@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * If applied to {@link Setting} then {@link WSettings} will access this {@link Setting} by your own reference {@link String} and not by a field name.
+ * If applied to {@link Setting} then {@link Settings} will access this {@link Setting} by your own reference {@link String} and not by a field name.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

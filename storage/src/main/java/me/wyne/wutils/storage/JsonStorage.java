@@ -1,7 +1,8 @@
 package me.wyne.wutils.storage;
 
 import com.google.gson.*;
-import me.wyne.wutils.log.WLog;
+import me.wyne.wutils.log.Log;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,12 @@ public abstract class JsonStorage implements Storage {
 
     public JsonStorage(@NotNull final Plugin plugin, @NotNull final String filePath)
     {
+        try {
+            Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
+        } catch (ClassNotFoundException e) {
+            Log.error("Trying to use JsonStorage but com.google.gson is not included");
+            Bukkit.getLogger().severe("Trying to use JsonStorage but com.google.gson is not included");
+        }
         this.plugin = plugin;
         storageFile = new File(plugin.getDataFolder(), filePath);
         executorService = Executors.newSingleThreadExecutor();
@@ -36,16 +43,16 @@ public abstract class JsonStorage implements Storage {
     public void createStorageFolder()
     {
         if (!plugin.getDataFolder().exists()) {
-            WLog.info("Создание папки плагина...");
+            Log.info("Создание папки плагина...");
             plugin.getDataFolder().mkdirs();
-            WLog.info("Папка плагина создана");
+            Log.info("Папка плагина создана");
         }
     }
 
     public void createStorageFile()
     {
         if (!storageFile.exists()) {
-            WLog.info("Создание файла '" + storageFile.getName() + "'...");
+            Log.info("Создание файла '" + storageFile.getName() + "'...");
             try {
                 if (storageFile.createNewFile()) {
                     PrintWriter writer = new PrintWriter(storageFile);
@@ -53,10 +60,10 @@ public abstract class JsonStorage implements Storage {
                     writer.flush();
                     writer.close();
                 }
-                WLog.info("Файл '" + storageFile.getName() + "' создан");
+                Log.info("Файл '" + storageFile.getName() + "' создан");
             } catch (IOException e) {
-                WLog.error("Произошла ошибка при создании файла '" + storageFile.getName() + "'");
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при создании файла '" + storageFile.getName() + "'");
+                Log.error(e.getMessage());
             }
         }
     }
@@ -119,17 +126,17 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    WLog.info("Сохранено значение '" + value + "' ключа '" + key + "' по пути '" + path + "'");
+                    Log.info("Сохранено значение '" + value + "' ключа '" + key + "' по пути '" + path + "'");
                 else
-                    WLog.info("Сохранено значение '" + value + "' ключа '" + key + "'");
+                    Log.info("Сохранено значение '" + value + "' ключа '" + key + "'");
             }
             catch (FileNotFoundException e)
             {
-                WLog.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
-                WLog.error("Ключ: " + key);
-                WLog.error("Значение: " + value);
-                WLog.error("Путь: " + path);
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Значение: " + value);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
             }
         });
     }
@@ -142,8 +149,8 @@ public abstract class JsonStorage implements Storage {
 
         if (newCollection.contains(value))
         {
-            WLog.warn("Значение '" + value + "' коллекции ключа '" + key + "' уже было сохранено");
-            WLog.warn("Путь: " + path);
+            Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' уже было сохранено");
+            Log.warn("Путь: " + path);
             return false;
         }
 
@@ -165,15 +172,15 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                WLog.info("Сохранено значение '" + value + "' коллекции ключа '" + key + "'по пути '" + path + "'");
+                Log.info("Сохранено значение '" + value + "' коллекции ключа '" + key + "'по пути '" + path + "'");
             }
             catch (FileNotFoundException e)
             {
-                WLog.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
-                WLog.error("Ключ: " + key);
-                WLog.error("Значение: " + value);
-                WLog.error("Путь: " + path);
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Значение: " + value);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
             }
         });
         return true;
@@ -185,8 +192,8 @@ public abstract class JsonStorage implements Storage {
         {
             if (!data.containsKey(key))
             {
-                WLog.warn("Значение ключа '" + key + "' не найдено");
-                WLog.warn("Путь: " + path);
+                Log.warn("Значение ключа '" + key + "' не найдено");
+                Log.warn("Путь: " + path);
                 return false;
             }
 
@@ -211,14 +218,14 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    WLog.info("Удалено значение ключа '" + key + "' по пути '" + path + "'");
+                    Log.info("Удалено значение ключа '" + key + "' по пути '" + path + "'");
                 else
-                    WLog.info("Удалено значение ключа '" + key + "'");
+                    Log.info("Удалено значение ключа '" + key + "'");
             } catch (FileNotFoundException e) {
-                WLog.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
-                WLog.error("Ключ: " + key);
-                WLog.error("Путь: " + path);
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
             }
         });
         return true;
@@ -233,15 +240,15 @@ public abstract class JsonStorage implements Storage {
         }
         else
         {
-            WLog.warn("Значение ключа '" + key + "' не найдено");
-            WLog.warn("Путь: " + path);
+            Log.warn("Значение ключа '" + key + "' не найдено");
+            Log.warn("Путь: " + path);
             return false;
         }
 
         if (!newCollection.contains(value))
         {
-            WLog.warn("Значение '" + value + "' коллекции ключа '" + key + "' не найдено");
-            WLog.warn("Путь: " + path);
+            Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' не найдено");
+            Log.warn("Путь: " + path);
             return false;
         }
 
@@ -267,13 +274,13 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                WLog.info("Удалено значение '" + value + "' коллекции ключа '" + key + "' по пути '" + path + "'");
+                Log.info("Удалено значение '" + value + "' коллекции ключа '" + key + "' по пути '" + path + "'");
             } catch (FileNotFoundException e) {
-                WLog.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
-                WLog.error("Ключ: " + key);
-                WLog.error("Значение: " + value);
-                WLog.error("Путь: " + path);
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Значение: " + value);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
             }
         });
         return true;
@@ -283,15 +290,15 @@ public abstract class JsonStorage implements Storage {
     {
         if (!data.containsKey(key))
         {
-            WLog.warn("Значение ключа '" + key + "' не найдено");
-            WLog.warn("Путь: " + path);
+            Log.warn("Значение ключа '" + key + "' не найдено");
+            Log.warn("Путь: " + path);
             return false;
         }
 
         if (data.get(key).isEmpty())
         {
-            WLog.warn("Коллекция ключа '" + key + "' не имеет элементов");
-            WLog.warn("Путь: " + path);
+            Log.warn("Коллекция ключа '" + key + "' не имеет элементов");
+            Log.warn("Путь: " + path);
             return false;
         }
 
@@ -307,12 +314,12 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                WLog.info("Очищена коллекция ключа '" + key + "' по пути '" + path + "'");
+                Log.info("Очищена коллекция ключа '" + key + "' по пути '" + path + "'");
             } catch (FileNotFoundException e) {
-                WLog.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
-                WLog.error("Ключ: " + key);
-                WLog.error("Путь: " + path);
-                WLog.error(e.getMessage());
+                Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
             }
         });
         return true;
