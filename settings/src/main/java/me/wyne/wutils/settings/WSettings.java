@@ -1,7 +1,6 @@
 package me.wyne.wutils.settings;
 
 import me.wyne.wutils.log.WLog;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,10 +69,10 @@ public class WSettings {
      * Get {@link Setting} from inheritor by {@link Setting} field name or by {@link SettingReference} and then set new value.
      * @param setting {@link Setting} field name of {@link SettingReference}
      * @param newValue New {@link Setting} value
-     * @return {@link Setting} setMessage as component
+     * @return {@link Setting} setMessage
      */
     @NotNull
-    public Component setSetting(@NotNull final String setting, @NotNull final Object newValue) {
+    public String setSetting(@NotNull final String setting, @NotNull final Object newValue) {
         return WSettings.setSetting(this, setting, newValue);
     }
 
@@ -82,10 +81,10 @@ public class WSettings {
      * @param settingsObject {@link Object} to get {@link Setting} from
      * @param setting {@link Setting} field name of {@link SettingReference}
      * @param newValue New {@link Setting} value
-     * @return {@link Setting} setMessage as component
+     * @return {@link Setting} setMessage
      */
     @NotNull
-    public static Component setSetting(@NotNull final Object settingsObject, @NotNull final String setting, @NotNull final Object newValue) {
+    public static String setSetting(@NotNull final Object settingsObject, @NotNull final String setting, @NotNull final Object newValue) {
         for (Field field : settingsObject.getClass().getDeclaredFields())
         {
             if (!field.isAnnotationPresent(Setting.class))
@@ -99,9 +98,9 @@ public class WSettings {
                         field.set(settingsObject, newValue);
                     } catch (IllegalAccessException e) {
                         WLog.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
-                        return Component.empty();
+                        return "";
                     }
-                    return Component.text(field.getAnnotation(Setting.class).setMessage());
+                    return field.getAnnotation(Setting.class).setMessage();
                 }
             }
             else
@@ -113,12 +112,12 @@ public class WSettings {
                         field.set(settingsObject, newValue);
                     } catch (IllegalAccessException e) {
                         WLog.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
-                        return Component.empty();
+                        return "";
                     }
-                    return Component.text(field.getAnnotation(Setting.class).setMessage());
+                    return field.getAnnotation(Setting.class).setMessage();
                 }
             }
         }
-        return Component.empty();
+        return "";
     }
 }
