@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Apply to field to make it accessible as setting via {@link WSettings}.
+ * Apply to field to make it accessible as setting via {@link Settings}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

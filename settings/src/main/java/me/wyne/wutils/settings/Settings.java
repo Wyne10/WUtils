@@ -1,6 +1,6 @@
 package me.wyne.wutils.settings;
 
-import me.wyne.wutils.log.WLog;
+import me.wyne.wutils.log.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 /**
  * Inherit to use {@link #getSetting(String)} and {@link #setSetting(String, Object)} directly for this object or use static method variants.
  */
-public class WSettings {
+public class Settings {
 
     /**
      * Get {@link Setting} value from inheritor by {@link Setting} field name or by {@link SettingReference}.
@@ -19,7 +19,7 @@ public class WSettings {
      */
     @Nullable
     public <SettingType> SettingType getSetting(@NotNull final String setting) {
-        return WSettings.getSetting(this, setting);
+        return Settings.getSetting(this, setting);
     }
 
     /**
@@ -43,7 +43,7 @@ public class WSettings {
                     try {
                         return (SettingType) field.get(settingsObject);
                     } catch (IllegalAccessException e) {
-                        WLog.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
+                        Log.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
                         return null;
                     }
                 }
@@ -56,7 +56,7 @@ public class WSettings {
                     try {
                         return (SettingType) field.get(settingsObject);
                     } catch (IllegalAccessException e) {
-                        WLog.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
+                        Log.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
                         return null;
                     }
                 }
@@ -73,7 +73,7 @@ public class WSettings {
      */
     @NotNull
     public String setSetting(@NotNull final String setting, @NotNull final Object newValue) {
-        return WSettings.setSetting(this, setting, newValue);
+        return Settings.setSetting(this, setting, newValue);
     }
 
     /**
@@ -97,7 +97,7 @@ public class WSettings {
                         field.setAccessible(true);
                         field.set(settingsObject, newValue);
                     } catch (IllegalAccessException e) {
-                        WLog.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
+                        Log.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
                         return "";
                     }
                     return field.getAnnotation(Setting.class).setMessage();
@@ -111,7 +111,7 @@ public class WSettings {
                         field.setAccessible(true);
                         field.set(settingsObject, newValue);
                     } catch (IllegalAccessException e) {
-                        WLog.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
+                        Log.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
                         return "";
                     }
                     return field.getAnnotation(Setting.class).setMessage();

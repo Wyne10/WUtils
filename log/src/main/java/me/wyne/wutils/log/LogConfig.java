@@ -1,6 +1,9 @@
 package me.wyne.wutils.log;
 
-public interface WLogConfig {
+/**
+ * Used to control Log.info(String), Log.warn(String) and Log.error(String) logging from {@link Log}.
+ */
+public interface LogConfig {
 
     /**
      * @return Do info logging?

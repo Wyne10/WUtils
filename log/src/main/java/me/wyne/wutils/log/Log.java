@@ -13,10 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class WLog {
+public final class Log {
 
     private static Logger logger = null;
-    private static WLogConfig config = null;
+    private static LogConfig config = null;
     private static ExecutorService executorService;
     private static File directory = null;
 
@@ -34,16 +34,16 @@ public final class WLog {
      */
     public static void registerLogger(@NotNull final Logger logger)
     {
-        WLog.logger = logger;
+        Log.logger = logger;
     }
 
     /**
-     * Register {@link WLogConfig} to control {@link #info(String)}, {@link #warn(String)} and {@link #error(String)} logging.
+     * Register {@link LogConfig} to control {@link #info(String)}, {@link #warn(String)} and {@link #error(String)} logging.
      * @param config Config to register
      */
-    public static void registerConfig(@NotNull final WLogConfig config)
+    public static void registerConfig(@NotNull final LogConfig config)
     {
-        WLog.config = config;
+        Log.config = config;
     }
 
     /**
@@ -52,7 +52,7 @@ public final class WLog {
      */
     public static void registerLogDirectory(@NotNull final File directory)
     {
-        WLog.directory = directory;
+        Log.directory = directory;
     }
 
     /**
@@ -61,7 +61,7 @@ public final class WLog {
      */
     public static void registerWriteThread(@NotNull final ExecutorService executorService)
     {
-        WLog.executorService = executorService;
+        Log.executorService = executorService;
     }
 
     public static void info(@NotNull final String message)

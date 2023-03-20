@@ -1,6 +1,6 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.WLog;
+import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,13 +11,13 @@ import java.util.Set;
 /**
  * Inherit to automatically register config {@link Object} or use static {@link #registerConfigObject(Object)} method.
  */
-public class WConfig {
+public final class Config {
 
     private static final Set<Object> registeredConfigObjects = new HashSet<>();
 
-    public WConfig()
+    public Config()
     {
-        WConfig.registerConfigObject(this);
+        Config.registerConfigObject(this);
     }
 
     /**
@@ -36,7 +36,7 @@ public class WConfig {
     public static void reloadConfigObjects(@NotNull final FileConfiguration config) {
         try
         {
-            WLog.info("Перезагрузка конфига...");
+            Log.info("Перезагрузка конфига...");
             for (Object object : registeredConfigObjects)
             {
                 for(Field field  : object.getClass().getDeclaredFields())
@@ -45,16 +45,15 @@ public class WConfig {
                     {
                         field.setAccessible(true);
                         field.set(object, config.get(field.getAnnotation(ConfigField.class).path()));
-                        field.setAccessible(false);
                     }
                 }
             }
-            WLog.info("Конфиг перезагружен");
+            Log.info("Конфиг перезагружен");
         }
         catch (IllegalAccessException e)
         {
-            WLog.error("Произошла ошибка при перезагрузке конфига");
-            WLog.error(e.getMessage());
+            Log.error("Произошла ошибка при перезагрузке конфига");
+            Log.error(e.getMessage());
         }
     }
 
