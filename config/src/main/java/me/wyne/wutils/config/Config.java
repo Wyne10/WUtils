@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Inherit to automatically register config {@link Object} or use static {@link #registerConfigObject(Object)} method.
  */
-public final class Config {
+public class Config {
 
     private static final Set<Object> registeredConfigObjects = new HashSet<>();
 
