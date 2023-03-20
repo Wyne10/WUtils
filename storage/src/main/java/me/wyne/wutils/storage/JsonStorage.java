@@ -14,6 +14,9 @@ import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Requires {@link com.google.gson} dependency.
+ */
 public abstract class JsonStorage implements Storage {
 
     protected final Plugin plugin;
