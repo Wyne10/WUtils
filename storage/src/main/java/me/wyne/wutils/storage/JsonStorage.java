@@ -212,8 +212,11 @@ public abstract class JsonStorage implements Storage {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
                 if (!datas.has(key.toString()))
                 {
-                    Log.warn("Значение ключа '" + key + "' не найдено");
-                    Log.warn("Путь: " + path);
+                    if (data != null)
+                    {
+                        Log.warn("Значение ключа '" + key + "' не найдено");
+                        Log.warn("Путь: " + path);
+                    }
                     return;
                 }
                 if (path != null)

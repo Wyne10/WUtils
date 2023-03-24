@@ -77,7 +77,7 @@ public final class Log {
     {
         if (isActive() && config.logWarn())
         {
-            logger.info(message);
+            logger.warning(message);
             writeLog(Level.WARNING, message);
         }
     }
