@@ -46,8 +46,8 @@ public interface Storage {
 
     /**
      * Save element to data {@link HashMap} and to storageFile to given path.
-     * Set path as null to save value directly to key in storageFile.
-     * Set data as null to save value only to storageFile.
+     * <br>Set path as null to save value directly to key in storageFile.
+     * <br>Set data as null to save value only to storageFile.
      * @param data {@link HashMap} to save element to
      * @param key {@link HashMap} key to save element to
      * @param value Value to save
@@ -71,8 +71,8 @@ public interface Storage {
 
     /**
      * Remove element from data {@link HashMap} and from storageFile from given path.
-     * Set path as null to remove whole key from storageFile.
-     * Set data as null to remove value only from storageFile.
+     * <br>Set path as null to remove whole key from storageFile.
+     * <br>Set data as null to remove value only from storageFile.
      * @param data {@link HashMap} to remove element from
      * @param key {@link HashMap} key to remove element from
      * @param path Path in storageFile to remove element from
@@ -105,5 +105,5 @@ public interface Storage {
      * @param <ValType> {@link Collection} value type
      * @param <ColType> Type of {@link Collection}
      */
-    <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, final String path);
+    <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final String path);
 }
