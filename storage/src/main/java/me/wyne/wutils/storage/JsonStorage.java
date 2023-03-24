@@ -40,6 +40,7 @@ public abstract class JsonStorage implements Storage {
         executorService = Executors.newSingleThreadExecutor();
     }
 
+    @Override
     public void createStorageFolder()
     {
         if (!plugin.getDataFolder().exists()) {
@@ -49,6 +50,7 @@ public abstract class JsonStorage implements Storage {
         }
     }
 
+    @Override
     public void createStorageFile()
     {
         if (!storageFile.exists()) {
@@ -77,6 +79,7 @@ public abstract class JsonStorage implements Storage {
      * @param <KeyType> Data {@link HashMap} key type
      * @param <ValType> Data {@link HashMap} value type
      */
+    @Override
     @Nullable
     public <KeyType, ValType> ValType get(@NotNull final HashMap<KeyType, ValType> data, @NotNull final KeyType key)
     {
@@ -93,6 +96,7 @@ public abstract class JsonStorage implements Storage {
      * @param <KeyType> Data {@link HashMap} key type
      * @param <ValType> {@link Collection} value type
      */
+    @Override
     @NotNull
     public <KeyType, ValType> Collection<ValType> getCollection(@NotNull final HashMap<KeyType, ? extends Collection<ValType>> data, @NotNull final KeyType key)
     {
@@ -101,7 +105,8 @@ public abstract class JsonStorage implements Storage {
         return data.get(key);
     }
 
-    public <KeyType, ValType> void save(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, @NotNull final ValType value, final String path)
+    @Override
+    public <KeyType, ValType> void save(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, @NotNull final ValType value, @Nullable final String path)
     {
         if (data != null)
             data.put(key, value);
@@ -140,6 +145,7 @@ public abstract class JsonStorage implements Storage {
             }
         });
     }
+    @Override
     public <KeyType, ValType, ColType extends Collection<ValType>> boolean saveCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
     {
         Collection<ValType> newCollection = new HashSet<ValType>();
@@ -186,7 +192,8 @@ public abstract class JsonStorage implements Storage {
         return true;
     }
 
-    public <KeyType, ValType> boolean remove(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, final String path)
+    @Override
+    public <KeyType, ValType> boolean remove(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, @Nullable final String path)
     {
         if (data != null)
         {
@@ -203,6 +210,12 @@ public abstract class JsonStorage implements Storage {
         executorService.execute(() -> {
             try {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
+                if (!datas.has(key.toString()))
+                {
+                    Log.warn("Значение ключа '" + key + "' не найдено");
+                    Log.warn("Путь: " + path);
+                    return;
+                }
                 if (path != null)
                 {
                     JsonObject dataObject = datas.getAsJsonObject(key.toString());
@@ -230,7 +243,8 @@ public abstract class JsonStorage implements Storage {
         });
         return true;
     }
-    public <KeyType, ValType, ColType extends Collection<ValType>> boolean removeCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, final String path)
+    @Override
+    public <KeyType, ValType, ColType extends Collection<ValType>> boolean removeCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
     {
         Collection<ValType> newCollection;
 
@@ -286,7 +300,8 @@ public abstract class JsonStorage implements Storage {
         return true;
     }
 
-    public <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, final String path)
+    @Override
+    public <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final String path)
     {
         if (!data.containsKey(key))
         {
