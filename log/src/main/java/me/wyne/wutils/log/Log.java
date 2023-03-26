@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ public final class Log {
 
     private static Logger logger = null;
     private static LogConfig config = null;
-    private static ExecutorService executorService;
+    private static Executor executor;
     private static File directory = null;
 
     /**
@@ -56,12 +57,12 @@ public final class Log {
     }
 
     /**
-     * Register {@link ExecutorService} that will write logs to {@link #directory}.
-     * @param executorService Thread to register
+     * Register {@link Executor} that will write logs to {@link #directory}.
+     * @param executor Executor to register
      */
-    public static void registerWriteThread(@NotNull final ExecutorService executorService)
+    public static void registerExecutor(@NotNull final Executor executor)
     {
-        Log.executorService = executorService;
+        Log.executor = executor;
     }
 
     public static void info(@NotNull final String message)
@@ -130,10 +131,10 @@ public final class Log {
      */
     private static void writeLog(@NotNull final Level level, @NotNull final String log)
     {
-        if (directory == null || executorService == null)
+        if (directory == null || executor == null)
             return;
 
-        executorService.execute(() -> {
+        executor.execute(() -> {
             String levelMessage = "INFO";
 
             if (level == Level.WARNING)
