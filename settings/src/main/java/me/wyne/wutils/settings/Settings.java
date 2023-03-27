@@ -42,8 +42,9 @@ public class Settings {
                     field.setAccessible(true);
                     try {
                         return (SettingType) field.get(settingsObject);
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         Log.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
+                        Log.error(e.getMessage());
                         return null;
                     }
                 }
@@ -55,8 +56,9 @@ public class Settings {
                     field.setAccessible(true);
                     try {
                         return (SettingType) field.get(settingsObject);
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         Log.error("Произошла ошибка при попытке получить настройку '" + setting + "'");
+                        Log.error(e.getMessage());
                         return null;
                     }
                 }
@@ -96,8 +98,9 @@ public class Settings {
                     try {
                         field.setAccessible(true);
                         field.set(settingsObject, newValue);
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         Log.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
+                        Log.error(e.getMessage());
                         return "";
                     }
                     return field.getAnnotation(Setting.class).setMessage();
@@ -110,8 +113,9 @@ public class Settings {
                     try {
                         field.setAccessible(true);
                         field.set(settingsObject, newValue);
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         Log.error("Произошла ошибка при попытке установить настройку '" + setting + "'");
+                        Log.error(e.getMessage());
                         return "";
                     }
                     return field.getAnnotation(Setting.class).setMessage();
