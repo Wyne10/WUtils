@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,8 +17,8 @@ public final class Log {
 
     private static Logger logger = null;
     private static LogConfig config = null;
-    private static Executor executor;
-    private static File directory = null;
+    private static Executor logWriteExecutor;
+    private static File logDirectory = null;
 
     /**
      * @return Are logger and config registered?
@@ -53,66 +52,85 @@ public final class Log {
      */
     public static void registerLogDirectory(@NotNull final File directory)
     {
-        Log.directory = directory;
+        Log.logDirectory = directory;
     }
 
     /**
-     * Register {@link Executor} that will write logs to {@link #directory}.
+     * Register {@link Executor} that will write logs to {@link #logDirectory}.
      * @param executor Executor to register
      */
     public static void registerExecutor(@NotNull final Executor executor)
     {
-        Log.executor = executor;
+        Log.logWriteExecutor = executor;
     }
 
-    public static void info(@NotNull final String message)
+    /**
+     * @return True if logged successfully
+     */
+    public static boolean info(@NotNull final String message)
     {
         if (isActive() && config.logInfo())
         {
             logger.info(message);
             writeLog(Level.INFO, message);
+            return true;
         }
+        return false;
     }
 
-    public static void warn(@NotNull final String message)
+    /**
+     * @return True if logged successfully
+     */
+    public static boolean warn(@NotNull final String message)
     {
         if (isActive() && config.logWarn())
         {
             logger.warning(message);
             writeLog(Level.WARNING, message);
+            return true;
         }
+        return false;
     }
 
-    public static void error(@NotNull final String message)
+    /**
+     * @return True if logged successfully
+     */
+    public static boolean error(@NotNull final String message)
     {
         if (isActive() && config.logError())
         {
             logger.severe(message);
             writeLog(Level.SEVERE, message);
+            return true;
         }
+        return false;
     }
 
     /**
      * Log {@link LogMessage}.
+     * @return True if logged successfully
      * @param logMessage {@link LogMessage} to log
      * @param doLog Log or don't log. Useful when using some logging config
      */
-    public static void log(@NotNull final LogMessage logMessage, final boolean doLog)
+    public static boolean log(@NotNull final LogMessage logMessage, final boolean doLog)
     {
         if (isActive() && doLog)
         {
             logger.log(logMessage.getLevel(), logMessage.getMessage());
             writeLog(logMessage.getLevel(), logMessage.getMessage());
+            return true;
         }
+        return false;
     }
 
     /**
      * Log {@link LogMessage} and split {@link LogMessage} by regex.
+     * @return True if logged successfully
      * @param logMessage {@link LogMessage} to log
      * @param splitRegex Regex to split {@link LogMessage} by
      * @param doLog Log or don't log. Useful when using some logging config
      */
-    public static void log(@NotNull final LogMessage logMessage, @NotNull final String splitRegex, final boolean doLog)
+    public static boolean log(@NotNull final LogMessage logMessage, @NotNull final String splitRegex, final boolean doLog)
     {
         if (isActive() && doLog)
         {
@@ -121,20 +139,22 @@ public final class Log {
                 logger.log(logMessage.getLevel(), message);
                 writeLog(logMessage.getLevel(), message);
             }
+            return true;
         }
+        return false;
     }
 
     /**
-     * Write log to {@link #directory}.
+     * Write log to {@link #logDirectory}.
      * @param level Log {@link Level}
      * @param log Message to log
      */
     private static void writeLog(@NotNull final Level level, @NotNull final String log)
     {
-        if (directory == null || executor == null)
+        if (logDirectory == null || logWriteExecutor == null)
             return;
 
-        executor.execute(() -> {
+        logWriteExecutor.execute(() -> {
             String levelMessage = "INFO";
 
             if (level == Level.WARNING)
@@ -144,11 +164,11 @@ public final class Log {
 
             String writeLog = "[" + new SimpleDateFormat("hh:mm:ss").format(new Date()) + " " + levelMessage + "] " + log;
 
-            File logFile = new File(directory, LocalDate.now() + ".txt");
+            File logFile = new File(logDirectory, LocalDate.now() + ".txt");
 
             try {
-                if (!directory.exists())
-                    directory.mkdirs();
+                if (!logDirectory.exists())
+                    logDirectory.mkdirs();
                 if (!logFile.exists())
                     logFile.createNewFile();
 

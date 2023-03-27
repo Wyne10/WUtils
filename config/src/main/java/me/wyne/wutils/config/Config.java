@@ -31,9 +31,10 @@ public class Config {
 
     /**
      * Load data from {@link FileConfiguration} to registered objects.
+     * @return True if reloaded successfully
      * @param config {@link FileConfiguration} to load data from
      */
-    public static void reloadConfigObjects(@NotNull final FileConfiguration config) {
+    public static boolean reloadConfigObjects(@NotNull final FileConfiguration config) {
         try
         {
             Log.info("Перезагрузка конфига...");
@@ -49,11 +50,13 @@ public class Config {
                 }
             }
             Log.info("Конфиг перезагружен");
+            return true;
         }
         catch (IllegalAccessException e)
         {
             Log.error("Произошла ошибка при перезагрузке конфига");
             Log.error(e.getMessage());
+            return false;
         }
     }
 

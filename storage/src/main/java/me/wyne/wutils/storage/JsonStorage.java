@@ -25,19 +25,21 @@ public abstract class JsonStorage implements Storage {
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     protected final File storageFile;
-    protected final ExecutorService executorService;
+    protected final ExecutorService jsonExecutorService;
 
-    public JsonStorage(@NotNull final Plugin plugin, @NotNull final String filePath)
+    public JsonStorage(@NotNull final Plugin plugin, @NotNull final File storageFile)
     {
         try {
             Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
         } catch (ClassNotFoundException e) {
-            Log.error("Trying to use JsonStorage but com.google.gson is not included");
-            Bukkit.getLogger().severe("Trying to use JsonStorage but com.google.gson is not included");
+            if (!Log.error("Trying to use JsonStorage but com.google.gson is not included"))
+                Bukkit.getLogger().severe("Trying to use JsonStorage but com.google.gson is not included");
+            if (!Log.error(e.getMessage()))
+                Bukkit.getLogger().severe(e.getMessage());
         }
         this.plugin = plugin;
-        storageFile = new File(plugin.getDataFolder(), filePath);
-        executorService = Executors.newSingleThreadExecutor();
+        this.storageFile = storageFile;
+        jsonExecutorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -111,7 +113,7 @@ public abstract class JsonStorage implements Storage {
         if (data != null)
             data.put(key, value);
 
-        executorService.execute(() -> {
+        jsonExecutorService.execute(() -> {
             try
             {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
@@ -163,7 +165,7 @@ public abstract class JsonStorage implements Storage {
         newCollection.add(value);
         data.put(key, (ColType) newCollection);
 
-        executorService.execute(() -> {
+        jsonExecutorService.execute(() -> {
             try
             {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
@@ -207,7 +209,7 @@ public abstract class JsonStorage implements Storage {
             data.remove(key);
         }
 
-        executorService.execute(() -> {
+        jsonExecutorService.execute(() -> {
             try {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
                 if (!datas.has(key.toString()))
@@ -272,7 +274,7 @@ public abstract class JsonStorage implements Storage {
         newCollection.remove(value);
         data.put(key, (ColType) newCollection);
 
-        executorService.execute(() -> {
+        jsonExecutorService.execute(() -> {
             try {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
                 JsonObject dataObject = datas.getAsJsonObject(key.toString());
@@ -322,7 +324,7 @@ public abstract class JsonStorage implements Storage {
 
         data.put(key, (ColType) Collections.emptySet());
 
-        executorService.execute(() -> {
+        jsonExecutorService.execute(() -> {
             try {
                 JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
                 JsonObject dataObject = datas.getAsJsonObject(key.toString());
