@@ -114,8 +114,10 @@ public class LogMessage {
             try {
                 Class.forName("net.kyori.adventure.text.minimessage.MiniMessage", false, getClass().getClassLoader());
             } catch (ClassNotFoundException e) {
-                Log.error("Trying to stripTags but net.kyori.adventure.text.minimessage is not included");
-                Bukkit.getLogger().severe("Trying to stripTags but net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error("Trying to use stripTags in LogMessage but net.kyori.adventure.text.minimessage is not included"))
+                    Bukkit.getLogger().severe("Trying to use stripTags in LogMessage but net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error(e.getMessage()))
+                    Bukkit.getLogger().severe(e.getMessage());
                 return this;
             }
             message = MiniMessage.miniMessage().stripTags(message);
@@ -132,8 +134,10 @@ public class LogMessage {
             try {
                 Class.forName("me.clip.placeholderapi.PlaceholderAPI", false, getClass().getClassLoader());
             } catch (ClassNotFoundException e) {
-                Log.error("Trying to setPlaceholders but me.clip.placeholderapi is not included");
-                Bukkit.getLogger().severe("Trying to setPlaceholders but me.clip.placeholderapi is not included");
+                if (!Log.error("Trying to use setPlaceholders in LogMessage but me.clip.placeholderapi is not included"))
+                    Bukkit.getLogger().severe("Trying to use setPlaceholders in LogMessage but me.clip.placeholderapi is not included");
+                if (!Log.error(e.getMessage()))
+                    Bukkit.getLogger().severe(e.getMessage());
                 return this;
             }
             message = PlaceholderAPI.setPlaceholders(player, message);
