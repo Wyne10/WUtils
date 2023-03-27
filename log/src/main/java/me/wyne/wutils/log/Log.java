@@ -176,8 +176,9 @@ public final class Log {
                 writer.println(writeLog);
                 writer.flush();
                 writer.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 error("Произошла ошибка при попытке записи лога в файл '" + LocalDate.now() + ".txt'");
+                error(e.getMessage());
             }
         });
     }

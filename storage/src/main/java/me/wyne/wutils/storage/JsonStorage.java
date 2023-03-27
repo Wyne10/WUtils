@@ -65,7 +65,7 @@ public abstract class JsonStorage implements Storage {
                     writer.close();
                 }
                 Log.info("Файл '" + storageFile.getName() + "' создан");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.error("Произошла ошибка при создании файла '" + storageFile.getName() + "'");
                 Log.error(e.getMessage());
             }
@@ -137,7 +137,7 @@ public abstract class JsonStorage implements Storage {
                 else
                     Log.info("Сохранено значение '" + value + "' ключа '" + key + "'");
             }
-            catch (FileNotFoundException e)
+            catch (Exception e)
             {
                 Log.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -182,7 +182,7 @@ public abstract class JsonStorage implements Storage {
                 writer.close();
                 Log.info("Сохранено значение '" + value + "' коллекции ключа '" + key + "'по пути '" + path + "'");
             }
-            catch (FileNotFoundException e)
+            catch (Exception e)
             {
                 Log.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -239,7 +239,7 @@ public abstract class JsonStorage implements Storage {
                     Log.info("Удалено значение ключа '" + key + "' по пути '" + path + "'");
                 else
                     Log.info("Удалено значение ключа '" + key + "'");
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
                 Log.error("Путь: " + path);
@@ -294,7 +294,7 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 Log.info("Удалено значение '" + value + "' коллекции ключа '" + key + "' по пути '" + path + "'");
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
                 Log.error("Значение: " + value);
@@ -335,7 +335,7 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 Log.info("Очищена коллекция ключа '" + key + "' по пути '" + path + "'");
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
                 Log.error("Путь: " + path);

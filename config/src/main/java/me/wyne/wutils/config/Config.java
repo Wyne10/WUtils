@@ -52,7 +52,7 @@ public class Config {
             Log.info("Конфиг перезагружен");
             return true;
         }
-        catch (IllegalAccessException e)
+        catch (Exception e)
         {
             Log.error("Произошла ошибка при перезагрузке конфига");
             Log.error(e.getMessage());
