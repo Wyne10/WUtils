@@ -69,6 +69,22 @@ public abstract class JsonStorage implements Storage {
         }
     }
 
+    @Override
+    public void loadData()
+    {
+        jsonExecutorService.execute(() -> {
+            Throwable exception;
+            Log.info("Загрузка данных из файла '" + storageFile.getName() + "'...");
+            if ((exception = loadDataImpl()) == null)
+                Log.info("Данные из файла '" + storageFile.getName() + "' загружены");
+            else
+            {
+                Log.error("Произошла ошибка при загрузке данных из файла '" + storageFile.getName() + "'");
+                Log.error(exception.getMessage());
+            }
+        });
+    }
+
     /**
      * Get element from data {@link Map}. If Map doesn't have given key it will return null.
      * Map is used because data is often stored as key:value.
