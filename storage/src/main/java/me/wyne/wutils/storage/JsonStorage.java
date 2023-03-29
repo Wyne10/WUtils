@@ -70,11 +70,11 @@ public abstract class JsonStorage implements Storage {
     }
 
     /**
-     * Get element from {@link Map}. If Map doesn't have given key it will return null.
+     * Get element from data {@link Map}. If Map doesn't have given key it will return null.
      * Map is used because data is often stored as key:value.
-     * @param data {@link Map} to get element from
-     * @param key {@link Map} key to get element from
-     * @return Element of {@link ValType} from data or null
+     * @param data Data {@link Map} to get element from
+     * @param key Data {@link Map} key to get element from
+     * @return Element of {@link ValType} from data {@link Map} or null
      * @param <KeyType> Data {@link Map} key type
      * @param <ValType> Data {@link Map} value type
      */
@@ -87,11 +87,11 @@ public abstract class JsonStorage implements Storage {
         return data.get(key);
     }
     /**
-     * Get {@link Collection} from {@link Map}. If Map doesn't have given key or retrieved {@link Collection} is empty it will return null.
+     * Get {@link Collection} from data {@link Map}. If data {@link Map} doesn't have given key or retrieved {@link Collection} is empty it will return null.
      * Map is used because data is often stored as key:value.
-     * @param data {@link Map} to get {@link Collection} from
-     * @param key {@link Map} key to get {@link Collection} from
-     * @return {@link Collection} from data or null
+     * @param data Data {@link Map} to get {@link Collection} from
+     * @param key Data {@link Map} key to get {@link Collection} from
+     * @return {@link Collection} from data {@link Map} or empty set
      * @param <KeyType> Data {@link Map} key type
      * @param <ValType> {@link Collection} value type
      */
