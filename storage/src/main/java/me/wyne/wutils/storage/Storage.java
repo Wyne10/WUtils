@@ -17,9 +17,15 @@ public interface Storage {
      */
     void createStorageFile();
     /**
-     * Load data from storage file.
+     * Load data from storage file. Uses {@link #loadDataImpl()}, puts it in other thread and logs.
      */
     void loadData();
+
+    /**
+     * Implementation of loading data from storage file. {@link #loadData()} will take care of logging and putting implementation in other thread.
+     * @return {@link Throwable} if data loading caused exception
+     */
+    @Nullable Throwable loadDataImpl();
 
     /**
      * Get element from data {@link Map}. May be used to add extra logic to data query.
