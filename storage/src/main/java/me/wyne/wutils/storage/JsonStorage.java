@@ -373,7 +373,7 @@ public abstract class JsonStorage implements Storage {
         }
 
         newMap.remove(mapKey);
-        data.put(key, (MapType) mapKey);
+        data.put(key, (MapType) newMap);
 
         jsonExecutorService.execute(() -> {
             try {
