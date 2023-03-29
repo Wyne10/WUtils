@@ -8,10 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -73,34 +70,34 @@ public abstract class JsonStorage implements Storage {
     }
 
     /**
-     * Get element from {@link HashMap}. If HashMap doesn't have given key it will return null.
-     * HashMap is used because data is often stored as key:value.
-     * @param data {@link HashMap} to get element from
-     * @param key {@link HashMap} key to get element from
+     * Get element from {@link Map}. If Map doesn't have given key it will return null.
+     * Map is used because data is often stored as key:value.
+     * @param data {@link Map} to get element from
+     * @param key {@link Map} key to get element from
      * @return Element of {@link ValType} from data or null
-     * @param <KeyType> Data {@link HashMap} key type
-     * @param <ValType> Data {@link HashMap} value type
+     * @param <KeyType> Data {@link Map} key type
+     * @param <ValType> Data {@link Map} value type
      */
     @Override
     @Nullable
-    public <KeyType, ValType> ValType get(@NotNull final HashMap<KeyType, ValType> data, @NotNull final KeyType key)
+    public <KeyType, ValType> ValType get(@NotNull final Map<KeyType, ValType> data, @NotNull final KeyType key)
     {
         if (!data.containsKey(key))
             return null;
         return data.get(key);
     }
     /**
-     * Get {@link Collection} from {@link HashMap}. If HashMap doesn't have given key or retrieved {@link Collection} is empty it will return null.
-     * HashMap is used because data is often stored as key:value.
-     * @param data {@link HashMap} to get {@link Collection} from
-     * @param key {@link HashMap} key to get {@link Collection} from
+     * Get {@link Collection} from {@link Map}. If Map doesn't have given key or retrieved {@link Collection} is empty it will return null.
+     * Map is used because data is often stored as key:value.
+     * @param data {@link Map} to get {@link Collection} from
+     * @param key {@link Map} key to get {@link Collection} from
      * @return {@link Collection} from data or null
-     * @param <KeyType> Data {@link HashMap} key type
+     * @param <KeyType> Data {@link Map} key type
      * @param <ValType> {@link Collection} value type
      */
     @Override
     @NotNull
-    public <KeyType, ValType> Collection<ValType> getCollection(@NotNull final HashMap<KeyType, ? extends Collection<ValType>> data, @NotNull final KeyType key)
+    public <KeyType, ValType> Collection<ValType> getCollection(@NotNull final Map<KeyType, ? extends Collection<ValType>> data, @NotNull final KeyType key)
     {
         if (!data.containsKey(key) || data.get(key).isEmpty())
             return Collections.emptySet();
@@ -108,7 +105,7 @@ public abstract class JsonStorage implements Storage {
     }
 
     @Override
-    public <KeyType, ValType> void save(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, @NotNull final ValType value, @Nullable final String path)
+    public <KeyType, ValType> void save(@Nullable Map<KeyType, ValType> data, @NotNull final KeyType key, @NotNull final ValType value, @Nullable final String path)
     {
         if (data != null)
             data.put(key, value);
@@ -148,7 +145,7 @@ public abstract class JsonStorage implements Storage {
         });
     }
     @Override
-    public <KeyType, ValType, ColType extends Collection<ValType>> boolean saveCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
+    public <KeyType, ValType, ColType extends Collection<ValType>> boolean saveCollection(@NotNull Map<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
     {
         Collection<ValType> newCollection = new HashSet<ValType>();
 
@@ -158,7 +155,7 @@ public abstract class JsonStorage implements Storage {
         if (newCollection.contains(value))
         {
             Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' уже было сохранено");
-            Log.warn("Путь: " + path);
+            Log.warn("Файл: " + storageFile.getName());
             return false;
         }
 
@@ -193,16 +190,64 @@ public abstract class JsonStorage implements Storage {
         });
         return true;
     }
+    @Override
+    public <KeyType, MapKeyType, ValType, MapType extends Map<MapKeyType, ValType>> void saveMap(@NotNull Map<KeyType, MapType> data, @NotNull final KeyType key, @NotNull final MapKeyType mapKey, @NotNull final ValType value, @Nullable final String path)
+    {
+        Map<MapKeyType, ValType> newMap = new HashMap<>();
+
+        if (data.containsKey(key))
+            newMap = data.get(key);
+
+        newMap.put(mapKey, value);
+        data.put(key, (MapType) newMap);
+
+        jsonExecutorService.execute(() -> {
+            try
+            {
+                JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
+                JsonObject dataObject = datas.has(key.toString()) ?
+                        datas.getAsJsonObject(key.toString()) : new JsonObject();
+                if (path != null)
+                {
+                    dataObject.add(path, gson.toJsonTree(value));
+                }
+                else
+                {
+                    dataObject.add(gson.toJson(mapKey), gson.toJsonTree(value));
+                }
+                datas.add(key.toString(), dataObject);
+                PrintWriter writer = new PrintWriter(storageFile);
+                writer.write(gson.toJson(datas));
+                writer.flush();
+                writer.close();
+                if (path != null)
+                    Log.info("Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + path + "'");
+                else
+                    Log.info("Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + mapKey + "'");
+            }
+            catch (Exception e)
+            {
+                Log.error("Произошла ошибка при записи значения в файл '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Значение: " + value);
+                if (path != null)
+                    Log.error("Путь: " + path);
+                else
+                    Log.error("Путь: " + mapKey);
+                Log.error(e.getMessage());
+            }
+        });
+    }
 
     @Override
-    public <KeyType, ValType> boolean remove(@Nullable HashMap<KeyType, ValType> data, @NotNull final KeyType key, @Nullable final String path)
+    public <KeyType, ValType> boolean remove(@Nullable Map<KeyType, ValType> data, @NotNull final KeyType key, @Nullable final String path)
     {
         if (data != null)
         {
             if (!data.containsKey(key))
             {
                 Log.warn("Значение ключа '" + key + "' не найдено");
-                Log.warn("Путь: " + path);
+                Log.warn("Файл: " + storageFile.getName());
                 return false;
             }
 
@@ -217,7 +262,7 @@ public abstract class JsonStorage implements Storage {
                     if (data == null)
                     {
                         Log.warn("Значение ключа '" + key + "' не найдено");
-                        Log.warn("Путь: " + path);
+                        Log.warn("Файл: " + storageFile.getName());
                     }
                     return;
                 }
@@ -249,7 +294,7 @@ public abstract class JsonStorage implements Storage {
         return true;
     }
     @Override
-    public <KeyType, ValType, ColType extends Collection<ValType>> boolean removeCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
+    public <KeyType, ValType, ColType extends Collection<ValType>> boolean removeCollection(@NotNull Map<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final ValType value, @NotNull final String path)
     {
         Collection<ValType> newCollection;
 
@@ -260,14 +305,14 @@ public abstract class JsonStorage implements Storage {
         else
         {
             Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Путь: " + path);
+            Log.warn("Файл: " + storageFile.getName());
             return false;
         }
 
         if (!newCollection.contains(value))
         {
             Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' не найдено");
-            Log.warn("Путь: " + path);
+            Log.warn("Файл: " + storageFile.getName());
             return false;
         }
 
@@ -304,21 +349,78 @@ public abstract class JsonStorage implements Storage {
         });
         return true;
     }
+    @Override
+    public <KeyType, MapKeyType, ValType, MapType extends Map<MapKeyType, ValType>> boolean removeMap(@NotNull Map<KeyType, MapType> data, @NotNull final KeyType key, @NotNull final MapKeyType mapKey, @Nullable final String path)
+    {
+        Map<MapKeyType, ValType> newMap;
+
+        if (data.containsKey(key))
+        {
+            newMap = data.get(key);
+        }
+        else
+        {
+            Log.warn("Значение ключа '" + key + "' не найдено");
+            Log.warn("Файл: " + storageFile.getName());
+            return false;
+        }
+
+        if (!newMap.containsKey(mapKey))
+        {
+            Log.warn("Ключ '" + mapKey + "' карты ключа '" + key + "' не найден");
+            Log.warn("Файл: " + storageFile.getName());
+            return false;
+        }
+
+        newMap.remove(mapKey);
+        data.put(key, (MapType) mapKey);
+
+        jsonExecutorService.execute(() -> {
+            try {
+                JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
+                JsonObject dataObject = datas.getAsJsonObject(key.toString());
+                if (path != null)
+                {
+                    dataObject.remove(path);
+                }
+                else
+                {
+                    dataObject.remove(gson.toJson(mapKey));
+                }
+                datas.add(key.toString(), dataObject);
+                PrintWriter writer = new PrintWriter(storageFile);
+                writer.write(gson.toJson(datas));
+                writer.flush();
+                writer.close();
+                if (path != null)
+                    Log.info("Удалено значение '" + mapKey + "' карты ключа '" + key + "' по пути '" + path + "'");
+                else
+                    Log.info("Удалено значение '" + mapKey + "' карты ключа '" + key + "'");
+            } catch (Exception e) {
+                Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
+                Log.error("Значение: " + mapKey);
+                Log.error("Путь: " + path);
+                Log.error(e.getMessage());
+            }
+        });
+        return true;
+    }
 
     @Override
-    public <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull HashMap<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final String path)
+    public <KeyType, ValType, ColType extends Collection<ValType>> boolean clearCollection(@NotNull Map<KeyType, ColType> data, @NotNull final KeyType key, @NotNull final String path)
     {
         if (!data.containsKey(key))
         {
             Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Путь: " + path);
+            Log.warn("Файл: " + storageFile.getName());
             return false;
         }
 
         if (data.get(key).isEmpty())
         {
             Log.warn("Коллекция ключа '" + key + "' не имеет элементов");
-            Log.warn("Путь: " + path);
+            Log.warn("Файл: " + storageFile.getName());
             return false;
         }
 
@@ -336,9 +438,55 @@ public abstract class JsonStorage implements Storage {
                 writer.close();
                 Log.info("Очищена коллекция ключа '" + key + "' по пути '" + path + "'");
             } catch (Exception e) {
-                Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
+                Log.error("Произошла ошибка при очистке коллекции из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
                 Log.error("Путь: " + path);
+                Log.error(e.getMessage());
+            }
+        });
+        return true;
+    }
+    @Override
+    public <KeyType, MapKeyType, ValType, MapType extends Map<MapKeyType, ValType>> boolean clearMap(@NotNull Map<KeyType, MapType> data, @NotNull final KeyType key, @NotNull final Class<MapKeyType> mapKeyType)
+    {
+        MapType dataClone = data.get(key);
+
+        if (!data.containsKey(key))
+        {
+            Log.warn("Значение ключа '" + key + "' не найдено");
+            Log.warn("Файл: " + storageFile.getName());
+            return false;
+        }
+
+        if (data.get(key).isEmpty())
+        {
+            Log.warn("Карта ключа '" + key + "' не имеет элементов");
+            Log.warn("Файл: " + storageFile.getName());
+            return false;
+        }
+
+        data.put(key, (MapType) new HashMap<>());
+
+        jsonExecutorService.execute(() -> {
+            try {
+                JsonObject datas = (JsonObject) JsonParser.parseReader(new FileReader(storageFile));
+                JsonObject dataObject = datas.getAsJsonObject(key.toString());
+                for (String property : dataObject.keySet())
+                {
+                    if (dataClone.containsKey(gson.fromJson(property, mapKeyType)))
+                    {
+                        dataObject.remove(property);
+                    }
+                }
+                datas.add(key.toString(), dataObject);
+                PrintWriter writer = new PrintWriter(storageFile);
+                writer.write(gson.toJson(datas));
+                writer.flush();
+                writer.close();
+                Log.info("Очищена карта ключа '" + key + "'");
+            } catch (Exception e) {
+                Log.error("Произошла ошибка при очистке карты из файла '" + storageFile.getName() + "'");
+                Log.error("Ключ: " + key);
                 Log.error(e.getMessage());
             }
         });
