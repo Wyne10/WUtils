@@ -44,12 +44,34 @@ public class Command {
         this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
     }
 
+    public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
+    {
+        for (String childCommand : childCommands)
+        {
+            this.childrenCommands.put(argIndex, childCommand, executor != null ? executor : (t, u) -> false);
+            Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
+            newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
+            this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
+        }
+    }
+
     public void setChildCommand(final int argIndex, @NotNull final String childCommand, @Nullable final String ... permissions)
     {
         this.childrenCommands.put(argIndex, childCommand, childrenCommands.contains(argIndex, childCommand) ? childrenCommands.get(argIndex, childCommand) : (t, u) -> false);
         Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
         newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
         this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
+    }
+
+    public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final String ... permissions)
+    {
+        for (String childCommand : childCommands)
+        {
+            this.childrenCommands.put(argIndex, childCommand, childrenCommands.contains(argIndex, childCommand) ? childrenCommands.get(argIndex, childCommand) : (t, u) -> false);
+            Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
+            newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
+            this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
+        }
     }
 
     public void setChildCommandPermissions(final int argIndex, @NotNull final String childCommand, @Nullable final String ... permissions)
