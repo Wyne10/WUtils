@@ -45,7 +45,7 @@ public class Command {
 
     public void setChildCommand(final int argIndex, @NotNull final String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
     {
-        this.childrenCommands.put(argIndex, childCommand, executor);
+        this.childrenCommands.put(argIndex, childCommand, executor != null ? executor : (t, u) -> false);
         this.childrenCommandsPermissions.put(argIndex, childCommand, permissions != null ? Set.of(permissions) : new HashSet<>());
     }
 
@@ -138,8 +138,6 @@ public class Command {
     public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String args[], final int argIndex, @NotNull final String arg)
     {
         if (!childrenCommands.contains(argIndex, arg))
-            return false;
-        if (childrenCommands.get(argIndex, arg) == null)
             return false;
 
         if (!childrenCommandsPermissions.get(argIndex, arg).isEmpty())
