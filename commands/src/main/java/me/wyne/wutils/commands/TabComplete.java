@@ -5,16 +5,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class TabComplete {
 
     @NotNull
-    public static List<String> collectionTabComplete(@NotNull final Collection<String> collection, @NotNull final String arg)
+    public static Set<String> collectionTabComplete(@NotNull final Collection<String> collection, @NotNull final String arg)
     {
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
 
         for (String element : collection)
         {
@@ -31,9 +29,9 @@ public class TabComplete {
     }
 
     @NotNull
-    public static List<String> offlinePlayersTabComplete(@NotNull final String arg)
+    public static Set<String> offlinePlayersTabComplete(@NotNull final String arg)
     {
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
 
         for (OfflinePlayer player : Bukkit.getOfflinePlayers())
         {
@@ -53,9 +51,9 @@ public class TabComplete {
     }
 
     @NotNull
-    public static List<String> onlinePlayersTabComplete(@NotNull final String arg)
+    public static Set<String> onlinePlayersTabComplete(@NotNull final String arg)
     {
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
 
         for (Player player : Bukkit.getOnlinePlayers())
         {
