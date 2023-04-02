@@ -102,12 +102,7 @@ public class Command {
         if (args.length == 0)
             executeParentCommand(sender);
 
-        int argIndex = 0;
-        for (String arg : args)
-        {
-            executeChildCommand(sender, args, argIndex, arg);
-            argIndex++;
-        }
+        executeChildCommand(sender, args, args.length - 1, args[args.length - 1]);
 
         return false;
     }
