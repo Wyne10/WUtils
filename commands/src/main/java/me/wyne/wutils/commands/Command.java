@@ -2,7 +2,6 @@ package me.wyne.wutils.commands;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,18 +10,9 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-/**
- * Used to create command that can be easily modified adding different child commands.
- */
 public class Command {
 
-    /**
-     * This {@link Function} will be executed if command is called without any args.
-     */
     private Function<CommandSender, Boolean> parentCommand;
-    /**
-     * If player has at least one of this permissions then parent command will be executed.
-     */
     private Set<String> parentCommandPermissions = new HashSet<>();
 
     private Table<Integer, String, BiFunction<CommandSender, String[], Boolean>> childrenCommands = HashBasedTable.create();
