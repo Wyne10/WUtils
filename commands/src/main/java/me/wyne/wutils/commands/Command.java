@@ -2,6 +2,7 @@ package me.wyne.wutils.commands;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,34 +70,28 @@ public class Command {
     {
         List<String> result = new ArrayList<>();
 
-        int argIndex = 0;
-        for (String arg : args)
+        int argIndex = args.length - 1;
+
+        if (!childrenCommands.containsRow(argIndex))
+            return result;
+
+        for (String command : childrenCommands.columnKeySet())
         {
-            if (!childrenCommands.containsRow(argIndex))
-            {
-                argIndex++;
+            if (!childrenCommands.contains(argIndex, command))
                 continue;
-            }
 
-            for (String command : childrenCommands.columnKeySet())
+            if (childrenCommandsPermissions.contains(argIndex, command))
             {
-                if (!childrenCommands.contains(argIndex, command))
-                    continue;
-
-                if (childrenCommandsPermissions.contains(argIndex, command))
+                for (String permission : childrenCommandsPermissions.get(argIndex, command))
                 {
-                    for (String permission : childrenCommandsPermissions.get(argIndex, command))
-                    {
-                        if (sender.hasPermission(permission))
-                            result.add(command);
-                    }
-                }
-                else
-                {
-                    result.add(command);
+                    if (sender.hasPermission(permission))
+                        result.add(command);
                 }
             }
-            argIndex++;
+            else
+            {
+                result.add(command);
+            }
         }
 
         return result;
