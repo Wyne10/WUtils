@@ -2,15 +2,11 @@ package me.wyne.wutils.commands;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -20,59 +16,50 @@ import java.util.function.Function;
 public class Command {
 
     /**
-     * This function will be executed if command is called without any args.
+     * This {@link Function} will be executed if command is called without any args.
      */
     private Function<CommandSender, Boolean> parentCommand;
-    private String parentCommandPermission;
-
     /**
-     * Contains children commands that are
+     * If player has at least one of this permissions then parent command will be executed.
      */
-    private HashMap<Integer, Pair<List<String>, BiFunction<CommandSender, String[], Boolean>>> childrenCommands = new HashMap<>();
-    private Table<Integer, String, List<String>> childrenCommandsPermissions = HashBasedTable.create();
+    private Set<String> parentCommandPermissions = new HashSet<>();
 
-    public void setParentCommand(@NotNull final Function<CommandSender, Boolean> parentCommand)
+    private Table<Integer, String, BiFunction<CommandSender, String[], Boolean>> childrenCommands = HashBasedTable.create();
+    private Table<Integer, String, Set<String>> childrenCommandsPermissions = HashBasedTable.create();
+
+    public void setParentCommand(@Nullable final Function<CommandSender, Boolean> parentCommand)
     {
         this.parentCommand = parentCommand;
     }
 
-    public void setParentCommand(@NotNull final Function<CommandSender, Boolean> parentCommand, @NotNull final String permission)
+    public void setParentCommand(@Nullable final Function<CommandSender, Boolean> parentCommand, @Nullable final String ... permissions)
     {
         this.parentCommand = parentCommand;
-        this.parentCommandPermission = permission;
+        this.parentCommandPermissions = permissions != null ? Set.of(permissions) : new HashSet<>();
     }
 
-    public void setParentCommandPermission(@NotNull final String permission)
+    public void setParentCommandPermissions(@Nullable final String ... permissions)
     {
-        this.parentCommandPermission = permission;
+        this.parentCommandPermissions = permissions != null ? Set.of(permissions) : new HashSet<>();
     }
 
-    public void setChildCommand(final int argIndex, @NotNull final List<String> childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor)
+    public void setChildCommand(final int argIndex, @NotNull final String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
     {
-        List<String> newCommands = childrenCommands.containsKey(argIndex) ? childrenCommands.get(argIndex).getKey() : new ArrayList<>();
-        newCommands.addAll(childCommand);
-        this.childrenCommands.put(argIndex, new ImmutablePair<>(newCommands, executor));
-    }
-
-    public void setChildCommand(final int argIndex, @NotNull String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
-    {
-        List<String> newCommands = childrenCommands.containsKey(argIndex) ? childrenCommands.get(argIndex).getKey() : new ArrayList<>();
-        newCommands.add(childCommand);
-        this.childrenCommands.put(argIndex, new ImmutablePair<>(newCommands, executor));
-        this.childrenCommandsPermissions.put(argIndex, childCommand, List.of(permissions));
+        this.childrenCommands.put(argIndex, childCommand, executor);
+        this.childrenCommandsPermissions.put(argIndex, childCommand, permissions != null ? Set.of(permissions) : new HashSet<>());
     }
 
     public void setChildCommandPermissions(final int argIndex, @NotNull final String childCommand, @Nullable final String ... permissions)
     {
-        this.childrenCommandsPermissions.put(argIndex, childCommand, List.of(permissions));
+        this.childrenCommandsPermissions.put(argIndex, childCommand, permissions != null ? Set.of(permissions) : new HashSet<>());
     }
 
-    public void setChildrenCommands(@NotNull final HashMap<Integer, Pair<List<String>, BiFunction<CommandSender, String[], Boolean>>> childrenCommands)
+    public void setChildrenCommands(@NotNull final Table<Integer, String, BiFunction<CommandSender, String[], Boolean>> childrenCommands)
     {
         this.childrenCommands = childrenCommands;
     }
 
-    public void setChildrenCommandsPermissions(@NotNull final Table<Integer, String, List<String>> childrenCommandsPermissions)
+    public void setChildrenCommandsPermissions(@NotNull final Table<Integer, String, Set<String>> childrenCommandsPermissions)
     {
         this.childrenCommandsPermissions = childrenCommandsPermissions;
     }
@@ -85,22 +72,28 @@ public class Command {
         int argIndex = 0;
         for (String arg : args)
         {
-            if (childrenCommands.containsKey(argIndex))
+            if (!childrenCommands.containsRow(argIndex))
             {
-                for (String command : childrenCommands.get(argIndex).getKey())
+                argIndex++;
+                continue;
+            }
+
+            for (String command : childrenCommands.columnKeySet())
+            {
+                if (!childrenCommands.contains(argIndex, command))
+                    continue;
+
+                if (childrenCommandsPermissions.contains(argIndex, command))
                 {
-                    if (childrenCommandsPermissions.contains(argIndex, command))
+                    for (String permission : childrenCommandsPermissions.get(argIndex, command))
                     {
-                        for (String permission : childrenCommandsPermissions.get(argIndex, command))
-                        {
-                            if (sender.hasPermission(permission))
-                                result.add(command);
-                        }
+                        if (sender.hasPermission(permission))
+                            result.add(command);
                     }
-                    else
-                    {
-                        result.add(command);
-                    }
+                }
+                else
+                {
+                    result.add(command);
                 }
             }
             argIndex++;
@@ -128,33 +121,38 @@ public class Command {
     {
         if (parentCommand != null)
         {
-            if (parentCommandPermission != null)
+            if (!parentCommandPermissions.isEmpty())
             {
-                if (sender.hasPermission(parentCommandPermission))
-                    return parentCommand.apply(sender);
+                for (String permission : parentCommandPermissions)
+                {
+                    if (sender.hasPermission(permission))
+                        return parentCommand.apply(sender);
+                }
             }
-            return parentCommand.apply(sender);
+            else
+                return parentCommand.apply(sender);
         }
         return false;
     }
 
     public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String args[], final int argIndex, @NotNull final String arg)
     {
-        if (childrenCommands.containsKey(argIndex) && childrenCommands.get(argIndex).getValue() != null)
+        if (!childrenCommands.contains(argIndex, arg))
+            return false;
+        if (childrenCommands.get(argIndex, arg) == null)
+            return false;
+
+        if (!childrenCommandsPermissions.get(argIndex, arg).isEmpty())
         {
-            if (childrenCommands.get(argIndex).getKey().contains(arg))
+            for (String permission : childrenCommandsPermissions.get(argIndex, arg))
             {
-                if (childrenCommandsPermissions.contains(argIndex, arg))
-                {
-                    for (String permission : childrenCommandsPermissions.get(argIndex, arg))
-                    {
-                        if (sender.hasPermission(permission))
-                            return childrenCommands.get(argIndex).getValue().apply(sender, args);
-                    }
-                }
-                return childrenCommands.get(argIndex).getValue().apply(sender, args);
+                if (sender.hasPermission(permission))
+                    return childrenCommands.get(argIndex, arg).apply(sender, args);
             }
         }
+        else
+            return childrenCommands.get(argIndex, arg).apply(sender, args);
+
         return false;
     }
 
