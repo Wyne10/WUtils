@@ -36,12 +36,12 @@ public class Command {
         this.parentCommandPermissions = permissions != null ? Set.of(permissions) : new HashSet<>();
     }
 
-    public void setChildCommand(final int argIndex, @Nullable final String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
+    public void setChildCommand(final int argIndex, @NotNull final String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
     {
-        this.childrenCommands.put(argIndex, childCommand != null ? childCommand : "", executor != null ? executor : (t, u) -> false);
-        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommandsPermissions.get(argIndex, childCommand != null ? childCommand : "") : new HashSet<>();
+        this.childrenCommands.put(argIndex, childCommand, executor != null ? executor : (t, u) -> false);
+        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
         newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-        this.childrenCommandsPermissions.put(argIndex, childCommand != null ? childCommand : "", newPermissions);
+        this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
     }
 
     public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
@@ -55,12 +55,12 @@ public class Command {
         }
     }
 
-    public void setChildCommand(final int argIndex, @Nullable final String childCommand, @Nullable final String ... permissions)
+    public void setChildCommand(final int argIndex, @NotNull final String childCommand, @Nullable final String ... permissions)
     {
-        this.childrenCommands.put(argIndex, childCommand != null ? childCommand : "", childrenCommands.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommands.get(argIndex, childCommand != null ? childCommand : "") : (t, u) -> false);
-        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommandsPermissions.get(argIndex, childCommand != null ? childCommand : "") : new HashSet<>();
+        this.childrenCommands.put(argIndex, childCommand, childrenCommands.contains(argIndex, childCommand) ? childrenCommands.get(argIndex, childCommand) : (t, u) -> false);
+        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
         newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-        this.childrenCommandsPermissions.put(argIndex, childCommand != null ? childCommand : "", newPermissions);
+        this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
     }
 
     public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final String ... permissions)
@@ -101,8 +101,6 @@ public class Command {
 
         for (String command : childrenCommands.columnKeySet())
         {
-            if (command.isBlank())
-                continue;
             if (!childrenCommands.contains(argIndex, command))
                 continue;
 
@@ -126,12 +124,11 @@ public class Command {
     public boolean executeCommand(@NotNull final CommandSender sender, @NotNull final String[] args)
     {
         if (args.length == 0)
-            return executeParentCommand(sender);
+            executeParentCommand(sender);
 
-        if (!childrenCommands.contains(args.length - 1, args[args.length - 1]))
-            return executeChildCommand(sender, args, args.length - 1, "");
-        else
-            return executeChildCommand(sender, args, args.length - 1, args[args.length - 1]);
+        executeChildCommand(sender, args, args.length - 1, args[args.length - 1]);
+
+        return false;
     }
 
     public boolean executeParentCommand(@NotNull final CommandSender sender)
@@ -170,4 +167,5 @@ public class Command {
 
         return false;
     }
+
 }
