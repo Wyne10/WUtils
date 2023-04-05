@@ -65,26 +65,6 @@ public class Command {
         this.childrenCommandsPermissions = childrenCommandsPermissions;
     }
 
-    public boolean matchPattern(@NotNull final String pattern, @NotNull final String[] match)
-    {
-        String[] splitPattern;
-
-        if ((splitPattern = pattern.split("\\s+")).length != match.length)
-            return false;
-
-        int i = 0;
-        for (String key : splitPattern)
-        {
-            if (key.equalsIgnoreCase("<any>"))
-                continue;
-            if (!key.equalsIgnoreCase(match[i]))
-                return false;
-            i++;
-        }
-
-        return true;
-    }
-
     public String arrayToPattern(@NotNull final String[] arr)
     {
         Set<String> keys = new HashSet<>();
@@ -104,17 +84,6 @@ public class Command {
         }
 
         return result.toString().strip();
-    }
-
-    public boolean hasKeyword(@NotNull final String keyword)
-    {
-        for (String pattern : childrenCommands.keySet())
-        {
-            if (Arrays.stream(pattern.split("\\s+")).anyMatch(s -> s.equalsIgnoreCase(keyword)))
-                return true;
-        }
-
-        return false;
     }
 
     @NotNull
