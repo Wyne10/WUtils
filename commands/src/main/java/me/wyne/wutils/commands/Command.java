@@ -1,5 +1,6 @@
 package me.wyne.wutils.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,7 @@ public class Command {
 
     private Map<String, BiFunction<CommandSender, String[], Boolean>> childrenCommands = new HashMap<>();
     private Map<String, Set<String>> childrenCommandsPermissions = new HashMap<>();
+    private Map<String, Set<String>> childrenCommandsTabComplete = new HashMap<>();
 
     public void setParentCommand(@Nullable final Function<CommandSender, Boolean> parentCommand)
     {
@@ -55,6 +57,11 @@ public class Command {
         this.childrenCommandsPermissions.put(childCommandPattern, permissions != null ? Set.of(permissions) : new HashSet<>());
     }
 
+    public void setChildCommandTabComplete(@NotNull final String childCommandPattern, @NotNull final Set<String> tabComplete)
+    {
+        this.childrenCommandsTabComplete.put(childCommandPattern, tabComplete);
+    }
+
     public void setChildrenCommands(@NotNull final HashMap<String, BiFunction<CommandSender, String[], Boolean>> childrenCommands)
     {
         this.childrenCommands = childrenCommands;
@@ -63,6 +70,11 @@ public class Command {
     public void setChildrenCommandsPermissions(@NotNull final HashMap<String, Set<String>> childrenCommandsPermissions)
     {
         this.childrenCommandsPermissions = childrenCommandsPermissions;
+    }
+
+    public void setChildrenCommandsTabComplete(@NotNull final HashMap<String, Set<String>> childrenCommandsTabComplete)
+    {
+        this.childrenCommandsTabComplete = childrenCommandsTabComplete;
     }
 
     public String arrayToPattern(@NotNull final String[] arr)
@@ -86,6 +98,49 @@ public class Command {
         return result.toString().strip();
     }
 
+    public boolean matchPattern(@NotNull final String pattern, @NotNull final String match)
+    {
+        String[] splitPattern = pattern.split("\\s+");
+        String[] splitMatch = match.split("\\s+");
+
+        int i = -1;
+        for (String key : splitPattern)
+        {
+            i++;
+            if (splitMatch.length == i)
+                return false;
+            if (key.equalsIgnoreCase("<any>") || key.equalsIgnoreCase("<tab>"))
+                continue;
+            if (!key.equalsIgnoreCase(splitMatch[i]))
+                return false;
+        }
+
+        return true;
+    }
+
+    public boolean containsPattern(@NotNull final String pattern, @NotNull final Set<String> contains)
+    {
+        for (String matchPattern : contains)
+        {
+            if (matchPattern(pattern, matchPattern))
+                return true;
+        }
+
+        return false;
+    }
+
+    @Nullable
+    public <R> R getByPattern(@NotNull final String pattern, @NotNull final Map<String, R> data)
+    {
+        for (String matchPattern : data.keySet())
+        {
+            if (matchPattern(pattern, matchPattern))
+                return data.get(matchPattern);
+        }
+
+        return null;
+    }
+
     @NotNull
     public List<String> tabComplete(@NotNull final CommandSender sender, @NotNull final String[] args)
     {
@@ -93,6 +148,30 @@ public class Command {
 
         if (args.length == 0)
             return result;
+
+        for (String complete : childrenCommandsTabComplete.keySet())
+        {
+            String[] splitComplete;
+            if ((splitComplete = complete.split("\\s+")).length < args.length)
+                continue;
+
+            if (containsPattern(complete, childrenCommandsPermissions.keySet()))
+            {
+                for (String permission : getByPattern(complete, childrenCommandsPermissions))
+                {
+                    if (sender.hasPermission(permission))
+                    {
+                        if (splitComplete[args.length - 1].equalsIgnoreCase("<tab>"))
+                            result.addAll(childrenCommandsTabComplete.get(complete));
+                    }
+                }
+            }
+            else
+            {
+                if (splitComplete[args.length - 1].equalsIgnoreCase("<tab>"))
+                    result.addAll(childrenCommandsTabComplete.get(complete));
+            }
+        }
 
         for (String pattern : childrenCommands.keySet())
         {
