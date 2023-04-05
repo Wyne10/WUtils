@@ -75,7 +75,7 @@ public class Command {
         int i = 0;
         for (String key : splitPattern)
         {
-            if (key.equalsIgnoreCase("null"))
+            if (key.equalsIgnoreCase("<any>"))
                 continue;
             if (!key.equalsIgnoreCase(match[i]))
                 return false;
@@ -98,12 +98,12 @@ public class Command {
         for (String str : arr)
         {
             if (keys.contains(str))
-                result.append(" ").append(str).append(" ");
+                result.append(" ").append(str);
             else
-                result.append(" ").append("null").append(" ");
+                result.append(" ").append("<any>");
         }
 
-        return result.toString();
+        return result.toString().strip();
     }
 
     public boolean hasKeyword(@NotNull final String keyword)
@@ -127,7 +127,10 @@ public class Command {
 
         for (String pattern : childrenCommands.keySet())
         {
-            if (pattern.split("\\s+").length < args.length)
+            String[] splitPattern;
+            if ((splitPattern = pattern.split("\\s+")).length < args.length)
+                continue;
+            if (splitPattern[args.length - 1].equalsIgnoreCase("<any>"))
                 continue;
 
             if (childrenCommandsPermissions.containsKey(pattern))
@@ -135,12 +138,12 @@ public class Command {
                 for (String permission : childrenCommandsPermissions.get(pattern))
                 {
                     if (sender.hasPermission(permission))
-                        result.add(pattern.split("\\s+")[args.length - 1]);
+                        result.add(splitPattern[args.length - 1]);
                 }
             }
             else
             {
-                result.add(pattern.split("\\s+")[args.length - 1]);
+                result.add(splitPattern[args.length - 1]);
             }
         }
 
