@@ -1,7 +1,5 @@
 package me.wyne.wutils.commands;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +13,8 @@ public class Command {
     private Function<CommandSender, Boolean> parentCommand;
     private Set<String> parentCommandPermissions = new HashSet<>();
 
-    private Table<Integer, String, BiFunction<CommandSender, String[], Boolean>> childrenCommands = HashBasedTable.create();
-    private Table<Integer, String, Set<String>> childrenCommandsPermissions = HashBasedTable.create();
+    private Map<String, BiFunction<CommandSender, String[], Boolean>> childrenCommands = new HashMap<>();
+    private Map<String, Set<String>> childrenCommandsPermissions = new HashMap<>();
 
     public void setParentCommand(@Nullable final Function<CommandSender, Boolean> parentCommand)
     {
@@ -36,57 +34,87 @@ public class Command {
         this.parentCommandPermissions = permissions != null ? Set.of(permissions) : new HashSet<>();
     }
 
-    public void setChildCommand(final int argIndex, @Nullable final String childCommand, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
+    public void setChildCommand(@NotNull final String childCommandPattern, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
     {
-        this.childrenCommands.put(argIndex, childCommand != null ? childCommand : "", executor != null ? executor : (t, u) -> false);
-        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommandsPermissions.get(argIndex, childCommand != null ? childCommand : "") : new HashSet<>();
+        this.childrenCommands.put(childCommandPattern, executor != null ? executor : (t, u) -> false);
+        Set<String> newPermissions = childrenCommandsPermissions.containsKey(childCommandPattern) ? childrenCommandsPermissions.get(childCommandPattern) : new HashSet<>();
         newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-        this.childrenCommandsPermissions.put(argIndex, childCommand != null ? childCommand : "", newPermissions);
+        this.childrenCommandsPermissions.put(childCommandPattern, newPermissions);
     }
 
-    public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final BiFunction<CommandSender, String[], Boolean> executor, @Nullable final String ... permissions)
+    public void setChildCommand(@NotNull final String childCommandPattern, @Nullable final String ... permissions)
     {
-        for (String childCommand : childCommands)
-        {
-            this.childrenCommands.put(argIndex, childCommand, executor != null ? executor : (t, u) -> false);
-            Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
-            newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-            this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
-        }
-    }
-
-    public void setChildCommand(final int argIndex, @Nullable final String childCommand, @Nullable final String ... permissions)
-    {
-        this.childrenCommands.put(argIndex, childCommand != null ? childCommand : "", childrenCommands.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommands.get(argIndex, childCommand != null ? childCommand : "") : (t, u) -> false);
-        Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand != null ? childCommand : "") ? childrenCommandsPermissions.get(argIndex, childCommand != null ? childCommand : "") : new HashSet<>();
+        this.childrenCommands.put(childCommandPattern, childrenCommands.containsKey(childCommandPattern) ? childrenCommands.get(childCommandPattern) : (t, u) -> false);
+        Set<String> newPermissions = childrenCommandsPermissions.containsKey(childCommandPattern) ? childrenCommandsPermissions.get(childCommandPattern) : new HashSet<>();
         newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-        this.childrenCommandsPermissions.put(argIndex, childCommand != null ? childCommand : "", newPermissions);
+        this.childrenCommandsPermissions.put(childCommandPattern, newPermissions);
     }
 
-    public void setChildCommands(final int argIndex, @NotNull final Set<String> childCommands, @Nullable final String ... permissions)
+    public void setChildCommandPermissions(@NotNull final String childCommandPattern, @Nullable final String ... permissions)
     {
-        for (String childCommand : childCommands)
-        {
-            this.childrenCommands.put(argIndex, childCommand, childrenCommands.contains(argIndex, childCommand) ? childrenCommands.get(argIndex, childCommand) : (t, u) -> false);
-            Set<String> newPermissions = childrenCommandsPermissions.contains(argIndex, childCommand) ? childrenCommandsPermissions.get(argIndex, childCommand) : new HashSet<>();
-            newPermissions.addAll(permissions != null ? Set.of(permissions) : new HashSet<>());
-            this.childrenCommandsPermissions.put(argIndex, childCommand, newPermissions);
-        }
+        this.childrenCommandsPermissions.put(childCommandPattern, permissions != null ? Set.of(permissions) : new HashSet<>());
     }
 
-    public void setChildCommandPermissions(final int argIndex, @NotNull final String childCommand, @Nullable final String ... permissions)
-    {
-        this.childrenCommandsPermissions.put(argIndex, childCommand, permissions != null ? Set.of(permissions) : new HashSet<>());
-    }
-
-    public void setChildrenCommands(@NotNull final Table<Integer, String, BiFunction<CommandSender, String[], Boolean>> childrenCommands)
+    public void setChildrenCommands(@NotNull final HashMap<String, BiFunction<CommandSender, String[], Boolean>> childrenCommands)
     {
         this.childrenCommands = childrenCommands;
     }
 
-    public void setChildrenCommandsPermissions(@NotNull final Table<Integer, String, Set<String>> childrenCommandsPermissions)
+    public void setChildrenCommandsPermissions(@NotNull final HashMap<String, Set<String>> childrenCommandsPermissions)
     {
         this.childrenCommandsPermissions = childrenCommandsPermissions;
+    }
+
+    public boolean matchPattern(@NotNull final String pattern, @NotNull final String[] match)
+    {
+        String[] splitPattern;
+
+        if ((splitPattern = pattern.split("\\s+")).length != match.length)
+            return false;
+
+        int i = 0;
+        for (String key : splitPattern)
+        {
+            if (key.equalsIgnoreCase("null"))
+                continue;
+            if (!key.equalsIgnoreCase(match[i]))
+                return false;
+            i++;
+        }
+
+        return true;
+    }
+
+    public String arrayToPattern(@NotNull final String[] arr)
+    {
+        Set<String> keys = new HashSet<>();
+        StringBuilder result = new StringBuilder();
+
+        for (String pattern : childrenCommands.keySet())
+        {
+            keys.addAll(List.of(pattern.split("\\s+")));
+        }
+
+        for (String str : arr)
+        {
+            if (keys.contains(str))
+                result.append(" ").append(str).append(" ");
+            else
+                result.append(" ").append("null").append(" ");
+        }
+
+        return result.toString();
+    }
+
+    public boolean hasKeyword(@NotNull final String keyword)
+    {
+        for (String pattern : childrenCommands.keySet())
+        {
+            if (Arrays.stream(pattern.split("\\s+")).anyMatch(s -> s.equalsIgnoreCase(keyword)))
+                return true;
+        }
+
+        return false;
     }
 
     @NotNull
@@ -94,29 +122,25 @@ public class Command {
     {
         List<String> result = new ArrayList<>();
 
-        int argIndex = args.length - 1;
-
-        if (!childrenCommands.containsRow(argIndex))
+        if (args.length == 0)
             return result;
 
-        for (String command : childrenCommands.columnKeySet())
+        for (String pattern : childrenCommands.keySet())
         {
-            if (command.isBlank())
-                continue;
-            if (!childrenCommands.contains(argIndex, command))
+            if (pattern.split("\\s+").length < args.length)
                 continue;
 
-            if (childrenCommandsPermissions.contains(argIndex, command))
+            if (childrenCommandsPermissions.containsKey(pattern))
             {
-                for (String permission : childrenCommandsPermissions.get(argIndex, command))
+                for (String permission : childrenCommandsPermissions.get(pattern))
                 {
                     if (sender.hasPermission(permission))
-                        result.add(command.replace("+", ""));
+                        result.add(pattern.split("\\s+")[args.length - 1]);
                 }
             }
             else
             {
-                result.add(command.replace("+", ""));
+                result.add(pattern.split("\\s+")[args.length - 1]);
             }
         }
 
@@ -128,21 +152,7 @@ public class Command {
         if (args.length == 0)
             return executeParentCommand(sender);
 
-        if (args.length >= 2)
-        {
-            if (!childrenCommands.contains(args.length - 1, args[args.length - 1]))
-            {
-                if (childrenCommands.contains(args.length - 2, args[args.length - 2] + "+"))
-                {
-                    return executeChildCommand(sender, args, args.length - 2, args[args.length - 2] + "+");
-                }
-            }
-        }
-
-        if (!childrenCommands.contains(args.length - 1, args[args.length - 1]))
-            return executeChildCommand(sender, args, args.length - 1, "");
-        else
-            return executeChildCommand(sender, args, args.length - 1, args[args.length - 1]);
+        return executeChildCommand(sender, args);
     }
 
     public boolean executeParentCommand(@NotNull final CommandSender sender)
@@ -163,21 +173,23 @@ public class Command {
         return false;
     }
 
-    public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String args[], final int argIndex, @NotNull final String arg)
+    public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String args[])
     {
-        if (!childrenCommands.contains(argIndex, arg))
+        String pattern = arrayToPattern(args);
+
+        if (!childrenCommands.containsKey(pattern))
             return false;
 
-        if (!childrenCommandsPermissions.get(argIndex, arg).isEmpty())
+        if (childrenCommandsPermissions.containsKey(pattern))
         {
-            for (String permission : childrenCommandsPermissions.get(argIndex, arg))
+            for (String permission : childrenCommandsPermissions.get(pattern))
             {
                 if (sender.hasPermission(permission))
-                    return childrenCommands.get(argIndex, arg).apply(sender, args);
+                    return childrenCommands.get(pattern).apply(sender, args);
             }
         }
         else
-            return childrenCommands.get(argIndex, arg).apply(sender, args);
+            return childrenCommands.get(pattern).apply(sender, args);
 
         return false;
     }
