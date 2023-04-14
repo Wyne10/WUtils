@@ -76,7 +76,7 @@ public class Command {
         this.childrenCommandsTabComplete = childrenCommandsTabComplete;
     }
 
-    public String arrayToPattern(@NotNull final String[] arr)
+    public String argsToPattern(@NotNull final String[] args)
     {
         Set<String> keys = new HashSet<>();
         StringBuilder result = new StringBuilder();
@@ -86,10 +86,10 @@ public class Command {
             keys.addAll(List.of(pattern.split("\\s+")));
         }
 
-        for (String str : arr)
+        for (String arg : args)
         {
-            if (keys.contains(str))
-                result.append(" ").append(str);
+            if (keys.contains(arg))
+                result.append(" ").append(arg);
             else
                 result.append(" ").append("<any>");
         }
@@ -102,12 +102,13 @@ public class Command {
         String[] splitPattern = pattern.split("\\s+");
         String[] splitMatch = match.split("\\s+");
 
+        if (splitPattern.length != splitMatch.length)
+            return false;
+
         int i = -1;
         for (String key : splitPattern)
         {
             i++;
-            if (splitMatch.length == i)
-                return false;
             if (key.equalsIgnoreCase("<any>") || key.equalsIgnoreCase("<tab>"))
                 continue;
             if (!key.equalsIgnoreCase(splitMatch[i]))
@@ -153,6 +154,8 @@ public class Command {
             String[] splitComplete;
             if ((splitComplete = complete.split("\\s+")).length < args.length)
                 continue;
+            if (!matchPattern(complete, argsToPattern(args)))
+                continue;
 
             if (containsPattern(complete, childrenCommandsPermissions.keySet()))
             {
@@ -189,9 +192,7 @@ public class Command {
                 }
             }
             else
-            {
                 result.add(splitPattern[args.length - 1]);
-            }
         }
 
         return result;
@@ -223,9 +224,9 @@ public class Command {
         return false;
     }
 
-    public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String args[])
+    public boolean executeChildCommand(@NotNull final CommandSender sender, @NotNull final String[] args)
     {
-        String pattern = arrayToPattern(args);
+        String pattern = argsToPattern(args);
 
         if (!childrenCommands.containsKey(pattern))
             return false;
