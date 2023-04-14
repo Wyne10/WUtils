@@ -1,6 +1,6 @@
 package me.wyne.wutils.log;
 
-public class LogConfigInstance implements LogConfig {
+public final class LogConfigInstance implements LogConfig {
 
     private boolean logInfo = false;
     private boolean logWarn = false;

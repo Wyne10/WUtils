@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class TabComplete {
+public final class TabComplete {
 
     @NotNull
     public static Set<String> collectionTabComplete(@NotNull final Collection<String> collection, @NotNull final String arg)
