@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  * Inherit to automatically register config {@link Object} or use static {@link #registerConfigObject(Object)} method.
+ * <br>Apply {@link ConfigField} to field to tie it up with value from config.
  */
 public class Config {
 
