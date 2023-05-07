@@ -15,4 +15,8 @@ public @interface Setting {
      * @return Setting set message
      */
     String setMessage() default "";
+    /**
+     * @return Reference {@link String} to get {@link Setting} by.
+     */
+    String reference() default "";
 }
