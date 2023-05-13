@@ -14,13 +14,13 @@ public class LogMessage {
     private Level level = Level.INFO;
     private final String message;
 
+    public LogMessage(@NotNull final String message)
+    {
+        this.message = message;
+    }
     public LogMessage(@NotNull final Level level, @NotNull final String message)
     {
         this.level = level;
-        this.message = message;
-    }
-    public LogMessage(@NotNull final String message)
-    {
         this.message = message;
     }
     LogMessage(@NotNull final Builder builder)
@@ -75,11 +75,6 @@ public class LogMessage {
         private String message;
 
         Builder() {}
-        Builder(@NotNull final Level level, @NotNull final String message)
-        {
-            this.level = level;
-            this.message = message;
-        }
         Builder(@NotNull final String message)
         {
             this.message = message;
@@ -88,6 +83,11 @@ public class LogMessage {
         {
             this.level = logMessage.level;
             this.message = logMessage.message;
+        }
+        Builder(@NotNull final Level level, @NotNull final String message)
+        {
+            this.level = level;
+            this.message = message;
         }
 
         @Contract("_ -> this")
