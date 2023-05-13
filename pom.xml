@@ -18,6 +18,7 @@
         <module>settings</module>
         <module>storage</module>
         <module>commands</module>
+        <module>chatMessages</module>
     </modules>
 
     <properties>
