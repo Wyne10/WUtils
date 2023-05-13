@@ -13,6 +13,11 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Used to log messages and save log files.
+ * <br>Before logging messages make sure to {@link #registerLogger(Logger)} and {@link #registerConfig(LogConfig)}.
+ * <br>If you want to save log files make sure to {@link #registerExecutor(Executor)} and {@link #registerLogDirectory(File)}.
+ */
 public final class Log {
 
     private static Logger logger = null;
