@@ -47,7 +47,7 @@ public class ChatMessage {
     }
     ChatMessage(@NotNull final Builder builder)
     {
-        this.message = builder.message;
+        this.message = MiniMessage.miniMessage().deserialize(builder.message);
         this.permissions = builder.permissions;
     }
 
@@ -151,49 +151,49 @@ public class ChatMessage {
     public static final class Builder
     {
         private Set<String> permissions = new HashSet<>();
-        private Component message;
+        private String message;
 
         Builder() {}
         Builder(@NotNull final String message)
         {
-            this.message = Component.text(message);
+            this.message = message;
         }
         Builder(@NotNull final Component message)
         {
-            this.message = message;
+            this.message = MiniMessage.miniMessage().serialize(message);
         }
         Builder(@NotNull final String message, String... permissions)
         {
-            this.message = Component.text(message);
+            this.message = message;
             this.permissions = permissions != null ? Set.of(permissions) : new HashSet<>();
         }
         Builder(@NotNull final String message, @NotNull Set<String> permissions)
         {
-            this.message = Component.text(message);
+            this.message = message;
             this.permissions = permissions;
         }
         Builder(@NotNull final Component message, String... permissions)
         {
-            this.message = message;
+            this.message = MiniMessage.miniMessage().serialize(message);;
             this.permissions = permissions != null ? Set.of(permissions) : new HashSet<>();
         }
         Builder(@NotNull final Component message, @NotNull Set<String> permissions)
         {
-            this.message = message;
+            this.message = MiniMessage.miniMessage().serialize(message);;
             this.permissions = permissions;
         }
 
         @Contract("_ -> this")
         public Builder setMessage(@NotNull final String message)
         {
-            this.message = Component.text(message);
+            this.message = message;
             return this;
         }
 
         @Contract("_ -> this")
         public Builder setMessage(@NotNull final Component message)
         {
-            this.message = message;
+            this.message = MiniMessage.miniMessage().serialize(message);
             return this;
         }
 
@@ -212,7 +212,7 @@ public class ChatMessage {
         public Builder stripTags()
         {
             try {
-                message = Component.text(MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(message)));
+                message = MiniMessage.miniMessage().stripTags(message);
             } catch (NoClassDefFoundError e) {
                 if (!Log.error("Trying to use stripTags in ChatMessage but net.kyori.adventure.text.minimessage is not included"))
                     Bukkit.getLogger().severe("Trying to use stripTags in ChatMessage but net.kyori.adventure.text.minimessage is not included");
@@ -224,37 +224,17 @@ public class ChatMessage {
         }
 
         /**
-         * Apply {@link MiniMessage} tags.
-         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
-         */
-        @Contract("-> this")
-        public Builder applyTags()
-        {
-            try {
-                message = MiniMessage.miniMessage().deserialize(MiniMessage.miniMessage().serialize(message));
-            } catch (NoClassDefFoundError e) {
-                if (!Log.error("Trying to use applyTags in ChatMessage but net.kyori.adventure.text.minimessage is not included"))
-                    Bukkit.getLogger().severe("Trying to use applyTags in ChatMessage but net.kyori.adventure.text.minimessage is not included");
-                if (!Log.error(e.getMessage()))
-                    Bukkit.getLogger().severe(e.getMessage());
-                return this;
-            }
-            return this;
-        }
-
-        /**
          * Set {@link PlaceholderAPI} placeholders.
-         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          * <br>Requires {@link me.clip.placeholderapi} dependency.
          */
         @Contract("_ -> this")
         public Builder setPlaceholders(@NotNull final OfflinePlayer player)
         {
             try {
-                message = MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(player, MiniMessage.miniMessage().serialize(message)));
+                message = PlaceholderAPI.setPlaceholders(player, message);
             } catch (NoClassDefFoundError e) {
-                if (!Log.error("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi or net.kyori.adventure.text.minimessage is not included"))
-                    Bukkit.getLogger().severe("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi or net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi is not included"))
+                    Bukkit.getLogger().severe("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi is not included");
                 if (!Log.error(e.getMessage()))
                     Bukkit.getLogger().severe(e.getMessage());
                 return this;
@@ -265,7 +245,7 @@ public class ChatMessage {
         @Contract("_ -> this")
         public Builder modifyMessage(@NotNull final Function<Component, Component> modification)
         {
-            message = modification.apply(message);
+            message = MiniMessage.miniMessage().serialize(modification.apply(MiniMessage.miniMessage().deserialize(message)));
             return this;
         }
 
