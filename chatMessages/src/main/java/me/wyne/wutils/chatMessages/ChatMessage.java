@@ -17,6 +17,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
+/**
+ * THIS MODULE IS STILL INCOMPLETE, WORK IN PROGRESS
+ */
 public class ChatMessage {
 
     private Set<String> permissions = new HashSet<>();
