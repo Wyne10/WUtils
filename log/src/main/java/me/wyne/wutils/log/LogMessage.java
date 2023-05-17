@@ -1,12 +1,14 @@
 package me.wyne.wutils.log;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
 import java.util.logging.Level;
 
 public class LogMessage {
@@ -106,41 +108,40 @@ public class LogMessage {
 
         /**
          * Strip {@link MiniMessage} tags.
-         * Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder stripTags()
         {
             try {
-                Class.forName("net.kyori.adventure.text.minimessage.MiniMessage", false, getClass().getClassLoader());
-            } catch (ClassNotFoundException e) {
+                message = MiniMessage.miniMessage().stripTags(message);
+            } catch (NoClassDefFoundError e) {
                 if (!Log.error("Trying to use stripTags in LogMessage but net.kyori.adventure.text.minimessage is not included"))
                     Bukkit.getLogger().severe("Trying to use stripTags in LogMessage but net.kyori.adventure.text.minimessage is not included");
                 if (!Log.error(e.getMessage()))
                     Bukkit.getLogger().severe(e.getMessage());
                 return this;
             }
-            message = MiniMessage.miniMessage().stripTags(message);
+
             return this;
         }
 
         /**
          * Set {@link PlaceholderAPI} placeholders.
-         * Requires {@link me.clip.placeholderapi} dependency.
+         * <br>Requires {@link me.clip.placeholderapi} dependency.
          */
         @Contract("_ -> this")
         public Builder setPlaceholders(@NotNull final OfflinePlayer player)
         {
             try {
-                Class.forName("me.clip.placeholderapi.PlaceholderAPI", false, getClass().getClassLoader());
-            } catch (ClassNotFoundException e) {
+                message = PlaceholderAPI.setPlaceholders(player, message);
+            } catch (NoClassDefFoundError e) {
                 if (!Log.error("Trying to use setPlaceholders in LogMessage but me.clip.placeholderapi is not included"))
                     Bukkit.getLogger().severe("Trying to use setPlaceholders in LogMessage but me.clip.placeholderapi is not included");
                 if (!Log.error(e.getMessage()))
                     Bukkit.getLogger().severe(e.getMessage());
                 return this;
             }
-            message = PlaceholderAPI.setPlaceholders(player, message);
             return this;
         }
 
@@ -161,6 +162,13 @@ public class LogMessage {
         public Builder replace(@NotNull final String replace, @NotNull final String replacement)
         {
             message = message.replace(replace, replacement);
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder modifyMessage(@NotNull final Function<String, String> modification)
+        {
+            message = modification.apply(message);
             return this;
         }
 
