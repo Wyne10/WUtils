@@ -79,10 +79,13 @@ public class ChatMessage {
         {
             for (String permission : permissions)
             {
-                if (!player.hasPermission(permission))
+                if (player.hasPermission(permission))
+                {
+                    player.sendMessage(message);
                     break;
+                }
             }
-            player.sendMessage(message);
+
         }
     }
 
