@@ -11,7 +11,7 @@
     </parent>
 
     <version>1.0.0</version>
-    <artifactId>chatMessages</artifactId>
+    <artifactId>WUtils-chatMessages</artifactId>
     <packaging>jar</packaging>
 
     <repositories>
