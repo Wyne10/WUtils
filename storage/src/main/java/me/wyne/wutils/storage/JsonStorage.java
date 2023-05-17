@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * <b>Requires {@link com.google.gson} dependency.
+ * Requires {@link com.google.gson} dependency.
  */
 public abstract class JsonStorage implements Storage {
 
