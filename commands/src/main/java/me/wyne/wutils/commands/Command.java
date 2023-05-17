@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * THIS MODULE IS STILL INCOMPLETE, WORK IN PROGRESS
+ */
 public class Command {
 
     private Function<CommandSender, Boolean> parentCommand;
