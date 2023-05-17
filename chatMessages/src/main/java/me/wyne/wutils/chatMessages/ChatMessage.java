@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class ChatMessage {
 
     private Set<String> permissions = new HashSet<>();
-    private Component message;
+    private final Component message;
 
     public ChatMessage(@NotNull final String message, String... permissions)
     {
@@ -199,31 +199,59 @@ public class ChatMessage {
 
         /**
          * Strip {@link MiniMessage} tags.
+         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder stripTags()
         {
-            message = Component.text(MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(message)));
+            try {
+                message = Component.text(MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(message)));
+            } catch (NoClassDefFoundError e) {
+                if (!Log.error("Trying to use stripTags in ChatMessage but net.kyori.adventure.text.minimessage is not included"))
+                    Bukkit.getLogger().severe("Trying to use stripTags in ChatMessage but net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error(e.getMessage()))
+                    Bukkit.getLogger().severe(e.getMessage());
+                return this;
+            }
             return this;
         }
 
         /**
          * Apply {@link MiniMessage} tags.
+         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder applyTags()
         {
-            message = MiniMessage.miniMessage().deserialize(MiniMessage.miniMessage().serialize(message));
+            try {
+                message = MiniMessage.miniMessage().deserialize(MiniMessage.miniMessage().serialize(message));
+            } catch (NoClassDefFoundError e) {
+                if (!Log.error("Trying to use applyTags in ChatMessage but net.kyori.adventure.text.minimessage is not included"))
+                    Bukkit.getLogger().severe("Trying to use applyTags in ChatMessage but net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error(e.getMessage()))
+                    Bukkit.getLogger().severe(e.getMessage());
+                return this;
+            }
             return this;
         }
 
         /**
          * Set {@link PlaceholderAPI} placeholders.
+         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br>Requires {@link me.clip.placeholderapi} dependency.
          */
         @Contract("_ -> this")
         public Builder setPlaceholders(@NotNull final OfflinePlayer player)
         {
-            message = MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(player, MiniMessage.miniMessage().serialize(message)));
+            try {
+                message = MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(player, MiniMessage.miniMessage().serialize(message)));
+            } catch (NoClassDefFoundError e) {
+                if (!Log.error("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi or net.kyori.adventure.text.minimessage is not included"))
+                    Bukkit.getLogger().severe("Trying to use setPlaceholders in ChatMessage but me.clip.placeholderapi or net.kyori.adventure.text.minimessage is not included");
+                if (!Log.error(e.getMessage()))
+                    Bukkit.getLogger().severe(e.getMessage());
+                return this;
+            }
             return this;
         }
 
