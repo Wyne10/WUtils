@@ -108,7 +108,7 @@ public class LogMessage {
 
         /**
          * Strip {@link MiniMessage} tags.
-         * <br><b>Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder stripTags()
@@ -128,7 +128,7 @@ public class LogMessage {
 
         /**
          * Set {@link PlaceholderAPI} placeholders.
-         * <br><b>Requires {@link me.clip.placeholderapi} dependency.
+         * <br>Requires {@link me.clip.placeholderapi} dependency.
          */
         @Contract("_ -> this")
         public Builder setPlaceholders(@NotNull final OfflinePlayer player)
