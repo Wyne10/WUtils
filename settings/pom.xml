@@ -18,7 +18,7 @@
         <dependency>
             <groupId>me.wyne</groupId>
             <artifactId>WUtils-log</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>

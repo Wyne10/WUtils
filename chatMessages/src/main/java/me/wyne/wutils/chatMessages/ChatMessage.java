@@ -200,7 +200,7 @@ public class ChatMessage {
 
         /**
          * Strip {@link MiniMessage} tags.
-         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br><b>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder stripTags()
@@ -219,7 +219,7 @@ public class ChatMessage {
 
         /**
          * Apply {@link MiniMessage} tags.
-         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br><b>Requires {@link net.kyori.adventure.text.minimessage} dependency.
          */
         @Contract("-> this")
         public Builder applyTags()
@@ -238,8 +238,8 @@ public class ChatMessage {
 
         /**
          * Set {@link PlaceholderAPI} placeholders.
-         * <br>Requires {@link net.kyori.adventure.text.minimessage} dependency.
-         * <br>Requires {@link me.clip.placeholderapi} dependency.
+         * <br><b>Requires {@link net.kyori.adventure.text.minimessage} dependency.
+         * <br><b>Requires {@link me.clip.placeholderapi} dependency.
          */
         @Contract("_ -> this")
         public Builder setPlaceholders(@NotNull final OfflinePlayer player)
