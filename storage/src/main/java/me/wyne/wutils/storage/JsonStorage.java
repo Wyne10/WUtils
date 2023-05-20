@@ -2,6 +2,7 @@ package me.wyne.wutils.storage;
 
 import com.google.gson.*;
 import me.wyne.wutils.log.Log;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,6 +60,7 @@ public abstract class JsonStorage implements Storage {
             {
                 Log.error("Произошла ошибка при создании папки '" + folderPath.getName() + "'");
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
                 return;
             }
             Log.info("Папка '" + folderPath.getName() + "' создана");
@@ -80,6 +82,7 @@ public abstract class JsonStorage implements Storage {
             } catch (Exception e) {
                 Log.error("Произошла ошибка при создании файла '" + storageFile.getName() + "'");
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
                 return;
             }
             Log.info("Файл '" + storageFile.getName() + "' создан");
@@ -98,6 +101,7 @@ public abstract class JsonStorage implements Storage {
             {
                 Log.error("Произошла ошибка при загрузке данных из файла '" + storageFile.getName() + "'");
                 Log.error(exception.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(exception));
             }
         });
     }
@@ -174,6 +178,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Значение: " + value);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
     }
@@ -219,6 +224,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Значение: " + value);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
@@ -268,6 +274,7 @@ public abstract class JsonStorage implements Storage {
                 else
                     Log.error("Путь: " + mapKey);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
     }
@@ -322,6 +329,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Ключ: " + key);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
@@ -378,6 +386,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Значение: " + value);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
@@ -435,6 +444,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Значение: " + mapKey);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
@@ -475,6 +485,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Ключ: " + key);
                 Log.error("Путь: " + path);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
@@ -521,6 +532,7 @@ public abstract class JsonStorage implements Storage {
                 Log.error("Произошла ошибка при очистке карты из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
                 Log.error(e.getMessage());
+                Log.error(ExceptionUtils.getStackTrace(e));
             }
         });
         return true;
