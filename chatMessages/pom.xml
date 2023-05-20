@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <artifactId>WUtils-chatMessages</artifactId>
     <packaging>jar</packaging>
 
@@ -53,6 +53,11 @@
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.wyne</groupId>
+            <artifactId>WUtils-config</artifactId>
+            <version>1.1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -66,6 +71,36 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>me.wyne.wutils.config</pattern>
+                                    <shadedPattern>me.wyne.relocations.wutils.config</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
