@@ -46,7 +46,10 @@ public class Config {
                     if (field.isAnnotationPresent(ConfigField.class))
                     {
                         field.setAccessible(true);
-                        field.set(object, config.get(field.getAnnotation(ConfigField.class).path()));
+                        if (field.getType().isAssignableFrom(ConfigParameter.class))
+                            ((ConfigParameter)field.get(object)).getValue(field.getAnnotation(ConfigField.class).path());
+                        else
+                            field.set(object, config.get(field.getAnnotation(ConfigField.class).path()));
                     }
                 }
             }
