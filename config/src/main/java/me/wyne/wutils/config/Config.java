@@ -1,6 +1,7 @@
 package me.wyne.wutils.config;
 
 import me.wyne.wutils.log.Log;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +61,7 @@ public class Config {
         {
             Log.error("Произошла ошибка при перезагрузке конфига");
             Log.error(e.getMessage());
+            Log.error(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
