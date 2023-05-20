@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Requires {@link com.google.gson} dependency.
@@ -21,7 +20,7 @@ public abstract class JsonStorage implements Storage {
     protected final File storageFile;
     protected final ExecutorService jsonExecutorService;
 
-    public JsonStorage(@NotNull final File storageFile)
+    public JsonStorage(@NotNull final File storageFile, @NotNull final ExecutorService jsonExecutorService)
     {
         try {
             Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
@@ -32,7 +31,19 @@ public abstract class JsonStorage implements Storage {
                 Bukkit.getLogger().severe(e.getMessage());
         }
         this.storageFile = storageFile;
-        jsonExecutorService = Executors.newSingleThreadExecutor();
+        this.jsonExecutorService = jsonExecutorService;
+    }
+
+    public Gson gson() {
+        return gson;
+    }
+
+    public File storageFile() {
+        return storageFile;
+    }
+
+    public ExecutorService jsonExecutorService() {
+        return jsonExecutorService;
     }
 
     @Override
