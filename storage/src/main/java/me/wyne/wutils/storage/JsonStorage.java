@@ -3,7 +3,6 @@ package me.wyne.wutils.storage;
 import com.google.gson.*;
 import me.wyne.wutils.log.Log;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,14 +16,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class JsonStorage implements Storage {
 
-    protected final Plugin plugin;
-
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     protected final File storageFile;
     protected final ExecutorService jsonExecutorService;
 
-    public JsonStorage(@NotNull final Plugin plugin, @NotNull final File storageFile)
+    public JsonStorage(@NotNull final File storageFile)
     {
         try {
             Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
@@ -34,18 +31,26 @@ public abstract class JsonStorage implements Storage {
             if (!Log.error(e.getMessage()))
                 Bukkit.getLogger().severe(e.getMessage());
         }
-        this.plugin = plugin;
         this.storageFile = storageFile;
         jsonExecutorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
-    public void createStorageFolder()
+    public void createStorageFolder(@NotNull final File folderPath)
     {
-        if (!plugin.getDataFolder().exists()) {
-            Log.info("Создание папки плагина...");
-            plugin.getDataFolder().mkdirs();
-            Log.info("Папка плагина создана");
+        if (!folderPath.exists()) {
+            Log.info("Создание папки '" + folderPath.getName() + "'...");
+            try
+            {
+                folderPath.mkdirs();
+            }
+            catch (Exception e)
+            {
+                Log.error("Произошла ошибка при создании папки '" + folderPath.getName() + "'");
+                Log.error(e.getMessage());
+                return;
+            }
+            Log.info("Папка '" + folderPath.getName() + "' создана");
         }
     }
 
@@ -61,11 +66,12 @@ public abstract class JsonStorage implements Storage {
                     writer.flush();
                     writer.close();
                 }
-                Log.info("Файл '" + storageFile.getName() + "' создан");
             } catch (Exception e) {
                 Log.error("Произошла ошибка при создании файла '" + storageFile.getName() + "'");
                 Log.error(e.getMessage());
+                return;
             }
+            Log.info("Файл '" + storageFile.getName() + "' создан");
         }
     }
 

@@ -3,6 +3,7 @@ package me.wyne.wutils.storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public interface Storage {
     /**
      * Create folder for storage file.
      */
-    void createStorageFolder();
+    void createStorageFolder(@NotNull final File folderPath);
     /**
      * Create storage file.
      */
