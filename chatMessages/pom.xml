@@ -57,9 +57,14 @@
             <groupId>me.wyne</groupId>
             <artifactId>WUtils-config</artifactId>
             <version>1.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
-
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -88,13 +93,15 @@
                                     <artifact>*:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/*.MF</exclude>
+                                        <exclude>META-INF/maven/me.wyne/WUtils-config/pom.properties</exclude>
+                                        <exclude>META-INF/maven/me.wyne/WUtils-config/pom.xml</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>me.wyne.wutils.config</pattern>
-                                    <shadedPattern>me.wyne.relocations.wutils.config</shadedPattern>
+                                    <shadedPattern>me.wyne.wutils.chatMessages.relocations.wutils.config</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
