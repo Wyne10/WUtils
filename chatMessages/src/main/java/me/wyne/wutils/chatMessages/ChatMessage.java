@@ -196,6 +196,11 @@ public class ChatMessage {
             this.message = MiniMessage.miniMessage().serialize(chatMessage.message);
             this.permissions = chatMessage.permissions;
         }
+        Builder(@NotNull final Builder builder)
+        {
+            this.message = builder.message;
+            this.permissions = builder.permissions;
+        }
 
         @Override
         public void getValue(@NotNull FileConfiguration config, @NotNull String path) {
@@ -273,6 +278,12 @@ public class ChatMessage {
         {
             permissions = modification.apply(permissions);
             return this;
+        }
+
+        @Contract("-> new")
+        public Builder clone()
+        {
+            return new Builder(this);
         }
 
         @Contract("-> new")
