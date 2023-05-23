@@ -77,13 +77,17 @@
                                     <artifact>*:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/*.MF</exclude>
+                                        <exclude>META-INF/LICENSE.txt</exclude>
+                                        <exclude>META-INF/NOTICE.txt</exclude>
+                                        <exclude>META-INF/maven/org.apache.commons/commons-lang3/pom.properties</exclude>
+                                        <exclude>META-INF/maven/org.apache.commons/commons-lang3/pom.xml</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>org.apache.commons.lang</pattern>
-                                    <shadedPattern>me.wyne.relocations.apache.commons.lang</shadedPattern>
+                                    <shadedPattern>me.wyne.wutils.storage.relocations.apache.commons.lang</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
