@@ -5,6 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ConfigParameter {
 
-    void getValue(@NotNull final FileConfiguration config, @NotNull final String path);
+    Object getValue(@NotNull final FileConfiguration config, @NotNull final String path);
 
 }

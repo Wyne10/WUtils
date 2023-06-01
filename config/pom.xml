@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>1.1.2</version>
+    <version>1.2.0</version>
     <artifactId>WUtils-config</artifactId>
     <packaging>jar</packaging>
 
@@ -32,6 +32,13 @@
             <groupId>me.wyne</groupId>
             <artifactId>WUtils-log</artifactId>
             <version>1.0.6</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.13.1</version>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
