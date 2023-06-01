@@ -2,6 +2,7 @@ package me.wyne.wutils.storage;
 
 import com.google.gson.*;
 import me.wyne.wutils.log.Log;
+import me.wyne.wutils.log.LogMessage;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
 
 /**
  * Requires {@link com.google.gson} dependency.
@@ -18,10 +20,15 @@ public abstract class JsonStorage implements Storage {
 
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * False disables info and warning logging (this option was added due to frequent json queries which cause log spam)
+     */
+    protected final boolean jsonQueryLog;
+
     protected final File storageFile;
     protected final ExecutorService jsonExecutorService;
 
-    public JsonStorage(@NotNull final File storageFile, @NotNull final ExecutorService jsonExecutorService)
+    public JsonStorage(@NotNull final File storageFile, @NotNull final ExecutorService jsonExecutorService, @NotNull final boolean jsonQueryLog)
     {
         try {
             Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
@@ -33,6 +40,7 @@ public abstract class JsonStorage implements Storage {
         }
         this.storageFile = storageFile;
         this.jsonExecutorService = jsonExecutorService;
+        this.jsonQueryLog = jsonQueryLog;
     }
 
     public Gson gson() {
@@ -167,9 +175,9 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    Log.info("Сохранено значение '" + value + "' ключа '" + key + "' по пути '" + path + "'");
+                    Log.log(new LogMessage(Level.INFO, "Сохранено значение '" + value + "' ключа '" + key + "' по пути '" + path + "'"), jsonQueryLog);
                 else
-                    Log.info("Сохранено значение '" + value + "' ключа '" + key + "'");
+                    Log.log(new LogMessage(Level.INFO, "Сохранено значение '" + value + "' ключа '" + key + "'"), jsonQueryLog);
             }
             catch (Exception e)
             {
@@ -192,8 +200,8 @@ public abstract class JsonStorage implements Storage {
 
         if (newCollection.contains(value))
         {
-            Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' уже было сохранено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение '" + value + "' коллекции ключа '" + key + "' уже было сохранено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
@@ -215,7 +223,7 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                Log.info("Сохранено значение '" + value + "' коллекции ключа '" + key + "'по пути '" + path + "'");
+                Log.log(new LogMessage(Level.INFO, "Сохранено значение '" + value + "' коллекции ключа '" + key + "'по пути '" + path + "'"), jsonQueryLog);
             }
             catch (Exception e)
             {
@@ -260,9 +268,9 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    Log.info("Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + path + "'");
+                    Log.log(new LogMessage(Level.INFO, "Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + path + "'"), jsonQueryLog);
                 else
-                    Log.info("Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + mapKey + "'");
+                    Log.log(new LogMessage(Level.INFO, "Сохранено значение '" + value + "' карты ключа '" + key + "'по пути '" + mapKey + "'"), jsonQueryLog);
             }
             catch (Exception e)
             {
@@ -286,8 +294,8 @@ public abstract class JsonStorage implements Storage {
         {
             if (!data.containsKey(key))
             {
-                Log.warn("Значение ключа '" + key + "' не найдено");
-                Log.warn("Файл: " + storageFile.getName());
+                Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+                Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
                 return false;
             }
 
@@ -301,8 +309,8 @@ public abstract class JsonStorage implements Storage {
                 {
                     if (data == null)
                     {
-                        Log.warn("Значение ключа '" + key + "' не найдено");
-                        Log.warn("Файл: " + storageFile.getName());
+                        Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+                        Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
                     }
                     return;
                 }
@@ -321,9 +329,9 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    Log.info("Удалено значение ключа '" + key + "' по пути '" + path + "'");
+                    Log.log(new LogMessage(Level.INFO, "Удалено значение ключа '" + key + "' по пути '" + path + "'"), jsonQueryLog);
                 else
-                    Log.info("Удалено значение ключа '" + key + "'");
+                    Log.log(new LogMessage(Level.INFO, "Удалено значение ключа '" + key + "'"), jsonQueryLog);
             } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -345,15 +353,15 @@ public abstract class JsonStorage implements Storage {
         }
         else
         {
-            Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
         if (!newCollection.contains(value))
         {
-            Log.warn("Значение '" + value + "' коллекции ключа '" + key + "' не найдено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение '" + value + "' коллекции ключа '" + key + "' не найдено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
@@ -379,7 +387,7 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                Log.info("Удалено значение '" + value + "' коллекции ключа '" + key + "' по пути '" + path + "'");
+                Log.log(new LogMessage(Level.INFO, "Удалено значение '" + value + "' коллекции ключа '" + key + "' по пути '" + path + "'"), jsonQueryLog);
             } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -402,15 +410,15 @@ public abstract class JsonStorage implements Storage {
         }
         else
         {
-            Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
         if (!newMap.containsKey(mapKey))
         {
-            Log.warn("Ключ '" + mapKey + "' карты ключа '" + key + "' не найден");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Ключ '" + mapKey + "' карты ключа '" + key + "' не найден"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
@@ -435,9 +443,9 @@ public abstract class JsonStorage implements Storage {
                 writer.flush();
                 writer.close();
                 if (path != null)
-                    Log.info("Удалено значение '" + mapKey + "' карты ключа '" + key + "' по пути '" + path + "'");
+                    Log.log(new LogMessage(Level.INFO, "Удалено значение '" + mapKey + "' карты ключа '" + key + "' по пути '" + path + "'"), jsonQueryLog);
                 else
-                    Log.info("Удалено значение '" + mapKey + "' карты ключа '" + key + "'");
+                    Log.log(new LogMessage(Level.INFO, "Удалено значение '" + mapKey + "' карты ключа '" + key + "'"), jsonQueryLog);
             } catch (Exception e) {
                 Log.error("Произошла ошибка при удалении значения из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -455,15 +463,15 @@ public abstract class JsonStorage implements Storage {
     {
         if (!data.containsKey(key))
         {
-            Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
         if (data.get(key).isEmpty())
         {
-            Log.warn("Коллекция ключа '" + key + "' не имеет элементов");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Коллекция ключа '" + key + "' не имеет элементов"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
@@ -479,7 +487,7 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                Log.info("Очищена коллекция ключа '" + key + "' по пути '" + path + "'");
+                Log.log(new LogMessage(Level.INFO, "Очищена коллекция ключа '" + key + "' по пути '" + path + "'"), jsonQueryLog);
             } catch (Exception e) {
                 Log.error("Произошла ошибка при очистке коллекции из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);
@@ -497,15 +505,15 @@ public abstract class JsonStorage implements Storage {
 
         if (!data.containsKey(key))
         {
-            Log.warn("Значение ключа '" + key + "' не найдено");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Значение ключа '" + key + "' не найдено"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
         if (data.get(key).isEmpty())
         {
-            Log.warn("Карта ключа '" + key + "' не имеет элементов");
-            Log.warn("Файл: " + storageFile.getName());
+            Log.log(new LogMessage(Level.WARNING, "Карта ключа '" + key + "' не имеет элементов"), jsonQueryLog);
+            Log.log(new LogMessage(Level.WARNING, "Файл: " + storageFile.getName()), jsonQueryLog);
             return false;
         }
 
@@ -527,7 +535,7 @@ public abstract class JsonStorage implements Storage {
                 writer.write(gson.toJson(datas));
                 writer.flush();
                 writer.close();
-                Log.info("Очищена карта ключа '" + key + "'");
+                Log.log(new LogMessage(Level.INFO, "Очищена карта ключа '" + key + "'"), jsonQueryLog);
             } catch (Exception e) {
                 Log.error("Произошла ошибка при очистке карты из файла '" + storageFile.getName() + "'");
                 Log.error("Ключ: " + key);

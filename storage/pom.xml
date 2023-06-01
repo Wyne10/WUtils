@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <artifactId>WUtils-storage</artifactId>
     <packaging>jar</packaging>
 
