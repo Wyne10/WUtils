@@ -1,5 +1,8 @@
 package me.wyne.wutils.log;
 
+/**
+ * Can be used as LogConfig just not to create extra class if not needed.
+ */
 public final class LogConfigInstance implements LogConfig {
 
     private boolean logInfo = false;
