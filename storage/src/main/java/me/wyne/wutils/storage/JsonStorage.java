@@ -16,7 +16,7 @@ import java.util.logging.Level;
 /**
  * Requires {@link com.google.gson} dependency.
  */
-public abstract class JsonStorage implements Storage {
+public abstract class JsonStorage implements LocalStorage {
 
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -28,7 +28,7 @@ public abstract class JsonStorage implements Storage {
     protected final File storageFile;
     protected final ExecutorService jsonExecutorService;
 
-    public JsonStorage(@NotNull final File storageFile, @NotNull final ExecutorService jsonExecutorService, @NotNull final boolean jsonQueryLog)
+    public JsonStorage(@NotNull final File storageFile, @NotNull final ExecutorService jsonExecutorService, final boolean jsonQueryLog)
     {
         try {
             Class.forName("com.google.gson.Gson", false, getClass().getClassLoader());
