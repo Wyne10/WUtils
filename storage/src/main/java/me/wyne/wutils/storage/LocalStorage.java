@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
-public interface Storage {
+public interface LocalStorage {
 
     /**
      * Create folder for storage file.
