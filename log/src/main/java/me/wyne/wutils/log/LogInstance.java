@@ -13,21 +13,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Used to log messages and save log files. This is a global version of logger.
+ * Used to log messages and save log files. This is an instance version of {@link Log}.
  * <br>Before logging messages make sure to {@link #registerLogger(Logger)} and {@link #registerConfig(LogConfig)}.
  * <br>If you want to save log files make sure to {@link #registerExecutor(Executor)} and {@link #registerLogDirectory(File)}.
  */
-public final class Log {
+public final class LogInstance {
 
-    private static Logger logger = null;
-    private static LogConfig config = null;
-    private static Executor logWriteExecutor;
-    private static File logDirectory = null;
+    private Logger logger = null;
+    private LogConfig config = null;
+    private Executor logWriteExecutor;
+    private File logDirectory = null;
 
     /**
      * @return Are logger and config registered?
      */
-    public static boolean isActive()
+    public boolean isActive()
     {
         return logger != null && config != null;
     }
@@ -36,42 +36,42 @@ public final class Log {
      * Register {@link Logger} to log all messages.
      * @param logger Logger to register
      */
-    public static void registerLogger(@NotNull final Logger logger)
+    public void registerLogger(@NotNull final Logger logger)
     {
-        Log.logger = logger;
+        this.logger = logger;
     }
 
     /**
      * Register {@link LogConfig} to control {@link #info(String)}, {@link #warn(String)} and {@link #error(String)} logging.
      * @param config Config to register
      */
-    public static void registerConfig(@NotNull final LogConfig config)
+    public void registerConfig(@NotNull final LogConfig config)
     {
-        Log.config = config;
+        this.config = config;
     }
 
     /**
      * Register directory to save log files to.
      * @param directory Directory to register
      */
-    public static void registerLogDirectory(@NotNull final File directory)
+    public void registerLogDirectory(@NotNull final File directory)
     {
-        Log.logDirectory = directory;
+        this.logDirectory = directory;
     }
 
     /**
      * Register {@link Executor} that will write logs to {@link #logDirectory}.
      * @param executor Executor to register
      */
-    public static void registerExecutor(@NotNull final Executor executor)
+    public void registerExecutor(@NotNull final Executor executor)
     {
-        Log.logWriteExecutor = executor;
+        this.logWriteExecutor = executor;
     }
 
     /**
      * @return True if logged successfully
      */
-    public static boolean info(@NotNull final String message)
+    public boolean info(@NotNull final String message)
     {
         if (isActive() && config.logInfo())
         {
@@ -85,7 +85,7 @@ public final class Log {
     /**
      * @return True if logged successfully
      */
-    public static boolean warn(@NotNull final String message)
+    public boolean warn(@NotNull final String message)
     {
         if (isActive() && config.logWarn())
         {
@@ -99,7 +99,7 @@ public final class Log {
     /**
      * @return True if logged successfully
      */
-    public static boolean error(@NotNull final String message)
+    public boolean error(@NotNull final String message)
     {
         if (isActive() && config.logError())
         {
@@ -116,7 +116,7 @@ public final class Log {
      * @param logMessage {@link LogMessage} to log
      * @param doLog Log or don't log. Useful when using some logging config
      */
-    public static boolean log(@NotNull final LogMessage logMessage, final boolean doLog)
+    public boolean log(@NotNull final LogMessage logMessage, final boolean doLog)
     {
         if (isActive() && doLog)
         {
@@ -134,7 +134,7 @@ public final class Log {
      * @param splitRegex Regex to split {@link LogMessage} by
      * @param doLog Log or don't log. Useful when using some logging config
      */
-    public static boolean log(@NotNull final LogMessage logMessage, @NotNull final String splitRegex, final boolean doLog)
+    public boolean log(@NotNull final LogMessage logMessage, @NotNull final String splitRegex, final boolean doLog)
     {
         if (isActive() && doLog)
         {
@@ -153,7 +153,7 @@ public final class Log {
      * @param level Log {@link Level}
      * @param log Message to log
      */
-    public static void writeLog(@NotNull final Level level, @NotNull final String log)
+    public void writeLog(@NotNull final Level level, @NotNull final String log)
     {
         if (logDirectory == null || logWriteExecutor == null)
             return;
@@ -186,4 +186,5 @@ public final class Log {
             }
         });
     }
+
 }
