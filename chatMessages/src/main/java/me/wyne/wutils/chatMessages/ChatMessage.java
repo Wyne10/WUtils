@@ -112,40 +112,40 @@ public class ChatMessage {
     }
 
     @Contract("-> new")
-    public static Builder Builder() { return new Builder(); }
+    public static Builder builder() { return new Builder(); }
 
     @Contract("_ -> new")
-    public static Builder Builder(@NotNull final String message)
+    public static Builder builder(@NotNull final String message)
     {
         return new Builder(message);
     }
 
     @Contract("_ -> new")
-    public static Builder Builder(@NotNull final Component message)
+    public static Builder builder(@NotNull final Component message)
     {
         return new Builder(message);
     }
 
     @Contract("_, _ -> new")
-    public static Builder Builder(@NotNull final String message, String... permissions)
+    public static Builder builder(@NotNull final String message, String... permissions)
     {
         return new Builder(message, permissions);
     }
 
     @Contract("_, _ -> new")
-    public static Builder Builder(@NotNull final String message, @NotNull Set<String> permissions)
+    public static Builder builder(@NotNull final String message, @NotNull Set<String> permissions)
     {
         return new Builder(message, permissions);
     }
 
     @Contract("_, _ -> new")
-    public static Builder Builder(@NotNull final Component message, String... permissions)
+    public static Builder builder(@NotNull final Component message, String... permissions)
     {
         return new Builder(message, permissions);
     }
 
     @Contract("_, _ -> new")
-    public static Builder Builder(@NotNull final Component message, @NotNull Set<String> permissions)
+    public static Builder builder(@NotNull final Component message, @NotNull Set<String> permissions)
     {
         return new Builder(message, permissions);
     }
