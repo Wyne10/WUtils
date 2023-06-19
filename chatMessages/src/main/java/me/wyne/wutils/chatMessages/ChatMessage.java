@@ -1,13 +1,11 @@
 package me.wyne.wutils.chatMessages;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.wyne.wutils.config.ConfigParameter;
 import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -157,7 +155,7 @@ public class ChatMessage {
         return new ChatMessage.Builder(this);
     }
 
-    public static final class Builder implements ConfigParameter
+    public static final class Builder
     {
         private Set<String> permissions = new HashSet<>();
         private String message;
@@ -200,12 +198,6 @@ public class ChatMessage {
         {
             this.message = builder.message;
             this.permissions = builder.permissions;
-        }
-
-        @Override
-        public Object getValue(@NotNull FileConfiguration config, @NotNull String path) {
-            this.message = config.getString(path);
-            return null;
         }
 
         @Contract("_ -> this")
