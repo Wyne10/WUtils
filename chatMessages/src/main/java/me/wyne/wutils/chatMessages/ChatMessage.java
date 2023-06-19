@@ -203,8 +203,9 @@ public class ChatMessage {
         }
 
         @Override
-        public void getValue(@NotNull FileConfiguration config, @NotNull String path) {
+        public Object getValue(@NotNull FileConfiguration config, @NotNull String path) {
             this.message = config.getString(path);
+            return null;
         }
 
         @Contract("_ -> this")
