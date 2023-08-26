@@ -259,6 +259,26 @@ public class ChatMessage {
             return this;
         }
 
+        /**
+         * Replace {@link #message} text by regex.
+         */
+        @Contract("_, _ -> this")
+        public ChatMessage.Builder replaceAll(@NotNull final String replaceRegex, @NotNull final String replacement)
+        {
+            message = message.replaceAll(replaceRegex, replacement);
+            return this;
+        }
+
+        /**
+         * Replace {@link #message} literal text.
+         */
+        @Contract("_, _ -> this")
+        public ChatMessage.Builder replace(@NotNull final String replace, @NotNull final String replacement)
+        {
+            message = message.replace(replace, replacement);
+            return this;
+        }
+
         @Contract("_ -> this")
         public Builder modifyMessage(@NotNull final Function<Component, Component> modification)
         {

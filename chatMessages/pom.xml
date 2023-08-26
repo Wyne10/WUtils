@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <artifactId>WUtils-chatMessages</artifactId>
     <packaging>jar</packaging>
 
