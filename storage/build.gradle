@@ -1,0 +1,33 @@
+plugins {
+    id 'me.wyne.java-library'
+}
+
+repositories {
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
+        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation project(':WUtils-log')
+}
+
+version = '1.0.10'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'WUtils-storage'
+            version = '1.0.10'
+
+            from components.java
+        }
+    }
+}
