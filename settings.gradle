@@ -9,9 +9,13 @@ include(':WUtils-chatMessages')
 include(':WUtils-log')
 include(':WUtils-commands')
 include(':WUtils-settings')
+include (':WUtils-I18n')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-storage").projectDir = file('storage')
 project(":WUtils-chatMessages").projectDir = file('chatMessages')
 project(":WUtils-log").projectDir = file('log')
 project(":WUtils-commands").projectDir = file('commands')
 project(":WUtils-settings").projectDir = file('settings')
+project(":WUtils-I18n").projectDir = file('I18n')
+
+
