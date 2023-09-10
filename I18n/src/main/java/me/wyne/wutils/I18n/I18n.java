@@ -20,20 +20,19 @@ public class I18n {
         setLangPath(langPath);
     }
 
-    public I18n(JavaPlugin plugin, FileConfiguration config)
+    public I18n(JavaPlugin plugin)
     {
-        setLangPath(getConfigLangPath(plugin, config));
+        setLangPath(getConfigLangPath(plugin));
     }
 
-    public File getConfigLangPath(JavaPlugin plugin, FileConfiguration config)
+    public File getConfigLangPath(JavaPlugin plugin)
     {
-        return new File(plugin.getDataFolder(), "lang/" + config.getString("lang"));
+        return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
     public void setLangPath(File langPath)
     {
-        langFile = new YamlConfiguration();
-        YamlConfiguration.loadConfiguration(langPath);
+        langFile = YamlConfiguration.loadConfiguration(langPath);
     }
 
     public String getLocalizedString(String path)
