@@ -1,0 +1,21 @@
+plugins {
+    id 'me.wyne.java-library'
+}
+
+dependencies {
+    implementation project(':WUtils-log')
+}
+
+version = '1.0.3'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'WUtils-settings'
+            version = '1.0.3'
+
+            from components.java
+        }
+    }
+}

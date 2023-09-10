@@ -1,0 +1,31 @@
+plugins {
+    id 'me.wyne.java-library'
+}
+
+repositories {
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'net.kyori:adventure-text-minimessage:4.14.0' // Acquired from Paper server
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation project(':WUtils-log')
+    implementation project(':WUtils-chatMessages')
+}
+
+version = '1.2.2'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'WUtils-storage'
+            version = '1.0.10'
+
+            from components.java
+        }
+    }
+}

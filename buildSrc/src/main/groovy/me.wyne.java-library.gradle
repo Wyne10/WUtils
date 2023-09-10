@@ -1,0 +1,32 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    repositories {
+        maven {
+            url myMavenRepoWriteUrl
+
+            credentials {
+                username myMavenRepoWriteUsername
+                password myMavenRepoWritePassword
+            }
+        }
+    }
+}
