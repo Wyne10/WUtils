@@ -152,7 +152,7 @@ public class ChatMessage {
     @NotNull
     public ChatMessage.Builder toBuilder()
     {
-        return new ChatMessage.Builder(this);
+        return new Builder(this);
     }
 
     public static final class Builder
@@ -263,7 +263,7 @@ public class ChatMessage {
          * Replace {@link #message} text by regex.
          */
         @Contract("_, _ -> this")
-        public ChatMessage.Builder replaceAll(@NotNull final String replaceRegex, @NotNull final String replacement)
+        public Builder replaceAll(@NotNull final String replaceRegex, @NotNull final String replacement)
         {
             message = message.replaceAll(replaceRegex, replacement);
             return this;
@@ -273,7 +273,7 @@ public class ChatMessage {
          * Replace {@link #message} literal text.
          */
         @Contract("_, _ -> this")
-        public ChatMessage.Builder replace(@NotNull final String replace, @NotNull final String replacement)
+        public Builder replace(@NotNull final String replace, @NotNull final String replacement)
         {
             message = message.replace(replace, replacement);
             return this;

@@ -1,5 +1,5 @@
 plugins {
-    id 'me.wyne.java-library'
+    id 'wutils.java-library'
 }
 
 repositories {
