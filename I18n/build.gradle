@@ -1,5 +1,5 @@
 plugins {
-    id 'me.wyne.java-library'
+    id 'wutils.java-library'
 }
 
 repositories {
@@ -19,7 +19,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'WUtils-I18n'
+            artifactId = 'WUtils-i18n'
             version = '1.0.0'
 
             from components.java

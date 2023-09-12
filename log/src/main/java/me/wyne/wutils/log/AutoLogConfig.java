@@ -1,6 +1,7 @@
 package me.wyne.wutils.log;
 
 import org.bukkit.configuration.file.FileConfiguration;
+
 import java.lang.reflect.Field;
 
 public final class AutoLogConfig implements LogConfig {
