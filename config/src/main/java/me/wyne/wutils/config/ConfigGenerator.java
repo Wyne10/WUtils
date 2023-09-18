@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -109,9 +110,7 @@ public class ConfigGenerator {
             printWriter.print(generatedText.toString());
             printWriter.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
         } catch (IOException e) {
-            Log.error("An exception occurred at config generation");
-            Log.error(e.getMessage());
-            Log.error(ExceptionUtils.getStackTrace(e));
+            Log.global.exception("An exception occurred at config generation", e);
         }
     }
 
@@ -132,9 +131,7 @@ public class ConfigGenerator {
             writer.write(fileContent.toString());
             writer.close();
         } catch (IOException e) {
-            Log.error("An exception occurred at config override");
-            Log.error(e.getMessage());
-            Log.error(ExceptionUtils.getStackTrace(e));
+            Log.global.exception("An exception occurred at config override", e);
         }
     }
 
