@@ -4,13 +4,11 @@ import me.wyne.wutils.config.ConfigParameter;
 import org.jetbrains.annotations.NotNull;
 
 public enum ConfigFieldType {
-    MiniMessageComponent(new MiniMessageComponentFieldType()),
-    MiniMessageChatMessage(new MiniMessageChatMessageFieldType()),
-    ChatMessageBuilder(new ChatMessageBuilderFieldType());
+    MiniMessageComponent(new MiniMessageComponentFieldType());
 
     private final ConfigParameter configParameter;
 
-    ConfigFieldType(@NotNull final ConfigParameter configParameter)
+    ConfigFieldType(ConfigParameter configParameter)
     {
         this.configParameter = configParameter;
     }

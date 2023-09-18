@@ -1,17 +1,15 @@
 package me.wyne.wutils.config.configFieldTypes;
 
 import me.wyne.wutils.config.ConfigParameter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class MiniMessageComponentFieldType implements ConfigParameter {
+public class MiniMessageComponentFieldType implements ConfigParameter<Component> {
 
-    /**
-     * @return MiniMessage deserialized string as {@link net.kyori.adventure.text.Component}
-     */
     @Override
-    public Object getValue(@NotNull FileConfiguration config, @NotNull String path) {
+    public Component getValue(@NotNull FileConfiguration config, @NotNull String path) {
         return MiniMessage.miniMessage().deserialize(config.getString(path));
     }
 

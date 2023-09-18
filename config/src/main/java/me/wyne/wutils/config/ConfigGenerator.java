@@ -1,5 +1,7 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Contract;
@@ -58,8 +60,9 @@ public class ConfigGenerator {
         {
             if (field.isAnnotationPresent(ConfigField.class))
             {
-                field.setAccessible(true);
                 ConfigField fieldAnnotation = field.getAnnotation(ConfigField.class);
+                if (fieldAnnotation.generate() == false)
+                    return;
                 String path = fieldAnnotation.path().isEmpty() ? field.getName() : fieldAnnotation.path();
                 Object value = null;
                 try {
@@ -67,6 +70,9 @@ public class ConfigGenerator {
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
+
+                if (fieldAnnotation.whitespace())
+                    global.whitespace();
 
                 if (!fieldAnnotation.comment().isEmpty())
                     global.writeValue(path, value, fieldAnnotation.comment());
@@ -104,7 +110,9 @@ public class ConfigGenerator {
             printStream.print(generatedText.toString());
             printStream.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error("An exception occurred at config generation");
+            Log.error(e.getMessage());
+            Log.error(ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -125,7 +133,9 @@ public class ConfigGenerator {
             writer.write(fileContent.toString());
             writer.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error("An exception occurred at config override");
+            Log.error(e.getMessage());
+            Log.error(ExceptionUtils.getStackTrace(e));
         }
     }
 
