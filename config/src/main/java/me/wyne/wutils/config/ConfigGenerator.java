@@ -1,4 +1,4 @@
-package me.wyne.configGenerator;
+package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -56,10 +56,10 @@ public class ConfigGenerator {
     {
         for(Field field : object.getClass().getDeclaredFields())
         {
-            if (field.isAnnotationPresent(ConfigGeneratorField.class))
+            if (field.isAnnotationPresent(ConfigField.class))
             {
                 field.setAccessible(true);
-                ConfigGeneratorField fieldAnnotation = field.getAnnotation(ConfigGeneratorField.class);
+                ConfigField fieldAnnotation = field.getAnnotation(ConfigField.class);
                 String path = fieldAnnotation.path().isEmpty() ? field.getName() : fieldAnnotation.path();
                 Object value = null;
                 try {
@@ -128,4 +128,5 @@ public class ConfigGenerator {
             throw new RuntimeException(e);
         }
     }
+
 }
