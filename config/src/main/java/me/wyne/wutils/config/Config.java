@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -24,7 +25,7 @@ public class Config {
     public static boolean reloadConfigObjects(FileConfiguration config) {
         try
         {
-            Log.info("Reloading config...");
+            Log.global.info("Reloading config...");
             for (Object object : registeredConfigObjects)
             {
                 for(Field field  : object.getClass().getDeclaredFields())
@@ -42,14 +43,12 @@ public class Config {
                     }
                 }
             }
-            Log.info("Config is reloaded");
+            Log.global.info("Config is reloaded");
             return true;
         }
         catch (Exception e)
         {
-            Log.error("Critical exception occurred at config reload");
-            Log.error(e.getMessage());
-            Log.error(ExceptionUtils.getStackTrace(e));
+            Log.global.exception("Critical exception occurred at config reload", e);
             return false;
         }
     }

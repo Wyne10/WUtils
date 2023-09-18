@@ -104,7 +104,6 @@ public class Log {
             error(message);
             error(exception.getMessage());
             error(ExceptionUtils.getStackTrace(exception));
-            writeLog(Level.SEVERE, message);
             return true;
         }
         return false;

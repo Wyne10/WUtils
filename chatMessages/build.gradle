@@ -13,8 +13,8 @@ repositories {
 
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.2' // Acquired from PlaceholderAPI plugin
-    compileOnly 'net.kyori:adventure-text-minimessage:4.13.1' // Acquired from Paper server
+    compileOnly 'me.clip:placeholderapi:2.11.2'
+    compileOnly 'net.kyori:adventure-text-minimessage:4.13.1'
     implementation project(':WUtils-log')
 }
 
