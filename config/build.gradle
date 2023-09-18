@@ -10,10 +10,9 @@ repositories {
 
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'net.kyori:adventure-text-minimessage:4.14.0' // Acquired from Paper server
+    compileOnly 'net.kyori:adventure-text-minimessage:4.14.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation project(':WUtils-log')
-    implementation project(':WUtils-chatMessages')
 }
 
 version = '1.3.0'

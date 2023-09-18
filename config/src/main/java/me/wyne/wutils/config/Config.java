@@ -18,15 +18,15 @@ public class Config {
         Config.registerConfigObject(this);
     }
 
-    public static void registerConfigObject(@NotNull final Object object)
+    public static void registerConfigObject(Object object)
     {
         registeredConfigObjects.add(object);
     }
 
-    public static boolean reloadConfigObjects(@NotNull final FileConfiguration config) {
+    public static boolean reloadConfigObjects(FileConfiguration config) {
         try
         {
-            Log.info("Перезагрузка конфига...");
+            Log.info("Reloading config...");
             for (Object object : registeredConfigObjects)
             {
                 for(Field field  : object.getClass().getDeclaredFields())
@@ -43,12 +43,12 @@ public class Config {
                     }
                 }
             }
-            Log.info("Конфиг перезагружен");
+            Log.info("Config is reloaded");
             return true;
         }
         catch (Exception e)
         {
-            Log.error("Произошла ошибка при перезагрузке конфига");
+            Log.error("Critical exception occurred at config reload");
             Log.error(e.getMessage());
             Log.error(ExceptionUtils.getStackTrace(e));
             return false;
