@@ -1,6 +1,5 @@
 package me.wyne.wutils.settings;
 
-import me.wyne.wutils.log.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,5 +1,6 @@
 package me.wyne.wutils.log;
 
+import me.wyne.wutils.config.ConfigGenerator;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
@@ -27,10 +28,10 @@ public final class AutoLogConfig implements LogConfig {
 
     private void generateConfig(FileConfiguration config, String loggerName)
     {
+        ConfigGenerator.global.whitespace();
         for (Field field : AutoLogConfig.class.getFields())
         {
-            if (!config.contains(loggerName + "-" + field.getName()))
-                config.set(loggerName + "-" + field.getName(), false);
+            ConfigGenerator.global.writeValue(loggerName + "-" + field.getName(), false);
         }
     }
 

@@ -1,10 +1,13 @@
 package me.wyne.wutils.log;
 
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -12,66 +15,56 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Used to log messages and save log files. This is a global version of logger.
- * <br>Before logging messages make sure to {@link #registerLogger(Logger)} and {@link #registerConfig(LogConfig)}.
- * <br>If you want to save log files make sure to {@link #registerExecutor(Executor)} and {@link #registerLogDirectory(File)}.
- */
-public final class Log {
+public class Log {
 
-    private static Logger logger = null;
-    private static LogConfig config = null;
-    private static Executor logWriteExecutor;
-    private static File logDirectory = null;
+    public static Log global;
 
-    /**
-     * @return Are logger and config registered?
-     */
-    public static boolean isActive()
+    private Logger logger;
+    private LogConfig config;
+    private Executor fileWriteExecutor;
+    private File logDirectory;
+
+    public boolean isActive()
     {
         return logger != null && config != null;
     }
 
-    /**
-     * Register {@link Logger} to log all messages.
-     * @param logger Logger to register
-     */
-    public static void registerLogger(@NotNull final Logger logger)
+    public boolean isFileWriteActive()
     {
-        Log.logger = logger;
+        return fileWriteExecutor != null && logDirectory != null;
     }
 
-    /**
-     * Register {@link LogConfig} to control {@link #info(String)}, {@link #warn(String)} and {@link #error(String)} logging.
-     * @param config Config to register
-     */
-    public static void registerConfig(@NotNull final LogConfig config)
+    public Log(Logger logger, LogConfig logConfig)
     {
-        Log.config = config;
+        this.logger = logger;
+        this.config = logConfig;
     }
 
-    /**
-     * Register directory to save log files to.
-     * @param directory Directory to register
-     */
-    public static void registerLogDirectory(@NotNull final File directory)
+    public Log(Logger logger, FileConfiguration config, String loggerName)
     {
-        Log.logDirectory = directory;
+        this.logger = logger;
+        this.config = new AutoLogConfig(config, loggerName);
     }
 
-    /**
-     * Register {@link Executor} that will write logs to {@link #logDirectory}.
-     * @param executor Executor to register
-     */
-    public static void registerExecutor(@NotNull final Executor executor)
+    public Log(Logger logger, LogConfig logConfig, Executor logWriteExecutor, File logDirectory)
     {
-        Log.logWriteExecutor = executor;
+        this.logger = logger;
+        this.config = logConfig;
+        this.fileWriteExecutor = logWriteExecutor;
+        this.logDirectory = logDirectory;
+        deleteOlderLogs();
     }
 
-    /**
-     * @return True if logged successfully
-     */
-    public static boolean info(@NotNull final String message)
+    public Log(Logger logger, FileConfiguration config, String loggerName, Executor logWriteExecutor, File logDirectory)
+    {
+        this.logger = logger;
+        this.config = new AutoLogConfig(config, loggerName);
+        this.fileWriteExecutor = logWriteExecutor;
+        this.logDirectory = logDirectory;
+        deleteOlderLogs();
+    }
+
+    public boolean info(String message)
     {
         if (isActive() && config.logInfo())
         {
@@ -82,10 +75,7 @@ public final class Log {
         return false;
     }
 
-    /**
-     * @return True if logged successfully
-     */
-    public static boolean warn(@NotNull final String message)
+    public boolean warn(String message)
     {
         if (isActive() && config.logWarn())
         {
@@ -96,10 +86,7 @@ public final class Log {
         return false;
     }
 
-    /**
-     * @return True if logged successfully
-     */
-    public static boolean error(@NotNull final String message)
+    public boolean error(String message)
     {
         if (isActive())
         {
@@ -110,16 +97,28 @@ public final class Log {
         return false;
     }
 
-    /**
-     * Log {@link LogMessage}.
-     * @return True if logged successfully
-     * @param logMessage {@link LogMessage} to log
-     * @param doLog Log or don't log. Useful when using some logging config
-     */
-    public static boolean log(@NotNull final LogMessage logMessage, final boolean doLog)
+    public boolean exception(String message, Throwable exception)
     {
-        if (isActive() && doLog)
+        if (isActive())
         {
+            error(message);
+            error(exception.getMessage());
+            error(ExceptionUtils.getStackTrace(exception));
+            writeLog(Level.SEVERE, message);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(LogMessage logMessage)
+    {
+        if (isActive())
+        {
+            if (logMessage.getLevel() == Level.INFO && config.logInfo() == false)
+                return false;
+            if (logMessage.getLevel() == Level.WARNING && config.logWarn() == false)
+                return false;
+
             logger.log(logMessage.getLevel(), logMessage.getMessage());
             writeLog(logMessage.getLevel(), logMessage.getMessage());
             return true;
@@ -127,17 +126,15 @@ public final class Log {
         return false;
     }
 
-    /**
-     * Log {@link LogMessage} and split {@link LogMessage} by regex.
-     * @return True if logged successfully
-     * @param logMessage {@link LogMessage} to log
-     * @param splitRegex Regex to split {@link LogMessage} by
-     * @param doLog Log or don't log. Useful when using some logging config
-     */
-    public static boolean log(@NotNull final LogMessage logMessage, @NotNull final String splitRegex, final boolean doLog)
+    public boolean log(LogMessage logMessage, String splitRegex)
     {
-        if (isActive() && doLog)
+        if (isActive())
         {
+            if (logMessage.getLevel() == Level.INFO && config.logInfo() == false)
+                return false;
+            if (logMessage.getLevel() == Level.WARNING && config.logWarn() == false)
+                return false;
+
             for (String message : logMessage.getMessage().split(splitRegex))
             {
                 logger.log(logMessage.getLevel(), message);
@@ -148,17 +145,16 @@ public final class Log {
         return false;
     }
 
-    /**
-     * Write log to {@link #logDirectory}.
-     * @param level Log {@link Level}
-     * @param log Message to log
-     */
-    public static void writeLog(@NotNull final Level level, @NotNull final String log)
+    public void writeLog(Level level, String log)
     {
-        if (logDirectory == null || logWriteExecutor == null)
+        if (logDirectory == null || fileWriteExecutor == null)
+            return;
+        if (level == Level.INFO && config.writeInfo() == false)
+            return;
+        if (level == Level.WARNING && config.writeInfo() == false)
             return;
 
-        logWriteExecutor.execute(() -> {
+        fileWriteExecutor.execute(() -> {
             String levelMessage = "INFO";
 
             if (level == Level.WARNING)
@@ -170,20 +166,30 @@ public final class Log {
 
             File logFile = new File(logDirectory, LocalDate.now() + ".txt");
 
-            try {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(logFile, true))){
                 if (!logDirectory.exists())
                     logDirectory.mkdirs();
                 if (!logFile.exists())
                     logFile.createNewFile();
 
-                PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
                 writer.println(writeLog);
                 writer.flush();
-                writer.close();
-            } catch (Exception e) {
-                error("Произошла ошибка при попытке записи лога в файл '" + LocalDate.now() + ".txt'");
-                error(e.getMessage());
+            } catch (IOException e) {
+                exception("An exception occurred while writing log to a file", e);
             }
         });
+    }
+
+    private void deleteOlderLogs()
+    {
+        for (File file : logDirectory.listFiles())
+        {
+            try {
+                if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime()  > 604800000)
+                    file.delete();
+            } catch (ParseException e) {
+                exception("An exception occured while deleting old logs", e);
+            }
+        }
     }
 }
