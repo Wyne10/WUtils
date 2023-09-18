@@ -1,7 +1,6 @@
 package me.wyne.wutils.storage;
 
 import com.google.gson.*;
-import me.wyne.wutils.log.Log;
 import me.wyne.wutils.log.LogMessage;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;

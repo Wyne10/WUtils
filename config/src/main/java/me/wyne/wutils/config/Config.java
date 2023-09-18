@@ -1,9 +1,7 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.Log;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;

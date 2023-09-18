@@ -1,6 +1,5 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.Log;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -100,16 +99,15 @@ public class ConfigGenerator {
 
     private void writeInitialData(File configFile, FileConfiguration config)
     {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(configFile, true);
-             PrintStream printStream = new PrintStream(fileOutputStream)) {
+        try (PrintWriter printWriter = new PrintWriter(new FileWriter(configFile, true))) {
             if (!config.contains("config-generator"))
             {
-                printStream.println("\n\n# This value is used as an indicator of successful generation of the config.\n# Set the value to false to regenerate part of config that was generated automatically");
-                printStream.println("config-generator: true\n");
+                printWriter.println("\n\n# This value is used as an indicator of successful generation of the config.\n# Set the value to false to regenerate part of config that was generated automatically");
+                printWriter.println("config-generator: true\n");
             }
-            printStream.println("# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY\n");
-            printStream.print(generatedText.toString());
-            printStream.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
+            printWriter.println("# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY\n");
+            printWriter.print(generatedText.toString());
+            printWriter.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
         } catch (IOException e) {
             Log.error("An exception occurred at config generation");
             Log.error(e.getMessage());
