@@ -21,8 +21,8 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'WUtils-storage'
-            version = '1.0.10'
+            artifactId = 'WUtils-config'
+            version = '1.3.0'
 
             from components.java
         }

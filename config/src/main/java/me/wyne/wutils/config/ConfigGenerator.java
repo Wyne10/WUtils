@@ -60,6 +60,7 @@ public class ConfigGenerator {
         {
             if (field.isAnnotationPresent(ConfigField.class))
             {
+                field.setAccessible(true);
                 ConfigField fieldAnnotation = field.getAnnotation(ConfigField.class);
                 if (fieldAnnotation.generate() == false)
                     return;
