@@ -101,7 +101,7 @@ public final class Log {
      */
     public static boolean error(@NotNull final String message)
     {
-        if (isActive() && config.logError())
+        if (isActive())
         {
             logger.severe(message);
             writeLog(Level.SEVERE, message);
