@@ -1,7 +1,5 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.Log;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
@@ -22,35 +20,23 @@ public class Config {
         registeredConfigObjects.add(object);
     }
 
-    public static boolean reloadConfigObjects(FileConfiguration config) {
-        try
+    public static void reloadConfigObjects(FileConfiguration config) throws IllegalAccessException {
+        for (Object object : registeredConfigObjects)
         {
-            Log.global.info("Reloading config...");
-            for (Object object : registeredConfigObjects)
+            for(Field field  : object.getClass().getDeclaredFields())
             {
-                for(Field field  : object.getClass().getDeclaredFields())
+                if (field.isAnnotationPresent(ConfigField.class))
                 {
-                    if (field.isAnnotationPresent(ConfigField.class))
-                    {
-                        field.setAccessible(true);
-                        String path = field.getAnnotation(ConfigField.class).path().isEmpty() ? field.getName() : field.getAnnotation(ConfigField.class).path();
-                        if (field.isAnnotationPresent(TypedConfigField.class))
-                            field.set(object, field.getAnnotation(TypedConfigField.class).configFieldType().getConfigParameter().getValue(config, path));
-                        else if (ConfigParameter.class.isAssignableFrom(field.getType()))
-                            ((ConfigParameter)field.get(object)).getValue(config, path);
-                        else
-                            field.set(object, config.get(path));
-                    }
+                    field.setAccessible(true);
+                    String path = field.getAnnotation(ConfigField.class).path().isEmpty() ? field.getName() : field.getAnnotation(ConfigField.class).path();
+                    if (field.isAnnotationPresent(TypedConfigField.class))
+                        field.set(object, field.getAnnotation(TypedConfigField.class).configFieldType().getConfigParameter().getValue(config, path));
+                    else if (ConfigParameter.class.isAssignableFrom(field.getType()))
+                        ((ConfigParameter)field.get(object)).getValue(config, path);
+                    else
+                        field.set(object, config.get(path));
                 }
             }
-            Log.global.info("Config is reloaded");
-            return true;
-        }
-        catch (Exception e)
-        {
-            Log.global.exception("Critical exception occurred at config reload", e);
-            return false;
         }
     }
-
 }
