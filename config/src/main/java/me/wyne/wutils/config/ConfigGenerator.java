@@ -1,7 +1,5 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.Log;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Contract;
@@ -83,8 +81,7 @@ public class ConfigGenerator {
         }
     }
 
-    public void generate(File configFile)
-    {
+    public void generate(File configFile) throws IOException {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         if (config.getBoolean("config-generator") == true)
@@ -98,8 +95,7 @@ public class ConfigGenerator {
         }
     }
 
-    private void writeInitialData(File configFile, FileConfiguration config)
-    {
+    private void writeInitialData(File configFile, FileConfiguration config) throws IOException {
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(configFile, true))) {
             if (!config.contains("config-generator"))
             {
@@ -109,13 +105,10 @@ public class ConfigGenerator {
             printWriter.println("# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY\n");
             printWriter.print(generatedText.toString());
             printWriter.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
-        } catch (IOException e) {
-            Log.global.exception("An exception occurred at config generation", e);
         }
     }
 
-    private void overrideData(File configFile)
-    {
+    private void overrideData(File configFile) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
             StringBuilder fileContent = new StringBuilder();
 
@@ -129,9 +122,8 @@ public class ConfigGenerator {
             fileContent.append("config-generator: true\n\n");
             BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
             writer.write(fileContent.toString());
+            writer.flush();
             writer.close();
-        } catch (IOException e) {
-            Log.global.exception("An exception occurred at config override", e);
         }
     }
 
