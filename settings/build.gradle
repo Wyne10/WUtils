@@ -13,7 +13,7 @@ publishing {
         maven(MavenPublication) {
             groupId = group
             artifactId = 'WUtils-settings'
-            version = '1.0.4'
+            version = version
 
             from components.java
         }
