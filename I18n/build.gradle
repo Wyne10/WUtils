@@ -4,23 +4,23 @@ plugins {
 
 repositories {
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
 }
 
 dependencies {
-    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     implementation 'commons-io:commons-io:2.13.0'
 }
 
-version = '1.0.0'
+version = '1.1.0'
 
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
             artifactId = 'WUtils-i18n'
-            version = '1.0.0'
+            version = version
 
             from components.java
         }

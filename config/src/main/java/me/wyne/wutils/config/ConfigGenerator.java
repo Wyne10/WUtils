@@ -52,8 +52,7 @@ public class ConfigGenerator {
         return this;
     }
 
-    public static void writeConfigObject(Object object)
-    {
+    public static void writeConfigObject(Object object) throws IllegalAccessException {
         for(Field field : object.getClass().getDeclaredFields())
         {
             if (field.isAnnotationPresent(ConfigField.class))
@@ -63,12 +62,7 @@ public class ConfigGenerator {
                 if (fieldAnnotation.generate() == false)
                     return;
                 String path = fieldAnnotation.path().isEmpty() ? field.getName() : fieldAnnotation.path();
-                Object value = null;
-                try {
-                    value = fieldAnnotation.value().isEmpty() ? field.get(object) : fieldAnnotation.value();
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
+                Object value = fieldAnnotation.value().isEmpty() ? field.get(object) : fieldAnnotation.value();
 
                 if (fieldAnnotation.whitespace())
                     global.whitespace();

@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
 
-public final class AutoLogConfig implements LogConfig {
+public class AutoLogConfig implements LogConfig {
 
     private boolean logInfo = false;
     private boolean logWarn = false;
@@ -28,8 +28,7 @@ public final class AutoLogConfig implements LogConfig {
 
     private void generateConfig(FileConfiguration config, String loggerName)
     {
-        ConfigGenerator.global.whitespace();
-        for (Field field : AutoLogConfig.class.getFields())
+        for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
             ConfigGenerator.global.writeValue(loggerName + "-" + field.getName(), false);
         }
@@ -37,7 +36,7 @@ public final class AutoLogConfig implements LogConfig {
 
     private void readConfig(FileConfiguration config, String loggerName)
     {
-        for (Field field : AutoLogConfig.class.getFields())
+        for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
             field.setAccessible(true);
             try {
