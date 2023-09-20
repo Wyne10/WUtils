@@ -12,8 +12,38 @@ public class AutoLogConfig implements LogConfig {
     private boolean writeInfo = false;
     private boolean writeWarn = false;
 
+    private boolean generateWrite = false;
+
     public AutoLogConfig(FileConfiguration config, String loggerName)
     {
+        generateConfig(config, loggerName);
+        readConfig(config, loggerName);
+    }
+
+    public AutoLogConfig(FileConfiguration config, String loggerName, boolean generateWrite)
+    {
+        this.generateWrite = generateWrite;
+        generateConfig(config, loggerName);
+        readConfig(config, loggerName);
+    }
+
+    public AutoLogConfig(FileConfiguration config, String loggerName, LogConfig defaultValues)
+    {
+        logInfo = defaultValues.logInfo();
+        logWarn = defaultValues.logWarn();
+        writeInfo = defaultValues.writeInfo();
+        writeWarn = defaultValues.writeWarn();
+        generateConfig(config, loggerName);
+        readConfig(config, loggerName);
+    }
+
+    public AutoLogConfig(FileConfiguration config, String loggerName, LogConfig defaultValues, boolean generateWrite)
+    {
+        this.generateWrite = generateWrite;
+        logInfo = defaultValues.logInfo();
+        logWarn = defaultValues.logWarn();
+        writeInfo = defaultValues.writeInfo();
+        writeWarn = defaultValues.writeWarn();
         generateConfig(config, loggerName);
         readConfig(config, loggerName);
     }
@@ -30,7 +60,16 @@ public class AutoLogConfig implements LogConfig {
     {
         for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
-            ConfigGenerator.global.writeValue(loggerName + "-" + field.getName(), false);
+            if (field.getName().contains("write") && !generateWrite)
+                continue;
+            if (field.getName().equals("generateWrite"))
+                continue;
+
+            try {
+                ConfigGenerator.global.writeValue(loggerName + "-" + field.getName(), field.get(this));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -38,9 +77,12 @@ public class AutoLogConfig implements LogConfig {
     {
         for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
+            if (field.getName().equals("generateWrite"))
+                continue;
+
             field.setAccessible(true);
             try {
-                field.setBoolean(this, config.getBoolean(loggerName + "-" + field.getName()));
+                field.setBoolean(this, config.getBoolean(loggerName + "-" + field.getName(), (Boolean) field.get(this)));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

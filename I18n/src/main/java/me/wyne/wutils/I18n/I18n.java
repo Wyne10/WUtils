@@ -1,5 +1,6 @@
 package me.wyne.wutils.i18n;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -31,9 +32,9 @@ public class I18n {
 
     private void loadLang(JavaPlugin plugin)
     {
-        for (File file : new File(plugin.getDataFolder(), "lang/").listFiles())
+        for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
         {
-            lang.put(file.getName(), YamlConfiguration.loadConfiguration(file));
+            lang.put(FilenameUtils.removeExtension(file.getName()), YamlConfiguration.loadConfiguration(file));
         }
     }
 

@@ -99,6 +99,7 @@ public class ConfigGenerator {
             printWriter.println("# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY\n");
             printWriter.print(generatedText.toString());
             printWriter.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
+            printWriter.flush();
         }
     }
 
