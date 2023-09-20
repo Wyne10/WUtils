@@ -19,8 +19,8 @@ public class Log {
 
     public static Log global;
 
-    private Logger logger;
-    private LogConfig config;
+    private final Logger logger;
+    private final LogConfig config;
     private Executor fileWriteExecutor;
     private File logDirectory;
 
@@ -43,7 +43,13 @@ public class Log {
     public Log(Logger logger, FileConfiguration config, String loggerName)
     {
         this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName);
+        this.config = new AutoLogConfig(config, loggerName, false);
+    }
+
+    public Log(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues)
+    {
+        this.logger = logger;
+        this.config = new AutoLogConfig(config, loggerName, defaultValues, false);
     }
 
     public Log(Logger logger, LogConfig logConfig, Executor logWriteExecutor, File logDirectory)
@@ -58,7 +64,16 @@ public class Log {
     public Log(Logger logger, FileConfiguration config, String loggerName, Executor logWriteExecutor, File logDirectory)
     {
         this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName);
+        this.config = new AutoLogConfig(config, loggerName, true);
+        this.fileWriteExecutor = logWriteExecutor;
+        this.logDirectory = logDirectory;
+        deleteOlderLogs();
+    }
+
+    public Log(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor logWriteExecutor, File logDirectory)
+    {
+        this.logger = logger;
+        this.config = new AutoLogConfig(config, loggerName, defaultValues, true);
         this.fileWriteExecutor = logWriteExecutor;
         this.logDirectory = logDirectory;
         deleteOlderLogs();
@@ -146,7 +161,7 @@ public class Log {
 
     public void writeLog(Level level, String log)
     {
-        if (logDirectory == null || fileWriteExecutor == null)
+        if (!isFileWriteActive())
             return;
         if (level == Level.INFO && config.writeInfo() == false)
             return;
@@ -165,14 +180,17 @@ public class Log {
 
             File logFile = new File(logDirectory, LocalDate.now() + ".txt");
 
-            try (PrintWriter writer = new PrintWriter(new FileWriter(logFile, true))){
+            try {
                 if (!logDirectory.exists())
                     logDirectory.mkdirs();
                 if (!logFile.exists())
                     logFile.createNewFile();
 
+                PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
+
                 writer.println(writeLog);
                 writer.flush();
+                writer.close();
             } catch (IOException e) {
                 exception("An exception occurred while writing log to a file", e);
             }
@@ -181,14 +199,31 @@ public class Log {
 
     private void deleteOlderLogs()
     {
+        if (!isFileWriteActive())
+            return;
+        if (!logDirectory.exists())
+            return;
+
+        info("Searching for 7+ days old logs...");
+
+        boolean foundOldLogs = false;
+
         for (File file : logDirectory.listFiles())
         {
             try {
                 if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime()  > 604800000)
+                {
+                    foundOldLogs = true;
                     file.delete();
+                }
             } catch (ParseException e) {
-                exception("An exception occured while deleting old logs", e);
+                exception("An exception occurred while deleting old logs", e);
             }
         }
+
+        if (foundOldLogs)
+            info("Deleted old logs");
+        else
+            info("Old logs not found");
     }
 }
