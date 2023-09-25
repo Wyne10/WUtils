@@ -1,5 +1,6 @@
 plugins {
     id 'wutils.java-library'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
@@ -8,9 +9,20 @@ repositories {
     }
 }
 
+configurations {
+    shadedCompile
+}
+
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    implementation 'commons-io:commons-io:2.13.0'
+    shadedCompile compileOnly('commons-io:commons-io:2.13.0')
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    minimize()
+    configurations = [project.configurations.shadedCompile]
+    relocate "org.apache.commons.io", "me.wyne.wutils.shadow.apache.commons.io"
 }
 
 version = '1.1.2'
