@@ -19,18 +19,18 @@ public class I18n {
 
     public I18n() {}
 
-    public I18n(File langPath)
+    public I18n(File langPath) throws IllegalArgumentException
     {
         setDefaultLangPath(langPath);
     }
 
-    public I18n(JavaPlugin plugin)
+    public I18n(JavaPlugin plugin) throws IllegalArgumentException, NullPointerException
     {
         setDefaultLangPath(getDefaultLangPath(plugin));
         loadLang(plugin);
     }
 
-    private void loadLang(JavaPlugin plugin)
+    private void loadLang(JavaPlugin plugin) throws IllegalArgumentException
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
         {
@@ -38,12 +38,12 @@ public class I18n {
         }
     }
 
-    public File getDefaultLangPath(JavaPlugin plugin)
+    public File getDefaultLangPath(JavaPlugin plugin) throws NullPointerException
     {
         return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
-    public void setDefaultLangPath(File langPath)
+    public void setDefaultLangPath(File langPath) throws IllegalArgumentException
     {
         defaultLang = YamlConfiguration.loadConfiguration(langPath);
     }
