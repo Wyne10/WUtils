@@ -10,9 +10,9 @@ public class Config {
 
     private static final Set<Object> registeredConfigObjects = new HashSet<>();
 
-    public Config()
-    {
+    public Config() throws IllegalAccessException {
         Config.registerConfigObject(this);
+        ConfigGenerator.writeConfigObject(this);
     }
 
     public static void registerConfigObject(Object object)
