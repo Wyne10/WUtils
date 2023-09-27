@@ -1,5 +1,6 @@
 package me.wyne.wutils.i18n;
 
+import me.wyne.wutils.log.Log;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,33 +20,35 @@ public class I18n {
 
     public I18n() {}
 
-    public I18n(File langPath) throws IllegalArgumentException
+    public I18n(File langPath)
     {
         setDefaultLangPath(langPath);
     }
 
-    public I18n(JavaPlugin plugin) throws IllegalArgumentException, NullPointerException
+    public I18n(JavaPlugin plugin)
     {
         setDefaultLangPath(getDefaultLangPath(plugin));
         loadLang(plugin);
     }
 
-    private void loadLang(JavaPlugin plugin) throws IllegalArgumentException
+    private void loadLang(JavaPlugin plugin)
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
         {
             lang.put(FilenameUtils.removeExtension(file.getName()), YamlConfiguration.loadConfiguration(file));
+            Log.global.info("Loaded " + FilenameUtils.removeExtension(file.getName()) + " language");
         }
     }
 
-    public File getDefaultLangPath(JavaPlugin plugin) throws NullPointerException
+    public File getDefaultLangPath(JavaPlugin plugin)
     {
         return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
-    public void setDefaultLangPath(File langPath) throws IllegalArgumentException
+    public void setDefaultLangPath(File langPath)
     {
         defaultLang = YamlConfiguration.loadConfiguration(langPath);
+        Log.global.info("Default language is set to " + FilenameUtils.removeExtension(langPath.getName()));
     }
 
     public String getLocalizedString(String path)

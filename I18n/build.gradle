@@ -16,6 +16,7 @@ configurations {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     shadedCompile compileOnly('commons-io:commons-io:2.13.0')
+    implementation project(':WUtils-log')
 }
 
 shadowJar {

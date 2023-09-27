@@ -21,7 +21,7 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.11.2'
     shadedCompile compileOnly('org.apache.commons:commons-lang3:3.12.0')
     shadedCompile compileOnly('net.kyori:adventure-text-minimessage:4.14.0')
-    shadedCompile compileOnly(project(':WUtils-config'))
+    implementation project(':WUtils-config')
 }
 
 shadowJar {
@@ -30,7 +30,6 @@ shadowJar {
     configurations = [project.configurations.shadedCompile]
     relocate "org.apache.commons.lang3", "me.wyne.wutils.shadow.apache.commons.lang3"
     relocate "net.kyori", "me.wyne.wutils.shadow.kyori"
-    relocate "me.wyne.wutils.config", "me.wyne.wutils.shadow.config"
 }
 
 version = '2.0.7'
