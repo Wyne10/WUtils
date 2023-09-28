@@ -42,17 +42,29 @@ public class I18n {
 
     public File getDefaultLangPath(JavaPlugin plugin)
     {
+        if (!plugin.getConfig().contains("lang"))
+        {
+            Log.global.warn("Plugin config doesn't contain default language path");
+            return null;
+        }
+
         return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
     public void setDefaultLangPath(File langPath)
     {
+        if (langPath == null || langPath.isFile())
+            Log.global.warn("Couldn't set default language to " + langPath.getName());
+
         defaultLang = YamlConfiguration.loadConfiguration(langPath);
-        Log.global.info("Default language is set to " + FilenameUtils.removeExtension(langPath.getName()));
+        Log.global.info("Default language is set to " + langPath.getName());
     }
 
     public String getLocalizedString(String path)
     {
+        if (!defaultLang.contains(path))
+            Log.global.warn("String at path '" + path + "' not found (Default language)");
+
         return defaultLang.getString(path);
     }
 
@@ -63,11 +75,17 @@ public class I18n {
         if (!lang.containsKey(player.locale().getLanguage()))
             return getLocalizedString(path);
 
+        if (!lang.get(player.locale().getLanguage()).contains(path))
+            Log.global.warn("String at path '" + path + "' not found (" + player.locale().getLanguage() + " language)");
+
         return lang.get(player.locale().getLanguage()).getString(path);
     }
 
     public List<String> getLocalizedStringList(String path)
     {
+        if (!defaultLang.contains(path))
+            Log.global.warn("String list at path '" + path + "' not found (Default language)");
+
         return defaultLang.getStringList(path);
     }
 
@@ -77,6 +95,9 @@ public class I18n {
             return getLocalizedStringList(path);
         if (!lang.containsKey(player.locale().getLanguage()))
             return getLocalizedStringList(path);
+
+        if (!lang.get(player.locale().getLanguage()).contains(path))
+            Log.global.warn("String list at path '" + path + "' not found (" + player.locale().getLanguage() + " language)");
 
         return lang.get(player.locale().getLanguage()).getStringList(path);
     }
