@@ -34,7 +34,7 @@ public class Config {
                     else if (ConfigParameter.class.isAssignableFrom(field.getType()))
                         ((ConfigParameter)field.get(object)).getValue(config, path);
                     else
-                        field.set(object, config.get(path));
+                        field.set(object, field.getAnnotation(ConfigField.class).asString() ? config.get(path).toString() : config.get(path));
                 }
             }
         }

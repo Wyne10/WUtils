@@ -26,7 +26,7 @@ public class ConfigGenerator {
     {
         generatedText.append(path);
         generatedText.append(": ");
-        generatedText.append(value.toString());
+        generatedText.append(value == null ? "" : value.toString());
         whitespace();
         return this;
     }

@@ -53,8 +53,11 @@ public class I18n {
 
     public void setDefaultLangPath(File langPath)
     {
-        if (langPath == null || langPath.isFile())
+        if (langPath == null || !langPath.isFile())
+        {
             Log.global.warn("Couldn't set default language to " + langPath.getName());
+            return;
+        }
 
         defaultLang = YamlConfiguration.loadConfiguration(langPath);
         Log.global.info("Default language is set to " + langPath.getName());

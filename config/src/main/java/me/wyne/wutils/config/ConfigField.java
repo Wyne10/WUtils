@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigField {
     boolean generate() default false;
+    boolean asString() default false;
     String path() default "";
     String value() default "";
     String comment() default "";
