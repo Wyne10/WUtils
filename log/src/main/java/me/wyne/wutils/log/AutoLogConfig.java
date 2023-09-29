@@ -16,14 +16,14 @@ public class AutoLogConfig implements LogConfig {
 
     public AutoLogConfig(FileConfiguration config, String loggerName)
     {
-        generateConfig(config, loggerName);
+        generateConfig(loggerName);
         readConfig(config, loggerName);
     }
 
     public AutoLogConfig(FileConfiguration config, String loggerName, boolean generateWrite)
     {
         this.generateWrite = generateWrite;
-        generateConfig(config, loggerName);
+        generateConfig(loggerName);
         readConfig(config, loggerName);
     }
 
@@ -33,7 +33,7 @@ public class AutoLogConfig implements LogConfig {
         logWarn = defaultValues.logWarn();
         writeInfo = defaultValues.writeInfo();
         writeWarn = defaultValues.writeWarn();
-        generateConfig(config, loggerName);
+        generateConfig(loggerName);
         readConfig(config, loggerName);
     }
 
@@ -44,7 +44,7 @@ public class AutoLogConfig implements LogConfig {
         logWarn = defaultValues.logWarn();
         writeInfo = defaultValues.writeInfo();
         writeWarn = defaultValues.writeWarn();
-        generateConfig(config, loggerName);
+        generateConfig(loggerName);
         readConfig(config, loggerName);
     }
 
@@ -56,8 +56,11 @@ public class AutoLogConfig implements LogConfig {
         this.writeWarn = writeWarn;
     }
 
-    private void generateConfig(FileConfiguration config, String loggerName)
+    private void generateConfig(String loggerName)
     {
+        if (!ConfigGenerator.global.isEmpty())
+            ConfigGenerator.global.whitespace();
+
         for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
             if (field.getName().contains("write") && !generateWrite)

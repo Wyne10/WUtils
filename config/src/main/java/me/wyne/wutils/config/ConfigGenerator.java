@@ -46,6 +46,10 @@ public class ConfigGenerator {
         return this;
     }
 
+    public boolean isEmpty() {
+        return generatedText.isEmpty();
+    }
+
     @Contract("-> this")
     public ConfigGenerator clear() {
         generatedText = new StringBuilder();

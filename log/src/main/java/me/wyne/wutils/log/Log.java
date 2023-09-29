@@ -2,6 +2,7 @@ package me.wyne.wutils.log;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,6 +35,26 @@ public class Log {
         return fileWriteExecutor != null && logDirectory != null;
     }
 
+    public Executor getFileWriteExecutor()
+    {
+        return fileWriteExecutor;
+    }
+
+    public File getLogDirectory()
+    {
+        return logDirectory;
+    }
+
+    Log(Builder builder)
+    {
+        this.logger = builder.logger;
+        this.fileWriteExecutor = builder.fileWriteExecutor;
+        this.logDirectory = builder.logDirectory;
+        if (builder.loggerName == null)
+            this.config = builder.config;
+        else
+            this.config = new AutoLogConfig(builder.autoConfig, builder.loggerName, builder.config, isFileWriteActive());
+    }
     public Log(Logger logger, LogConfig logConfig)
     {
         this.logger = logger;
@@ -58,7 +79,6 @@ public class Log {
         this.config = logConfig;
         this.fileWriteExecutor = logWriteExecutor;
         this.logDirectory = logDirectory;
-        deleteOlderLogs();
     }
 
     public Log(Logger logger, FileConfiguration config, String loggerName, Executor logWriteExecutor, File logDirectory)
@@ -67,7 +87,6 @@ public class Log {
         this.config = new AutoLogConfig(config, loggerName, true);
         this.fileWriteExecutor = logWriteExecutor;
         this.logDirectory = logDirectory;
-        deleteOlderLogs();
     }
 
     public Log(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor logWriteExecutor, File logDirectory)
@@ -76,7 +95,147 @@ public class Log {
         this.config = new AutoLogConfig(config, loggerName, defaultValues, true);
         this.fileWriteExecutor = logWriteExecutor;
         this.logDirectory = logDirectory;
-        deleteOlderLogs();
+    }
+
+    @Contract("-> new")
+    public static Builder builder() { return new Builder(); }
+
+    @Contract("_, _ -> new")
+    public static Builder builder(Logger logger, LogConfig logConfig) { return new Builder(logger, logConfig); }
+
+    @Contract("_, _, _ -> new")
+    public static Builder builder(Logger logger, FileConfiguration config, String loggerName) { return new Builder(logger, config, loggerName); }
+
+    @Contract("_, _, _, _ -> new")
+    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues) { return new Builder(logger, config, loggerName, defaultValues); }
+
+    @Contract("_, _, _, _ -> new")
+    public static Builder builder(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, logConfig, fileWriteExecutor, logDirectory); }
+
+    @Contract("_, _, _, _, _ -> new")
+    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, config, loggerName, fileWriteExecutor, logDirectory); }
+
+    @Contract("_, _, _, _, _, _ -> new")
+    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, config, loggerName, defaultValues, fileWriteExecutor, logDirectory); }
+
+    @Contract("-> new")
+    public Builder toBuilder()
+    {
+        return new Builder(this);
+    }
+
+    public static final class Builder
+    {
+        private Logger logger;
+        private LogConfig config = new AutoLogConfig(false, false, false, false);
+        private Executor fileWriteExecutor;
+        private File logDirectory;
+
+        private FileConfiguration autoConfig;
+        private String loggerName;
+
+        Builder() {}
+
+        Builder(Log logger)
+        {
+            this.logger = logger.logger;
+            this.config = logger.config;
+            this.fileWriteExecutor = logger.fileWriteExecutor;
+            this.logDirectory = logger.logDirectory;
+        }
+
+        public Builder(Logger logger, LogConfig logConfig)
+        {
+            this.logger = logger;
+            this.config = logConfig;
+        }
+
+        public Builder(Logger logger, FileConfiguration config, String loggerName)
+        {
+            this.logger = logger;
+            this.config = new AutoLogConfig(config, loggerName, false);
+        }
+
+        public Builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues)
+        {
+            this.logger = logger;
+            this.config = new AutoLogConfig(config, loggerName, defaultValues, false);
+        }
+
+        public Builder(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory)
+        {
+            this.logger = logger;
+            this.config = logConfig;
+            this.fileWriteExecutor = fileWriteExecutor;
+            this.logDirectory = logDirectory;
+        }
+
+        public Builder(Logger logger, FileConfiguration config, String loggerName, Executor fileWriteExecutor, File logDirectory)
+        {
+            this.logger = logger;
+            this.config = new AutoLogConfig(config, loggerName, true);
+            this.fileWriteExecutor = fileWriteExecutor;
+            this.logDirectory = logDirectory;
+        }
+
+        public Builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor fileWriteExecutor, File logDirectory)
+        {
+            this.logger = logger;
+            this.config = new AutoLogConfig(config, loggerName, defaultValues, true);
+            this.fileWriteExecutor = fileWriteExecutor;
+            this.logDirectory = logDirectory;
+        }
+
+        @Contract("_ -> this")
+        public Builder setLogger(Logger logger)
+        {
+            this.logger = logger;
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder setConfig(LogConfig logConfig)
+        {
+            this.config = logConfig;
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder setAutoConfig(FileConfiguration config, String loggerName)
+        {
+            this.autoConfig = config;
+            this.loggerName = loggerName;
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder setAutoConfig(FileConfiguration config, String loggerName, LogConfig defaultValues)
+        {
+            this.autoConfig = config;
+            this.loggerName = loggerName;
+            this.config = defaultValues;
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder setFileWriteExecutor(Executor fileWriteExecutor)
+        {
+            this.fileWriteExecutor = fileWriteExecutor;
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public Builder setLogDirectory(File logDirectory)
+        {
+            this.logDirectory = logDirectory;
+            return this;
+        }
+
+        @Contract("-> new")
+        public Log build()
+        {
+            return new Log(this);
+        }
     }
 
     public boolean info(String message)
