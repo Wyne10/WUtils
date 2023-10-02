@@ -1,6 +1,9 @@
 package me.wyne.wutils.i18n;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.wyne.wutils.log.Log;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +70,7 @@ public class I18n {
     public String getLocalizedString(String path)
     {
         if (!defaultLang.contains(path))
-            Log.global.warn("String at path '" + path + "' not found (Default language)");
+            Log.global.warn("String at path '" + path + "' not found (default language)");
 
         return defaultLang.getString(path);
     }
@@ -84,10 +88,30 @@ public class I18n {
         return lang.get(player.locale().getLanguage()).getString(path);
     }
 
+    public String getLocalizedPlaceholderString(Player player, String path)
+    {
+        return PlaceholderAPI.setPlaceholders(player, getLocalizedString(player, path));
+    }
+
+    public Component getLocalizedComponent(String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedString(path));
+    }
+
+    public Component getLocalizedComponent(Player player, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedString(player, path));
+    }
+
+    public Component getLocalizedPlaceholderComponent(Player player, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(player, path));
+    }
+
     public List<String> getLocalizedStringList(String path)
     {
         if (!defaultLang.contains(path))
-            Log.global.warn("String list at path '" + path + "' not found (Default language)");
+            Log.global.warn("String list at path '" + path + "' not found (default language)");
 
         return defaultLang.getStringList(path);
     }
@@ -103,5 +127,41 @@ public class I18n {
             Log.global.warn("String list at path '" + path + "' not found (" + player.locale().getLanguage() + " language)");
 
         return lang.get(player.locale().getLanguage()).getStringList(path);
+    }
+
+    public List<String> getLocalizedPlaceholderStringList(Player player, String path)
+    {
+        List<String> placeholderStringList = new ArrayList<>();
+
+        getLocalizedStringList(player, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(player, string)));
+
+        return placeholderStringList;
+    }
+
+    public List<Component> getLocalizedComponentList(String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedStringList(path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
+    public List<Component> getLocalizedComponentList(Player player, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedStringList(player, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
+    public List<Component> getLocalizedPlaceholderComponentList(Player player, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedPlaceholderStringList(player, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
     }
 }
