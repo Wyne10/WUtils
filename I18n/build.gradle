@@ -31,7 +31,7 @@ shadowJar {
     relocate "org.apache.commons.io", "me.wyne.wutils.shadow.apache.commons.io"
 }
 
-version = '1.2.0'
+version = '1.2.5'
 
 publishing {
     publications {

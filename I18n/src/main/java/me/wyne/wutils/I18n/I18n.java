@@ -5,10 +5,13 @@ import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FilenameUtils;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,14 +72,18 @@ public class I18n {
 
     public String getLocalizedString(String path)
     {
+        if (defaultLang == null)
+            Log.global.warn("Default language isn't set");
         if (!defaultLang.contains(path))
             Log.global.warn("String at path '" + path + "' not found (default language)");
 
         return defaultLang.getString(path);
     }
 
-    public String getLocalizedString(Player player, String path)
+    public String getLocalizedString(@Nullable Player player, String path)
     {
+        if (player == null)
+            return getLocalizedString(path);
         if (player.locale().getLanguage().isEmpty())
             return getLocalizedString(path);
         if (!lang.containsKey(player.locale().getLanguage()))
@@ -88,9 +95,41 @@ public class I18n {
         return lang.get(player.locale().getLanguage()).getString(path);
     }
 
+    public String getLocalizedString(CommandSender commandSender, String path)
+    {
+        Player player = null;
+
+        if (commandSender instanceof Player)
+            player = (Player)commandSender;
+
+        return getLocalizedString(player, path);
+    }
     public String getLocalizedPlaceholderString(Player player, String path)
     {
         return PlaceholderAPI.setPlaceholders(player, getLocalizedString(player, path));
+    }
+
+    public String getLocalizedPlaceholderString(CommandSender commandSender, String path)
+    {
+        Player player = null;
+
+        if (commandSender instanceof Player)
+            player = (Player)commandSender;
+
+        if (player != null)
+            return PlaceholderAPI.setPlaceholders(player, getLocalizedString(player, path));
+        else
+            return getLocalizedString(path);
+    }
+
+    public String getLocalizedPlaceholderString(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    {
+        return PlaceholderAPI.setPlaceholders(placeholderPlayer, getLocalizedString(langPlayer, path));
+    }
+
+    public String getLocalizedPlaceholderString(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    {
+        return PlaceholderAPI.setPlaceholders(placeholderPlayer, getLocalizedString(langCommandSender, path));
     }
 
     public Component getLocalizedComponent(String path)
@@ -103,21 +142,45 @@ public class I18n {
         return MiniMessage.miniMessage().deserialize(getLocalizedString(player, path));
     }
 
+    public Component getLocalizedComponent(CommandSender commandSender, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedString(commandSender, path));
+    }
+
     public Component getLocalizedPlaceholderComponent(Player player, String path)
     {
         return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(player, path));
     }
 
+    public Component getLocalizedPlaceholderComponent(CommandSender commandSender, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(commandSender, path));
+    }
+
+    public Component getLocalizedPlaceholderComponent(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(placeholderPlayer, langPlayer, path));
+    }
+
+    public Component getLocalizedPlaceholderComponent(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(placeholderPlayer, langCommandSender, path));
+    }
+
     public List<String> getLocalizedStringList(String path)
     {
+        if (defaultLang == null)
+            Log.global.warn("Default language isn't set");
         if (!defaultLang.contains(path))
             Log.global.warn("String list at path '" + path + "' not found (default language)");
 
         return defaultLang.getStringList(path);
     }
 
-    public List<String> getLocalizedStringList(Player player, String path)
+    public List<String> getLocalizedStringList(@Nullable Player player, String path)
     {
+        if (player == null)
+            return getLocalizedStringList(path);
         if (player.locale().getLanguage().isEmpty())
             return getLocalizedStringList(path);
         if (!lang.containsKey(player.locale().getLanguage()))
@@ -129,11 +192,59 @@ public class I18n {
         return lang.get(player.locale().getLanguage()).getStringList(path);
     }
 
+    public List<String> getLocalizedStringList(CommandSender commandSender, String path)
+    {
+        Player player = null;
+
+        if (commandSender instanceof Player)
+            player = (Player)commandSender;
+
+        return getLocalizedStringList(player, path);
+    }
+
     public List<String> getLocalizedPlaceholderStringList(Player player, String path)
     {
         List<String> placeholderStringList = new ArrayList<>();
 
         getLocalizedStringList(player, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(player, string)));
+
+        return placeholderStringList;
+    }
+
+    public List<String> getLocalizedPlaceholderStringList(CommandSender commandSender, String path)
+    {
+        Player player;
+
+        if (commandSender instanceof Player)
+            player = (Player)commandSender;
+        else {
+            player = null;
+        }
+
+        List<String> placeholderStringList = new ArrayList<>();
+
+        if (player != null)
+            getLocalizedStringList(player, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(player, string)));
+        else
+            return getLocalizedStringList(path);
+
+        return placeholderStringList;
+    }
+
+    public List<String> getLocalizedPlaceholderStringList(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    {
+        List<String> placeholderStringList = new ArrayList<>();
+
+        getLocalizedStringList(langPlayer, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(placeholderPlayer, string)));
+
+        return placeholderStringList;
+    }
+
+    public List<String> getLocalizedPlaceholderStringList(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    {
+        List<String> placeholderStringList = new ArrayList<>();
+
+        getLocalizedStringList(langCommandSender, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(placeholderPlayer, string)));
 
         return placeholderStringList;
     }
@@ -156,11 +267,47 @@ public class I18n {
         return componentList;
     }
 
+    public List<Component> getLocalizedComponentList(CommandSender commandSender, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedStringList(commandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
     public List<Component> getLocalizedPlaceholderComponentList(Player player, String path)
     {
         List<Component> componentList = new ArrayList<>();
 
         getLocalizedPlaceholderStringList(player, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
+    public List<Component> getLocalizedPlaceholderComponentList(CommandSender commandSender, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedPlaceholderStringList(commandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
+    public List<Component> getLocalizedPlaceholderComponentList(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedPlaceholderStringList(placeholderPlayer, langPlayer, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
+
+        return componentList;
+    }
+
+    public List<Component> getLocalizedPlaceholderComponentList(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    {
+        List<Component> componentList = new ArrayList<>();
+
+        getLocalizedPlaceholderStringList(placeholderPlayer, langCommandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
 
         return componentList;
     }
