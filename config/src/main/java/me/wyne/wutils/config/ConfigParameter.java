@@ -2,8 +2,8 @@ package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public interface ConfigParameter<TRet> {
+public interface ConfigParameter{
 
-    TRet getValue(FileConfiguration config, String path);
+    Object getValue(FileConfiguration config, String path);
 
 }

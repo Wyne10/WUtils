@@ -356,7 +356,7 @@ public class Log {
         });
     }
 
-    private void deleteOlderLogs()
+    public void deleteOlderLogs()
     {
         if (!isFileWriteActive())
             return;
@@ -369,6 +369,9 @@ public class Log {
 
         for (File file : logDirectory.listFiles())
         {
+            if (!file.getName().endsWith(".txt"))
+                continue;
+
             try {
                 if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime()  > 604800000)
                 {

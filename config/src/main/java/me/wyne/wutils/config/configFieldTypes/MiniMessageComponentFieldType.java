@@ -6,10 +6,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class MiniMessageComponentFieldType implements ConfigParameter<Component> {
+public class MiniMessageComponentFieldType implements ConfigParameter {
 
     @Override
-    public Component getValue(@NotNull FileConfiguration config, @NotNull String path) {
+    public Object getValue(@NotNull FileConfiguration config, @NotNull String path) {
         return MiniMessage.miniMessage().deserialize(config.getString(path));
     }
 
