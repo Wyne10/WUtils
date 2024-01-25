@@ -1,16 +1,8 @@
 rootProject.name = 'WUtils'
-include(':WUtils-chatMessages')
-include(':WUtils-commands')
 include(':WUtils-config')
 include (':WUtils-i18n')
 include(':WUtils-log')
-include(':WUtils-settings')
-include(':WUtils-storage')
-project(":WUtils-chatMessages").projectDir = file('chatMessages')
-project(":WUtils-commands").projectDir = file('commands')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-i18n").projectDir = file('i18n')
 project(":WUtils-log").projectDir = file('log')
-project(":WUtils-settings").projectDir = file('settings')
-project(":WUtils-storage").projectDir = file('storage')
 

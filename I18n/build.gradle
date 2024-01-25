@@ -12,35 +12,30 @@ repositories {
     }
 }
 
-configurations {
-    shadedCompile
-}
-
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
-    shadedCompile compileOnly('commons-io:commons-io:2.13.0')
-    shadedCompile compileOnly('net.kyori:adventure-text-minimessage:4.14.0')
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+    implementation 'commons-io:commons-io:2.13.0'
+    implementation 'net.kyori:adventure-text-minimessage:4.14.0'
     implementation project(':WUtils-log')
 }
 
 shadowJar {
     archiveClassifier.set('')
     minimize()
-    configurations = [project.configurations.shadedCompile]
-    relocate "org.apache.commons.io", "me.wyne.wutils.shadow.apache.commons.io"
+    relocate "org.apache.commons.io", "me.wyne.wutils.shadow.org.apache.commons.io"
+    relocate "net.kyori", "me.wyne.wutils.shadow.net.kyori"
 }
 
-version = '1.2.6'
+version = '1.3.0'
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        shadow(MavenPublication) { publication ->
+            from project.shadow.component(publication)
             groupId = group
             artifactId = 'WUtils-i18n'
             version = version
-
-            from components.java
         }
     }
 }
