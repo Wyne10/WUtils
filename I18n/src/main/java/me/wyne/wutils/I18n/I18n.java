@@ -1,314 +1,257 @@
 package me.wyne.wutils.i18n;
 
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.wyne.wutils.i18n.language.Language;
+import me.wyne.wutils.i18n.language.validation.NullValidator;
+import me.wyne.wutils.i18n.language.validation.StringValidator;
 import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 public class I18n {
-    public static I18n global = new I18n();
+    public static I18n global;
 
-    private final Map<String, FileConfiguration> lang = new HashMap<>();
-    private FileConfiguration defaultLang;
+    private final Map<String, Language> languageMap = new HashMap<>();
+    private Language defaultLanguage;
+    private Language pluginDefaultLanguage;
 
-    public I18n() {}
+    private StringValidator stringValidator = new NullValidator();
 
-    public I18n(File langPath)
+    public I18n(File defaultLanguageFile)
     {
-        setDefaultLangPath(langPath);
+        setDefaultLanguage(defaultLanguageFile);
     }
 
     public I18n(JavaPlugin plugin)
     {
-        setDefaultLangPath(getDefaultLangPath(plugin));
-        loadLang(plugin);
+        loadDefaultPluginLanguage(plugin);
+        setDefaultLanguage(getDefaultLanguageFile(plugin));
+        loadLanguages(plugin);
     }
 
-    private void loadLang(JavaPlugin plugin)
+    public I18n(File defaultLanguageFile, StringValidator stringValidator)
+    {
+        this.stringValidator = stringValidator;
+        setDefaultLanguage(defaultLanguageFile);
+    }
+
+    public I18n(JavaPlugin plugin, StringValidator stringValidator)
+    {
+        this.stringValidator = stringValidator;
+        loadDefaultPluginLanguage(plugin);
+        setDefaultLanguage(getDefaultLanguageFile(plugin));
+        loadLanguages(plugin);
+    }
+
+    public void loadLanguage(File languageFile)
+    {
+        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(defaultLanguage, languageFile, stringValidator));
+        Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+    }
+
+    private void loadLanguages(JavaPlugin plugin)
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
         {
-            lang.put(FilenameUtils.removeExtension(file.getName()), YamlConfiguration.loadConfiguration(file));
-            Log.global.info("Loaded " + FilenameUtils.removeExtension(file.getName()) + " language");
+            loadLanguage(file);
         }
     }
 
-    public File getDefaultLangPath(JavaPlugin plugin)
+    private void loadDefaultPluginLanguage(JavaPlugin plugin)
+    {
+        File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
+        try {
+            FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
+            YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(configResource);
+
+            if (!pluginConfig.contains("lang"))
+                return;
+
+            File languageResource = new File(plugin.getDataFolder(), "defaults/" + pluginConfig.getString("lang"));
+            pluginDefaultLanguage = new Language(languageResource, stringValidator);
+        } catch (IOException e) {
+            Log.global.exception("An error occurred while trying to load default plugin language", e);
+        }
+    }
+
+    public File getDefaultLanguageFile(JavaPlugin plugin)
     {
         if (!plugin.getConfig().contains("lang"))
         {
             Log.global.warn("Plugin config doesn't contain default language path");
+            Log.global.warn("Absence of default language may and will cause issues");
             return null;
         }
 
         return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
-    public void setDefaultLangPath(File langPath)
+    public void setDefaultLanguage(File languageFile)
     {
-        if (langPath == null || !langPath.isFile())
+        if (languageFile == null || !languageFile.exists())
         {
-            Log.global.warn("Couldn't set default language to " + langPath.getName());
+            Log.global.error("Couldn't set default language to " + (languageFile != null ? languageFile.getName() : "null"));
+            if (defaultLanguage == null)
+            {
+                Log.global.warn("Will try to get language file from plugin's resources");
+                this.defaultLanguage = pluginDefaultLanguage != null
+                        ? pluginDefaultLanguage
+                        : null;
+            }
             return;
         }
 
-        defaultLang = YamlConfiguration.loadConfiguration(langPath);
-        Log.global.info("Default language is set to " + langPath.getName());
+        this.defaultLanguage = pluginDefaultLanguage != null
+                ? new Language(pluginDefaultLanguage, languageFile, stringValidator)
+                : new Language(languageFile, stringValidator);
+        Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());
     }
 
-    public String getLocalizedString(String path)
+    public void setStringValidator(StringValidator stringValidator)
     {
-        if (defaultLang == null)
-            Log.global.warn("Default language isn't set");
-        if (!defaultLang.contains(path))
-            Log.global.warn("String at path '" + path + "' not found (default language)");
-
-        return defaultLang.getString(path);
+        this.stringValidator = stringValidator;
+        languageMap.forEach((s, language) -> language.setStringValidator(stringValidator));
+        defaultLanguage.setStringValidator(stringValidator);
     }
 
-    public String getLocalizedString(@Nullable Player player, String path)
+    public Language getLanguage(@Nullable Locale locale)
     {
-        if (player == null)
-            return getLocalizedString(path);
-        if (player.locale().getLanguage().isEmpty())
-            return getLocalizedString(path);
-        if (!lang.containsKey(player.locale().getLanguage()))
-            return getLocalizedString(path);
-
-        if (!lang.get(player.locale().getLanguage()).contains(path))
-            Log.global.warn("String at path '" + path + "' not found (" + player.locale().getLanguage() + " language)");
-
-        return lang.get(player.locale().getLanguage()).getString(path);
+        if (locale == null)
+            return defaultLanguage;
+        if (locale.getLanguage().isEmpty())
+            return defaultLanguage;
+        if (!languageMap.containsKey(locale.getLanguage()))
+            return defaultLanguage;
+        return languageMap.get(locale.getLanguage());
     }
 
-    public String getLocalizedString(CommandSender commandSender, String path)
+    public String getString(String path)
     {
-        Player player = null;
-
-        if (commandSender instanceof Player)
-            player = (Player)commandSender;
-
-        return getLocalizedString(player, path);
+        return defaultLanguage.getString(path);
     }
-    public String getLocalizedPlaceholderString(Player player, String path)
+
+    public String getString(@Nullable Locale locale, String path)
     {
-        return PlaceholderAPI.setPlaceholders(player, getLocalizedString(player, path));
+        return getLanguage(locale).getString(path);
     }
 
-    public String getLocalizedPlaceholderString(CommandSender commandSender, String path)
+    public String getPlaceholderString(Player player, String path)
     {
-        Player player = null;
-
-        if (commandSender instanceof Player)
-            player = (Player)commandSender;
-
-        if (player != null)
-            return PlaceholderAPI.setPlaceholders(player, getLocalizedString(player, path));
-        else
-            return getLocalizedString(path);
+        return defaultLanguage.getPlaceholderString(player, path);
     }
 
-    public String getLocalizedPlaceholderString(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    public String getPlaceholderString(@Nullable Locale locale, Player player, String path)
     {
-        return PlaceholderAPI.setPlaceholders(placeholderPlayer, getLocalizedString(langPlayer, path));
+        return getLanguage(locale).getPlaceholderString(player, path);
     }
 
-    public String getLocalizedPlaceholderString(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    public Component getComponent(String path)
     {
-        return PlaceholderAPI.setPlaceholders(placeholderPlayer, getLocalizedString(langCommandSender, path));
+        return defaultLanguage.getComponent(path);
     }
 
-    public Component getLocalizedComponent(String path)
+    public Component getComponent(String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedString(path));
+        return defaultLanguage.getComponent(path, tagResolvers);
     }
 
-    public Component getLocalizedComponent(Player player, String path)
+    public Component getComponent(@Nullable Locale locale, String path)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedString(player, path));
+        return getLanguage(locale).getComponent(path);
     }
 
-    public Component getLocalizedComponent(CommandSender commandSender, String path)
+    public Component getComponent(@Nullable Locale locale, String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedString(commandSender, path));
+        return getLanguage(locale).getComponent(path, tagResolvers);
     }
 
-    public Component getLocalizedPlaceholderComponent(Player player, String path)
+    public Component getPlaceholderComponent(Player player, String path)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(player, path));
+        return defaultLanguage.getPlaceholderComponent(player, path);
     }
 
-    public Component getLocalizedPlaceholderComponent(CommandSender commandSender, String path)
+    public Component getPlaceholderComponent(Player player, String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(commandSender, path));
+        return defaultLanguage.getPlaceholderComponent(player, path, tagResolvers);
     }
 
-    public Component getLocalizedPlaceholderComponent(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    public Component getPlaceholderComponent(@Nullable Locale locale, Player player, String path)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(placeholderPlayer, langPlayer, path));
+        return getLanguage(locale).getPlaceholderComponent(player, path);
     }
 
-    public Component getLocalizedPlaceholderComponent(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    public Component getPlaceholderComponent(@Nullable Locale locale, Player player, String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getLocalizedPlaceholderString(placeholderPlayer, langCommandSender, path));
+        return getLanguage(locale).getPlaceholderComponent(player, path, tagResolvers);
     }
 
-    public List<String> getLocalizedStringList(String path)
+    public List<String> getStringList(String path)
     {
-        if (defaultLang == null)
-            Log.global.warn("Default language isn't set");
-        if (!defaultLang.contains(path))
-            Log.global.warn("String list at path '" + path + "' not found (default language)");
-
-        return defaultLang.getStringList(path);
+        return defaultLanguage.getStringList(path);
     }
 
-    public List<String> getLocalizedStringList(@Nullable Player player, String path)
+    public List<String> getStringList(@Nullable Locale locale, String path)
     {
-        if (player == null)
-            return getLocalizedStringList(path);
-        if (player.locale().getLanguage().isEmpty())
-            return getLocalizedStringList(path);
-        if (!lang.containsKey(player.locale().getLanguage()))
-            return getLocalizedStringList(path);
-
-        if (!lang.get(player.locale().getLanguage()).contains(path))
-            Log.global.warn("String list at path '" + path + "' not found (" + player.locale().getLanguage() + " language)");
-
-        return lang.get(player.locale().getLanguage()).getStringList(path);
+        return getLanguage(locale).getStringList(path);
     }
 
-    public List<String> getLocalizedStringList(CommandSender commandSender, String path)
+    public List<String> getPlaceholderStringList(Player player, String path)
     {
-        Player player = null;
-
-        if (commandSender instanceof Player)
-            player = (Player)commandSender;
-
-        return getLocalizedStringList(player, path);
+        return defaultLanguage.getPlaceholderStringList(player, path);
     }
 
-    public List<String> getLocalizedPlaceholderStringList(Player player, String path)
+    public List<String> getPlaceholderStringList(@Nullable Locale locale, Player player, String path)
     {
-        List<String> placeholderStringList = new ArrayList<>();
-
-        getLocalizedStringList(player, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(player, string)));
-
-        return placeholderStringList;
+        return getLanguage(locale).getPlaceholderStringList(player, path);
     }
 
-    public List<String> getLocalizedPlaceholderStringList(CommandSender commandSender, String path)
+    public List<Component> getComponentList(String path)
     {
-        Player player;
-
-        if (commandSender instanceof Player)
-            player = (Player)commandSender;
-        else {
-            player = null;
-        }
-
-        List<String> placeholderStringList = new ArrayList<>();
-
-        if (player != null)
-            getLocalizedStringList(player, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(player, string)));
-        else
-            return getLocalizedStringList(path);
-
-        return placeholderStringList;
+        return defaultLanguage.getComponentList(path);
     }
 
-    public List<String> getLocalizedPlaceholderStringList(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
+    public List<Component> getComponentList(String path, TagResolver ...tagResolvers)
     {
-        List<String> placeholderStringList = new ArrayList<>();
-
-        getLocalizedStringList(langPlayer, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(placeholderPlayer, string)));
-
-        return placeholderStringList;
+        return defaultLanguage.getComponentList(path, tagResolvers);
     }
 
-    public List<String> getLocalizedPlaceholderStringList(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
+    public List<Component> getComponentList(@Nullable Locale locale, String path)
     {
-        List<String> placeholderStringList = new ArrayList<>();
-
-        getLocalizedStringList(langCommandSender, path).forEach((string) -> placeholderStringList.add(PlaceholderAPI.setPlaceholders(placeholderPlayer, string)));
-
-        return placeholderStringList;
+        return getLanguage(locale).getComponentList(path);
     }
 
-    public List<Component> getLocalizedComponentList(String path)
+    public List<Component> getComponentList(@Nullable Locale locale, String path, TagResolver ...tagResolvers)
     {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedStringList(path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
+        return getLanguage(locale).getComponentList(path, tagResolvers);
     }
 
-    public List<Component> getLocalizedComponentList(Player player, String path)
+    public List<Component> getPlaceholderComponentList(Player player, String path)
     {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedStringList(player, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
+        return defaultLanguage.getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getLocalizedComponentList(CommandSender commandSender, String path)
+    public List<Component> getPlaceholderComponentList(Player player, String path, TagResolver ...tagResolvers)
     {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedStringList(commandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
+        return defaultLanguage.getPlaceholderComponentList(player, path, tagResolvers);
     }
 
-    public List<Component> getLocalizedPlaceholderComponentList(Player player, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, Player player, String path)
     {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedPlaceholderStringList(player, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
+        return getLanguage(locale).getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getLocalizedPlaceholderComponentList(CommandSender commandSender, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, Player player, String path, TagResolver ...tagResolvers)
     {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedPlaceholderStringList(commandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
+        return getLanguage(locale).getPlaceholderComponentList(player, path, tagResolvers);
     }
 
-    public List<Component> getLocalizedPlaceholderComponentList(OfflinePlayer placeholderPlayer, @Nullable Player langPlayer, String path)
-    {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedPlaceholderStringList(placeholderPlayer, langPlayer, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
-    }
-
-    public List<Component> getLocalizedPlaceholderComponentList(OfflinePlayer placeholderPlayer, CommandSender langCommandSender, String path)
-    {
-        List<Component> componentList = new ArrayList<>();
-
-        getLocalizedPlaceholderStringList(placeholderPlayer, langCommandSender, path).forEach((string) -> componentList.add(MiniMessage.miniMessage().deserialize(string)));
-
-        return componentList;
-    }
 }

@@ -1,4 +1,4 @@
-package me.wyne.wutils.i18n;
+package me.wyne.wutils.i18n.language.validation;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

@@ -1,6 +1,7 @@
-package me.wyne.wutils.i18n;
+package me.wyne.wutils.i18n.language;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.wyne.wutils.i18n.language.validation.StringValidator;
 import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -19,7 +20,7 @@ public class Language {
 
     private final String languageCode;
     private final FileConfiguration strings;
-    private final StringValidator stringValidator;
+    private StringValidator stringValidator;
 
     public Language(File stringsFile, StringValidator stringValidator)
     {
@@ -54,11 +55,16 @@ public class Language {
             try {
                 strings.save(stringsFile);
             } catch (IOException e) {
-                Log.global.error("An exception occurred while trying to save " + stringsFile.getName());
+                Log.global.exception("An exception occurred while trying to save " + stringsFile.getName(), e);
             }
             Log.global.info("Merged missing strings to " + stringsFile.getName());
         }
 
+    }
+
+    public void setStringValidator(StringValidator stringValidator)
+    {
+        this.stringValidator = stringValidator;
     }
 
     public String getLanguageCode() {
@@ -80,9 +86,9 @@ public class Language {
         return MiniMessage.miniMessage().deserialize(getString(path));
     }
 
-    public Component getComponent(String path, TagResolver ...tagResolver)
+    public Component getComponent(String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getString(path), tagResolver);
+        return MiniMessage.miniMessage().deserialize(getString(path), tagResolvers);
     }
 
     public Component getPlaceholderComponent(Player player, String path)
@@ -90,9 +96,9 @@ public class Language {
         return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path));
     }
 
-    public Component getPlaceholderComponent(Player player, String path, TagResolver ...tagResolver)
+    public Component getPlaceholderComponent(Player player, String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path), tagResolver);
+        return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path), tagResolvers);
     }
 
 
@@ -115,10 +121,10 @@ public class Language {
                 .collect(Collectors.toList());
     }
 
-    public List<Component> getComponentList(String path, TagResolver ...tagResolver)
+    public List<Component> getComponentList(String path, TagResolver ...tagResolvers)
     {
         return getStringList(path).stream()
-                .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolver))
+                .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolvers))
                 .collect(Collectors.toList());
     }
 
@@ -129,10 +135,10 @@ public class Language {
                 .collect(Collectors.toList());
     }
 
-    public List<Component> getPlaceholderComponentList(Player player, String path, TagResolver ...tagResolver)
+    public List<Component> getPlaceholderComponentList(Player player, String path, TagResolver ...tagResolvers)
     {
         return getPlaceholderStringList(player, path).stream()
-                .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolver))
+                .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolvers))
                 .collect(Collectors.toList());
     }
 
