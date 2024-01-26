@@ -17,12 +17,14 @@ import java.util.stream.Collectors;
 
 public class Language {
 
+    private final String languageCode;
     private final FileConfiguration strings;
 
     public Language(File stringsFile)
     {
-        strings = YamlConfiguration.loadConfiguration(stringsFile);
-        Log.global.info("Loaded " + FilenameUtils.removeExtension(strings.getName()) + " language");
+        this.languageCode = FilenameUtils.removeExtension(stringsFile.getName());
+        this.strings = YamlConfiguration.loadConfiguration(stringsFile);
+        Log.global.info("Loaded " + languageCode + " language");
     }
 
     public Language(Language defaultLanguage, File stringsFile)
@@ -55,6 +57,10 @@ public class Language {
             Log.global.info("Merged missing strings to " + stringsFile.getName());
         }
 
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
     }
 
     public String getString(String path)
