@@ -5,6 +5,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class NullValidator implements StringValidator {
     @Override
     public String validateString(String languageCode, FileConfiguration strings, String path) {
-        return strings.contains(path) ? strings.getString(path) : null;
+        return strings.getString(path);
     }
 }

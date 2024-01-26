@@ -19,17 +19,19 @@ public class Language {
 
     private final String languageCode;
     private final FileConfiguration strings;
+    private final StringValidator stringValidator;
 
-    public Language(File stringsFile)
+    public Language(File stringsFile, StringValidator stringValidator)
     {
         this.languageCode = FilenameUtils.removeExtension(stringsFile.getName());
         this.strings = YamlConfiguration.loadConfiguration(stringsFile);
+        this.stringValidator = stringValidator;
         Log.global.info("Loaded " + languageCode + " language");
     }
 
-    public Language(Language defaultLanguage, File stringsFile)
+    public Language(Language defaultLanguage, File stringsFile, StringValidator stringValidator)
     {
-        this(stringsFile);
+        this(stringsFile, stringValidator);
         mergeDefaultStrings(defaultLanguage, stringsFile);
     }
 
@@ -65,7 +67,7 @@ public class Language {
 
     public String getString(String path)
     {
-        return strings.getString(path);
+        return stringValidator.validateString(languageCode, strings, path);
     }
 
     public String getPlaceholderString(Player player, String path)
