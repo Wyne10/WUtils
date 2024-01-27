@@ -86,7 +86,7 @@ public class I18n {
 
     public File getDefaultLanguageFile(JavaPlugin plugin)
     {
-        if (!plugin.getConfig().contains("lang"))
+        if (!plugin.getConfig().contains("lang", true))
         {
             Log.global.warn("Plugin config doesn't contain default language path");
             Log.global.warn("Absence of default language may and will cause issues");
@@ -104,14 +104,18 @@ public class I18n {
             if (defaultLanguage == null)
             {
                 Log.global.warn("Will try to get language file from plugin's resources");
-                this.defaultLanguage = pluginDefaultLanguage != null
-                        ? pluginDefaultLanguage
-                        : null;
+                if (pluginDefaultLanguage != null)
+                {
+                    defaultLanguage = pluginDefaultLanguage;
+                    Log.global.warn("Using " + pluginDefaultLanguage.getLanguageCode() + " as default language");
+                    return;
+                }
+                Log.global.warn("Couldn't get language file from plugins's resources");
             }
             return;
         }
 
-        this.defaultLanguage = pluginDefaultLanguage != null
+        defaultLanguage = pluginDefaultLanguage != null
                 ? new Language(pluginDefaultLanguage, languageFile, stringValidator)
                 : new Language(languageFile, stringValidator);
         Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());

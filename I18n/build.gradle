@@ -1,6 +1,5 @@
 plugins {
     id 'wutils.java-library'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
@@ -15,26 +14,21 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.5'
-    shadow 'net.kyori:adventure-text-minimessage:4.15.0'
+    api 'net.kyori:adventure-text-minimessage:4.15.0'
     implementation 'commons-io:commons-io:2.13.0'
     implementation project(':WUtils-log')
 }
 
-shadowJar {
-    archiveClassifier.set('')
-    minimize()
-    relocate "org.apache.commons.io", "me.wyne.wutils.shadow.org.apache.commons.io"
-}
-
-version = '2.0.1'
+version = '2.0.4'
 
 publishing {
     publications {
-        shadow(MavenPublication) { publication ->
-            from project.shadow.component(publication)
+        maven(MavenPublication) {
             groupId = group
             artifactId = 'WUtils-i18n'
             version = version
+
+            from components.java
         }
     }
 }

@@ -27,7 +27,6 @@ public class Language {
         this.languageCode = FilenameUtils.removeExtension(stringsFile.getName());
         this.strings = YamlConfiguration.loadConfiguration(stringsFile);
         this.stringValidator = stringValidator;
-        Log.global.info("Loaded " + languageCode + " language");
     }
 
     public Language(Language defaultLanguage, File stringsFile, StringValidator stringValidator)
