@@ -77,6 +77,7 @@ public class I18n {
                 return;
 
             File languageResource = new File(plugin.getDataFolder(), "defaults/" + pluginConfig.getString("lang"));
+            FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
             pluginDefaultLanguage = new Language(languageResource, stringValidator);
         } catch (IOException e) {
             Log.global.exception("An error occurred while trying to load default plugin language", e);
