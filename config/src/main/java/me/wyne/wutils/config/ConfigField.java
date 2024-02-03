@@ -13,6 +13,7 @@ public record ConfigField(String path, String value, String comment) {
         StringBuilder stringBuilder = new StringBuilder();
         if (!comment.isEmpty())
         {
+            stringBuilder.append("# ");
             stringBuilder.append(comment);
             stringBuilder.append("\n");
         }

@@ -1,9 +1,8 @@
 package me.wyne.wutils.config;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConfigEntryParser {
 
@@ -44,7 +43,7 @@ public class ConfigEntryParser {
             }
         }
 
-        return (Set<ConfigSection>) result.values();
+        return new LinkedHashSet<>(result.values());
     }
 
 }

@@ -23,6 +23,7 @@ public class ConfigGenerator {
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
             reader.lines().forEachOrdered(s -> generatedText.append(s));
+            generatedText.append("\n");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e); // TODO Add logging
         } catch (IOException e) {
@@ -32,10 +33,11 @@ public class ConfigGenerator {
 
     public void writeVersion(String version)
     {
-        if (!config.contains("config-version") || config.getString("config-version").equals(version))
+        if (config.contains("config-version") && config.getString("config-version").equals(version))
             return;
         isNewVersion = true;
         generatedText.insert(0, "config-version: " + version + "\n");
+        copyConfigFileData();
     }
 
     public void writeConfigSection(ConfigSection section)
@@ -56,9 +58,9 @@ public class ConfigGenerator {
         if (!isNewVersion)
             return;
 
-        copyConfigFileData();
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
             writer.write(generatedText.toString());
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e); // TODO Add logging
         }

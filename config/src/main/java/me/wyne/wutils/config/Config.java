@@ -11,7 +11,6 @@ public class Config {
 
     public static final Config global = new Config();
 
-    private ConfigEntryParser configEntryParser;
     private ConfigGenerator configGenerator;
     private final Set<Object> registeredConfigObjects = new HashSet<>();
 
@@ -58,7 +57,7 @@ public class Config {
         if (configGenerator == null)
             return; // TODO Add logging
 
-        configEntryParser = new ConfigEntryParser(registeredConfigObjects);
+        ConfigEntryParser configEntryParser = new ConfigEntryParser(registeredConfigObjects);
         configGenerator.writeVersion(version);
         configGenerator.writeConfigSections(configEntryParser.getConfigSections());
         configGenerator.generateConfig();

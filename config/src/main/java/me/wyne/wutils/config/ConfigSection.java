@@ -1,8 +1,6 @@
 package me.wyne.wutils.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigSection {
 
@@ -26,12 +24,15 @@ public class ConfigSection {
 
     public void addField(String subSection, ConfigField field)
     {
+        if (!fields.containsKey(subSection))
+            fields.put(subSection, new LinkedHashSet<>());
         fields.get(subSection).add(field);
     }
 
     public String generateConfigSection()
     {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
         stringBuilder.append(generateSectionHeader());
 
         for (String subSection : fields.keySet())
@@ -53,6 +54,7 @@ public class ConfigSection {
         for (ConfigField configField : fields.get(subSection))
         {
             stringBuilder.append(configField.generateConfigLine());
+            stringBuilder.append("\n");
         }
 
         return stringBuilder.toString();
