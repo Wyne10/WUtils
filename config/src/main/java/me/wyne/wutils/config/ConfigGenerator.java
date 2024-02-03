@@ -1,128 +1,66 @@
 package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.Contract;
 
 import java.io.*;
-import java.lang.reflect.Field;
+import java.util.Set;
 
 public class ConfigGenerator {
 
-    public final static ConfigGenerator global = new ConfigGenerator();
-
+    private final File configFile;
+    private final FileConfiguration config;
     private StringBuilder generatedText = new StringBuilder();
 
-    @Contract("_ -> this")
-    public ConfigGenerator writeString(String string)
+    private boolean isNewVersion = false;
+
+    public ConfigGenerator(File configFile, FileConfiguration config)
     {
-        generatedText.append(string);
-        whitespace();
-        return this;
+        this.configFile = configFile;
+        this.config = config;
     }
 
-    @Contract("_, _ -> this")
-    public ConfigGenerator writeValue(String path, Object value)
+    private void copyConfigFileData()
     {
-        generatedText.append(path);
-        generatedText.append(": ");
-        generatedText.append(value == null ? "" : value.toString());
-        whitespace();
-        return this;
-    }
-
-    @Contract("_, _, _ -> this")
-    public ConfigGenerator writeValue(String path, Object value, String comment)
-    {
-        generatedText.append(comment);
-        whitespace();
-        writeValue(path, value);
-        return this;
-    }
-
-    @Contract("-> this")
-    public ConfigGenerator whitespace() {
-        generatedText.append("\n");
-        return this;
-    }
-
-    public boolean isEmpty() {
-        return generatedText.isEmpty();
-    }
-
-    @Contract("-> this")
-    public ConfigGenerator clear() {
-        generatedText = new StringBuilder();
-        return this;
-    }
-
-    public static void writeConfigObject(Object object) throws IllegalAccessException {
-        for(Field field : object.getClass().getDeclaredFields())
-        {
-            if (field.isAnnotationPresent(ConfigField.class))
-            {
-                field.setAccessible(true);
-                ConfigField fieldAnnotation = field.getAnnotation(ConfigField.class);
-                if (fieldAnnotation.generate() == false)
-                    return;
-                String path = fieldAnnotation.path().isEmpty() ? field.getName() : fieldAnnotation.path();
-                Object value = fieldAnnotation.value().isEmpty() ? field.get(object) : fieldAnnotation.value();
-
-                if (fieldAnnotation.whitespace())
-                    global.whitespace();
-
-                if (!fieldAnnotation.comment().isEmpty())
-                    global.writeValue(path, value, fieldAnnotation.comment());
-                else
-                    global.writeValue(path, value);
-            }
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+            reader.lines().forEachOrdered(s -> generatedText.append(s));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e); // TODO Add logging
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO Add logging
         }
     }
 
-    public void generate(File configFile) throws IOException {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-        if (config.getBoolean("config-generator") == true)
+    public void writeVersion(String version)
+    {
+        if (!config.contains("config-version") || config.getString("config-version").equals(version))
             return;
-        else if (!config.contains("config-generator"))
-            writeInitialData(configFile, config);
-        else if (config.getBoolean("config-generator") == false)
+        isNewVersion = true;
+        generatedText.insert(0, "config-version: " + version + "\n");
+    }
+
+    public void writeConfigSection(ConfigSection section)
+    {
+        generatedText.append(section.generateConfigSection());
+    }
+
+    public void writeConfigSections(Set<ConfigSection> sectionSet)
+    {
+        for (ConfigSection section : sectionSet)
         {
-            overrideData(configFile);
-            writeInitialData(configFile, config);
+            writeConfigSection(section);
         }
     }
 
-    private void writeInitialData(File configFile, FileConfiguration config) throws IOException {
-        try (PrintWriter printWriter = new PrintWriter(new FileWriter(configFile, true))) {
-            if (!config.contains("config-generator"))
-            {
-                printWriter.println("\n\n# This value is used as an indicator of successful generation of the config.\n# Set the value to false to regenerate part of config that was generated automatically");
-                printWriter.println("config-generator: true\n");
-            }
-            printWriter.println("# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY\n");
-            printWriter.print(generatedText.toString());
-            printWriter.println("\n# THIS PART OF CONFIG WAS GENERATED AUTOMATICALLY");
-            printWriter.flush();
-        }
-    }
+    public void generateConfig()
+    {
+        if (!isNewVersion)
+            return;
 
-    private void overrideData(File configFile) throws IOException {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
-            StringBuilder fileContent = new StringBuilder();
-
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.equalsIgnoreCase("config-generator: false"))
-                    break;
-                fileContent.append(line).append(System.lineSeparator());
-            }
-            bufferedReader.close();
-            fileContent.append("config-generator: true\n\n");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
-            writer.write(fileContent.toString());
-            writer.flush();
-            writer.close();
+        copyConfigFileData();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
+            writer.write(generatedText.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO Add logging
         }
     }
 

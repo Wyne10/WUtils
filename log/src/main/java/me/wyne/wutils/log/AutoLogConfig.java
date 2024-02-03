@@ -1,6 +1,6 @@
 package me.wyne.wutils.log;
 
-import me.wyne.wutils.config.ConfigGenerator;
+import me.wyne.wutils.config.ConfigGen;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
@@ -58,8 +58,8 @@ public class AutoLogConfig implements LogConfig {
 
     private void generateConfig(String loggerName)
     {
-        if (!ConfigGenerator.global.isEmpty())
-            ConfigGenerator.global.whitespace();
+        if (!ConfigGen.global.isEmpty())
+            ConfigGen.global.whitespace();
 
         for (Field field : AutoLogConfig.class.getDeclaredFields())
         {
@@ -69,7 +69,7 @@ public class AutoLogConfig implements LogConfig {
                 continue;
 
             try {
-                ConfigGenerator.global.writeValue(loggerName + "-" + field.getName(), field.get(this));
+                ConfigGen.global.writeValue(loggerName + "-" + field.getName(), field.get(this));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

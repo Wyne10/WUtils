@@ -2,41 +2,65 @@ package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Config {
 
-    private static final Set<Object> registeredConfigObjects = new HashSet<>();
+    public static final Config global = new Config();
 
-    public Config() throws IllegalAccessException {
-        Config.registerConfigObject(this);
-        ConfigGenerator.writeConfigObject(this);
+    private ConfigEntryParser configEntryParser;
+    private ConfigGenerator configGenerator;
+    private final Set<Object> registeredConfigObjects = new HashSet<>();
+
+    public Config(File configFile, FileConfiguration config)
+    {
+        setConfigGenerator(configFile, config);
     }
 
-    public static void registerConfigObject(Object object)
+    protected Config() {
+        registerConfigObject(this);
+    }
+
+    public void setConfigGenerator(File configFile, FileConfiguration config)
+    {
+        configGenerator = new ConfigGenerator(configFile, config);
+    }
+
+    public void registerConfigObject(Object object)
     {
         registeredConfigObjects.add(object);
     }
 
-    public static void reloadConfigObjects(FileConfiguration config) throws IllegalAccessException {
+    public void reloadConfigObjects(FileConfiguration config) {
         for (Object object : registeredConfigObjects)
         {
             for(Field field  : object.getClass().getDeclaredFields())
             {
-                if (field.isAnnotationPresent(ConfigField.class))
-                {
-                    field.setAccessible(true);
-                    String path = field.getAnnotation(ConfigField.class).path().isEmpty() ? field.getName() : field.getAnnotation(ConfigField.class).path();
-                    if (field.isAnnotationPresent(TypedConfigField.class))
-                        field.set(object, field.getAnnotation(TypedConfigField.class).configFieldType().getConfigParameter().getValue(config, path));
-                    else if (ConfigParameter.class.isAssignableFrom(field.getType()))
-                        ((ConfigParameter)field.get(object)).getValue(config, path);
-                    else
-                        field.set(object, field.getAnnotation(ConfigField.class).asString() ? config.get(path) == null ? null : config.get(path).toString() : config.get(path));
+                if (!field.isAnnotationPresent(ConfigEntry.class))
+                    continue;
+
+                field.setAccessible(true);
+                String path = field.getAnnotation(ConfigEntry.class).path().isEmpty() ? field.getName() : field.getAnnotation(ConfigEntry.class).path();
+                try {
+                    field.set(object, field.getType() == String.class ? String.valueOf(config.get(path)) : config.get(path));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e); // TODO Add logging
                 }
             }
         }
+    }
+
+    public void generateConfig(String version)
+    {
+        if (configGenerator == null)
+            return; // TODO Add logging
+
+        configEntryParser = new ConfigEntryParser(registeredConfigObjects);
+        configGenerator.writeVersion(version);
+        configGenerator.writeConfigSections(configEntryParser.getConfigSections());
+        configGenerator.generateConfig();
     }
 }

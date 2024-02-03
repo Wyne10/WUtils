@@ -1,6 +1,5 @@
 plugins {
     id 'wutils.java-library'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
@@ -9,23 +8,11 @@ repositories {
     }
 }
 
-configurations {
-    shadedCompile
-}
-
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    shadedCompile compileOnly('net.kyori:adventure-text-minimessage:4.14.0')
 }
 
-shadowJar {
-    archiveClassifier.set('')
-    minimize()
-    configurations = [project.configurations.shadedCompile]
-    relocate "net.kyori", "me.wyne.wutils.shadow.kyori"
-}
-
-version = '1.3.10'
+version = '2.0.0'
 
 publishing {
     publications {

@@ -1,17 +1,24 @@
 package me.wyne.wutils.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public record ConfigField(String path, String value, String comment) {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigField {
-    boolean generate() default false;
-    boolean asString() default false;
-    String path() default "";
-    String value() default "";
-    String comment() default "";
-    boolean whitespace() default false;
+    public ConfigField(String path, String value, String comment) {
+        this.path = path;
+        this.value = value;
+        this.comment = comment;
+    }
+
+    public String generateConfigLine()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!comment.isEmpty())
+        {
+            stringBuilder.append(comment);
+            stringBuilder.append("\n");
+        }
+        stringBuilder.append(path);
+        stringBuilder.append(": ");
+        stringBuilder.append(value);
+        return stringBuilder.toString();
+    }
 }
