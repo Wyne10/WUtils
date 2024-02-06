@@ -29,7 +29,7 @@ public class ConfigFieldParser {
     }
     
     public static Set<ConfigSection> getConfigSections(Map<String, Set<ConfigField>> registeredConfigFields) {
-        Map<String, ConfigSection> result = new HashMap<>();
+        Map<String, ConfigSection> result = new LinkedHashMap<>();
 
         registeredConfigFields.forEach((section, fields) -> {
             String primarySection = getPrimarySection(section);

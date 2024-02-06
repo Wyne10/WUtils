@@ -30,7 +30,7 @@ public class Config {
 
     public void registerConfigObject(Object object)
     {
-        for(Field field  : object.getClass().getDeclaredFields())
+        for(Field field : object.getClass().getDeclaredFields())
         {
             if (!field.isAnnotationPresent(ConfigEntry.class))
                 continue;
