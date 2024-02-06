@@ -9,6 +9,7 @@ public class ConfigFieldParser {
 
     public static ConfigField getConfigField(Object holder, Field field)
     {
+        field.setAccessible(true);
         var configEntry = field.getAnnotation(ConfigEntry.class);
         String path = configEntry.path().isEmpty() ? field.getName() : configEntry.path();
         String value = null;
