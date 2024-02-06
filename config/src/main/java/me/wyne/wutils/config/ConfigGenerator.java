@@ -9,7 +9,7 @@ public class ConfigGenerator {
 
     private final File configFile;
     private final FileConfiguration config;
-    private StringBuilder generatedText = new StringBuilder();
+    private final StringBuilder generatedText = new StringBuilder();
 
     private boolean isNewVersion = false;
 

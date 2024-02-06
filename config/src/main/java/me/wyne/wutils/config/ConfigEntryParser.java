@@ -2,7 +2,6 @@ package me.wyne.wutils.config;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ConfigEntryParser {
 
