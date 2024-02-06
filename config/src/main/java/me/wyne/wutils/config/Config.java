@@ -4,15 +4,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Config {
 
     public static final Config global = new Config();
 
     private ConfigGenerator configGenerator;
-    private final Set<Object> registeredConfigObjects = new HashSet<>();
+    private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
+    private final Set<Object> registeredConfigObjects = new LinkedHashSet<>();
 
     public Config(File configFile, FileConfiguration config)
     {
@@ -31,6 +31,13 @@ public class Config {
     public void registerConfigObject(Object object)
     {
         registeredConfigObjects.add(object);
+    }
+
+    public void registerConfigField(String section, ConfigField field) {
+        if (!registeredConfigFields.containsKey(section) || registeredConfigFields.get(section) == null)
+            registeredConfigFields.put(section, new LinkedHashSet<>());
+
+        registeredConfigFields.get(section).add(field);
     }
 
     public void reloadConfigObjects(FileConfiguration config) {
@@ -57,7 +64,7 @@ public class Config {
         if (configGenerator == null)
             return; // TODO Add logging
 
-        ConfigEntryParser configEntryParser = new ConfigEntryParser(registeredConfigObjects);
+        ConfigEntryParser configEntryParser = new ConfigEntryParser(registeredConfigFields, registeredConfigObjects);
         configGenerator.writeVersion(version);
         configGenerator.writeConfigSections(configEntryParser.getConfigSections());
         configGenerator.generateConfig();

@@ -1,38 +1,18 @@
 plugins {
     id 'wutils.java-library'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
-    maven {
-        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
-}
-
-configurations {
-    shadedCompile
 }
 
 dependencies {
-    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
-    shadedCompile compileOnly('org.apache.commons:commons-lang3:3.12.0')
-    shadedCompile compileOnly('net.kyori:adventure-text-minimessage:4.14.0')
-    implementation project(':WUtils-config')
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
 }
 
-shadowJar {
-    archiveClassifier.set('')
-    minimize()
-    configurations = [project.configurations.shadedCompile]
-    relocate "org.apache.commons.lang3", "me.wyne.wutils.shadow.apache.commons.lang3"
-    relocate "net.kyori", "me.wyne.wutils.shadow.kyori"
-}
-
-version = '2.0.15'
+version = '3.0.0'
 
 publishing {
     publications {
