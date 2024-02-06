@@ -1,6 +1,7 @@
 package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.javatuples.Pair;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -12,7 +13,6 @@ public class Config {
 
     private ConfigGenerator configGenerator;
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
-    private final Set<Object> registeredConfigObjects = new LinkedHashSet<>();
 
     public Config(File configFile, FileConfiguration config)
     {
@@ -30,7 +30,13 @@ public class Config {
 
     public void registerConfigObject(Object object)
     {
-        registeredConfigObjects.add(object);
+        for(Field field  : object.getClass().getDeclaredFields())
+        {
+            if (!field.isAnnotationPresent(ConfigEntry.class))
+                continue;
+            Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field);
+            registerConfigField(sectionedConfigField.getValue0(), sectionedConfigField.getValue1());
+        }
     }
 
     public void registerConfigField(String section, ConfigField field) {
@@ -40,23 +46,18 @@ public class Config {
         registeredConfigFields.get(section).add(field);
     }
 
-    public void reloadConfigObjects(FileConfiguration config) {
-        for (Object object : registeredConfigObjects)
-        {
-            for(Field field  : object.getClass().getDeclaredFields())
-            {
-                if (!field.isAnnotationPresent(ConfigEntry.class))
-                    continue;
-
-                field.setAccessible(true);
-                String path = field.getAnnotation(ConfigEntry.class).path().isEmpty() ? field.getName() : field.getAnnotation(ConfigEntry.class).path();
-                try {
-                    field.set(object, field.getType() == String.class ? String.valueOf(config.get(path)) : config.get(path));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e); // TODO Add logging
-                }
-            }
-        }
+    public void reloadConfig(FileConfiguration config) {
+        registeredConfigFields.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .forEachOrdered(configField -> {
+                    configField.field().setAccessible(true);
+                    try {
+                        configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e); // TODO Add logging
+                    }
+                });
     }
 
     public void generateConfig(String version)
@@ -64,9 +65,8 @@ public class Config {
         if (configGenerator == null)
             return; // TODO Add logging
 
-        ConfigEntryParser configEntryParser = new ConfigEntryParser(registeredConfigFields, registeredConfigObjects);
         configGenerator.writeVersion(version);
-        configGenerator.writeConfigSections(configEntryParser.getConfigSections());
+        configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
         configGenerator.generateConfig();
     }
 }

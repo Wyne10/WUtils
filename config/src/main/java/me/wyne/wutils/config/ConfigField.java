@@ -1,8 +1,12 @@
 package me.wyne.wutils.config;
 
-public record ConfigField(String path, String value, String comment) {
+import java.lang.reflect.Field;
 
-    public ConfigField(String path, String value, String comment) {
+public record ConfigField(Object holder, Field field, String path, String value, String comment) {
+
+    public ConfigField(Object holder, Field field, String path, String value, String comment) {
+        this.holder = holder;
+        this.field = field;
         this.path = path;
         this.value = value;
         this.comment = comment;
