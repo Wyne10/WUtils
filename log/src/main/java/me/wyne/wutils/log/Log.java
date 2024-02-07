@@ -1,7 +1,6 @@
 package me.wyne.wutils.log;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -48,76 +47,26 @@ public class Log {
     Log(Builder builder)
     {
         this.logger = builder.logger;
+        this.config = builder.config;
         this.fileWriteExecutor = builder.fileWriteExecutor;
         this.logDirectory = builder.logDirectory;
-        if (builder.loggerName == null)
-            this.config = builder.config;
-        else
-            this.config = new AutoLogConfig(builder.autoConfig, builder.loggerName, builder.config, isFileWriteActive());
     }
+
     public Log(Logger logger, LogConfig logConfig)
     {
         this.logger = logger;
         this.config = logConfig;
     }
 
-    public Log(Logger logger, FileConfiguration config, String loggerName)
+    public Log(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory)
     {
-        this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName, false);
-    }
-
-    public Log(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues)
-    {
-        this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName, defaultValues, false);
-    }
-
-    public Log(Logger logger, LogConfig logConfig, Executor logWriteExecutor, File logDirectory)
-    {
-        this.logger = logger;
-        this.config = logConfig;
-        this.fileWriteExecutor = logWriteExecutor;
-        this.logDirectory = logDirectory;
-    }
-
-    public Log(Logger logger, FileConfiguration config, String loggerName, Executor logWriteExecutor, File logDirectory)
-    {
-        this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName, true);
-        this.fileWriteExecutor = logWriteExecutor;
-        this.logDirectory = logDirectory;
-    }
-
-    public Log(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor logWriteExecutor, File logDirectory)
-    {
-        this.logger = logger;
-        this.config = new AutoLogConfig(config, loggerName, defaultValues, true);
-        this.fileWriteExecutor = logWriteExecutor;
+        this(logger, logConfig);
+        this.fileWriteExecutor = fileWriteExecutor;
         this.logDirectory = logDirectory;
     }
 
     @Contract("-> new")
     public static Builder builder() { return new Builder(); }
-
-    @Contract("_, _ -> new")
-    public static Builder builder(Logger logger, LogConfig logConfig) { return new Builder(logger, logConfig); }
-
-    @Contract("_, _, _ -> new")
-    public static Builder builder(Logger logger, FileConfiguration config, String loggerName) { return new Builder(logger, config, loggerName); }
-
-    @Contract("_, _, _, _ -> new")
-    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues) { return new Builder(logger, config, loggerName, defaultValues); }
-
-    @Contract("_, _, _, _ -> new")
-    public static Builder builder(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, logConfig, fileWriteExecutor, logDirectory); }
-
-    @Contract("_, _, _, _, _ -> new")
-    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, config, loggerName, fileWriteExecutor, logDirectory); }
-
-    @Contract("_, _, _, _, _, _ -> new")
-    public static Builder builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor fileWriteExecutor, File logDirectory) { return new Builder(logger, config, loggerName, defaultValues, fileWriteExecutor, logDirectory); }
-
     @Contract("-> new")
     public Builder toBuilder()
     {
@@ -127,12 +76,9 @@ public class Log {
     public static final class Builder
     {
         private Logger logger;
-        private LogConfig config = new AutoLogConfig(false, false, false, false);
+        private LogConfig config = new BasicLogConfig(false, false, false, false);
         private Executor fileWriteExecutor;
         private File logDirectory;
-
-        private FileConfiguration autoConfig;
-        private String loggerName;
 
         Builder() {}
 
@@ -142,48 +88,6 @@ public class Log {
             this.config = logger.config;
             this.fileWriteExecutor = logger.fileWriteExecutor;
             this.logDirectory = logger.logDirectory;
-        }
-
-        public Builder(Logger logger, LogConfig logConfig)
-        {
-            this.logger = logger;
-            this.config = logConfig;
-        }
-
-        public Builder(Logger logger, FileConfiguration config, String loggerName)
-        {
-            this.logger = logger;
-            this.config = new AutoLogConfig(config, loggerName, false);
-        }
-
-        public Builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues)
-        {
-            this.logger = logger;
-            this.config = new AutoLogConfig(config, loggerName, defaultValues, false);
-        }
-
-        public Builder(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory)
-        {
-            this.logger = logger;
-            this.config = logConfig;
-            this.fileWriteExecutor = fileWriteExecutor;
-            this.logDirectory = logDirectory;
-        }
-
-        public Builder(Logger logger, FileConfiguration config, String loggerName, Executor fileWriteExecutor, File logDirectory)
-        {
-            this.logger = logger;
-            this.config = new AutoLogConfig(config, loggerName, true);
-            this.fileWriteExecutor = fileWriteExecutor;
-            this.logDirectory = logDirectory;
-        }
-
-        public Builder(Logger logger, FileConfiguration config, String loggerName, LogConfig defaultValues, Executor fileWriteExecutor, File logDirectory)
-        {
-            this.logger = logger;
-            this.config = new AutoLogConfig(config, loggerName, defaultValues, true);
-            this.fileWriteExecutor = fileWriteExecutor;
-            this.logDirectory = logDirectory;
         }
 
         @Contract("_ -> this")
@@ -197,23 +101,6 @@ public class Log {
         public Builder setConfig(LogConfig logConfig)
         {
             this.config = logConfig;
-            return this;
-        }
-
-        @Contract("_ -> this")
-        public Builder setAutoConfig(FileConfiguration config, String loggerName)
-        {
-            this.autoConfig = config;
-            this.loggerName = loggerName;
-            return this;
-        }
-
-        @Contract("_ -> this")
-        public Builder setAutoConfig(FileConfiguration config, String loggerName, LogConfig defaultValues)
-        {
-            this.autoConfig = config;
-            this.loggerName = loggerName;
-            this.config = defaultValues;
             return this;
         }
 
@@ -278,41 +165,6 @@ public class Log {
             error(message);
             error(exception.getMessage());
             error(ExceptionUtils.getStackTrace(exception));
-            return true;
-        }
-        return false;
-    }
-
-    public boolean log(LogMessage logMessage)
-    {
-        if (isActive())
-        {
-            if (logMessage.getLevel() == Level.INFO && config.logInfo() == false)
-                return false;
-            if (logMessage.getLevel() == Level.WARNING && config.logWarn() == false)
-                return false;
-
-            logger.log(logMessage.getLevel(), logMessage.getMessage());
-            writeLog(logMessage.getLevel(), logMessage.getMessage());
-            return true;
-        }
-        return false;
-    }
-
-    public boolean log(LogMessage logMessage, String splitRegex)
-    {
-        if (isActive())
-        {
-            if (logMessage.getLevel() == Level.INFO && config.logInfo() == false)
-                return false;
-            if (logMessage.getLevel() == Level.WARNING && config.logWarn() == false)
-                return false;
-
-            for (String message : logMessage.getMessage().split(splitRegex))
-            {
-                logger.log(logMessage.getLevel(), message);
-                writeLog(logMessage.getLevel(), message);
-            }
             return true;
         }
         return false;
