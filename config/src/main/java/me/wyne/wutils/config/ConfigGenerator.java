@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.*;
@@ -24,10 +25,8 @@ public class ConfigGenerator {
         try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
             reader.lines().forEachOrdered(s -> generatedText.append(s));
             generatedText.append("\n");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e); // TODO Add logging
         } catch (IOException e) {
-            throw new RuntimeException(e); // TODO Add logging
+            Log.global.exception("An exception occurred while trying to read config file data", e);
         }
     }
 
@@ -62,7 +61,7 @@ public class ConfigGenerator {
             writer.write(generatedText.toString());
             writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e); // TODO Add logging
+            Log.global.exception("An exception occurred while trying to write WUtils config", e);
         }
     }
 

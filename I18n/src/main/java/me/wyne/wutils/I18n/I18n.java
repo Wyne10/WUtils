@@ -80,7 +80,7 @@ public class I18n {
             FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
             pluginDefaultLanguage = new Language(languageResource, stringValidator);
         } catch (IOException e) {
-            Log.global.exception("An error occurred while trying to load default plugin language", e);
+            Log.global.exception("An exception occurred while trying to load default plugin language", e);
         }
     }
 
@@ -110,7 +110,7 @@ public class I18n {
                     Log.global.warn("Using " + pluginDefaultLanguage.getLanguageCode() + " as default language");
                     return;
                 }
-                Log.global.warn("Couldn't get language file from plugins's resources");
+                Log.global.warn("Couldn't get language file from plugin's resources");
             }
             return;
         }

@@ -5,4 +5,5 @@ include(':WUtils-log')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-i18n").projectDir = file('i18n')
 project(":WUtils-log").projectDir = file('log')
+include 'configLogBridge'
 

@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
 import org.javatuples.Pair;
 
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ public class ConfigFieldParser {
         try {
             value = configEntry.value().isEmpty() ? field.get(holder).toString() : configEntry.value();
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e); // TODO Add logging
+            Log.global.exception("An exception occurred while trying to parse reflected field to ConfigField", e);
         }
         String comment = configEntry.comment();
 

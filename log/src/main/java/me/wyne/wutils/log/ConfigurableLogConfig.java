@@ -1,6 +1,6 @@
 package me.wyne.wutils.log;
 
-import me.wyne.wutils.config.Config;
+import me.wyne.wutils.config.IConfig;
 import me.wyne.wutils.config.ConfigField;
 
 import java.lang.reflect.Field;
@@ -13,9 +13,9 @@ public class ConfigurableLogConfig implements LogConfig {
     private boolean writeWarn = false;
 
     private final String loggerName;
-    private final Config config;
+    private final IConfig config;
 
-    public ConfigurableLogConfig(String loggerName, Config config)
+    public ConfigurableLogConfig(String loggerName, IConfig config)
     {
         this.loggerName = loggerName;
         this.config = config;
@@ -37,7 +37,7 @@ public class ConfigurableLogConfig implements LogConfig {
                                 String.valueOf((boolean)field.get(this)),
                                 ""));
             } catch (IllegalAccessException e) {
-                Log.global.exception("An exception occured while trying to create ConfigurableLogConfig", e);
+                Log.global.exception("An exception occurred while trying to create ConfigurableLogConfig", e);
             }
         }
     }

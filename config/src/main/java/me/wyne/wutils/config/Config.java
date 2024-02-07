@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.javatuples.Pair;
 
@@ -7,9 +8,9 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class Config {
+public class Config implements IConfig {
 
-    public static final Config global = new Config();
+    public static final IConfig global = new Config();
 
     private ConfigGenerator configGenerator;
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
@@ -23,11 +24,13 @@ public class Config {
         registerConfigObject(this);
     }
 
+    @Override
     public void setConfigGenerator(File configFile, FileConfiguration config)
     {
         configGenerator = new ConfigGenerator(configFile, config);
     }
 
+    @Override
     public void registerConfigObject(Object object)
     {
         for(Field field : object.getClass().getDeclaredFields())
@@ -39,6 +42,7 @@ public class Config {
         }
     }
 
+    @Override
     public void registerConfigField(String section, ConfigField field) {
         if (!registeredConfigFields.containsKey(section) || registeredConfigFields.get(section) == null)
             registeredConfigFields.put(section, new LinkedHashSet<>());
@@ -46,6 +50,7 @@ public class Config {
         registeredConfigFields.get(section).add(field);
     }
 
+    @Override
     public void reloadConfig(FileConfiguration config) {
         registeredConfigFields.values()
                 .stream()
@@ -55,15 +60,19 @@ public class Config {
                     try {
                         configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e); // TODO Add logging
+                        Log.global.exception("An exception occurred while trying to reload WUtils config", e);
                     }
                 });
     }
 
+    @Override
     public void generateConfig(String version)
     {
         if (configGenerator == null)
-            return; // TODO Add logging
+        {
+            Log.global.warn("Trying to generate config but configGenerator is null");
+            return;
+        }
 
         configGenerator.writeVersion(version);
         configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
