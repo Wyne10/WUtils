@@ -22,6 +22,17 @@ public class ConfigurableLogConfig implements LogConfig {
         generateConfig();
     }
 
+    public ConfigurableLogConfig(String loggerName, IConfig config, LogConfig baseConfig)
+    {
+        this.loggerName = loggerName;
+        this.config = config;
+        this.logInfo = baseConfig.logInfo();
+        this.logWarn = baseConfig.logWarn();
+        this.writeInfo = baseConfig.writeInfo();
+        this.writeWarn = baseConfig.writeWarn();
+        generateConfig();
+    }
+
     private void generateConfig()
     {
         for (Field field : ConfigurableLogConfig.class.getDeclaredFields())

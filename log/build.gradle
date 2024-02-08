@@ -10,10 +10,10 @@ repositories {
 
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    api project(':configLogBridge')
+    api project(':WUtils-configLogBridge')
 }
 
-version = '3.0.0'
+version = '3.0.1'
 
 publishing {
     publications {

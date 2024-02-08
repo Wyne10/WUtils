@@ -2,8 +2,9 @@ rootProject.name = 'WUtils'
 include(':WUtils-config')
 include (':WUtils-i18n')
 include(':WUtils-log')
+include(':WUtils-configLogBridge')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-i18n").projectDir = file('i18n')
 project(":WUtils-log").projectDir = file('log')
-include 'configLogBridge'
+project(":WUtils-configLogBridge").projectDir = file('configLogBridge')
 
