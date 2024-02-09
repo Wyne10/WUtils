@@ -12,8 +12,6 @@ dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-
 version = '1.0.0'
 
 publishing {

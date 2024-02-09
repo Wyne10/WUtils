@@ -23,7 +23,7 @@ public class ConfigGenerator {
     private void copyConfigFileData()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
-            reader.lines().forEachOrdered(s -> generatedText.append(s));
+            reader.lines().forEachOrdered(generatedText::append);
             generatedText.append("\n");
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to read config file data", e);
