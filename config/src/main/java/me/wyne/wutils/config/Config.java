@@ -63,6 +63,7 @@ public class Config implements IConfig {
                         Log.global.exception("An exception occurred while trying to reload WUtils config", e);
                     }
                 });
+        Log.global.info("Reloaded WUtils config");
     }
 
     @Override

@@ -60,6 +60,7 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
             writer.write(generatedText.toString());
             writer.flush();
+            Log.global.info("Generated WUtils config");
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to write WUtils config", e);
         }
