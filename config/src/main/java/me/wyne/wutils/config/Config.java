@@ -15,19 +15,14 @@ public class Config implements IConfig {
     private ConfigGenerator configGenerator;
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
 
-    public Config(File configFile, FileConfiguration config)
-    {
-        setConfigGenerator(configFile, config);
-    }
-
     protected Config() {
         registerConfigObject(this);
     }
 
     @Override
-    public void setConfigGenerator(File configFile, FileConfiguration config)
+    public void setConfigGenerator(File configFile, File defaultConfigFile, FileConfiguration existingConfig)
     {
-        configGenerator = new ConfigGenerator(configFile, config);
+        configGenerator = new ConfigGenerator(configFile, defaultConfigFile, existingConfig);
     }
 
     @Override
