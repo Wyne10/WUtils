@@ -48,7 +48,7 @@ public class ConfigGenerator {
     private void copyDefaultConfig()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(defaultConfigFile))) {
-            reader.lines().forEachOrdered(generatedText::append);
+            reader.lines().forEachOrdered(s -> { generatedText.append(s); generatedText.append("\n"); });
             generatedText.append("\n");
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to read default config file data", e);
