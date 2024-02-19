@@ -58,6 +58,19 @@ public class I18n {
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
+    public void loadLanguage(String languageResourcePath, JavaPlugin plugin)
+    {
+        File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
+        File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
+        try {
+            FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResource);
+        } catch (IOException e) {
+            Log.global.exception("An exception occurred while trying to load " + languageResourcePath + " language", e);
+        }
+        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
+        Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+    }
+
     private void loadLanguages(JavaPlugin plugin)
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
@@ -76,7 +89,7 @@ public class I18n {
             if (!pluginConfig.contains("lang"))
                 return;
 
-            File languageResource = new File(plugin.getDataFolder(), "defaults/" + pluginConfig.getString("lang"));
+            File languageResource = new File(plugin.getDataFolder(), "defaults/lang/" + pluginConfig.getString("lang"));
             FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
             pluginDefaultLanguage = new Language(languageResource, stringValidator);
         } catch (IOException e) {
