@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Config implements ConfigFieldRegistry {
 
-    public static final ConfigFieldRegistry global = new Config();
+    public static final Config global = new Config();
 
     private ConfigGenerator configGenerator;
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
