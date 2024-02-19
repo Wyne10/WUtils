@@ -1,6 +1,6 @@
 package me.wyne.wutils.log;
 
-import me.wyne.wutils.config.IConfig;
+import me.wyne.wutils.config.ConfigFieldRegistry;
 import me.wyne.wutils.config.ConfigField;
 
 import java.lang.reflect.Field;
@@ -13,16 +13,16 @@ public class ConfigurableLogConfig implements LogConfig {
     private boolean writeWarn = false;
 
     private final String loggerName;
-    private final IConfig config;
+    private final ConfigFieldRegistry config;
 
-    public ConfigurableLogConfig(String loggerName, IConfig config)
+    public ConfigurableLogConfig(String loggerName, ConfigFieldRegistry config)
     {
         this.loggerName = loggerName;
         this.config = config;
         generateConfig();
     }
 
-    public ConfigurableLogConfig(String loggerName, IConfig config, LogConfig baseConfig)
+    public ConfigurableLogConfig(String loggerName, ConfigFieldRegistry config, LogConfig baseConfig)
     {
         this.loggerName = loggerName;
         this.config = config;

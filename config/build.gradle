@@ -11,11 +11,12 @@ repositories {
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     implementation 'org.javatuples:javatuples:1.2'
+    implementation 'commons-io:commons-io:2.13.0'
     implementation project(':WUtils-log')
     api project(':WUtils-configLogBridge')
 }
 
-version = '2.4.1'
+version = '2.4.2'
 
 publishing {
     publications {
