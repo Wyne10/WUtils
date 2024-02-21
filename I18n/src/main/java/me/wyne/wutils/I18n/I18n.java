@@ -18,13 +18,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class I18n {
-    public static I18n global;
+    public static I18n global = new I18n();
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private Language defaultLanguage;
     private Language pluginDefaultLanguage;
 
     private StringValidator stringValidator = new NullValidator();
+
+    private I18n() {}
 
     public I18n(File defaultLanguageFile)
     {
@@ -97,7 +99,7 @@ public class I18n {
         }
     }
 
-    public File getDefaultLanguageFile(JavaPlugin plugin)
+    public static File getDefaultLanguageFile(JavaPlugin plugin)
     {
         if (!plugin.getConfig().contains("lang", true))
         {
