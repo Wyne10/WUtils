@@ -72,7 +72,7 @@ public class Config implements ConfigFieldRegistry {
         Log.global.info("Reloaded WUtils config");
     }
 
-    public void generateConfig(String version)
+    public void generateConfig(JavaPlugin plugin, String version)
     {
         if (configGenerator == null)
         {
@@ -82,6 +82,6 @@ public class Config implements ConfigFieldRegistry {
 
         configGenerator.writeVersion(version);
         configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
-        configGenerator.generateConfig();
+        configGenerator.generateConfig(plugin);
     }
 }

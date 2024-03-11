@@ -3,6 +3,7 @@ package me.wyne.wutils.config;
 import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.Set;
@@ -55,19 +56,17 @@ public class ConfigGenerator {
         }
     }
 
-    private void mergeExistingConfig() throws IOException {
-        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(configFile);
-        for (String key : newConfig.getKeys(false))
+    private void mergeExistingConfig(JavaPlugin plugin) {
+        for (String key : plugin.getConfig().getKeys(false))
         {
             if (key.equals("config-version"))
                 continue;
             if (existingConfig.contains(key))
-                newConfig.set(key, existingConfig.get(key));
+                plugin.getConfig().set(key, existingConfig.get(key));
         }
-        newConfig.save(configFile);
     }
 
-    public void generateConfig()
+    public void generateConfig(JavaPlugin plugin)
     {
         if (!isNewVersion)
             return;
@@ -75,7 +74,9 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
             writer.write(generatedText.toString());
             writer.flush();
-            mergeExistingConfig();
+            plugin.reloadConfig();
+            //mergeExistingConfig(plugin);
+            //plugin.saveConfig();
             Log.global.info("Generated WUtils config");
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to write WUtils config", e);
