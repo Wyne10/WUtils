@@ -44,7 +44,10 @@ public class Language {
         {
             if (!strings.contains(key))
             {
-                strings.set(key, defaultLanguage.strings.getString(key));
+                if (defaultLanguage.strings.isString(key))
+                    strings.set(key, defaultLanguage.strings.getString(key));
+                else if (defaultLanguage.strings.isList(key))
+                    strings.set(key, defaultLanguage.strings.getStringList(key));
                 result = true;
             }
         }
