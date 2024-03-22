@@ -8,6 +8,13 @@ repositories {
     }
 }
 
+configurations {
+    // Configuration for artifacts published to Maven repository
+    archives {
+        extendsFrom implementation
+    }
+}
+
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     implementation 'org.yaml:snakeyaml:2.2'
@@ -15,7 +22,9 @@ dependencies {
     implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'commons-io:commons-io:2.13.0'
-    implementation project(':WUtils-log')
+    implementation(project(':WUtils-log')) {
+        exclude group: 'me.wyne', module: 'WUtils-configLogBridge'
+    }
     api project(':WUtils-configLogBridge')
 }
 

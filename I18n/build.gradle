@@ -4,7 +4,7 @@ plugins {
 
 repositories {
     maven {
-        url 'https://repo.papermc.io/repository/maven-public/'
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
     }
     maven {
         url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
@@ -12,11 +12,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.5'
-    api 'net.kyori:adventure-text-minimessage:4.15.0'
+    api('net.kyori:adventure-text-minimessage:4.15.0')
     implementation 'commons-io:commons-io:2.13.0'
-    implementation project(':WUtils-log')
+    implementation(project(':WUtils-log')) {
+        transitive = false
+    }
 }
 
 version = '2.0.7'
