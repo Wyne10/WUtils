@@ -15,13 +15,14 @@ dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     api('net.kyori:adventure-text-minimessage:4.15.0')
+    implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'commons-io:commons-io:2.13.0'
     implementation(project(':WUtils-log')) {
         transitive = false
     }
 }
 
-version = '2.0.7'
+version = '2.0.8'
 
 publishing {
     publications {

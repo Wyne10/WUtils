@@ -62,6 +62,7 @@ public class I18n {
 
     public void loadLanguage(String languageResourcePath, JavaPlugin plugin)
     {
+        plugin.saveResource(languageResourcePath, false);
         File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
         try {
@@ -73,7 +74,7 @@ public class I18n {
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
-    private void loadLanguages(JavaPlugin plugin)
+    public void loadLanguages(JavaPlugin plugin)
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
         {
@@ -81,7 +82,7 @@ public class I18n {
         }
     }
 
-    private void loadDefaultPluginLanguage(JavaPlugin plugin)
+    public void loadDefaultPluginLanguage(JavaPlugin plugin)
     {
         File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
         try {

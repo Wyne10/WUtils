@@ -10,6 +10,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import ru.vyarus.yaml.updater.YamlUpdater;
+import ru.vyarus.yaml.updater.report.UpdateReport;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,49 +21,34 @@ import java.util.stream.Collectors;
 public class Language {
 
     private final String languageCode;
+    private final File languageFile;
     private final FileConfiguration strings;
     private StringValidator stringValidator;
 
-    public Language(File stringsFile, StringValidator stringValidator)
+    public Language(File languageFile, StringValidator stringValidator)
     {
-        this.languageCode = FilenameUtils.removeExtension(stringsFile.getName());
-        this.strings = YamlConfiguration.loadConfiguration(stringsFile);
+        this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
+        this.languageFile = languageFile;
+        this.strings = YamlConfiguration.loadConfiguration(languageFile);
         this.stringValidator = stringValidator;
     }
 
-    public Language(Language defaultLanguage, File stringsFile, StringValidator stringValidator)
+    public Language(Language defaultLanguage, File languageFile, StringValidator stringValidator)
     {
-        this(stringsFile, stringValidator);
-        mergeDefaultStrings(defaultLanguage, stringsFile);
+        this(languageFile, stringValidator);
+        mergeDefaultStrings(defaultLanguage, languageFile);
     }
 
-    private void mergeDefaultStrings(Language defaultLanguage, File stringsFile)
+    private void mergeDefaultStrings(Language defaultLanguage, File languageFile)
     {
-        Log.global.info("Searching for missing strings in " + stringsFile.getName());
-        boolean result = false;
-
-        for (String key : defaultLanguage.strings.getKeys(false))
-        {
-            if (!strings.contains(key))
-            {
-                if (defaultLanguage.strings.isString(key))
-                    strings.set(key, defaultLanguage.strings.getString(key));
-                else if (defaultLanguage.strings.isList(key))
-                    strings.set(key, defaultLanguage.strings.getStringList(key));
-                result = true;
-            }
-        }
-
-        if (result)
-        {
-            try {
-                strings.save(stringsFile);
-            } catch (IOException e) {
-                Log.global.exception("An exception occurred while trying to save " + stringsFile.getName(), e);
-            }
-            Log.global.info("Merged missing strings to " + stringsFile.getName());
-        }
-
+        Log.global.info("Searching for missing strings in " + languageFile.getName());
+        UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.languageFile)
+                .backup(false)
+                .update();
+        if (report.isConfigChanged())
+            Log.global.info("Merged missing strings to " + languageFile.getName());
+        else
+            Log.global.info(languageFile.getName() + " is up to date");
     }
 
     public void setStringValidator(StringValidator stringValidator)
