@@ -3,25 +3,28 @@ package me.wyne.wutils.config;
 import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import ru.vyarus.yaml.updater.YamlUpdater;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Set;
 
 public class ConfigGenerator {
 
     private final File configFile;
     private final File defaultConfigFile;
+
     private final FileConfiguration existingConfig;
+
     private final StringBuilder generatedText = new StringBuilder();
 
     private boolean isNewVersion = false;
 
-    public ConfigGenerator(File configFile, File defaultConfigFile, FileConfiguration existingConfig)
+    public ConfigGenerator(File configFile, File defaultConfigFile)
     {
         this.configFile = configFile;
         this.defaultConfigFile = defaultConfigFile;
-        this.existingConfig = existingConfig;
+        this.existingConfig = YamlConfiguration.loadConfiguration(configFile);
     }
 
     public void writeVersion(String version)
@@ -56,27 +59,20 @@ public class ConfigGenerator {
         }
     }
 
-    private void mergeExistingConfig(JavaPlugin plugin) {
-        for (String key : plugin.getConfig().getKeys(false))
-        {
-            if (key.equals("config-version"))
-                continue;
-            if (existingConfig.contains(key))
-                plugin.getConfig().set(key, existingConfig.get(key));
-        }
-    }
-
-    public void generateConfig(JavaPlugin plugin)
+    public void generateConfig(boolean backup, Map<String, String> replaceVars, String... deleteProps)
     {
         if (!isNewVersion)
             return;
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
-            plugin.reloadConfig();
-            //mergeExistingConfig(plugin);
-            //plugin.saveConfig();
+            YamlUpdater.create(configFile, defaultConfigFile)
+                    .backup(backup)
+                    .backupDir(new File(configFile.getParentFile(), "backups"))
+                    .vars(replaceVars)
+                    .deleteProps(deleteProps)
+                    .update();
             Log.global.info("Generated WUtils config");
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to write WUtils config", e);

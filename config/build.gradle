@@ -10,13 +10,16 @@ repositories {
 
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'commons-io:commons-io:2.13.0'
     implementation project(':WUtils-log')
     api project(':WUtils-configLogBridge')
 }
 
-version = '2.4.4'
+version = '2.4.5'
 
 publishing {
     publications {

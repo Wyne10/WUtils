@@ -22,20 +22,20 @@ public class Config implements ConfigFieldRegistry {
         registerConfigObject(this);
     }
 
-    public void setConfigGenerator(File configFile, File defaultConfigFile, FileConfiguration existingConfig)
+    public void setConfigGenerator(File configFile, File defaultConfigFile)
     {
-        configGenerator = new ConfigGenerator(configFile, defaultConfigFile, existingConfig);
+        configGenerator = new ConfigGenerator(configFile, defaultConfigFile);
     }
 
-    public void setConfigGenerator(JavaPlugin plugin, String defaultConfigPath, FileConfiguration existingConfig)
+    public void setConfigGenerator(JavaPlugin plugin, String defaultConfigPath)
     {
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/config.yml");
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(defaultConfigPath), defaultConfig);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load default config", e);
+            Log.global.exception("An exception occurred while trying to load default config for WUtils config", e);
         }
-        setConfigGenerator(new File(plugin.getDataFolder(), defaultConfigPath), defaultConfig, existingConfig);
+        setConfigGenerator(new File(plugin.getDataFolder(), defaultConfigPath), defaultConfig);
     }
 
     public void registerConfigObject(Object object)
@@ -72,16 +72,21 @@ public class Config implements ConfigFieldRegistry {
         Log.global.info("Reloaded WUtils config");
     }
 
-    public void generateConfig(JavaPlugin plugin, String version)
+    public void generateConfig(String version, boolean backup, Map<String, String> replaceVars, String... deleteProps)
     {
         if (configGenerator == null)
         {
-            Log.global.warn("Trying to generate config but configGenerator is null");
+            Log.global.warn("Trying to generate config, but configGenerator is null");
             return;
         }
 
         configGenerator.writeVersion(version);
         configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
-        configGenerator.generateConfig(plugin);
+        configGenerator.generateConfig(backup, replaceVars, deleteProps);
+    }
+
+    public void generateConfig(String version)
+    {
+        generateConfig(version, true, new HashMap<>());
     }
 }
