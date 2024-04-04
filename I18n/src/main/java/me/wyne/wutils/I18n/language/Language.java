@@ -41,6 +41,8 @@ public class Language {
 
     private void mergeDefaultStrings(Language defaultLanguage, File languageFile)
     {
+        if (defaultLanguage.languageFile.length() == 0)
+            return;
         Log.global.info("Searching for missing strings in " + languageFile.getName());
         UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.languageFile)
                 .backup(false)

@@ -27,15 +27,15 @@ public class Config implements ConfigFieldRegistry {
         configGenerator = new ConfigGenerator(configFile, defaultConfigFile);
     }
 
-    public void setConfigGenerator(JavaPlugin plugin, String defaultConfigPath)
+    public void setConfigGenerator(JavaPlugin plugin, String configPath)
     {
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/config.yml");
         try {
-            FileUtils.copyInputStreamToFile(plugin.getResource(defaultConfigPath), defaultConfig);
+            FileUtils.copyInputStreamToFile(plugin.getResource(configPath), defaultConfig);
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to load default config for WUtils config", e);
         }
-        setConfigGenerator(new File(plugin.getDataFolder(), defaultConfigPath), defaultConfig);
+        setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
 
     public void registerConfigObject(Object object)
