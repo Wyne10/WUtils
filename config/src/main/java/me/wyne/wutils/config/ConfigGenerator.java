@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import ru.vyarus.yaml.updater.YamlUpdater;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class ConfigGenerator {
         if (existingConfig.contains("config-version") && existingConfig.getString("config-version").equals(version))
             return;
         isNewVersion = true;
-        generatedText.insert(0, "config-version: " + version + "\n");
+        generatedText.insert(0, "config-version: #{version}\n");
         copyDefaultConfig();
     }
 
@@ -59,7 +60,7 @@ public class ConfigGenerator {
         }
     }
 
-    public void generateConfig(boolean backup, Map<String, String> replaceVars, String... deleteProps)
+    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
     {
         if (!isNewVersion)
             return;
