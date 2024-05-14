@@ -47,9 +47,13 @@ public class ConfigSection {
     private String generateSubSection(String subSection)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("# ");
-        stringBuilder.append(subSection);
-        stringBuilder.append("\n");
+
+        if (subSection.isEmpty())
+        {
+            stringBuilder.append("# ");
+            stringBuilder.append(subSection);
+            stringBuilder.append("\n");
+        }
 
         for (ConfigField configField : fields.get(subSection))
         {

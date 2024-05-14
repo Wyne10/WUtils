@@ -64,7 +64,10 @@ public class Config implements ConfigFieldRegistry {
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
-                        configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
+                        if (Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
+                            ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
+                        else
+                            configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
                         Log.global.exception("An exception occurred while trying to reload WUtils config", e);
                     }
