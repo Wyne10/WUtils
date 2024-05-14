@@ -48,7 +48,7 @@ public class ConfigSection {
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (subSection.isEmpty())
+        if (!subSection.isEmpty())
         {
             stringBuilder.append("# ");
             stringBuilder.append(subSection);

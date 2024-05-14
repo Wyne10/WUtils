@@ -16,7 +16,7 @@ public class ConfigFieldParser {
         String value = null;
         try {
             if (Configurable.class.isAssignableFrom(field.get(holder).getClass()))
-                value = ((Configurable)field.get(holder)).toConfig();
+                value = ((Configurable)field.get(holder)).toConfig(configEntry);
             else
                 value = configEntry.value().isEmpty() ? field.get(holder).toString() : configEntry.value();
         } catch (IllegalAccessException e) {
