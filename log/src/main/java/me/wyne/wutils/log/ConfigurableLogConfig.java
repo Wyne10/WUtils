@@ -41,7 +41,7 @@ public class ConfigurableLogConfig implements LogConfig {
                 continue;
 
             try {
-                config.registerConfigField("LOGGING." + loggerName,
+                config.registerConfigField("Log." + loggerName,
                         new ConfigField(this,
                                 field,
                                 loggerName + "-" + field.getName(),
