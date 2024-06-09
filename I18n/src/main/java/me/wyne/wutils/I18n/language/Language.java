@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.apache.commons.io.FilenameUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -72,6 +73,11 @@ public class Language {
         return PlaceholderAPI.setPlaceholders(player, getString(path));
     }
 
+    public String getPlaceholderString(OfflinePlayer player, String path)
+    {
+        return PlaceholderAPI.setPlaceholders(player, getString(path));
+    }
+
     public Component getComponent(String path)
     {
         return MiniMessage.miniMessage().deserialize(getString(path));
@@ -92,6 +98,15 @@ public class Language {
         return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path), tagResolvers);
     }
 
+    public Component getPlaceholderComponent(OfflinePlayer player, String path)
+    {
+        return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path));
+    }
+
+    public Component getPlaceholderComponent(OfflinePlayer player, String path, TagResolver ...tagResolvers)
+    {
+        return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path), tagResolvers);
+    }
 
     public List<String> getStringList(String path)
     {
@@ -99,6 +114,13 @@ public class Language {
     }
 
     public List<String> getPlaceholderStringList(Player player, String path)
+    {
+        return getStringList(path).stream()
+                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getPlaceholderStringList(OfflinePlayer player, String path)
     {
         return getStringList(path).stream()
                 .map(s -> PlaceholderAPI.setPlaceholders(player, s))
@@ -127,6 +149,20 @@ public class Language {
     }
 
     public List<Component> getPlaceholderComponentList(Player player, String path, TagResolver ...tagResolvers)
+    {
+        return getPlaceholderStringList(player, path).stream()
+                .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolvers))
+                .collect(Collectors.toList());
+    }
+
+    public List<Component> getPlaceholderComponentList(OfflinePlayer player, String path)
+    {
+        return getPlaceholderStringList(player, path).stream()
+                .map(s -> MiniMessage.miniMessage().deserialize(s))
+                .collect(Collectors.toList());
+    }
+
+    public List<Component> getPlaceholderComponentList(OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return getPlaceholderStringList(player, path).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s, tagResolvers))
