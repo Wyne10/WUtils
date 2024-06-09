@@ -23,7 +23,14 @@ public record ConfigField(Object holder, Field field, String path, String value,
         }
         stringBuilder.append(path);
         stringBuilder.append(": ");
-        stringBuilder.append(value);
+        if (field.getType() == String.class)
+        {
+            stringBuilder.append("'");
+            stringBuilder.append(value);
+            stringBuilder.append("'");
+        }
+        else
+            stringBuilder.append(value);
         return stringBuilder.toString();
     }
 }

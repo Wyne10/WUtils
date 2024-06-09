@@ -18,10 +18,6 @@ public class Config implements ConfigFieldRegistry {
     private ConfigGenerator configGenerator;
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
 
-    protected Config() {
-        registerConfigObject(this);
-    }
-
     public void setConfigGenerator(File configFile, File defaultConfigFile)
     {
         configGenerator = new ConfigGenerator(configFile, defaultConfigFile);
