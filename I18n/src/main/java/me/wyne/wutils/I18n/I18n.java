@@ -166,22 +166,22 @@ public class I18n {
         return getLanguage(locale).getString(path);
     }
 
-    public String getPlaceholderString(Player player, String path)
+    public String getPlaceholderString(@Nullable Player player, String path)
     {
         return defaultLanguage.getPlaceholderString(player, path);
     }
 
-    public String getPlaceholderString(OfflinePlayer player, String path)
+    public String getPlaceholderString(@Nullable OfflinePlayer player, String path)
     {
         return defaultLanguage.getPlaceholderString(player, path);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, Player player, String path)
+    public String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderString(player, path);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, OfflinePlayer player, String path)
+    public String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderString(player, path);
     }
@@ -206,42 +206,42 @@ public class I18n {
         return getLanguage(locale).getComponent(path, tagResolvers);
     }
 
-    public Component getPlaceholderComponent(Player player, String path)
+    public Component getPlaceholderComponent(@Nullable Player player, String path)
     {
         return defaultLanguage.getPlaceholderComponent(player, path);
     }
 
-    public Component getPlaceholderComponent(OfflinePlayer player, String path)
+    public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path)
     {
         return defaultLanguage.getPlaceholderComponent(player, path);
     }
 
-    public Component getPlaceholderComponent(Player player, String path, TagResolver ...tagResolvers)
+    public Component getPlaceholderComponent(@Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponent(player, path, tagResolvers);
     }
 
-    public Component getPlaceholderComponent(OfflinePlayer player, String path, TagResolver ...tagResolvers)
+    public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponent(player, path, tagResolvers);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, Player player, String path)
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, OfflinePlayer player, String path)
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, Player player, String path, TagResolver ...tagResolvers)
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path, tagResolvers);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, OfflinePlayer player, String path, TagResolver ...tagResolvers)
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path, tagResolvers);
     }
@@ -256,22 +256,22 @@ public class I18n {
         return getLanguage(locale).getStringList(path);
     }
 
-    public List<String> getPlaceholderStringList(Player player, String path)
+    public List<String> getPlaceholderStringList(@Nullable Player player, String path)
     {
         return defaultLanguage.getPlaceholderStringList(player, path);
     }
 
-    public List<String> getPlaceholderStringList(OfflinePlayer player, String path)
+    public List<String> getPlaceholderStringList(@Nullable OfflinePlayer player, String path)
     {
         return defaultLanguage.getPlaceholderStringList(player, path);
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, Player player, String path)
+    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderStringList(player, path);
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, OfflinePlayer player, String path)
+    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderStringList(player, path);
     }
@@ -296,42 +296,42 @@ public class I18n {
         return getLanguage(locale).getComponentList(path, tagResolvers);
     }
 
-    public List<Component> getPlaceholderComponentList(Player player, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable Player player, String path)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getPlaceholderComponentList(OfflinePlayer player, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getPlaceholderComponentList(Player player, String path, TagResolver ...tagResolvers)
+    public List<Component> getPlaceholderComponentList(@Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path, tagResolvers);
     }
 
-    public List<Component> getPlaceholderComponentList(OfflinePlayer player, String path, TagResolver ...tagResolvers)
+    public List<Component> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path, tagResolvers);
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, Player player, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, OfflinePlayer player, String path)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path);
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, Player player, String path, TagResolver ...tagResolvers)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path, tagResolvers);
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, OfflinePlayer player, String path, TagResolver ...tagResolvers)
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path, tagResolvers);
     }
