@@ -398,14 +398,14 @@ public class I18n {
         return getLanguage(locale).getPlaceholderComponentList(toPlayer(sender), path, tagResolvers);
     }
 
-    public @Nullable Player toPlayer(@Nullable CommandSender sender)
+    public static @Nullable Player toPlayer(@Nullable CommandSender sender)
     {
         if (sender instanceof Player player)
             return player;
         return null;
     }
 
-    public @Nullable Locale toLocale(@Nullable CommandSender sender)
+    public static @Nullable Locale toLocale(@Nullable CommandSender sender)
     {
         if (sender instanceof Player player)
             return player.locale();
