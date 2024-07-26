@@ -9,11 +9,13 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.meta.TypeQualifierNickname;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -176,6 +178,11 @@ public class I18n {
         return defaultLanguage.getPlaceholderString(player, path);
     }
 
+    public String getPlaceholderString(@Nullable CommandSender sender, String path)
+    {
+        return defaultLanguage.getPlaceholderString(toPlayer(sender), path);
+    }
+
     public String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderString(player, path);
@@ -184,6 +191,11 @@ public class I18n {
     public String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderString(player, path);
+    }
+
+    public String getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path)
+    {
+        return getLanguage(locale).getPlaceholderString(toPlayer(sender), path);
     }
 
     public Component getComponent(String path)
@@ -216,6 +228,11 @@ public class I18n {
         return defaultLanguage.getPlaceholderComponent(player, path);
     }
 
+    public Component getPlaceholderComponent(@Nullable CommandSender sender, String path)
+    {
+        return defaultLanguage.getPlaceholderComponent(toPlayer(sender), path);
+    }
+
     public Component getPlaceholderComponent(@Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponent(player, path, tagResolvers);
@@ -224,6 +241,11 @@ public class I18n {
     public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponent(player, path, tagResolvers);
+    }
+
+    public Component getPlaceholderComponent(@Nullable CommandSender sender, String path, TagResolver ...tagResolvers)
+    {
+        return defaultLanguage.getPlaceholderComponent(toPlayer(sender), path, tagResolvers);
     }
 
     public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path)
@@ -236,6 +258,11 @@ public class I18n {
         return getLanguage(locale).getPlaceholderComponent(player, path);
     }
 
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path)
+    {
+        return getLanguage(locale).getPlaceholderComponent(toPlayer(sender), path);
+    }
+
     public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path, tagResolvers);
@@ -244,6 +271,11 @@ public class I18n {
     public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponent(player, path, tagResolvers);
+    }
+
+    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path, TagResolver ...tagResolvers)
+    {
+        return getLanguage(locale).getPlaceholderComponent(toPlayer(sender), path, tagResolvers);
     }
 
     public List<String> getStringList(String path)
@@ -266,6 +298,11 @@ public class I18n {
         return defaultLanguage.getPlaceholderStringList(player, path);
     }
 
+    public List<String> getPlaceholderStringList(@Nullable CommandSender sender, String path)
+    {
+        return defaultLanguage.getPlaceholderStringList(toPlayer(sender), path);
+    }
+
     public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path)
     {
         return getLanguage(locale).getPlaceholderStringList(player, path);
@@ -274,6 +311,11 @@ public class I18n {
     public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path)
     {
         return getLanguage(locale).getPlaceholderStringList(player, path);
+    }
+
+    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path)
+    {
+        return getLanguage(locale).getPlaceholderStringList(toPlayer(sender), path);
     }
 
     public List<Component> getComponentList(String path)
@@ -306,6 +348,11 @@ public class I18n {
         return defaultLanguage.getPlaceholderComponentList(player, path);
     }
 
+    public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path)
+    {
+        return defaultLanguage.getPlaceholderComponentList(toPlayer(sender), path);
+    }
+
     public List<Component> getPlaceholderComponentList(@Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path, tagResolvers);
@@ -314,6 +361,11 @@ public class I18n {
     public List<Component> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return defaultLanguage.getPlaceholderComponentList(player, path, tagResolvers);
+    }
+
+    public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path, TagResolver ...tagResolvers)
+    {
+        return defaultLanguage.getPlaceholderComponentList(toPlayer(sender), path, tagResolvers);
     }
 
     public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path)
@@ -326,6 +378,11 @@ public class I18n {
         return getLanguage(locale).getPlaceholderComponentList(player, path);
     }
 
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path)
+    {
+        return getLanguage(locale).getPlaceholderComponentList(toPlayer(sender), path);
+    }
+
     public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path, tagResolvers);
@@ -334,6 +391,25 @@ public class I18n {
     public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TagResolver ...tagResolvers)
     {
         return getLanguage(locale).getPlaceholderComponentList(player, path, tagResolvers);
+    }
+
+    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TagResolver ...tagResolvers)
+    {
+        return getLanguage(locale).getPlaceholderComponentList(toPlayer(sender), path, tagResolvers);
+    }
+
+    public @Nullable Player toPlayer(@Nullable CommandSender sender)
+    {
+        if (sender instanceof Player player)
+            return player;
+        return null;
+    }
+
+    public @Nullable Locale toLocale(@Nullable CommandSender sender)
+    {
+        if (sender instanceof Player player)
+            return player.locale();
+        return null;
     }
 
 }
