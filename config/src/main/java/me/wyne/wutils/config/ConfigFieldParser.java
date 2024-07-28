@@ -15,10 +15,10 @@ public class ConfigFieldParser {
         String path = configEntry.path().isEmpty() ? field.getName() : configEntry.path();
         String value = null;
         try {
-            if (Configurable.class.isAssignableFrom(field.get(holder).getClass()))
+            if (field.get(holder) != null && Configurable.class.isAssignableFrom(field.get(holder).getClass()))
                 value = ((Configurable)field.get(holder)).toConfig(configEntry);
             else
-                value = configEntry.value().isEmpty() ? field.get(holder).toString() : configEntry.value();
+                value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
         } catch (IllegalAccessException e) {
             Log.global.exception("An exception occurred while trying to parse reflected field to ConfigField", e);
         }

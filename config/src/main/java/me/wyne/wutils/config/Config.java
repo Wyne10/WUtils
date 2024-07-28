@@ -60,7 +60,7 @@ public class Config implements ConfigFieldRegistry {
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
-                        if (Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
+                        if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
