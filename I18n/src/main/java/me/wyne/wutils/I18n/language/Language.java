@@ -95,7 +95,7 @@ public class Language {
 
     public Component getPlaceholderComponent(@Nullable Player player, String path, TagResolver ...tagResolvers)
     {
-        return MiniMessage.miniMessage().deserialize(getString(path), tagResolvers);
+        return MiniMessage.miniMessage().deserialize(getPlaceholderString(player, path), tagResolvers);
     }
 
     public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path)
