@@ -398,6 +398,16 @@ public class I18n {
         return getLanguage(locale).getPlaceholderComponentList(toPlayer(sender), path, tagResolvers);
     }
 
+    public static String reduceString(List<String> stringList)
+    {
+        return stringList.stream().reduce((s1 ,s2) -> s1 + "\n" + s2).orElse("");
+    }
+
+    public static Component reduceComponent(List<Component> componentList)
+    {
+        return componentList.stream().reduce((c1, c2) -> c1.appendNewline().append(c2)).orElse(Component.empty());
+    }
+
     public static @Nullable Player toPlayer(@Nullable CommandSender sender)
     {
         if (sender instanceof Player player)

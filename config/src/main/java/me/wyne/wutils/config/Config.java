@@ -75,7 +75,7 @@ public class Config implements ConfigFieldRegistry {
     {
         if (configGenerator == null)
         {
-            Log.global.warn("Trying to generate config, but configGenerator is null");
+            Log.global.error("Trying to generate config, but configGenerator is null");
             return;
         }
 
