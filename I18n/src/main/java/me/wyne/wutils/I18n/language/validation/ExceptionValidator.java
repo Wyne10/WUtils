@@ -5,6 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class ExceptionValidator implements StringValidator {
     @Override
     public String validateString(String languageCode, FileConfiguration strings, String path) {
-        throw new IllegalArgumentException("String " + path + " was not found in " + languageCode + " language");
+        if (!strings.contains(path))
+            throw new IllegalArgumentException("String " + path + " was not found in " + languageCode + " language");
+        return strings.getString(path);
     }
 }
