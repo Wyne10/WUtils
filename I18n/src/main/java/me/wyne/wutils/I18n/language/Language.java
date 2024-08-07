@@ -111,7 +111,7 @@ public class Language {
 
     public List<String> getStringList(String path)
     {
-        return strings.getStringList(path).stream().map(s -> stringValidator.validateString(languageCode, strings, path)).collect(Collectors.toCollection(ArrayList::new));
+        return strings.getStringList(path).stream().map(s -> stringValidator.validateString(languageCode, strings, s)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public List<String> getPlaceholderStringList(@Nullable Player player, String path)
