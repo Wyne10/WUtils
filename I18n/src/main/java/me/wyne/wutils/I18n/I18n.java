@@ -888,6 +888,11 @@ public class I18n {
         return componentList.stream().reduce((c1, c2) -> c1.appendNewline().append(c2)).orElse(Component.empty());
     }
 
+    public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
+    {
+        Arrays.stream(textReplacements).forEach(textReplacement -> textReplacement.replace(string));
+        return string;
+    }
     public static @Nullable Player toPlayer(@Nullable CommandSender sender)
     {
         if (sender instanceof Player player)
