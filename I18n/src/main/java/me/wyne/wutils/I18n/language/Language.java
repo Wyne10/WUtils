@@ -70,8 +70,10 @@ public class Language {
 
     private String applyTextReplacements(String string, TextReplacement ...textReplacements)
     {
-        Arrays.stream(textReplacements).forEach(textReplacement -> textReplacement.replace(string));
-        return string; 
+        String result = string;
+        for (TextReplacement replacement : textReplacements)
+            result = replacement.replace(result);
+        return result;
     }
     
     public String getString(String path)
@@ -91,7 +93,7 @@ public class Language {
     
     public String getPlaceholderString(@Nullable Player player, String path, TextReplacement... textReplacements)
     {
-        return applyTextReplacements(getPlaceholderString(player, path), textReplacements);
+        return PlaceholderAPI.setPlaceholders(player, getString(path, textReplacements));
     }
 
     public String getPlaceholderString(@Nullable OfflinePlayer player, String path)
@@ -101,7 +103,7 @@ public class Language {
 
     public String getPlaceholderString(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements)
     {
-        return applyTextReplacements(getPlaceholderString(player, path), textReplacements);
+        return PlaceholderAPI.setPlaceholders(player, getString(path, textReplacements));
     }
 
     public String getLegacyString(String path)

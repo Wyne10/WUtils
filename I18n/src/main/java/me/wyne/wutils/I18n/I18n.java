@@ -890,9 +890,12 @@ public class I18n {
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
     {
-        Arrays.stream(textReplacements).forEach(textReplacement -> textReplacement.replace(string));
-        return string;
+        String result = string;
+        for (TextReplacement replacement : textReplacements)
+            result = replacement.replace(result);
+        return result;
     }
+
     public static @Nullable Player toPlayer(@Nullable CommandSender sender)
     {
         if (sender instanceof Player player)
