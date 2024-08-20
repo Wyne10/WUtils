@@ -885,7 +885,7 @@ public class I18n {
 
     public static Component reduceComponent(List<Component> componentList)
     {
-        return componentList.stream().reduce((c1, c2) -> c1.appendNewline().append(c2)).orElse(Component.empty());
+        return componentList.stream().reduce((c1, c2) -> c1.append(Component.newline()).append(c2)).orElse(Component.empty());
     }
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
