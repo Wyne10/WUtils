@@ -363,42 +363,48 @@ public class Language {
     public List<Component> getLegacyComponentList(String path)
     {
         return getLegacyStringList(path).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
     public List<Component> getLegacyComponentList(String path, TextReplacement ...textReplacements)
     {
         return getLegacyStringList(path, textReplacements).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path)
     {
         return getLegacyPlaceholderStringList(player, path).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path)
     {
         return getLegacyPlaceholderStringList(player, path).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
-                .map(s -> (Component)LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(Component::asComponent)
                 .toList();
     }
 
