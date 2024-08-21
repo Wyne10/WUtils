@@ -5,6 +5,7 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -108,7 +109,7 @@ public class Language {
 
     public String getLegacyString(String path)
     {
-        return ChatColor.translateAlternateColorCodes('&', getString(path));
+        return ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', getString(path));
     }
     
     public String getLegacyString(String path, TextReplacement ...textReplacements)
@@ -183,32 +184,32 @@ public class Language {
 
     public Component getLegacyComponent(String path)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getString(path));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getString(path)));
     }
 
     public Component getLegacyComponent(String path, TextReplacement ...textReplacements)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getString(path, textReplacements));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getString(path, textReplacements)));
     }
 
     public Component getLegacyPlaceholderComponent(@Nullable Player player, String path)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path)));
     }
 
     public Component getLegacyPlaceholderComponent(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path, textReplacements));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path, textReplacements)));
     }
 
     public Component getLegacyPlaceholderComponent(@Nullable OfflinePlayer player, String path)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path)));
     }
 
     public Component getLegacyPlaceholderComponent(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path, textReplacements));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(getPlaceholderString(player, path, textReplacements)));
     } 
 
     public List<String> getStringList(String path)
@@ -258,7 +259,7 @@ public class Language {
     {
         return strings.getStringList(path).stream()
                 .map(s -> stringValidator.validateString(languageCode, strings, s))
-                .map(s -> ChatColor.translateAlternateColorCodes('&', s))
+                .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -267,7 +268,7 @@ public class Language {
         return strings.getStringList(path).stream()
                 .map(s -> stringValidator.validateString(languageCode, strings, s))
                 .map(s -> applyTextReplacements(s, textReplacements))
-                .map(s -> ChatColor.translateAlternateColorCodes('&', s))
+                .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -365,7 +366,7 @@ public class Language {
     public List<Component> getLegacyComponentList(String path)
     {
         return getLegacyStringList(path).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
@@ -373,7 +374,7 @@ public class Language {
     public List<Component> getLegacyComponentList(String path, TextReplacement ...textReplacements)
     {
         return getLegacyStringList(path, textReplacements).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
@@ -381,7 +382,7 @@ public class Language {
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path)
     {
         return getLegacyPlaceholderStringList(player, path).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
@@ -389,7 +390,7 @@ public class Language {
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
@@ -397,7 +398,7 @@ public class Language {
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path)
     {
         return getLegacyPlaceholderStringList(player, path).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
@@ -405,7 +406,7 @@ public class Language {
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
-                .map(s -> LegacyComponentSerializer.legacyAmpersand().deserialize(s))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
     }
