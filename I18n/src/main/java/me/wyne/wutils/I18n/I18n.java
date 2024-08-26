@@ -59,6 +59,8 @@ public class I18n {
 
     public void loadLanguage(File languageFile)
     {
+        if (languageMap.containsKey(FilenameUtils.removeExtension(languageFile.getName())))
+            return;
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(defaultLanguage, languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }

@@ -21,7 +21,6 @@ import ru.vyarus.yaml.updater.report.UpdateReport;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
