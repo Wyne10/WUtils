@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BinaryOperator;
 
 public class I18n {
     public static I18n global = new I18n();
@@ -882,12 +883,22 @@ public class I18n {
 
     public static String reduceString(List<String> stringList)
     {
-        return stringList.stream().reduce((s1 ,s2) -> s1 + "\n" + s2).orElse("");
+        return stringList.stream().reduce(I18n::reduceString).orElse("");
+    }
+
+    public static String reduceString(String s1, String s2)
+    {
+        return s1 + "\n" + s2;
     }
 
     public static Component reduceComponent(List<Component> componentList)
     {
-        return componentList.stream().reduce((c1, c2) -> c1.append(Component.newline()).append(c2)).orElse(Component.empty());
+        return componentList.stream().reduce(I18n::reduceComponent).orElse(Component.empty());
+    }
+
+    public static Component reduceComponent(Component c1, Component c2)
+    {
+        return c1.append(Component.newline()).append(c2);
     }
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
