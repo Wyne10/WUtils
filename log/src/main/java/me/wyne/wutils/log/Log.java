@@ -163,7 +163,6 @@ public class Log {
         if (isActive())
         {
             error(message);
-            error(exception.getMessage());
             error(ExceptionUtils.getStackTrace(exception));
             return true;
         }
@@ -176,7 +175,7 @@ public class Log {
             return;
         if (level == Level.INFO && config.writeInfo() == false)
             return;
-        if (level == Level.WARNING && config.writeInfo() == false)
+        if (level == Level.WARNING && config.writeWarn() == false)
             return;
 
         fileWriteExecutor.execute(() -> {
@@ -187,7 +186,7 @@ public class Log {
             else if (level == Level.SEVERE)
                 levelMessage = "ERROR";
 
-            String writeLog = "[" + new SimpleDateFormat("hh:mm:ss").format(new Date()) + " " + levelMessage + "] " + log;
+            String writeLog = "[" + new SimpleDateFormat("hh:mm:ss").format(new Date()) + " " + levelMessage + "]: " + log;
 
             File logFile = new File(logDirectory, LocalDate.now() + ".txt");
 
@@ -225,7 +224,7 @@ public class Log {
                 continue;
 
             try {
-                if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime()  > 604800000)
+                if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime() > 604800000)
                 {
                     foundOldLogs = true;
                     file.delete();
