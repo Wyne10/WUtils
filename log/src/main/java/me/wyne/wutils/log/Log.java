@@ -169,6 +169,16 @@ public class Log {
         return false;
     }
 
+    public boolean exception(Throwable exception)
+    {
+        if (isActive())
+        {
+            error(ExceptionUtils.getStackTrace(exception));
+            return true;
+        }
+        return false;
+    }
+
     public void writeLog(Level level, String log)
     {
         if (!isFileWriteActive())
