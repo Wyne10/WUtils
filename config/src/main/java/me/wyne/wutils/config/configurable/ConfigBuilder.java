@@ -2,16 +2,15 @@ package me.wyne.wutils.config.configurable;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.javatuples.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigBuilder {
 
     private final Table<Integer, String, String> valueTable = HashBasedTable.create();
-    private final Map<Integer, String> valueSequence = new LinkedHashMap<>();
+    private final Set<Pair<Integer, String>> valueSequence = new LinkedHashSet<>();
 
     public <TValue> ConfigBuilder append(int depth, String path, @Nullable TValue value)
     {
@@ -21,7 +20,7 @@ public class ConfigBuilder {
             valueTable.put(depth, path, "'" + stringValue + "'");
         else
             valueTable.put(depth, path, value.toString());
-        valueSequence.put(depth, path);
+        valueSequence.add(new Pair<>(depth, path));
         return this;
     }
 
@@ -33,7 +32,7 @@ public class ConfigBuilder {
             valueTable.put(depth, path, "'" + stringValue + "'");
         else
             valueTable.put(depth, path, value.toString());
-        valueSequence.put(depth, path);
+        valueSequence.add(new Pair<>(depth, path));
         return this;
     }
 
@@ -41,20 +40,27 @@ public class ConfigBuilder {
     {
         if (value.isEmpty())
             return this;
-        valueTable.put(depth, path, value.stream()
-                .map(val -> value.toString())
-                .map(val -> " ".repeat(depth * 2) + "- " + val)
-                .reduce("\n", ((s1, s2) -> s1 + "\n" + s2)));
-        valueSequence.put(depth, path);
+        if (value.get(0) instanceof String)
+            valueTable.put(depth, path, value.stream()
+                    .map(val -> "'" + val.toString() + "'")
+                    .map(val -> " ".repeat((depth + 1) * 2) + "- " + val)
+                    .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
+        else
+            valueTable.put(depth, path, value.stream()
+                    .map(Object::toString)
+                    .map(val -> " ".repeat((depth + 1) * 2) + "- " + val)
+                    .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
+        valueSequence.add(new Pair<>(depth, path));
         return this;
     }
 
     public String build()
     {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<Integer, String> entry : valueSequence.entrySet())
+        stringBuilder.append("\n");
+        for (Pair<Integer, String> entry : valueSequence)
         {
-            stringBuilder.append(" ".repeat(entry.getKey() * 2)).append(valueTable.get(entry.getKey(), entry.getValue())).append("\n");
+            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
         }
         return stringBuilder.toString();
     }
