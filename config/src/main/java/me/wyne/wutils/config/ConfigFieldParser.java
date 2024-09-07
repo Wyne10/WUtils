@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.config.configurable.Configurable;
 import me.wyne.wutils.log.Log;
 import org.javatuples.Pair;
 
