@@ -7,12 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SequencedMap;
 
 public class ConfigBuilder {
 
     private final Table<Integer, String, String> valueTable = HashBasedTable.create();
-    private final SequencedMap<Integer, String> valueSequence = new LinkedHashMap<>();
+    private final Map<Integer, String> valueSequence = new LinkedHashMap<>();
 
     public <TValue> ConfigBuilder append(int depth, String path, @Nullable TValue value)
     {
@@ -47,7 +46,7 @@ public class ConfigBuilder {
     public String build()
     {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<Integer, String> entry :valueSequence.sequencedEntrySet())
+        for (Map.Entry<Integer, String> entry : valueSequence.entrySet())
         {
             stringBuilder.append(valueTable.get(entry.getKey(), entry.getValue()));
         }
