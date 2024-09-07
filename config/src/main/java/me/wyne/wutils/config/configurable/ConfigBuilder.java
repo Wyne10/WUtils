@@ -36,11 +36,11 @@ public class ConfigBuilder {
         return this;
     }
 
-    public ConfigBuilder appendList(int depth, String path, List<?> value)
+    public ConfigBuilder appendCollection(int depth, String path, Collection<?> value)
     {
         if (value.isEmpty())
             return this;
-        if (value.get(0) instanceof String)
+        if (value.stream().findAny().get() instanceof String)
             valueTable.put(depth, path, value.stream()
                     .map(val -> "'" + val.toString() + "'")
                     .map(val -> " ".repeat((depth + 1) * 2) + "- " + val)
