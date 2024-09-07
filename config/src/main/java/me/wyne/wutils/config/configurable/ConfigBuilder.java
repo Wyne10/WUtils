@@ -17,7 +17,10 @@ public class ConfigBuilder {
     {
         if (value == null)
             return this;
-        valueTable.put(depth, path, value.toString());
+        if (value instanceof String stringValue)
+            valueTable.put(depth, path, "'" + stringValue + "'");
+        else
+            valueTable.put(depth, path, value.toString());
         valueSequence.put(depth, path);
         return this;
     }
@@ -26,7 +29,10 @@ public class ConfigBuilder {
     {
         if (value == null)
             return this;
-        valueTable.put(depth, path, value.toString());
+        if (value instanceof String stringValue)
+            valueTable.put(depth, path, "'" + stringValue + "'");
+        else
+            valueTable.put(depth, path, value.toString());
         valueSequence.put(depth, path);
         return this;
     }
@@ -48,7 +54,7 @@ public class ConfigBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<Integer, String> entry : valueSequence.entrySet())
         {
-            stringBuilder.append(" ".repeat(entry.getKey() * 2)).append(valueTable.get(entry.getKey(), entry.getValue()));
+            stringBuilder.append(" ".repeat(entry.getKey() * 2)).append(valueTable.get(entry.getKey(), entry.getValue())).append("\n");
         }
         return stringBuilder.toString();
     }
