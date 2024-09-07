@@ -48,7 +48,7 @@ public class ConfigBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<Integer, String> entry : valueSequence.entrySet())
         {
-            stringBuilder.append(valueTable.get(entry.getKey(), entry.getValue()));
+            stringBuilder.append(" ".repeat(entry.getKey() * 2)).append(valueTable.get(entry.getKey(), entry.getValue()));
         }
         return stringBuilder.toString();
     }
