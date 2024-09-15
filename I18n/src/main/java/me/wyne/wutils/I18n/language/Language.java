@@ -75,7 +75,12 @@ public class Language {
             result = replacement.replace(result);
         return result;
     }
-    
+
+    public boolean contains(String path)
+    {
+        return strings.contains(path);
+    }
+
     public String getString(String path)
     {
         return stringValidator.validateString(languageCode, strings, path);

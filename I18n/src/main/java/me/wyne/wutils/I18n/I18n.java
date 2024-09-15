@@ -161,6 +161,16 @@ public class I18n {
         return languageMap.get(locale.getLanguage());
     }
 
+    public boolean contains(String path)
+    {
+        return defaultLanguage.contains(path);
+    }
+
+    public boolean contains(@Nullable Locale locale, String path)
+    {
+        return getLanguage(locale).contains(path);
+    }
+
     public String getString(String path)
     {
         return defaultLanguage.getString(path);
