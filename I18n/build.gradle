@@ -14,8 +14,7 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.6'
-    compileOnlyApi 'net.kyori:adventure-text-minimessage:4.17.0'
-    compileOnlyApi "net.kyori:adventure-text-serializer-legacy:4.17.0"
+    compileOnly 'net.kyori:adventure-text-minimessage:4.17.0'
     implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'commons-io:commons-io:2.13.0'
     implementation project(':WUtils-log')
