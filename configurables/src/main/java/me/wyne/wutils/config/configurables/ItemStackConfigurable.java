@@ -11,6 +11,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,11 +26,10 @@ public class ItemStackConfigurable implements Configurable {
     private Material material;
     private int slot;
     private int model;
-    private final Collection<String> lore;
+    private final Collection<String> lore = new ArrayList<>();
 
     public ItemStackConfigurable(ConfigurationSection itemSection)
     {
-        this.lore = new ArrayList<>();
         fromConfig(itemSection);
     }
 
@@ -37,7 +38,7 @@ public class ItemStackConfigurable implements Configurable {
         this.material = material;
         this.slot = slot;
         this.model = model;
-        this.lore = lore;
+        this.lore.addAll(lore);
     }
 
     @Override
@@ -60,6 +61,54 @@ public class ItemStackConfigurable implements Configurable {
         model = config.getInt("model", -1);
         lore.clear();
         lore.addAll(config.getStringList("lore"));
+    }
+
+    public ItemStack build(TagResolver... tagResolvers)
+    {
+        ItemStack itemStack = new ItemStack(getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(getName(null, tagResolvers));
+        itemMeta.lore(getLore(null, tagResolvers));
+        if (model != -1)
+            itemMeta.setCustomModelData(model);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public ItemStack build(@Nullable Player player, TagResolver... tagResolvers)
+    {
+        ItemStack itemStack = new ItemStack(getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(getName(player, tagResolvers));
+        itemMeta.lore(getLore(player, tagResolvers));
+        if (model != -1)
+            itemMeta.setCustomModelData(model);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public ItemStack build(TextReplacement... textReplacements)
+    {
+        ItemStack itemStack = new ItemStack(getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(getName(null, textReplacements));
+        itemMeta.lore(getLore(null, textReplacements));
+        if (model != -1)
+            itemMeta.setCustomModelData(model);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public ItemStack build(@Nullable Player player, TextReplacement... textReplacements)
+    {
+        ItemStack itemStack = new ItemStack(getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(getName(player, textReplacements));
+        itemMeta.lore(getLore(player, textReplacements));
+        if (model != -1)
+            itemMeta.setCustomModelData(model);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     public String getName() {
