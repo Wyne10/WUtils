@@ -93,40 +93,40 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
                 });
     }
 
-    public GuiItem buildGuiItem(TextReplacement... textReplacements)
+    public GuiItem buildLegacyGuiItem(TextReplacement... textReplacements)
     {
-        return ItemBuilder.from(build(textReplacements))
+        return ItemBuilder.from(buildLegacy(textReplacements))
                 .asGuiItem(event -> {
-                    getPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getLegacyPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
 
-    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, TextReplacement... textReplacements)
+    public GuiItem buildLegacyGuiItem(GuiAction<InventoryClickEvent> action, TextReplacement... textReplacements)
     {
-        return ItemBuilder.from(build(textReplacements))
+        return ItemBuilder.from(buildLegacy(textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);
-                    getPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getLegacyPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
 
-    public GuiItem buildGuiItem(@Nullable Player player, TextReplacement... textReplacements)
+    public GuiItem buildLegacyGuiItem(@Nullable Player player, TextReplacement... textReplacements)
     {
-        return ItemBuilder.from(build(player, textReplacements))
+        return ItemBuilder.from(buildLegacy(player, textReplacements))
                 .asGuiItem(event -> {
-                    getPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getLegacyPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
 
-    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, @Nullable Player player, TextReplacement... textReplacements)
+    public GuiItem buildLegacyGuiItem(GuiAction<InventoryClickEvent> action, @Nullable Player player, TextReplacement... textReplacements)
     {
-        return ItemBuilder.from(build(player, textReplacements))
+        return ItemBuilder.from(buildLegacy(player, textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);
-                    getPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getLegacyPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
@@ -135,7 +135,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         return print;
     }
 
-    public Optional<Component> getPrint(@Nullable Player player, TextReplacement... textReplacements) {
+    public Optional<Component> getLegacyPrint(@Nullable Player player, TextReplacement... textReplacements) {
         return print.map(printString -> I18n.global.getLegacyPlaceholderComponent(I18n.toLocale(player), player, printString, textReplacements));
     }
 

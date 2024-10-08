@@ -87,24 +87,24 @@ public class ItemStackConfigurable implements Configurable {
         return itemStack;
     }
 
-    public ItemStack build(TextReplacement... textReplacements)
+    public ItemStack buildLegacy(TextReplacement... textReplacements)
     {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(getName(null, textReplacements));
-        itemMeta.lore(getLore(null, textReplacements));
+        itemMeta.displayName(getLegacyName(null, textReplacements));
+        itemMeta.lore(getLegacyLore(null, textReplacements));
         if (model != -1)
             itemMeta.setCustomModelData(model);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
 
-    public ItemStack build(@Nullable Player player, TextReplacement... textReplacements)
+    public ItemStack buildLegacy(@Nullable Player player, TextReplacement... textReplacements)
     {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(getName(player, textReplacements));
-        itemMeta.lore(getLore(player, textReplacements));
+        itemMeta.displayName(getLegacyName(player, textReplacements));
+        itemMeta.lore(getLegacyLore(player, textReplacements));
         if (model != -1)
             itemMeta.setCustomModelData(model);
         itemStack.setItemMeta(itemMeta);
@@ -115,14 +115,14 @@ public class ItemStackConfigurable implements Configurable {
         return name;
     }
 
-    public Component getName(@Nullable Player player, TextReplacement... textReplacements) {
+    public Component getLegacyName(@Nullable Player player, TextReplacement... textReplacements) {
         if (name.trim().isEmpty())
             return Component.empty();
         return I18n.global.getLegacyPlaceholderComponent(I18n.toLocale(player), player, name, textReplacements);
     }
 
-    public Component getNameWithLore(@Nullable Player player, TextReplacement... textReplacements) {
-        return getName(player, textReplacements).hoverEvent(HoverEvent.showText(I18n.reduceComponent(getLore(player, textReplacements))));
+    public Component getLegacyNameWithLore(@Nullable Player player, TextReplacement... textReplacements) {
+        return getLegacyName(player, textReplacements).hoverEvent(HoverEvent.showText(I18n.reduceComponent(getLegacyLore(player, textReplacements))));
     }
 
     public Component getName(@Nullable Player player, TagResolver... tagResolvers) {
@@ -162,7 +162,7 @@ public class ItemStackConfigurable implements Configurable {
                 .toList();
     }
 
-    public List<Component> getLore(@Nullable Player player, TextReplacement... textReplacements) {
+    public List<Component> getLegacyLore(@Nullable Player player, TextReplacement... textReplacements) {
         return lore.stream()
                 .flatMap(s -> {
                     if (I18n.global.contains(I18n.toLocale(player), s))
