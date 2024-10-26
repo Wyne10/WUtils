@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n.language;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 import me.wyne.wutils.log.Log;
@@ -93,22 +92,22 @@ public class Language {
     
     public String getPlaceholderString(@Nullable Player player, String path)
     {
-        return PlaceholderAPI.setPlaceholders(player, getString(path));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getString(path));
     }
     
     public String getPlaceholderString(@Nullable Player player, String path, TextReplacement... textReplacements)
     {
-        return PlaceholderAPI.setPlaceholders(player, getString(path, textReplacements));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getString(path, textReplacements));
     }
 
     public String getPlaceholderString(@Nullable OfflinePlayer player, String path)
     {
-        return PlaceholderAPI.setPlaceholders(player, getString(path));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getString(path));
     }
 
     public String getPlaceholderString(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements)
     {
-        return PlaceholderAPI.setPlaceholders(player, getString(path, textReplacements));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getString(path, textReplacements));
     }
 
     public String getLegacyString(String path)
@@ -123,22 +122,22 @@ public class Language {
 
     public String getLegacyPlaceholderString(@Nullable Player player, String path)
     {
-        return PlaceholderAPI.setPlaceholders(player, getLegacyString(path));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getLegacyString(path));
     }
 
     public String getLegacyPlaceholderString(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
-        return PlaceholderAPI.setPlaceholders(player, getLegacyString(path, textReplacements));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getLegacyString(path, textReplacements));
     }
 
     public String getLegacyPlaceholderString(@Nullable OfflinePlayer player, String path)
     {
-        return PlaceholderAPI.setPlaceholders(player, getLegacyString(path));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getLegacyString(path));
     }
 
     public String getLegacyPlaceholderString(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
-        return PlaceholderAPI.setPlaceholders(player, getLegacyString(path, textReplacements));
+        return PlaceholderAPIWrapper.setPlaceholders(player, getLegacyString(path, textReplacements));
     }
 
     public Component getComponent(String path)
@@ -234,28 +233,28 @@ public class Language {
     public List<String> getPlaceholderStringList(@Nullable Player player, String path)
     {
         return getStringList(path).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
     
     public List<String> getPlaceholderStringList(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
         return getStringList(path, textReplacements).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
     public List<String> getPlaceholderStringList(@Nullable OfflinePlayer player, String path)
     {
         return getStringList(path).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
     public List<String> getPlaceholderStringList(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
         return getStringList(path, textReplacements).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
@@ -279,28 +278,28 @@ public class Language {
     public List<String> getLegacyPlaceholderStringList(@Nullable Player player, String path)
     {
         return getLegacyStringList(path).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
     public List<String> getLegacyPlaceholderStringList(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyStringList(path, textReplacements).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
     public List<String> getLegacyPlaceholderStringList(@Nullable OfflinePlayer player, String path)
     {
         return getLegacyStringList(path).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     }
 
     public List<String> getLegacyPlaceholderStringList(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
         return getLegacyStringList(path, textReplacements).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(player, s))
+                .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
                 .toList();
     } 
 
