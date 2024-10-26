@@ -9,6 +9,9 @@ public class ConfigSection {
                                               "#####\n\n";
 
     private final String section;
+    /**
+     * Key - Sub section
+     */
     private final Map<String, Set<ConfigField>> fields = new HashMap<>();
 
     public ConfigSection(String section)

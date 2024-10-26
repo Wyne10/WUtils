@@ -1,7 +1,9 @@
 package me.wyne.wutils.config;
 
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurable.Configurable;
 import me.wyne.wutils.log.Log;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.javatuples.Pair;
 
 import java.lang.reflect.Field;
@@ -16,8 +18,10 @@ public class ConfigFieldParser {
         String path = configEntry.path().isEmpty() ? field.getName() : configEntry.path();
         String value = null;
         try {
-            if (field.get(holder) != null && Configurable.class.isAssignableFrom(field.get(holder).getClass()))
+            if (Configurable.class.isAssignableFrom(field.get(holder).getClass()))
                 value = ((Configurable)field.get(holder)).toConfig(configEntry);
+            else if (ConfigurationSerializable.class.isAssignableFrom(field.get(holder).getClass()))
+                value = getConfigurationSerializableString(((ConfigurationSerializable) field.get(holder)));
             else
                 value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
         } catch (IllegalAccessException e) {
@@ -26,6 +30,14 @@ public class ConfigFieldParser {
         String comment = configEntry.comment();
 
         return new ConfigField(holder, field, path, value, comment);
+    }
+
+    private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable)
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder();
+        configBuilder.append(1, "==", configurationSerializable.getClass().getTypeName());
+        configurationSerializable.serialize().forEach((string, o) -> configBuilder.append(1, string, o));
+        return configBuilder.build();
     }
 
     public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field)

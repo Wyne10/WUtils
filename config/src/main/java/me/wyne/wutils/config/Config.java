@@ -17,6 +17,9 @@ public class Config implements ConfigFieldRegistry {
     public static final Config global = new Config();
 
     private ConfigGenerator configGenerator;
+    /**
+     * Key - Section
+     */
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
 
     public void setConfigGenerator(File configFile, File defaultConfigFile)
