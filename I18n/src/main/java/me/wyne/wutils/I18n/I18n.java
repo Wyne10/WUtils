@@ -19,14 +19,13 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BinaryOperator;
 
 public class I18n {
     public static I18n global = new I18n();
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private Language defaultLanguage;
-    private Language pluginDefaultLanguage;
+    private Language defaultPluginLanguage;
 
     private StringValidator stringValidator = new NullValidator();
 
@@ -66,6 +65,19 @@ public class I18n {
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
+    public void loadLanguage(File languageResourceFile, File dataFolder)
+    {
+        File languageResource = new File(dataFolder, "defaults/" + languageResourceFile.getName());
+        File languageFile = new File(dataFolder, languageResourceFile.getName());
+        try {
+            FileUtils.copyFile(languageResourceFile, languageResource);
+        } catch (IOException e) {
+            Log.global.exception("An exception occurred while trying to load " + languageResourceFile.getName() + " language", e);
+        }
+        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
+        Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+    }
+
     public void loadLanguage(String languageResourcePath, JavaPlugin plugin)
     {
         plugin.saveResource(languageResourcePath, false);
@@ -100,7 +112,7 @@ public class I18n {
 
             File languageResource = new File(plugin.getDataFolder(), "defaults/lang/" + pluginConfig.getString("lang"));
             FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
-            pluginDefaultLanguage = new Language(languageResource, stringValidator);
+            defaultPluginLanguage = new Language(languageResource, stringValidator);
         } catch (IOException e) {
             Log.global.exception("An exception occurred while trying to load default plugin language", e);
         }
@@ -126,10 +138,10 @@ public class I18n {
             if (defaultLanguage == null)
             {
                 Log.global.warn("Will try to get language file from plugin's resources");
-                if (pluginDefaultLanguage != null)
+                if (defaultPluginLanguage != null)
                 {
-                    defaultLanguage = pluginDefaultLanguage;
-                    Log.global.warn("Using " + pluginDefaultLanguage.getLanguageCode() + " as default language");
+                    defaultLanguage = defaultPluginLanguage;
+                    Log.global.warn("Using " + defaultPluginLanguage.getLanguageCode() + " as default language");
                     return;
                 }
                 Log.global.warn("Couldn't get language file from plugin's resources");
@@ -137,8 +149,8 @@ public class I18n {
             return;
         }
 
-        defaultLanguage = pluginDefaultLanguage != null
-                ? new Language(pluginDefaultLanguage, languageFile, stringValidator)
+        defaultLanguage = defaultPluginLanguage != null
+                ? new Language(defaultPluginLanguage, languageFile, stringValidator)
                 : new Language(languageFile, stringValidator);
         Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());
     }
