@@ -64,22 +64,33 @@ public class I18n {
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
-    public void loadLanguage(String fileName, InputStream languageResourceStream, File dataFolder)
+    public void loadLanguage(String filePath, InputStream languageResourceStream, File dataFolder)
     {
-        File languageResource = new File(dataFolder, "defaults/" + fileName);
-        File languageFile = new File(dataFolder, fileName);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(languageResourceStream));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(languageResource))) {
+        File languageResource = new File(dataFolder, "defaults/" + filePath);
+        File languageFile = new File(dataFolder, filePath);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(languageResourceStream))) {
+            if (!languageResource.exists())
+            {
+                languageResource.getParentFile().mkdirs();
+                languageResource.createNewFile();
+            }
+            if (!languageFile.exists())
+            {
+                languageFile.getParentFile().mkdirs();
+                languageFile.createNewFile();
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(languageResource));
             reader.lines().forEachOrdered(s -> {
                 try {
                     writer.write(s);
                     writer.newLine();
                 } catch (IOException e) {
-                    Log.global.exception("An exception occurred while trying to load " + fileName + " language", e);
+                    Log.global.exception("An exception occurred while trying to load " + filePath + " language", e);
                 }
             });
+            writer.close();
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load " + fileName + " language", e);
+            Log.global.exception("An exception occurred while trying to load " + filePath + " language", e);
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
