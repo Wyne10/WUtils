@@ -16,8 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class I18n {
@@ -65,14 +64,22 @@ public class I18n {
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
-    public void loadLanguage(File languageResourceFile, File dataFolder)
+    public void loadLanguage(String fileName, InputStream languageResourceStream, File dataFolder)
     {
-        File languageResource = new File(dataFolder, "defaults/" + languageResourceFile.getName());
-        File languageFile = new File(dataFolder, languageResourceFile.getName());
-        try {
-            FileUtils.copyFile(languageResourceFile, languageResource);
+        File languageResource = new File(dataFolder, "defaults/" + fileName);
+        File languageFile = new File(dataFolder, fileName);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(languageResourceStream));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(languageResource))) {
+            reader.lines().forEachOrdered(s -> {
+                try {
+                    writer.write(s);
+                    writer.newLine();
+                } catch (IOException e) {
+                    Log.global.exception("An exception occurred while trying to load " + fileName + " language", e);
+                }
+            });
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load " + languageResourceFile.getName() + " language", e);
+            Log.global.exception("An exception occurred while trying to load " + fileName + " language", e);
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
@@ -95,6 +102,14 @@ public class I18n {
     public void loadLanguages(JavaPlugin plugin)
     {
         for (File file : new File(plugin.getDataFolder(), "lang").listFiles())
+        {
+            loadLanguage(file);
+        }
+    }
+
+    public void loadLanguages(File langFolder)
+    {
+        for (File file : langFolder.listFiles())
         {
             loadLanguage(file);
         }
