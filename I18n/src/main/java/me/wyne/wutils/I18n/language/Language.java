@@ -40,8 +40,11 @@ public class Language {
 
     public Language(Language defaultLanguage, File languageFile, StringValidator stringValidator)
     {
-        this(languageFile, stringValidator);
         mergeDefaultStrings(defaultLanguage, languageFile);
+        this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
+        this.languageFile = languageFile;
+        this.strings = YamlConfiguration.loadConfiguration(languageFile);
+        this.stringValidator = stringValidator;
     }
 
     private void mergeDefaultStrings(Language defaultLanguage, File languageFile)
