@@ -144,6 +144,7 @@ public class I18n {
         }
     }
 
+    @Nullable
     public static File getDefaultLanguageFile(JavaPlugin plugin)
     {
         if (!plugin.getConfig().contains("lang", true))
@@ -156,7 +157,33 @@ public class I18n {
         return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
     }
 
-    public void setDefaultLanguage(File languageFile)
+    @Nullable
+    public static String getDefaultLanguagePath(JavaPlugin plugin)
+    {
+        if (!plugin.getConfig().contains("lang", true))
+        {
+            Log.global.warn("Plugin config doesn't contain default language path");
+            Log.global.warn("Absence of default language may and will cause issues");
+            return null;
+        }
+
+        return "lang/" + plugin.getConfig().getString("lang");
+    }
+
+    @Nullable
+    public static String getDefaultLanguageCode(JavaPlugin plugin)
+    {
+        if (!plugin.getConfig().contains("lang", true))
+        {
+            Log.global.warn("Plugin config doesn't contain default language path");
+            Log.global.warn("Absence of default language may and will cause issues");
+            return null;
+        }
+
+        return FilenameUtils.removeExtension(plugin.getConfig().getString("lang"));
+    }
+
+    public void setDefaultLanguage(@Nullable File languageFile)
     {
         if (languageFile == null || !languageFile.exists())
         {
@@ -178,6 +205,29 @@ public class I18n {
         defaultLanguage = defaultPluginLanguage != null
                 ? new Language(defaultPluginLanguage, languageFile, stringValidator)
                 : new Language(languageFile, stringValidator);
+        Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());
+    }
+
+    public void setDefaultLanguage(String languageCode)
+    {
+        if (!languageMap.containsKey(languageCode))
+        {
+            Log.global.error("Couldn't set default language to " + languageCode);
+            if (defaultLanguage == null)
+            {
+                Log.global.warn("Will try to get language file from plugin's resources");
+                if (defaultPluginLanguage != null)
+                {
+                    defaultLanguage = defaultPluginLanguage;
+                    Log.global.warn("Using " + defaultPluginLanguage.getLanguageCode() + " as default language");
+                    return;
+                }
+                Log.global.warn("Couldn't get language file from plugin's resources");
+            }
+            return;
+        }
+
+        defaultLanguage = languageMap.get(languageCode);
         Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());
     }
 
