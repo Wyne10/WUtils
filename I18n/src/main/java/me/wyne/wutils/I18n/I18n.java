@@ -18,13 +18,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 
 public class I18n {
     public static I18n global = new I18n();
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private Language defaultLanguage;
-    private Language defaultPluginLanguage;
+    private Language defaultResourceLanguage;
 
     private StringValidator stringValidator = new NullValidator();
 
@@ -37,9 +38,9 @@ public class I18n {
 
     public I18n(JavaPlugin plugin)
     {
-        loadDefaultPluginLanguage(plugin);
-        setDefaultLanguage(getDefaultLanguageFile(plugin));
+        loadDefaultResourceLanguage(plugin);
         loadLanguages(plugin);
+        setDefaultLanguage(getDefaultLanguageCode(plugin));
     }
 
     public I18n(File defaultLanguageFile, StringValidator stringValidator)
@@ -51,46 +52,27 @@ public class I18n {
     public I18n(JavaPlugin plugin, StringValidator stringValidator)
     {
         this.stringValidator = stringValidator;
-        loadDefaultPluginLanguage(plugin);
-        setDefaultLanguage(getDefaultLanguageFile(plugin));
+        loadDefaultResourceLanguage(plugin);
         loadLanguages(plugin);
+        setDefaultLanguage(getDefaultLanguageCode(plugin));
     }
 
     public void loadLanguage(File languageFile)
     {
         if (languageMap.containsKey(FilenameUtils.removeExtension(languageFile.getName())))
             return;
-        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(defaultLanguage, languageFile, stringValidator));
+        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(defaultResourceLanguage, languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
     }
 
-    public void loadLanguage(String filePath, InputStream languageResourceStream, File dataFolder)
+    public void loadLanguage(String languageResourcePath, InputStream languageResourceStream, File dataFolder)
     {
-        File languageResource = new File(dataFolder, "defaults/" + filePath);
-        File languageFile = new File(dataFolder, filePath);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(languageResourceStream))) {
-            if (!languageResource.exists())
-            {
-                languageResource.getParentFile().mkdirs();
-                languageResource.createNewFile();
-            }
-            if (!languageFile.exists())
-            {
-                languageFile.getParentFile().mkdirs();
-                languageFile.createNewFile();
-            }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(languageResource));
-            reader.lines().forEachOrdered(s -> {
-                try {
-                    writer.write(s);
-                    writer.newLine();
-                } catch (IOException e) {
-                    Log.global.exception("An exception occurred while trying to load " + filePath + " language", e);
-                }
-            });
-            writer.close();
+        File languageResource = new File(dataFolder, "defaults/" + languageResourcePath);
+        File languageFile = new File(dataFolder, languageResourcePath);
+        try {
+            FileUtils.copyInputStreamToFile(languageResourceStream, languageResource);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load " + filePath + " language", e);
+            Log.global.exception("An exception occurred trying to load " + languageResourcePath + " language", e); 
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
@@ -104,7 +86,7 @@ public class I18n {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResource);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load " + languageResourcePath + " language", e);
+            Log.global.exception("An exception occurred trying to load " + languageResourcePath + " language", e);
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new Language(new Language(languageResource, stringValidator), languageFile, stringValidator));
         Log.global.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
@@ -126,7 +108,7 @@ public class I18n {
         }
     }
 
-    public void loadDefaultPluginLanguage(JavaPlugin plugin)
+    public void loadDefaultResourceLanguage(JavaPlugin plugin)
     {
         File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
         try {
@@ -138,36 +120,28 @@ public class I18n {
 
             File languageResource = new File(plugin.getDataFolder(), "defaults/lang/" + pluginConfig.getString("lang"));
             FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
-            defaultPluginLanguage = new Language(languageResource, stringValidator);
+            defaultResourceLanguage = new Language(languageResource, stringValidator);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load default plugin language", e);
+            Log.global.exception("An exception occurred trying to load default language from resources", e);
         }
     }
 
-    @Nullable
-    public static File getDefaultLanguageFile(JavaPlugin plugin)
+    public void loadDefaultResourceLanguage(File dataFolder, JavaPlugin plugin, Function<String, InputStream> resourceProvider)
     {
-        if (!plugin.getConfig().contains("lang", true))
-        {
-            Log.global.warn("Plugin config doesn't contain default language path");
-            Log.global.warn("Absence of default language may and will cause issues");
-            return null;
+        File configResource = new File(dataFolder,  "defaults/config.yml");
+        try {
+            FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
+            YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(configResource);
+
+            if (!pluginConfig.contains("lang"))
+                return;
+
+            File languageResource = new File(dataFolder, "defaults/lang/" + pluginConfig.getString("lang"));
+            FileUtils.copyInputStreamToFile(resourceProvider.apply("lang/" + pluginConfig.getString("lang")), languageResource);
+            defaultResourceLanguage = new Language(languageResource, stringValidator);
+        } catch (IOException e) {
+            Log.global.exception("An exception occurred trying to load default plugin language", e);
         }
-
-        return new File(plugin.getDataFolder(), "lang/" + plugin.getConfig().getString("lang"));
-    }
-
-    @Nullable
-    public static String getDefaultLanguagePath(JavaPlugin plugin)
-    {
-        if (!plugin.getConfig().contains("lang", true))
-        {
-            Log.global.warn("Plugin config doesn't contain default language path");
-            Log.global.warn("Absence of default language may and will cause issues");
-            return null;
-        }
-
-        return "lang/" + plugin.getConfig().getString("lang");
     }
 
     @Nullable
@@ -190,11 +164,11 @@ public class I18n {
             Log.global.error("Couldn't set default language to " + (languageFile != null ? languageFile.getName() : "null"));
             if (defaultLanguage == null)
             {
-                Log.global.warn("Will try to get language file from plugin's resources");
-                if (defaultPluginLanguage != null)
+                Log.global.warn("Will try to get language file from plugins resources");
+                if (defaultResourceLanguage != null)
                 {
-                    defaultLanguage = defaultPluginLanguage;
-                    Log.global.warn("Using " + defaultPluginLanguage.getLanguageCode() + " as default language");
+                    defaultLanguage = defaultResourceLanguage;
+                    Log.global.warn("Using " + defaultResourceLanguage.getLanguageCode() + " as default language");
                     return;
                 }
                 Log.global.warn("Couldn't get language file from plugin's resources");
@@ -202,8 +176,8 @@ public class I18n {
             return;
         }
 
-        defaultLanguage = defaultPluginLanguage != null
-                ? new Language(defaultPluginLanguage, languageFile, stringValidator)
+        defaultLanguage = defaultResourceLanguage != null
+                ? new Language(defaultResourceLanguage, languageFile, stringValidator)
                 : new Language(languageFile, stringValidator);
         Log.global.info("Default language is set to " + defaultLanguage.getLanguageCode());
     }
@@ -215,11 +189,11 @@ public class I18n {
             Log.global.error("Couldn't set default language to " + languageCode);
             if (defaultLanguage == null)
             {
-                Log.global.warn("Will try to get language file from plugin's resources");
-                if (defaultPluginLanguage != null)
+                Log.global.warn("Will try to get language file from plugins resources");
+                if (defaultResourceLanguage != null)
                 {
-                    defaultLanguage = defaultPluginLanguage;
-                    Log.global.warn("Using " + defaultPluginLanguage.getLanguageCode() + " as default language");
+                    defaultLanguage = defaultResourceLanguage;
+                    Log.global.warn("Using " + defaultResourceLanguage.getLanguageCode() + " as default language");
                     return;
                 }
                 Log.global.warn("Couldn't get language file from plugin's resources");

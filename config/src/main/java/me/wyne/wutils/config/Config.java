@@ -33,7 +33,7 @@ public class Config implements ConfigFieldRegistry {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(configPath), defaultConfig);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred while trying to load default config for WUtils config", e);
+            Log.global.exception("An exception occurred trying to load default config for WUtils config", e);
         }
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
@@ -69,7 +69,7 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        Log.global.exception("An exception occurred while trying to reload WUtils config", e);
+                        Log.global.exception("An exception occurred trying to reload WUtils config", e);
                     }
                 });
         Log.global.info("Reloaded WUtils config");

@@ -212,7 +212,7 @@ public class Log {
                 writer.flush();
                 writer.close();
             } catch (IOException e) {
-                exception("An exception occurred while writing log to a file", e);
+                exception("An exception occurred trying to write log to a file", e);
             }
         });
     }
@@ -240,7 +240,7 @@ public class Log {
                     file.delete();
                 }
             } catch (ParseException e) {
-                exception("An exception occurred while deleting old logs", e);
+                exception("An exception occurred trying to delete old logs", e);
             }
         }
 
