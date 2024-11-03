@@ -128,7 +128,7 @@ public class I18n {
 
     public void loadDefaultResourceLanguage(File dataFolder, JavaPlugin plugin, Function<String, InputStream> resourceProvider)
     {
-        File configResource = new File(dataFolder,  "defaults/config.yml");
+        File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
             YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(configResource);
