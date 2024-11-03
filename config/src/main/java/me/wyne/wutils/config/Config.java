@@ -75,7 +75,7 @@ public class Config implements ConfigFieldRegistry {
         Log.global.info("Reloaded WUtils config");
     }
 
-    public void generateConfig(String version, boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
+    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
     {
         if (configGenerator == null)
         {
@@ -83,15 +83,13 @@ public class Config implements ConfigFieldRegistry {
             return;
         }
 
-        replaceVars.put("version", version);
-        deleteProps.add("config-version");
-        configGenerator.writeVersion(version);
+        configGenerator.copyDefaultConfig();
         configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
         configGenerator.generateConfig(backup, replaceVars, deleteProps);
     }
 
-    public void generateConfig(String version)
+    public void generateConfig()
     {
-        generateConfig(version, true, new HashMap<>(), new ArrayList<>());
+        generateConfig(true, new HashMap<>(), new ArrayList<>());
     }
 }

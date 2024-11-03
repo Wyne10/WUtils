@@ -19,22 +19,11 @@ public class ConfigGenerator {
 
     private final StringBuilder generatedText = new StringBuilder();
 
-    private boolean isNewVersion = false;
-
     public ConfigGenerator(File configFile, File defaultConfigFile)
     {
         this.configFile = configFile;
         this.defaultConfigFile = defaultConfigFile;
         this.existingConfig = YamlConfiguration.loadConfiguration(configFile);
-    }
-
-    public void writeVersion(String version)
-    {
-        if (existingConfig.contains("config-version") && existingConfig.getString("config-version").equals(version))
-            return;
-        isNewVersion = true;
-        generatedText.insert(0, "config-version: #{version}\n");
-        copyDefaultConfig();
     }
 
     public void writeConfigSection(ConfigSection section)
@@ -50,7 +39,7 @@ public class ConfigGenerator {
         }
     }
 
-    private void copyDefaultConfig()
+    public void copyDefaultConfig()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(defaultConfigFile))) {
             reader.lines().forEachOrdered(s -> { generatedText.append(s); generatedText.append("\n"); });
@@ -62,9 +51,6 @@ public class ConfigGenerator {
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
     {
-        if (!isNewVersion)
-            return;
-
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
