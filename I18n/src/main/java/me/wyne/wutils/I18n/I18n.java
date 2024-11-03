@@ -29,7 +29,7 @@ public class I18n {
 
     private StringValidator stringValidator = new NullValidator();
 
-    private I18n() {}
+    public I18n() {}
 
     public I18n(File defaultLanguageFile)
     {
