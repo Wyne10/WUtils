@@ -370,7 +370,7 @@ public class Language {
 
     public List<Component> getLegacyComponentList(String path)
     {
-        return getLegacyStringList(path).stream()
+        return getStringList(path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
@@ -378,7 +378,7 @@ public class Language {
 
     public List<Component> getLegacyComponentList(String path, TextReplacement ...textReplacements)
     {
-        return getLegacyStringList(path, textReplacements).stream()
+        return getStringList(path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
@@ -386,7 +386,7 @@ public class Language {
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path)
     {
-        return getLegacyPlaceholderStringList(player, path).stream()
+        return getPlaceholderStringList(player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
@@ -394,7 +394,7 @@ public class Language {
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable Player player, String path, TextReplacement ...textReplacements)
     {
-        return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
+        return getPlaceholderStringList(player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
@@ -402,7 +402,7 @@ public class Language {
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path)
     {
-        return getLegacyPlaceholderStringList(player, path).stream()
+        return getPlaceholderStringList(player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
@@ -410,7 +410,7 @@ public class Language {
 
     public List<Component> getLegacyPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TextReplacement ...textReplacements)
     {
-        return getLegacyPlaceholderStringList(player, path, textReplacements).stream()
+        return getPlaceholderStringList(player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
                 .toList();
