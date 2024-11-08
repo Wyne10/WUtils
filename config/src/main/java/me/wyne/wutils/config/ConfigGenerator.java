@@ -45,7 +45,7 @@ public class ConfigGenerator {
             reader.lines().forEachOrdered(s -> { generatedText.append(s); generatedText.append("\n"); });
             generatedText.append("\n");
         } catch (IOException e) {
-            Log.global.exception("An exception occurred trying to read default config file data", e);
+            LogWrapper.exception("An exception occurred trying to read default config file data", e);
         }
     }
 
@@ -60,9 +60,9 @@ public class ConfigGenerator {
                     .vars(replaceVars)
                     .deleteProps(deleteProps)
                     .update();
-            Log.global.info("Generated WUtils config");
+            LogWrapper.info("Generated WUtils config");
         } catch (IOException e) {
-            Log.global.exception("An exception occurred trying to write WUtils config", e);
+            LogWrapper.exception("An exception occurred trying to write WUtils config", e);
         }
     }
 

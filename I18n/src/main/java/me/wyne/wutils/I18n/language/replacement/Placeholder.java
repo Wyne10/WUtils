@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n.language.replacement;
 
-import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 

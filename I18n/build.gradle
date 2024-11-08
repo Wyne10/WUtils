@@ -16,11 +16,12 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'net.kyori:adventure-text-minimessage:4.17.0'
     implementation 'ru.vyarus:yaml-config-updater:1.4.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.1'
     implementation 'commons-io:commons-io:2.13.0'
     implementation project(':WUtils-log')
 }
 
-version = '2.5.3'
+version = '2.5.5'
 
 publishing {
     publications {

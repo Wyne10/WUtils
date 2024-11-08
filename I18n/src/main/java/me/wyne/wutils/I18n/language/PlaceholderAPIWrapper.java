@@ -7,29 +7,29 @@ import org.jetbrains.annotations.Nullable;
 
 public class PlaceholderAPIWrapper {
 
-    private final static boolean isPlaceholderApiPresent;
+    public final static boolean IS_PLACEHOLDER_API_PRESENT;
 
     static {
-        boolean isPlaceholderApiPresent1;
+        boolean isPlaceholderApiPresent;
         try {
-            Class.forName("PlaceholderAPI");
-            isPlaceholderApiPresent1 = true;
+            Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+            isPlaceholderApiPresent = true;
         } catch (ClassNotFoundException e) {
-            isPlaceholderApiPresent1 = false;
+            isPlaceholderApiPresent = false;
         }
-        isPlaceholderApiPresent = isPlaceholderApiPresent1;
+        IS_PLACEHOLDER_API_PRESENT = isPlaceholderApiPresent;
     }
 
     public static String setPlaceholders(@Nullable Player player, String string)
     {
-        if (!isPlaceholderApiPresent)
+        if (!IS_PLACEHOLDER_API_PRESENT)
             return string;
         return PlaceholderAPI.setPlaceholders(player, string);
     }
 
     public static String setPlaceholders(@Nullable OfflinePlayer player, String string)
     {
-        if (!isPlaceholderApiPresent)
+        if (!IS_PLACEHOLDER_API_PRESENT)
             return string;
         return PlaceholderAPI.setPlaceholders(player, string);
     }

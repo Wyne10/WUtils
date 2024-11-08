@@ -2,7 +2,6 @@ package me.wyne.wutils.i18n.language;
 
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
-import me.wyne.wutils.log.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -51,14 +50,14 @@ public class Language {
     {
         if (defaultLanguage.languageFile.length() == 0)
             return;
-        Log.global.info("Searching for missing strings in " + languageFile.getName());
+        LogWrapper.info("Searching for missing strings in " + languageFile.getName());
         UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.languageFile)
                 .backup(false)
                 .update();
         if (report.isConfigChanged())
-            Log.global.info("Merged missing strings to " + languageFile.getName());
+            LogWrapper.info("Merged missing strings to " + languageFile.getName());
         else
-            Log.global.info(languageFile.getName() + " is up to date");
+            LogWrapper.info(languageFile.getName() + " is up to date");
     }
 
     public void setStringValidator(StringValidator stringValidator)

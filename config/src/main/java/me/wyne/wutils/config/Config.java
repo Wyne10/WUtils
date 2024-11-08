@@ -1,8 +1,10 @@
 package me.wyne.wutils.config;
 
 import me.wyne.wutils.config.configurable.Configurable;
-import me.wyne.wutils.log.Log;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javatuples.Pair;
@@ -22,6 +24,10 @@ public class Config implements ConfigFieldRegistry {
      */
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
 
+    static {
+        Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+    }
+
     public void setConfigGenerator(File configFile, File defaultConfigFile)
     {
         configGenerator = new ConfigGenerator(configFile, defaultConfigFile);
@@ -33,7 +39,7 @@ public class Config implements ConfigFieldRegistry {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(configPath), defaultConfig);
         } catch (IOException e) {
-            Log.global.exception("An exception occurred trying to load default config for WUtils config", e);
+            LogWrapper.exception("An exception occurred trying to load default config for WUtils config", e);
         }
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
@@ -69,17 +75,17 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        Log.global.exception("An exception occurred trying to reload WUtils config", e);
+                        LogWrapper.exception("An exception occurred trying to reload WUtils config", e);
                     }
                 });
-        Log.global.info("Reloaded WUtils config");
+        LogWrapper.info("Reloaded WUtils config");
     }
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
     {
         if (configGenerator == null)
         {
-            Log.global.error("Trying to generate config, but configGenerator is null");
+            LogWrapper.error("Trying to generate config, but configGenerator is null");
             return;
         }
 

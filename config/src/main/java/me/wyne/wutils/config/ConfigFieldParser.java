@@ -25,7 +25,7 @@ public class ConfigFieldParser {
             else
                 value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
         } catch (IllegalAccessException e) {
-            Log.global.exception("An exception occurred trying to parse reflected field to ConfigField", e);
+            LogWrapper.exception("An exception occurred trying to parse reflected field to ConfigField", e);
         }
         String comment = configEntry.comment();
 

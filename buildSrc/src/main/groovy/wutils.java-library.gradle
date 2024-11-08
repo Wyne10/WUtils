@@ -17,6 +17,10 @@ java {
     withSourcesJar()
 }
 
+tasks.withType(PublishToMavenRepository).configureEach {
+    it.dependsOn("publishToMavenLocal")
+}
+
 publishing {
     repositories {
         maven {
