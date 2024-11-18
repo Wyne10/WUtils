@@ -1,16 +1,18 @@
-package me.wyne.wutils.i18n.language;
+package me.wyne.wutils.i18n;
 
 import me.wyne.wutils.log.Log;
 
 public class LogWrapper {
 
     public final static boolean IS_LOGGER_PRESENT;
+    public static Log LOGGER;
 
     static {
         boolean isLoggerPresent;
         try {
             Class.forName("me.wyne.wutils.log.Log");
             isLoggerPresent = true;
+            LOGGER = Log.global;
         } catch (ClassNotFoundException e) {
             isLoggerPresent = false;
         }
@@ -20,31 +22,31 @@ public class LogWrapper {
     public static void info(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        Log.global.info(message);
+        LOGGER.info(message);
     }
 
     public static void warn(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        Log.global.warn(message);
+        LOGGER.warn(message);
     }
 
     public static void error(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        Log.global.error(message);
+        LOGGER.error(message);
     }
 
     public static void exception(Throwable exception) {
         if (!IS_LOGGER_PRESENT)
             return;
-        Log.global.exception(exception);
+        LOGGER.exception(exception);
     }
 
     public static void exception(String message, Throwable exception) {
         if (!IS_LOGGER_PRESENT)
             return;
-        Log.global.exception(message, exception);
+        LOGGER.exception(message, exception);
     }
 
 }

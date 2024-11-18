@@ -1,7 +1,6 @@
 package me.wyne.wutils.i18n;
 
 import me.wyne.wutils.i18n.language.Language;
-import me.wyne.wutils.i18n.language.LogWrapper;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.NullValidator;
 import me.wyne.wutils.i18n.language.validation.StringValidator;

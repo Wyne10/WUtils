@@ -1,4 +1,4 @@
-package me.wyne.wutils.i18n.language;
+package me.wyne.wutils.i18n;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;

@@ -1,5 +1,7 @@
 package me.wyne.wutils.i18n.language;
 
+import me.wyne.wutils.i18n.LogWrapper;
+import me.wyne.wutils.i18n.PlaceholderAPIWrapper;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 import net.kyori.adventure.text.Component;
