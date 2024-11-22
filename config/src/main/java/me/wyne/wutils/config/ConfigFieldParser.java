@@ -2,7 +2,6 @@ package me.wyne.wutils.config;
 
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurable.Configurable;
-import me.wyne.wutils.log.Log;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.javatuples.Pair;
 
@@ -18,9 +17,9 @@ public class ConfigFieldParser {
         String path = configEntry.path().isEmpty() ? field.getName() : configEntry.path();
         String value = null;
         try {
-            if (Configurable.class.isAssignableFrom(field.get(holder).getClass()))
+            if (field.get(holder) != null && Configurable.class.isAssignableFrom(field.get(holder).getClass()))
                 value = ((Configurable)field.get(holder)).toConfig(configEntry);
-            else if (ConfigurationSerializable.class.isAssignableFrom(field.get(holder).getClass()))
+            else if (field.get(holder) != null && ConfigurationSerializable.class.isAssignableFrom(field.get(holder).getClass()))
                 value = getConfigurationSerializableString(((ConfigurationSerializable) field.get(holder)));
             else
                 value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
