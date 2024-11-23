@@ -70,6 +70,8 @@ public class Config implements ConfigFieldRegistry {
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
+                        if (config.get(configField.path()) == null)
+                            config.set(configField.path(), configField.value());
                         if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
@@ -79,6 +81,26 @@ public class Config implements ConfigFieldRegistry {
                     }
                 });
         LogWrapper.info("Reloaded WUtils config");
+    }
+
+    public void loadConfig(FileConfiguration config, Object object) {
+        registeredConfigFields.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(configField -> configField.holder() == object)
+                .forEachOrdered(configField -> {
+                    configField.field().setAccessible(true);
+                    try {
+                        if (config.get(configField.path()) == null)
+                            config.set(configField.path(), configField.value());
+                        if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
+                            ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
+                        else
+                            configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
+                    } catch (IllegalAccessException e) {
+                        LogWrapper.exception("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
+                    }
+                });
     }
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
