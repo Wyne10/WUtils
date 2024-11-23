@@ -5,48 +5,52 @@ import me.wyne.wutils.log.Log;
 public class LogWrapper {
 
     public final static boolean IS_LOGGER_PRESENT;
-    public static Log LOGGER;
+    public Log logger;
+
+    public LogWrapper() {
+        if (IS_LOGGER_PRESENT)
+            logger = Log.global;
+    }
 
     static {
         boolean isLoggerPresent;
         try {
             Class.forName("me.wyne.wutils.log.Log");
             isLoggerPresent = true;
-            LOGGER = Log.global;
         } catch (ClassNotFoundException e) {
             isLoggerPresent = false;
         }
         IS_LOGGER_PRESENT = isLoggerPresent;
     }
 
-    public static void info(String message) {
+    public void info(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        LOGGER.info(message);
+        logger.info(message);
     }
 
-    public static void warn(String message) {
+    public void warn(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        LOGGER.warn(message);
+        logger.warn(message);
     }
 
-    public static void error(String message) {
+    public void error(String message) {
         if (!IS_LOGGER_PRESENT)
             return;
-        LOGGER.error(message);
+        logger.error(message);
     }
 
-    public static void exception(Throwable exception) {
+    public void exception(Throwable exception) {
         if (!IS_LOGGER_PRESENT)
             return;
-        LOGGER.exception(exception);
+        logger.exception(exception);
     }
 
-    public static void exception(String message, Throwable exception) {
+    public void exception(String message, Throwable exception) {
         if (!IS_LOGGER_PRESENT)
             return;
-        LOGGER.exception(message, exception);
+        logger.exception(message, exception);
     }
 
 }

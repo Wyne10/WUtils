@@ -26,21 +26,25 @@ import java.util.stream.Collectors;
 
 public class Language {
 
+    private final LogWrapper log;
+
     private final String languageCode;
     private final File languageFile;
     private final FileConfiguration strings;
     private StringValidator stringValidator;
 
-    public Language(File languageFile, StringValidator stringValidator)
+    public Language(File languageFile, StringValidator stringValidator, LogWrapper log)
     {
+        this.log = log;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.languageFile = languageFile;
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
         this.stringValidator = stringValidator;
     }
 
-    public Language(Language defaultLanguage, File languageFile, StringValidator stringValidator)
+    public Language(Language defaultLanguage, File languageFile, StringValidator stringValidator, LogWrapper log)
     {
+        this.log = log;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.languageFile = languageFile;
@@ -52,14 +56,14 @@ public class Language {
     {
         if (defaultLanguage.languageFile.length() == 0)
             return;
-        LogWrapper.info("Searching for missing strings in " + languageFile.getName());
+        log.info("Searching for missing strings in " + languageFile.getName());
         UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.languageFile)
                 .backup(false)
                 .update();
         if (report.isConfigChanged())
-            LogWrapper.info("Merged missing strings to " + languageFile.getName());
+            log.info("Merged missing strings to " + languageFile.getName());
         else
-            LogWrapper.info(languageFile.getName() + " is up to date");
+            log.info(languageFile.getName() + " is up to date");
     }
 
     public void setStringValidator(StringValidator stringValidator)

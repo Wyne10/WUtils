@@ -1,8 +1,5 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.log.Log;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import ru.vyarus.yaml.updater.YamlUpdater;
 
 import java.io.*;
@@ -12,18 +9,18 @@ import java.util.Set;
 
 public class ConfigGenerator {
 
+    private final LogWrapper log;
+
     private final File configFile;
     private final File defaultConfigFile;
 
-    private final FileConfiguration existingConfig;
-
     private final StringBuilder generatedText = new StringBuilder();
 
-    public ConfigGenerator(File configFile, File defaultConfigFile)
+    public ConfigGenerator(File configFile, File defaultConfigFile, LogWrapper log)
     {
+        this.log = log;
         this.configFile = configFile;
         this.defaultConfigFile = defaultConfigFile;
-        this.existingConfig = YamlConfiguration.loadConfiguration(configFile);
     }
 
     public void writeConfigSection(ConfigSection section)
@@ -45,7 +42,7 @@ public class ConfigGenerator {
             reader.lines().forEachOrdered(s -> { generatedText.append(s); generatedText.append("\n"); });
             generatedText.append("\n");
         } catch (IOException e) {
-            LogWrapper.exception("An exception occurred trying to read default config file data", e);
+            log.exception("An exception occurred trying to read default config file data", e);
         }
     }
 
@@ -60,9 +57,9 @@ public class ConfigGenerator {
                     .vars(replaceVars)
                     .deleteProps(deleteProps)
                     .update();
-            LogWrapper.info("Generated WUtils config");
+            log.info("Generated WUtils config");
         } catch (IOException e) {
-            LogWrapper.exception("An exception occurred trying to write WUtils config", e);
+            log.exception("An exception occurred trying to write WUtils config", e);
         }
     }
 

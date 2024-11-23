@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ConfigFieldParser {
 
-    public static ConfigField getConfigField(Object holder, Field field)
+    public static ConfigField getConfigField(Object holder, Field field, LogWrapper log)
     {
         field.setAccessible(true);
         var configEntry = field.getAnnotation(ConfigEntry.class);
@@ -24,7 +24,7 @@ public class ConfigFieldParser {
             else
                 value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
         } catch (IllegalAccessException e) {
-            LogWrapper.exception("An exception occurred trying to parse reflected field to ConfigField", e);
+            log.exception("An exception occurred trying to parse reflected field to ConfigField", e);
         }
         String comment = configEntry.comment();
 
@@ -39,9 +39,9 @@ public class ConfigFieldParser {
         return configBuilder.build();
     }
 
-    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field)
+    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field, LogWrapper log)
     {
-        return new Pair<>(field.getAnnotation(ConfigEntry.class).section(), getConfigField(holder, field));
+        return new Pair<>(field.getAnnotation(ConfigEntry.class).section(), getConfigField(holder, field, log));
     }
     
     public static Set<ConfigSection> getConfigSections(Map<String, Set<ConfigField>> registeredConfigFields) {

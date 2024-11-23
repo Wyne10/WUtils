@@ -1,7 +1,6 @@
 package me.wyne.wutils.config;
 
 import me.wyne.wutils.config.configurable.Configurable;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -12,11 +11,14 @@ import org.javatuples.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class Config implements ConfigFieldRegistry {
 
     public static final Config global = new Config();
+    public final LogWrapper log = new LogWrapper();
 
     private ConfigGenerator configGenerator;
     /**
@@ -30,16 +32,16 @@ public class Config implements ConfigFieldRegistry {
 
     public void setConfigGenerator(File configFile, File defaultConfigFile)
     {
-        configGenerator = new ConfigGenerator(configFile, defaultConfigFile);
+        configGenerator = new ConfigGenerator(configFile, defaultConfigFile, log);
     }
 
     public void setConfigGenerator(JavaPlugin plugin, String configPath)
     {
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/config.yml");
         try {
-            FileUtils.copyInputStreamToFile(plugin.getResource(configPath), defaultConfig);
+            Files.copy(plugin.getResource(configPath), defaultConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            LogWrapper.exception("An exception occurred trying to load default config for WUtils config", e);
+            log.exception("An exception occurred trying to load default config for WUtils config", e);
         }
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
@@ -50,7 +52,7 @@ public class Config implements ConfigFieldRegistry {
         {
             if (!field.isAnnotationPresent(ConfigEntry.class))
                 continue;
-            Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field);
+            Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field, log);
             registerConfigField(sectionedConfigField.getValue0(), sectionedConfigField.getValue1());
         }
     }
@@ -77,10 +79,10 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        LogWrapper.exception("An exception occurred trying to reload WUtils config", e);
+                        log.exception("An exception occurred trying to reload WUtils config", e);
                     }
                 });
-        LogWrapper.info("Reloaded WUtils config");
+        log.info("Reloaded WUtils config");
     }
 
     public void loadConfig(FileConfiguration config, Object object) {
@@ -98,7 +100,7 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        LogWrapper.exception("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
+                        log.exception("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
                     }
                 });
     }
@@ -107,7 +109,7 @@ public class Config implements ConfigFieldRegistry {
     {
         if (configGenerator == null)
         {
-            LogWrapper.error("Trying to generate config, but configGenerator is null");
+            log.error("Trying to generate config, but configGenerator is null");
             return;
         }
 
