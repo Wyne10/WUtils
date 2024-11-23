@@ -7,11 +7,6 @@ public class LogWrapper {
     public final static boolean IS_LOGGER_PRESENT;
     public Log logger;
 
-    public LogWrapper() {
-        if (IS_LOGGER_PRESENT)
-            logger = Log.global;
-    }
-
     static {
         boolean isLoggerPresent;
         try {
@@ -24,33 +19,39 @@ public class LogWrapper {
     }
 
     public void info(String message) {
-        if (!IS_LOGGER_PRESENT)
+        if (!isLoggerPresent())
             return;
         logger.info(message);
     }
 
     public void warn(String message) {
-        if (!IS_LOGGER_PRESENT)
+        if (!isLoggerPresent())
             return;
         logger.warn(message);
     }
 
     public void error(String message) {
-        if (!IS_LOGGER_PRESENT)
+        if (!isLoggerPresent())
             return;
         logger.error(message);
     }
 
     public void exception(Throwable exception) {
-        if (!IS_LOGGER_PRESENT)
+        if (!isLoggerPresent())
             return;
         logger.exception(exception);
     }
 
     public void exception(String message, Throwable exception) {
-        if (!IS_LOGGER_PRESENT)
+        if (!isLoggerPresent())
             return;
         logger.exception(message, exception);
+    }
+
+    private boolean isLoggerPresent() {
+        if (IS_LOGGER_PRESENT && logger == null)
+            logger = Log.global;
+        return IS_LOGGER_PRESENT;
     }
 
 }
