@@ -11,7 +11,6 @@ public @interface ConfigEntry {
 
     String section() default "";
     String path() default "";
-    String value() default "";
     String comment() default "";
 
 }

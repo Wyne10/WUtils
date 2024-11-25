@@ -72,8 +72,8 @@ public class Config implements ConfigFieldRegistry {
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
-                        if (config.get(configField.path()) == null)
-                            config.set(configField.path(), configField.value());
+                        if (!config.contains(configField.path()))
+                            return;
                         if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
@@ -93,8 +93,8 @@ public class Config implements ConfigFieldRegistry {
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
-                        if (config.get(configField.path()) == null)
-                            config.set(configField.path(), configField.value());
+                        if (!config.contains(configField.path()))
+                            return;
                         if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
