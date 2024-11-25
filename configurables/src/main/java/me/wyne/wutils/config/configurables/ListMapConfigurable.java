@@ -39,4 +39,8 @@ public class ListMapConfigurable<T> implements Configurable {
         config.getKeys(false).forEach(key -> map.put(key, (List<T>) config.getList(key)));
     }
 
+    public Map<String, List<T>> getMap() {
+        return map;
+    }
+
 }
