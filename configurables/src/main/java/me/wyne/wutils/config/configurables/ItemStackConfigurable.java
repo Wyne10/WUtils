@@ -28,8 +28,7 @@ public class ItemStackConfigurable implements Configurable {
     private int model;
     private final Collection<String> lore = new ArrayList<>();
 
-    public ItemStackConfigurable(ConfigurationSection itemSection)
-    {
+    public ItemStackConfigurable(ConfigurationSection itemSection) {
         fromConfig(itemSection);
     }
 
