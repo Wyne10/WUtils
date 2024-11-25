@@ -22,7 +22,7 @@ public class ConfigFieldParser {
             else if (field.get(holder) != null && ConfigurationSerializable.class.isAssignableFrom(field.get(holder).getClass()))
                 value = getConfigurationSerializableString(((ConfigurationSerializable) field.get(holder)));
             else
-                value = configEntry.value().isEmpty() ? field.get(holder) != null ? field.get(holder).toString() : "" : configEntry.value();
+                value = field.get(holder) != null ? field.get(holder).toString() : "";
         } catch (IllegalAccessException e) {
             log.exception("An exception occurred trying to parse reflected field to ConfigField", e);
         }
