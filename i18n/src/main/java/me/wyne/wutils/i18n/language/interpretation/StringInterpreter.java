@@ -32,6 +32,4 @@ public interface StringInterpreter extends Interpreter {
     List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path);
 
     List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements);
-
-
 }

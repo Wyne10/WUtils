@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -234,6 +235,54 @@ public class I18n {
 
     public ComponentInterpreter component() {
         return componentInterpreter;
+    }
+
+    public String getString(@Nullable Locale locale, String path) {
+        return string().getString(getLanguage(locale), path);
+    }
+
+    String getString(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        return string().getString(getLanguage(locale), path, textReplacements);
+    }
+
+    String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path) {
+        return string().getPlaceholderString(getLanguage(locale), player, path);
+    }
+
+    String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        return string().getPlaceholderString(getLanguage(locale), player, path, textReplacements);
+    }
+
+    String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        return string().getPlaceholderString(getLanguage(locale), player, path);
+    }
+
+    String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        return string().getPlaceholderString(getLanguage(locale), player, path, textReplacements);
+    }
+
+    List<String> getStringList(@Nullable Locale locale, String path) {
+        return string().getStringList(getLanguage(locale), path);
+    }
+
+    List<String> getStringList(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        return string().getStringList(getLanguage(locale), path, textReplacements);
+    }
+
+    List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path) {
+        return string().getPlaceholderStringList(getLanguage(locale), player, path);
+    }
+
+    List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        return string().getPlaceholderStringList(getLanguage(locale), player, path, textReplacements);
+    }
+
+    List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        return string().getPlaceholderStringList(getLanguage(locale), player, path);
+    }
+
+    List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        return string().getPlaceholderStringList(getLanguage(locale), player, path, textReplacements);
     }
 
     public static String reduceString(List<String> stringList)
