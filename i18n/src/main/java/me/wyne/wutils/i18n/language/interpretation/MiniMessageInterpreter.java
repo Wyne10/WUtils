@@ -1,9 +1,8 @@
-package me.wyne.wutils.i18n.language.validation;
+package me.wyne.wutils.i18n.language.interpretation;
 
-import me.wyne.wutils.i18n.language.interpretation.BaseInterpreter;
-import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
+import me.wyne.wutils.i18n.language.validation.StringValidator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
