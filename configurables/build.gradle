@@ -13,12 +13,11 @@ dependencies {
     compileOnly("dev.triumphteam:triumph-gui:3.1.10") {
         exclude group: 'net.kyori'
     }
-    compileOnly 'net.kyori:adventure-text-minimessage:4.17.0'
     compileOnly project(':WUtils-i18n')
     api project(':WUtils-config')
 }
 
-version = '1.0.4'
+version = '1.0.5'
 
 publishing {
     publications {

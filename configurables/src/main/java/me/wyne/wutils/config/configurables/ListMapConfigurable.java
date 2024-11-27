@@ -32,6 +32,7 @@ public class ListMapConfigurable<T> implements Configurable {
         return configBuilder.build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void fromConfig(Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;
