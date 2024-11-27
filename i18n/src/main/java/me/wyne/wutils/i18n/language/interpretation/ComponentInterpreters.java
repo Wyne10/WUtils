@@ -13,7 +13,7 @@ public enum ComponentInterpreters {
         this.interpreter = interpreter;
     }
 
-    public ComponentInterpreter getInterpreter() {
+    public ComponentInterpreter get() {
         return interpreter;
     }
 
@@ -21,7 +21,7 @@ public enum ComponentInterpreters {
         this.interpreter.setStringValidator(validator);
     }
 
-    public ComponentInterpreter getInterpreter(StringValidator validator) {
+    public ComponentInterpreter get(StringValidator validator) {
         setStringValidator(validator);
         return this.interpreter;
     }
