@@ -229,6 +229,10 @@ public class I18n {
         return languageMap.get(locale.getLanguage());
     }
 
+    public boolean contains(@Nullable Locale locale, String path) {
+        return getLanguage(locale).contains(path);
+    }
+
     public StringInterpreter string() {
         return stringInterpreter;
     }
