@@ -28,7 +28,10 @@ public class ConfigFieldParser {
         }
         String comment = configEntry.comment();
 
-        return new ConfigField(holder, field, configEntry.section().toLowerCase() + "." + path, value, comment);
+        return new ConfigField(holder, field,
+                configEntry.section().substring(0, configEntry.section().contains(".") ? configEntry.section().indexOf('.') : configEntry.section().length())
+                        .replaceAll(" ", "").toLowerCase() + "." + path,
+                value, comment);
     }
 
     private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable)

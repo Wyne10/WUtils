@@ -37,7 +37,7 @@ public class ConfigSection {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
         stringBuilder.append(generateSectionHeader());
-        stringBuilder.append(section.toLowerCase()).append(":").append("\n");
+        stringBuilder.append(section.replaceAll(" ", "").toLowerCase()).append(":").append("\n");
 
         for (String subSection : fields.keySet())
         {
