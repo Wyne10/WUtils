@@ -9,8 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +28,12 @@ public class Log {
     private Executor fileWriteExecutor;
     private File logDirectory;
 
+    private String dateTimePattern = "HH:mm:ss";
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
+
+    private final Map<String, File> cachedFiles = new HashMap<>();
+    private final Map<String, PrintWriter> cachedWriters = new HashMap<>();
+
     public boolean isActive()
     {
         return logger != null && config != null;
@@ -32,6 +42,14 @@ public class Log {
     public boolean isFileWriteActive()
     {
         return fileWriteExecutor != null && logDirectory != null;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public LogConfig getConfig() {
+        return config;
     }
 
     public Executor getFileWriteExecutor()
@@ -44,12 +62,37 @@ public class Log {
         return logDirectory;
     }
 
+    public String getDateTimePattern() {
+        return dateTimePattern;
+    }
+
+    public DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
+
+    public void setFileWriteExecutor(Executor fileWriteExecutor) {
+        this.fileWriteExecutor = fileWriteExecutor;
+    }
+
+    public void setLogDirectory(File logDirectory) {
+        this.logDirectory = logDirectory;
+    }
+
+    public void setDateTimePattern(String dateTimePattern) {
+        this.dateTimePattern = dateTimePattern;
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(ZoneId.systemDefault());
+    }
+
     Log(Builder builder)
     {
         this.logger = builder.logger;
         this.config = builder.config;
         this.fileWriteExecutor = builder.fileWriteExecutor;
         this.logDirectory = builder.logDirectory;
+        this.dateTimePattern = builder.dateTimePattern;
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(ZoneId.systemDefault());
+        if (isFileWriteActive() && !logDirectory.exists())
+            logDirectory.mkdirs();
     }
 
     public Log(Logger logger, LogConfig logConfig)
@@ -63,6 +106,8 @@ public class Log {
         this(logger, logConfig);
         this.fileWriteExecutor = fileWriteExecutor;
         this.logDirectory = logDirectory;
+        if (isFileWriteActive() && !logDirectory.exists())
+            logDirectory.mkdirs();
     }
 
     @Contract("-> new")
@@ -80,6 +125,8 @@ public class Log {
         private Executor fileWriteExecutor;
         private File logDirectory;
 
+        private String dateTimePattern = "HH:mm:ss";
+
         Builder() {}
 
         Builder(Log logger)
@@ -88,6 +135,7 @@ public class Log {
             this.config = logger.config;
             this.fileWriteExecutor = logger.fileWriteExecutor;
             this.logDirectory = logger.logDirectory;
+            this.dateTimePattern = logger.dateTimePattern;
         }
 
         @Contract("_ -> this")
@@ -118,11 +166,31 @@ public class Log {
             return this;
         }
 
+        @Contract("_ -> this")
+        public Builder setDateTimePattern(String dateTimePattern)
+        {
+            this.dateTimePattern = dateTimePattern;
+            return this;
+        }
+
         @Contract("-> new")
         public Log build()
         {
             return new Log(this);
         }
+    }
+
+    public boolean log(Level level, String message)
+    {
+        if (isActive())
+        {
+            if (level == Level.INFO && config.logInfo())
+                logger.info(message);
+            if (level == Level.WARNING && config.logWarn())
+                logger.warning(message);
+            return true;
+        }
+        return false;
     }
 
     public boolean info(String message)
@@ -196,23 +264,50 @@ public class Log {
             else if (level == Level.SEVERE)
                 levelMessage = "ERROR";
 
-            String writeLog = "[" + new SimpleDateFormat("hh:mm:ss").format(new Date()) + " " + levelMessage + "]: " + log;
+            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: " + log;
 
-            File logFile = new File(logDirectory, LocalDate.now() + ".txt");
+            String logFileName = LocalDate.now() + ".txt";
+            File logFile = cachedFiles.getOrDefault(logFileName, new File(logDirectory, logFileName));
+            cachedFiles.putIfAbsent(logFileName, logFile);
 
             try {
-                if (!logDirectory.exists())
-                    logDirectory.mkdirs();
                 if (!logFile.exists())
                     logFile.createNewFile();
 
-                PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
+                PrintWriter writer = cachedWriters.getOrDefault(logFileName, new PrintWriter(new FileWriter(logFile, true)));
+                cachedWriters.putIfAbsent(logFileName, writer);
 
                 writer.println(writeLog);
                 writer.flush();
-                writer.close();
             } catch (IOException e) {
                 exception("An exception occurred trying to write log to a file", e);
+            }
+        });
+    }
+
+    public void writeLog(String log) {
+        if (!isFileWriteActive())
+            return;
+
+        fileWriteExecutor.execute(() -> {
+            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + "]: " + log;
+
+            String logFileName = LocalDate.now() + ".txt";
+            File logFile = cachedFiles.getOrDefault(logFileName, new File(logDirectory, logFileName));
+            cachedFiles.putIfAbsent(logFileName, logFile);
+
+            try {
+                if (!logFile.exists())
+                    logFile.createNewFile();
+
+                PrintWriter writer = cachedWriters.getOrDefault(logFileName, new PrintWriter(new FileWriter(logFile, true)));
+                cachedWriters.putIfAbsent(logFileName, writer);
+
+                writer.println(writeLog);
+                writer.flush();
+            } catch (IOException e) {
+                logger.severe("An exception occurred trying to write log to a file");
+                error(ExceptionUtils.getStackTrace(e));
             }
         });
     }
