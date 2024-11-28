@@ -15,19 +15,13 @@ public record ConfigField(Object holder, Field field, String path, String value,
     public String generateConfigLine()
     {
         StringBuilder stringBuilder = new StringBuilder();
-        if (!comment.isEmpty())
-        {
-            stringBuilder.append("# ");
-            stringBuilder.append(comment);
-            stringBuilder.append("\n");
+        if (!comment.isEmpty()) {
+            stringBuilder.append("  ").append("# ").append(comment).append("\n");
         }
-        stringBuilder.append(path);
+        stringBuilder.append("  ").append(path.substring(path.lastIndexOf('.') + 1));
         stringBuilder.append(": ");
-        if (field.getType() == String.class)
-        {
-            stringBuilder.append("'");
-            stringBuilder.append(value);
-            stringBuilder.append("'");
+        if (field.getType() == String.class) {
+            stringBuilder.append("'").append(value).append("'");
         }
         else
             stringBuilder.append(value);

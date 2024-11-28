@@ -42,11 +42,11 @@ public class ItemStackConfigurable implements Configurable {
     @Override
     public String toConfig(ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(1, "name", name);
-        configBuilder.append(1, "material", material);
-        configBuilder.append(1, "slot", slot != -1 ? slot : null);
-        configBuilder.append(1, "model", model != -1 ? model : null);
-        configBuilder.appendCollection(1, "lore", lore);
+        configBuilder.append(2, "name", name);
+        configBuilder.append(2, "material", material);
+        configBuilder.append(2, "slot", slot != -1 ? slot : null);
+        configBuilder.append(2, "model", model != -1 ? model : null);
+        configBuilder.appendCollection(2, "lore", lore);
         return configBuilder.build();
     }
 

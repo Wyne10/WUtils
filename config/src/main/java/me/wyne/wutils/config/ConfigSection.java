@@ -37,6 +37,7 @@ public class ConfigSection {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
         stringBuilder.append(generateSectionHeader());
+        stringBuilder.append(section.toLowerCase()).append(":").append("\n");
 
         for (String subSection : fields.keySet())
         {
@@ -51,11 +52,8 @@ public class ConfigSection {
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (!subSection.isEmpty())
-        {
-            stringBuilder.append("# ");
-            stringBuilder.append(subSection);
-            stringBuilder.append("\n");
+        if (!subSection.isEmpty()) {
+            stringBuilder.append("  ").append("# ").append(subSection).append("\n");
         }
 
         for (ConfigField configField : fields.get(subSection))

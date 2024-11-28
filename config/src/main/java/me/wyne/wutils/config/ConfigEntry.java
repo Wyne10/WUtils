@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigEntry {
 
-    String section() default "";
+    String section();
     String path() default "";
     String comment() default "";
 

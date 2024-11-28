@@ -18,10 +18,10 @@ public class SoundConfigurable implements Configurable {
     @Override
     public String toConfig(ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(1, "sound", sound.name().asString());
-        configBuilder.append(1, "source", sound.source());
-        configBuilder.append(1, "volume", sound.volume());
-        configBuilder.append(1, "pitch", sound.pitch());
+        configBuilder.append(2, "sound", sound.name().asString());
+        configBuilder.append(2, "source", sound.source());
+        configBuilder.append(2, "volume", sound.volume());
+        configBuilder.append(2, "pitch", sound.pitch());
         return configBuilder.build();
     }
 

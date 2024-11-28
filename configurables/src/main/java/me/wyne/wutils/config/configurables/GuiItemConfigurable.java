@@ -38,8 +38,8 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     public String toConfig(ConfigEntry configEntry) {
         String itemStackConfig = super.toConfig(configEntry);
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(1, "print", print.orElse(null));
-        configBuilder.append(1, "sound", sound.map(soundMapper -> soundMapper.name().asString()).orElse(null));
+        configBuilder.append(2, "print", print.orElse(null));
+        configBuilder.append(2, "sound", sound.map(soundMapper -> soundMapper.name().asString()).orElse(null));
         return itemStackConfig + configBuilder.build();
     }
 

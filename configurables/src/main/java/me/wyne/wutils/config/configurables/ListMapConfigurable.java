@@ -27,7 +27,7 @@ public class ListMapConfigurable<T> implements Configurable {
     public String toConfig(ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
         map.forEach((key, value) -> {
-            configBuilder.appendCollection(1, key, value);
+            configBuilder.appendCollection(2, key, value);
         });
         return configBuilder.build();
     }
