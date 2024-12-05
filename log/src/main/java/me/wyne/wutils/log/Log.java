@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 public class Log {
 
+    public static final int DAY_DURATION_MILLISECONDS = 86400000;
     public static Log global;
 
     private final Logger logger;
@@ -314,12 +315,18 @@ public class Log {
 
     public void deleteOlderLogs()
     {
+        deleteOlderLogs(7);
+    }
+
+    public void deleteOlderLogs(int durationDays) {
         if (!isFileWriteActive())
             return;
         if (!logDirectory.exists())
             return;
 
-        info("Searching for 7+ days old logs...");
+        long durationMilliseconds = durationDays * DAY_DURATION_MILLISECONDS;
+
+        info("Searching for " + durationDays + "+ days old logs...");
 
         boolean foundOldLogs = false;
 
@@ -329,7 +336,7 @@ public class Log {
                 continue;
 
             try {
-                if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime() > 604800000)
+                if (System.currentTimeMillis() - new SimpleDateFormat("yyyy-MM-dd").parse(file.getName()).getTime() >= durationMilliseconds)
                 {
                     foundOldLogs = true;
                     file.delete();
