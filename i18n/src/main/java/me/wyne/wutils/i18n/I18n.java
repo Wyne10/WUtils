@@ -38,7 +38,9 @@ public class I18n {
     private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
     static {
-        Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+        try {
+            Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+        } catch (NoSuchMethodError ignored) {}
     }
 
     public I18n() {}

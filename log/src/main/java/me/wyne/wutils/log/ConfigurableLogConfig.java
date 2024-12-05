@@ -44,7 +44,7 @@ public class ConfigurableLogConfig implements LogConfig {
                 config.registerConfigField("Log." + loggerName,
                         new ConfigField(this,
                                 field,
-                                "log."+ loggerName + "-" + field.getName(),
+                                "log." + loggerName + "-" + field.getName(),
                                 String.valueOf((boolean)field.get(this)),
                                 ""));
             } catch (IllegalAccessException e) {

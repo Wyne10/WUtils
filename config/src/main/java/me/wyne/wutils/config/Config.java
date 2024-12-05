@@ -27,7 +27,9 @@ public class Config implements ConfigFieldRegistry {
     private final Map<String, Set<ConfigField>> registeredConfigFields = new LinkedHashMap<>();
 
     static {
-        Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+        try {
+            Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+        } catch (NoSuchMethodError ignored) {}
     }
 
     public void setConfigGenerator(File configFile, File defaultConfigFile)
