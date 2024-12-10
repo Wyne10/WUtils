@@ -320,18 +320,26 @@ public class I18n {
     }
 
     public String getPlaceholderString(@Nullable CommandSender sender, String path) {
+        if (defaultLanguage.getStrings().isList(path))
+            return reduceString(getPlaceholderStringList(sender, path));
         return string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path);
     }
 
     public String getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        if (getLanguage(locale).getStrings().isList(path))
+            return reduceString(getPlaceholderStringList(locale, sender, path));
         return string().getPlaceholderString(getLanguage(locale), I18n.toPlayer(sender), path);
     }
 
     public String getPlaceholderString(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (defaultLanguage.getStrings().isList(path))
+            return reduceString(getPlaceholderStringList(sender, path, textReplacements));
         return string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
     }
 
     public String getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (getLanguage(locale).getStrings().isList(path))
+            return reduceString(getPlaceholderStringList(locale, sender, path, textReplacements));
         return string().getPlaceholderString(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
     }
 
@@ -408,18 +416,26 @@ public class I18n {
     }
 
     public List<String> getPlaceholderStringList(@Nullable CommandSender sender, String path) {
+        if (!defaultLanguage.getStrings().isList(path))
+            return List.of(getPlaceholderString(sender, path));
         return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path);
     }
 
     public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        if (!getLanguage(locale).getStrings().isList(path))
+            return List.of(getPlaceholderString(locale, sender, path));
         return string().getPlaceholderStringList(getLanguage(locale), I18n.toPlayer(sender), path);
     }
 
     public List<String> getPlaceholderStringList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (!defaultLanguage.getStrings().isList(path))
+            return List.of(getPlaceholderString(sender, path, textReplacements));
         return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
     }
 
     public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (!getLanguage(locale).getStrings().isList(path))
+            return List.of(getPlaceholderString(locale, sender, path, textReplacements));
         return string().getPlaceholderStringList(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
     }
 
@@ -496,18 +512,26 @@ public class I18n {
     }
 
     public Component getPlaceholderComponent(@Nullable CommandSender sender, String path) {
+        if (defaultLanguage.getStrings().isList(path))
+            return reduceComponent(getPlaceholderComponentList(sender, path));
         return component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path);
     }
 
     public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        if (getLanguage(locale).getStrings().isList(path))
+            return reduceComponent(getPlaceholderComponentList(locale, sender, path));
         return component().getPlaceholderComponent(getLanguage(locale), I18n.toPlayer(sender), path);
     }
 
     public Component getPlaceholderComponent(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (defaultLanguage.getStrings().isList(path))
+            return reduceComponent(getPlaceholderComponentList(sender, path, textReplacements));
         return component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
     }
 
     public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (getLanguage(locale).getStrings().isList(path))
+            return reduceComponent(getPlaceholderComponentList(locale, sender, path, textReplacements));
         return component().getPlaceholderComponent(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
     }
 
@@ -584,18 +608,26 @@ public class I18n {
     }
 
     public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path) {
+        if (!defaultLanguage.getStrings().isList(path))
+            return List.of(getPlaceholderComponent(sender, path));
         return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path);
     }
 
     public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        if (!getLanguage(locale).getStrings().isList(path))
+            return List.of(getPlaceholderComponent(locale, sender, path));
         return component().getPlaceholderComponentList(getLanguage(locale), I18n.toPlayer(sender), path);
     }
 
     public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (!defaultLanguage.getStrings().isList(path))
+            return List.of(getPlaceholderComponent(sender, path, textReplacements));
         return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
     }
 
     public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        if (!getLanguage(locale).getStrings().isList(path))
+            return List.of(getPlaceholderComponent(locale, sender, path, textReplacements));
         return component().getPlaceholderComponentList(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
     }
 
