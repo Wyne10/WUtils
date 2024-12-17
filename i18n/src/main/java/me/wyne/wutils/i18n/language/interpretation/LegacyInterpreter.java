@@ -184,4 +184,8 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
                 .toList();
     }
 
+    @Override
+    public String toString(Component component) {
+        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+    }
 }

@@ -45,4 +45,6 @@ public interface ComponentInterpreter extends Interpreter {
     //List<Component> getPlaceholderComponentList(ILanguage language, @Nullable OfflinePlayer player, String path, TagResolver... tagResolvers);
 
     List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements);
+
+    String toString(Component component);
 }
