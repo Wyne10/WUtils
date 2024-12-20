@@ -13,12 +13,12 @@ public class ListMapConfigurable<T> implements Configurable {
 
     private final Map<String, List<T>> map = new HashMap<>();
 
-    public ListMapConfigurable(ConfigurationSection section) {
-        fromConfig(section);
-    }
-
     public ListMapConfigurable(Map<String, List<T>> map) {
         this.map.putAll(map);
+    }
+
+    public ListMapConfigurable(Object configObject) {
+        fromConfig(configObject);
     }
 
     public ListMapConfigurable() {}

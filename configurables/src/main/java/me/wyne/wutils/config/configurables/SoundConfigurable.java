@@ -15,6 +15,10 @@ public class SoundConfigurable implements Configurable {
         this.sound = sound;
     }
 
+    public SoundConfigurable(Object configObject) {
+        fromConfig(configObject);
+    }
+
     @Override
     public String toConfig(ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();

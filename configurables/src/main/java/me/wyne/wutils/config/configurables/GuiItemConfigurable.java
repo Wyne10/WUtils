@@ -24,8 +24,8 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     private Optional<String> print;
     private Optional<Sound> sound;
 
-    public GuiItemConfigurable(ConfigurationSection itemSection) {
-        super(itemSection);
+    public GuiItemConfigurable(Object configObject) {
+        super(configObject);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {

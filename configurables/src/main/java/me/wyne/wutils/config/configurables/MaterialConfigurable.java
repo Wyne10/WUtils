@@ -13,6 +13,10 @@ public class MaterialConfigurable implements Configurable {
         this.material = material;
     }
 
+    public MaterialConfigurable(Object configObject) {
+        fromConfig(configObject);
+    }
+
     @Override
     public String toConfig(ConfigEntry configEntry) {
         return material.toString();
