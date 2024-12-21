@@ -6,7 +6,7 @@ public class ConfigSection {
 
     private static final String HEADER_FORMAT = "#####\n" +
                                               "# %s\n" +
-                                              "#####\n\n";
+                                              "#####\n";
 
     private final String section;
     /**
@@ -53,7 +53,7 @@ public class ConfigSection {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (!subSection.isEmpty()) {
-            stringBuilder.append("  ").append("# ").append(subSection).append("\n");
+            stringBuilder.append("  ").append("### ").append(subSection).append("\n");
         }
 
         for (ConfigField configField : fields.get(subSection))
