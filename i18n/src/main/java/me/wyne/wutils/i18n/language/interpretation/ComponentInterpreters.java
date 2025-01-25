@@ -4,7 +4,7 @@ import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 
 public enum ComponentInterpreters {
-    LEGACY(new EnhancedLegacyInterpreter(new EmptyValidator())),
+    LEGACY(new LegacyInterpreter(new EmptyValidator())),
     ENHANCED_LEGACY(new EnhancedLegacyInterpreter(new EmptyValidator())),
     MINI_MESSAGE(new MiniMessageInterpreter(new EmptyValidator()));
 
