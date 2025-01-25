@@ -2,10 +2,7 @@ package me.wyne.wutils.i18n;
 
 import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
-import me.wyne.wutils.i18n.language.interpretation.BaseInterpreter;
-import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
-import me.wyne.wutils.i18n.language.interpretation.EnhancedLegacyInterpreter;
-import me.wyne.wutils.i18n.language.interpretation.StringInterpreter;
+import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import net.kyori.adventure.text.Component;
@@ -35,7 +32,7 @@ public class I18n {
     private Language defaultResourceLanguage;
 
     private StringInterpreter stringInterpreter = new BaseInterpreter(new EmptyValidator());
-    private ComponentInterpreter componentInterpreter = new EnhancedLegacyInterpreter(new EmptyValidator());
+    private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
     static {
         try {

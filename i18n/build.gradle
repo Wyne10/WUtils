@@ -22,7 +22,7 @@ dependencies {
     implementation project(':WUtils-log')
 }
 
-version = '3.3.1'
+version = '3.3.2'
 
 publishing {
     publications {
