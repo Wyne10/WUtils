@@ -34,6 +34,8 @@ public class I18n {
     private StringInterpreter stringInterpreter = new BaseInterpreter(new EmptyValidator());
     private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
+    private boolean usePlayerLanguage = true;
+
     static {
         try {
             Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
@@ -217,8 +219,14 @@ public class I18n {
         this.componentInterpreter = componentInterpreter;
     }
 
+    public void setUsePlayerLanguage(boolean usePlayerLanguage) {
+        this.usePlayerLanguage = usePlayerLanguage;
+    }
+
     public Language getLanguage(@Nullable Locale locale)
     {
+        if (!usePlayerLanguage)
+            return defaultLanguage;
         if (locale == null)
             return defaultLanguage;
         if (locale.getLanguage().isEmpty())
