@@ -40,10 +40,7 @@ public class ConfigGenerator {
     public void copyDefaultConfig()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(defaultConfigFile))) {
-            reader.lines().forEachOrdered(s -> {
-                if (s.contains("regenerate"))
-                    return;
-
+            reader.lines().skip(1).forEachOrdered(s -> {
                 generatedText.append(s);
                 generatedText.append("\n");
             });
