@@ -1,5 +1,6 @@
 package me.wyne.wutils.config;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import ru.vyarus.yaml.updater.YamlUpdater;
 
 import java.io.*;
@@ -39,7 +40,13 @@ public class ConfigGenerator {
     public void copyDefaultConfig()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(defaultConfigFile))) {
-            reader.lines().forEachOrdered(s -> { generatedText.append(s); generatedText.append("\n"); });
+            reader.lines().forEachOrdered(s -> {
+                if (s.contains("regenerate"))
+                    return;
+
+                generatedText.append(s);
+                generatedText.append("\n");
+            });
             generatedText.append("\n");
         } catch (IOException e) {
             log.exception("An exception occurred trying to read default config file data", e);
@@ -48,6 +55,10 @@ public class ConfigGenerator {
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
     {
+        boolean generationRequested = YamlConfiguration.loadConfiguration(configFile).getBoolean("regenerate", false);
+        if (!generationRequested)
+            return;
+
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();

@@ -115,6 +115,7 @@ public class Config implements ConfigFieldRegistry {
             return;
         }
 
+        deleteProps.add("regenerate");
         configGenerator.copyDefaultConfig();
         configGenerator.writeConfigSections(ConfigFieldParser.getConfigSections(registeredConfigFields));
         configGenerator.generateConfig(backup, replaceVars, deleteProps);
