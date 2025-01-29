@@ -223,6 +223,10 @@ public class I18n {
         this.usePlayerLanguage = usePlayerLanguage;
     }
 
+    public boolean isUsePlayerLanguage() {
+        return usePlayerLanguage;
+    }
+
     public void clearLanguageMap() {
         languageMap.clear();
     }
