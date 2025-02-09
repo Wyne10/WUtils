@@ -644,7 +644,7 @@ public class I18n {
         return component().getPlaceholderComponentList(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
     }
 
-    public static String reduceString(List<String> stringList)
+    public static String reduceString(Collection<String> stringList)
     {
         return stringList.stream().reduce(I18n::reduceString).orElse("");
     }
@@ -654,7 +654,7 @@ public class I18n {
         return s1 + "\n" + s2;
     }
 
-    public static Component reduceComponent(List<Component> componentList)
+    public static Component reduceComponent(Collection<Component> componentList)
     {
         return componentList.stream().reduce(I18n::reduceComponent).orElse(Component.empty());
     }
