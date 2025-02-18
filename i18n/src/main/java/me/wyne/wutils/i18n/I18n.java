@@ -672,16 +672,16 @@ public class I18n {
         return result;
     }
 
-    public static @Nullable Player toPlayer(@Nullable CommandSender sender)
+    public static @Nullable <T> Player toPlayer(@Nullable T something)
     {
-        if (sender instanceof Player player)
+        if (something instanceof Player player)
             return player;
         return null;
     }
 
-    public static @Nullable Locale toLocale(@Nullable CommandSender sender)
+    public static @Nullable <T> Locale toLocale(@Nullable T something)
     {
-        if (sender instanceof Player player)
+        if (something instanceof Player player)
             return player.locale();
         return null;
     }
