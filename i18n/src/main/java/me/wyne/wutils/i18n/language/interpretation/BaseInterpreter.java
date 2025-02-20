@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class BaseInterpreter implements StringInterpreter {
 
-    protected StringValidator stringValidator;
+    private StringValidator stringValidator;
 
     public BaseInterpreter(StringValidator stringValidator) {
         this.stringValidator = stringValidator;
@@ -23,6 +23,11 @@ public class BaseInterpreter implements StringInterpreter {
     @Override
     public void setStringValidator(StringValidator stringValidator) {
         this.stringValidator = stringValidator;
+    }
+
+    @Override
+    public StringValidator getStringValidator() {
+        return stringValidator;
     }
 
     @Override

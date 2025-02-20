@@ -15,17 +15,8 @@ import java.util.List;
 
 public class EnhancedLegacyInterpreter extends LegacyInterpreter implements ComponentInterpreter {
 
-    private final BaseInterpreter baseInterpreter;
-
     public EnhancedLegacyInterpreter(StringValidator stringValidator) {
         super(stringValidator);
-        this.baseInterpreter = new BaseInterpreter(stringValidator);
-    }
-
-    @Override
-    public void setStringValidator(StringValidator stringValidator) {
-        this.stringValidator = stringValidator;
-        baseInterpreter.setStringValidator(stringValidator);
     }
 
     @Override

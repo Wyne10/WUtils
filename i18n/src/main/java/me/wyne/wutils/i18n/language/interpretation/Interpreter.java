@@ -12,4 +12,5 @@ public interface Interpreter {
     }
 
     void setStringValidator(StringValidator stringValidator);
+    StringValidator getStringValidator();
 }

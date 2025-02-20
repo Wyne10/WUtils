@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class LegacyInterpreter extends BaseInterpreter implements ComponentInterpreter {
 
-    private final BaseInterpreter baseInterpreter;
+    protected final BaseInterpreter baseInterpreter;
 
     public LegacyInterpreter(StringValidator stringValidator) {
         super(stringValidator);
@@ -27,7 +27,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
 
     @Override
     public void setStringValidator(StringValidator stringValidator) {
-        this.stringValidator = stringValidator;
+        super.setStringValidator(stringValidator);
         baseInterpreter.setStringValidator(stringValidator);
     }
 
@@ -64,7 +64,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<String> getStringList(Language language, String path) {
         return language.getStrings().getStringList(path).stream()
-                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStrings(), s))
+                .map(s -> getStringValidator().validateString(language.getLanguageCode(), language.getStrings(), s))
                 .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -72,7 +72,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<String> getStringList(Language language, String path, TextReplacement... textReplacements) {
         return language.getStrings().getStringList(path).stream()
-                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStrings(), s))
+                .map(s -> getStringValidator().validateString(language.getLanguageCode(), language.getStrings(), s))
                 .map(s -> applyTextReplacements(s, textReplacements))
                 .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toCollection(ArrayList::new));
