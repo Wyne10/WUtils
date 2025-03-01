@@ -9,6 +9,11 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public class Placeholder {
 
+    public static <T> TextReplacement replace(String key, T value)
+    {
+        return string -> string.replaceAll("<"+key+">", String.valueOf(value));
+    }
+
     public static TextReplacement replace(String key, String value)
     {
         return string -> string.replaceAll("<"+key+">", value);
