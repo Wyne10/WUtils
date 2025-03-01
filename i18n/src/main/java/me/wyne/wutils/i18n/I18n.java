@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n;
 import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.interpretation.*;
+import me.wyne.wutils.i18n.language.replacement.Placeholder;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import net.kyori.adventure.text.Component;
@@ -662,6 +663,18 @@ public class I18n {
     public static Component reduceComponent(Component c1, Component c2)
     {
         return c1.append(Component.newline()).append(c2);
+    }
+
+    public static List<String> ofStrings(List<String> paths, Function<String, String> operation) {
+        return paths.stream()
+                .map(operation)
+                .toList();
+    }
+
+    public static List<Component> ofComponents(List<String> paths, Function<String, Component> operation) {
+        return paths.stream()
+                .map(operation)
+                .toList();
     }
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
