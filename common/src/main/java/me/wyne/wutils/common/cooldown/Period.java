@@ -8,6 +8,9 @@ public class Period {
 
     private Long finishAt;
 
+    public Period() {
+    }
+
     public Period(long finishAt) {
         this.finishAt = finishAt;
     }
