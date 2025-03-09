@@ -3,7 +3,6 @@ package me.wyne.wutils.i18n;
 import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.interpretation.*;
-import me.wyne.wutils.i18n.language.replacement.Placeholder;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import net.kyori.adventure.text.Component;
@@ -39,6 +38,7 @@ public class I18n {
 
     static {
         try {
+            Configurator.setLevel("ru.vyarus", Level.WARN);
             Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
         } catch (NoSuchMethodError ignored) {}
     }

@@ -28,6 +28,7 @@ public class Config implements ConfigFieldRegistry {
 
     static {
         try {
+            Configurator.setLevel("ru.vyarus", Level.WARN);
             Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
         } catch (NoSuchMethodError ignored) {}
     }
