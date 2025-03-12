@@ -227,6 +227,39 @@ public class Log {
         return false;
     }
 
+    public boolean info(Object message)
+    {
+        if (isActive() && config.logInfo())
+        {
+            logger.info(message.toString());
+            writeLog(Level.INFO, message.toString());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean warn(Object message)
+    {
+        if (isActive() && config.logWarn())
+        {
+            logger.warning(message.toString());
+            writeLog(Level.WARNING, message.toString());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean error(Object message)
+    {
+        if (isActive())
+        {
+            logger.severe(message.toString());
+            writeLog(Level.SEVERE, message.toString());
+            return true;
+        }
+        return false;
+    }
+
     public boolean exception(String message, Throwable exception)
     {
         if (isActive())
