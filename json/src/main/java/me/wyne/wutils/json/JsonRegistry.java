@@ -26,7 +26,39 @@ public class JsonRegistry {
     }
 
     public void registerField(Object holder, Field field) {
-        objectMap.put(field.getAnnotation(JSON.class).path(), new JsonObject(holder, field, field.getType()));
+        objectMap.put(field.getAnnotation(JSON.class).path(), new JsonObject(holder, field));
+    }
+
+    public void write() {
+        if (directory == null)
+            throw new NullPointerException("JsonRegistry directory is not specified");
+
+        objectMap.forEach((path, object) -> {
+            try (Writer writer = new FileWriter(new File(directory, path))) {
+                object.field().setAccessible(true);
+                gson.toJson(object.field().get(object.holder()), writer);
+            } catch (IOException | IllegalAccessException e) {
+                log.exception("An exception occurred trying to write json to file", e);
+            }
+        });
+    }
+
+    public void load() {
+        if (directory == null)
+            throw new NullPointerException("JsonRegistry directory is not specified");
+
+        objectMap.forEach((path, object) -> {
+            File file = new File(directory, path);
+            if (!file.exists() || file.length() == 0)
+                return;
+
+            try (Reader reader = new FileReader(file)) {
+                object.field().setAccessible(true);
+                object.field().set(object.holder(), gson.fromJson(reader, object.field().getType()));
+            } catch (IOException | IllegalAccessException e) {
+                log.exception("An exception occurred trying to read json file", e);
+            }
+        });
     }
 
     public Gson getGson() {
