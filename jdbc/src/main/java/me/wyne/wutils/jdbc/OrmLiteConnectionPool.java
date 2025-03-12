@@ -1,0 +1,59 @@
+package me.wyne.wutils.jdbc;
+
+import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import org.apache.commons.lang.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectionSource> {
+
+    private final String url;
+    private final String username;
+    private final String password;
+
+    private final JdbcPooledConnectionSource connectionSource = new JdbcPooledConnectionSource();
+    private boolean isInitialized = false;
+
+    public OrmLiteConnectionPool(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        initializeDataSource();
+    }
+
+    private void initializeDataSource()
+    {
+        connectionSource.setUrl(url);
+        connectionSource.setUsername(username);
+        connectionSource.setPassword(password);
+        try {
+            connectionSource.initialize();
+            isInitialized = true;
+        } catch (SQLException e) {
+            LogWrapper.exception("An exception occurred trying to establish connection with " + url, e);
+        }
+    }
+
+    @Override
+    public boolean isActive() {
+        return isInitialized;
+    }
+
+    @Override
+    public @Nullable Connection getConnection() {
+        throw new NotImplementedException("OrmLiteConnectionPool doesn't provide java.sql connections");
+    }
+
+    @Override
+    public @Nullable JdbcPooledConnectionSource getSource() {
+        return connectionSource;
+    }
+
+    @Override
+    public void close() {
+        connectionSource.closeQuietly();
+    }
+
+}

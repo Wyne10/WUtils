@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class PlaceholderAPIWrapper {
+public final class PlaceholderAPIWrapper {
 
     public final static boolean IS_PLACEHOLDER_API_PRESENT;
 

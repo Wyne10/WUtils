@@ -2,7 +2,7 @@ package me.wyne.wutils.i18n;
 
 import me.wyne.wutils.log.Log;
 
-public class LogWrapper {
+public final class LogWrapper {
 
     public final static boolean IS_LOGGER_PRESENT;
     public Log logger;

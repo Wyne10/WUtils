@@ -1,11 +1,11 @@
-package me.wyne.wutils.config;
+package me.wyne.wutils.jdbc;
 
 import me.wyne.wutils.log.Log;
 
 public final class LogWrapper {
 
     public final static boolean IS_LOGGER_PRESENT;
-    public Log logger;
+    private static Log logger;
 
     static {
         boolean isLoggerPresent;
@@ -18,37 +18,37 @@ public final class LogWrapper {
         IS_LOGGER_PRESENT = isLoggerPresent;
     }
 
-    public void info(String message) {
+    public static void info(String message) {
         if (!isLoggerPresent())
             return;
         logger.info(message);
     }
 
-    public void warn(String message) {
+    public static void warn(String message) {
         if (!isLoggerPresent())
             return;
         logger.warn(message);
     }
 
-    public void error(String message) {
+    public static void error(String message) {
         if (!isLoggerPresent())
             return;
         logger.error(message);
     }
 
-    public void exception(Throwable exception) {
+    public static void exception(Throwable exception) {
         if (!isLoggerPresent())
             return;
         logger.exception(exception);
     }
 
-    public void exception(String message, Throwable exception) {
+    public static void exception(String message, Throwable exception) {
         if (!isLoggerPresent())
             return;
         logger.exception(message, exception);
     }
-    
-    private boolean isLoggerPresent() {
+
+    private static boolean isLoggerPresent() {
         if (IS_LOGGER_PRESENT && logger == null)
             logger = Log.global;
         return IS_LOGGER_PRESENT;

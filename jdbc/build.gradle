@@ -10,22 +10,18 @@ repositories {
 
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
-    implementation 'ru.vyarus:yaml-config-updater:1.4.2'
-    implementation 'org.javatuples:javatuples:1.2'
-    compileOnly(project(':WUtils-log')) {
-        exclude group: 'me.wyne', module: 'WUtils-configLogBridge'
-    }
-    api project(':WUtils-configLogBridge')
+    compileOnly 'com.zaxxer:HikariCP:6.2.1'
+    compileOnly 'com.j256.ormlite:ormlite-jdbc:6.1'
+    compileOnly project(':WUtils-log')
 }
 
-version = '2.7.9'
+version = '1.0.0'
 
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'WUtils-config'
+            artifactId = 'WUtils-jdbc'
             version = version
 
             from components.java

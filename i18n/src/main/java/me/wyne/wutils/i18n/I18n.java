@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class I18n {
     
     public static I18n global = new I18n();
-    public LogWrapper log = new LogWrapper();
+    public final LogWrapper log = new LogWrapper();
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private Language defaultLanguage;
