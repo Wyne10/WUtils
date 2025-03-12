@@ -1,0 +1,28 @@
+plugins {
+    id 'wutils.java-library'
+}
+
+repositories {
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    compileOnly project(':WUtils-log')
+}
+
+version = '1.0.0'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'WUtils-json'
+            version = version
+
+            from components.java
+        }
+    }
+}
