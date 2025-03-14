@@ -26,7 +26,11 @@ public class JsonRegistry {
     }
 
     public void registerField(Object holder, Field field) {
-        objectMap.put(field.getAnnotation(JSON.class).path(), new JsonObject(holder, field));
+        register(holder, field, field.getAnnotation(JSON.class).path());
+    }
+
+    public void register(Object holder, Field field, String path) {
+        objectMap.put(path, new JsonObject(holder, field));
     }
 
     public void write() {
