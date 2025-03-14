@@ -38,9 +38,18 @@ public class JsonRegistry {
             throw new NullPointerException("JsonRegistry directory is not specified");
 
         objectMap.forEach((path, object) -> {
-            try (Writer writer = new FileWriter(new File(directory, path))) {
+            File file = new File(directory, path);
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists())
+                parent.mkdirs();
+
+            try {
+                if (!file.exists())
+                    file.createNewFile();
+                Writer writer = new FileWriter(file);
                 object.field().setAccessible(true);
                 gson.toJson(object.field().get(object.holder()), writer);
+                writer.close();
             } catch (IOException | IllegalAccessException e) {
                 log.exception("An exception occurred trying to write json to file", e);
             }
