@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +30,16 @@ public class JsonRegistry {
         register(holder, field, field.getAnnotation(JSON.class).path());
     }
 
+    public void registerField(Object holder, Field field, Type type) {
+        register(holder, field, field.getAnnotation(JSON.class).path(), type);
+    }
+
     public void register(Object holder, Field field, String path) {
-        objectMap.put(path, new JsonObject(holder, field));
+        objectMap.put(path, new JsonObject(holder, field, field.getGenericType()));
+    }
+
+    public void register(Object holder, Field field, String path, Type type) {
+        objectMap.put(path, new JsonObject(holder, field, type));
     }
 
     public void write() {
@@ -67,7 +76,7 @@ public class JsonRegistry {
 
             try (Reader reader = new FileReader(file)) {
                 object.field().setAccessible(true);
-                object.field().set(object.holder(), gson.fromJson(reader, object.field().getType()));
+                object.field().set(object.holder(), gson.fromJson(reader, object.type()));
             } catch (IOException | IllegalAccessException e) {
                 log.exception("An exception occurred trying to read json file", e);
             }
