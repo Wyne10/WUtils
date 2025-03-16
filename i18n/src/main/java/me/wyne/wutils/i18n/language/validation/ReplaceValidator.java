@@ -13,6 +13,9 @@ public class ReplaceValidator implements StringValidator {
 
     @Override
     public String validateString(String languageCode, FileConfiguration strings, String path) {
+        if (path.trim().isEmpty())
+            return replaceString;
         return strings.contains(path) ? strings.getString(path) : replaceString;
     }
+
 }

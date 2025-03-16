@@ -5,6 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class EmptyValidator implements StringValidator {
     @Override
     public String validateString(String languageCode, FileConfiguration strings, String path) {
+        if (path.trim().isEmpty())
+            return path;
         return strings.contains(path) ? strings.getString(path) : path;
     }
 }
