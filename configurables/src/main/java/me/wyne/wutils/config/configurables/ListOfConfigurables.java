@@ -2,7 +2,6 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.Configurable;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
 import java.util.List;

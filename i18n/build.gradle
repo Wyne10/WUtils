@@ -22,7 +22,7 @@ dependencies {
     compileOnly project(':WUtils-log')
 }
 
-version = '3.3.13'
+version = '3.3.14'
 
 publishing {
     publications {

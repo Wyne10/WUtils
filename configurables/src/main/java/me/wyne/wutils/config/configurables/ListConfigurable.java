@@ -5,7 +5,7 @@ import me.wyne.wutils.config.configurable.Configurable;
 
 import java.util.*;
 
-public class  ListConfigurable<T> implements Configurable {
+public class ListConfigurable<T> implements Configurable {
 
     private final List<T> list = new ArrayList<>();
 

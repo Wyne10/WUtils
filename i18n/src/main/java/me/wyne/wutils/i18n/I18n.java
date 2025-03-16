@@ -665,13 +665,13 @@ public class I18n {
         return c1.append(Component.newline()).append(c2);
     }
 
-    public static List<String> ofStrings(List<String> paths, Function<String, String> operation) {
+    public static List<String> ofStrings(Collection<String> paths, Function<String, String> operation) {
         return paths.stream()
                 .map(operation)
                 .toList();
     }
 
-    public static List<Component> ofComponents(List<String> paths, Function<String, Component> operation) {
+    public static List<Component> ofComponents(Collection<String> paths, Function<String, Component> operation) {
         return paths.stream()
                 .map(operation)
                 .toList();

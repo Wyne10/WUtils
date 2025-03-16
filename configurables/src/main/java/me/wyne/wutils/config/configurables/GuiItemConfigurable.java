@@ -100,4 +100,5 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     public Optional<Sound> getSound() {
         return sound;
     }
+
 }

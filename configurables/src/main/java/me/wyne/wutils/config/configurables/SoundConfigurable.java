@@ -32,7 +32,7 @@ public class SoundConfigurable implements Configurable {
     @Override
     public void fromConfig(Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;
-        sound = Sound.sound(Key.key(config.getString("sound")), Sound.Source.valueOf(config.getString("source", "MASTER")), (float)config.getDouble("volume"), (float)config.getDouble("pitch"));
+        sound = Sound.sound(Key.key(config.getString("sound")), Sound.Source.valueOf(config.getString("source", "MASTER")), (float)config.getDouble("volume", 1.0), (float)config.getDouble("pitch", 1.0));
     }
 
     public Sound getSound() {

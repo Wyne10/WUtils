@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ItemStackConfigurable implements Configurable {
 
@@ -116,14 +115,7 @@ public class ItemStackConfigurable implements Configurable {
     }
 
     public List<Component> getLore(@Nullable Player player, TextReplacement... textReplacements) {
-        return lore.stream()
-                .flatMap(s -> {
-                    if (I18n.global.contains(I18n.toLocale(player), s))
-                        return I18n.global.getPlaceholderComponentList(I18n.toLocale(player), player, s, textReplacements).stream();
-                    else
-                        return Stream.of(I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
-                })
-                .toList();
+        return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
     }
 
 }

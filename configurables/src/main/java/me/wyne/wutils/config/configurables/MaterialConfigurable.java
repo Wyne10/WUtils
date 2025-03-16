@@ -30,5 +30,6 @@ public class MaterialConfigurable implements Configurable {
     public Material getMaterial() {
         return material;
     }
+
 }
 
