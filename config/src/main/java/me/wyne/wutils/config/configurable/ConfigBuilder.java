@@ -12,9 +12,23 @@ public class ConfigBuilder {
     private final Table<Integer, String, String> valueTable = HashBasedTable.create();
     private final Set<Pair<Integer, String>> valueSequence = new LinkedHashSet<>();
 
-    public <TValue> ConfigBuilder append(int depth, String path, @Nullable TValue value)
+    public <T> ConfigBuilder append(int depth, String path, @Nullable T value)
     {
         if (value == null)
+            return this;
+        if (value instanceof String stringValue)
+            valueTable.put(depth, path, "'" + stringValue + "'");
+        else
+            valueTable.put(depth, path, value.toString());
+        valueSequence.add(new Pair<>(depth, path));
+        return this;
+    }
+
+    public <T> ConfigBuilder appendIfNotEqual(int depth, String path, @Nullable T value, T otherValue)
+    {
+        if (value == null)
+            return this;
+        if (value.equals(otherValue))
             return this;
         if (value instanceof String stringValue)
             valueTable.put(depth, path, "'" + stringValue + "'");
