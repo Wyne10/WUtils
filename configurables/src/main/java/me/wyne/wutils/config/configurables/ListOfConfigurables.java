@@ -27,12 +27,12 @@ public class ListOfConfigurables<T extends Configurable> extends ListConfigurabl
 
     @Override
     public String toConfig(ConfigEntry configEntry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getList().stream()
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getList().stream()
                 .map(configurable -> configurable.toConfig(configEntry))
                 .map(val -> " ".repeat(4) + "- " + val)
                 .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
-        return builder.toString();
+        return stringBuilder.toString();
     }
 
     @Override

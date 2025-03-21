@@ -21,18 +21,18 @@ public class ListConfigurable<T> implements Configurable {
 
     @Override
     public String toConfig(ConfigEntry configEntry) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         if (list.stream().findAny().get() instanceof String)
-            builder.append(list.stream()
+            stringBuilder.append(list.stream()
                     .map(val -> "'" + val.toString() + "'")
                     .map(val -> " ".repeat(4) + "- " + val)
                     .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
         else
-            builder.append(list.stream()
+            stringBuilder.append(list.stream()
                     .map(Object::toString)
                     .map(val -> " ".repeat(4) + "- " + val)
                     .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
-        return builder.toString();
+        return stringBuilder.toString();
     }
 
     @SuppressWarnings("unchecked")
