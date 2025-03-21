@@ -70,15 +70,13 @@ public class ConfigBuilder {
 
     public String build()
     {
+        if (valueSequence.isEmpty())
+            return "";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
-        int i = 0;
         for (Pair<Integer, String> entry : valueSequence)
         {
-            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1()));
-            if (i < valueSequence.size() - 1)
-                stringBuilder.append("\n");
-            i++;
+            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
         }
         return stringBuilder.toString();
     }
