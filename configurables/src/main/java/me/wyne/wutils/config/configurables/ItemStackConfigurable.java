@@ -57,7 +57,7 @@ public class ItemStackConfigurable implements Configurable {
         slot = config.getInt("slot", -1);
         model = config.getInt("model", -1);
         lore.clear();
-        lore.addAll(config.getStringList("lore"));
+        lore.addAll(ConfigUtils.getStringList(config, "lore"));
     }
 
     public ItemStack build(TextReplacement... textReplacements)
