@@ -1,11 +1,11 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.Configurable;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 
 import java.util.*;
 
-public class ListConfigurable<E> implements Configurable {
+public class ListConfigurable<E> implements CompositeConfigurable {
 
     private final List<E> list = new ArrayList<>();
 
@@ -21,16 +21,21 @@ public class ListConfigurable<E> implements Configurable {
 
     @Override
     public String toConfig(ConfigEntry configEntry) {
+        return toConfig(1, configEntry);
+    }
+
+    @Override
+    public String toConfig(int depth, ConfigEntry configEntry) {
         StringBuilder stringBuilder = new StringBuilder();
         if (list.stream().findAny().get() instanceof String)
             stringBuilder.append(list.stream()
                     .map(val -> "'" + val.toString() + "'")
-                    .map(val -> " ".repeat(4) + "- " + val)
+                    .map(val -> " ".repeat(depth * 4) + "- " + val)
                     .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
         else
             stringBuilder.append(list.stream()
                     .map(Object::toString)
-                    .map(val -> " ".repeat(4) + "- " + val)
+                    .map(val -> " ".repeat(depth * 4) + "- " + val)
                     .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
         return stringBuilder.toString();
     }

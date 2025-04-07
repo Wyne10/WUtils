@@ -3,8 +3,8 @@ package me.wyne.wutils.config.configurables;
 import me.wyne.wutils.common.ConfigUtils;
 import me.wyne.wutils.common.MapUtils;
 import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurable.Configurable;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ItemStackConfigurable implements Configurable {
+public class ItemStackConfigurable implements CompositeConfigurable {
 
     private String name;
     private Material material;
@@ -65,17 +65,17 @@ public class ItemStackConfigurable implements Configurable {
     }
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(2, "name", name);
-        configBuilder.append(2, "material", material);
-        configBuilder.append(2, "slot", slot != -1 ? slot : null);
-        configBuilder.append(2, "model", model != -1 ? model : null);
-        configBuilder.appendCollection(2, "lore", lore);
-        configBuilder.appendCollection(2, "flags", flags);
-        String enchantmentsString = enchantments.toConfig(3, configEntry);
+        configBuilder.append(depth, "name", name);
+        configBuilder.append(depth, "material", material);
+        configBuilder.append(depth, "slot", slot != -1 ? slot : null);
+        configBuilder.append(depth, "model", model != -1 ? model : null);
+        configBuilder.appendCollection(depth, "lore", lore);
+        configBuilder.appendCollection(depth, "flags", flags);
+        String enchantmentsString = enchantments.toConfig(depth + 1, configEntry);
         if (!enchantmentsString.isEmpty()) {
-            configBuilder.appendString(2, "enchantments", enchantmentsString);
+            configBuilder.appendString(depth, "enchantments", enchantmentsString);
         }
         return configBuilder.build();
     }

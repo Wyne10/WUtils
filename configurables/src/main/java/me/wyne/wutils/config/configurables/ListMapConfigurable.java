@@ -1,19 +1,19 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurable.Configurable;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListMapConfigurable<T> implements Configurable {
+public class ListMapConfigurable<E> implements CompositeConfigurable {
 
-    private final Map<String, List<T>> map = new HashMap<>();
+    private final Map<String, List<E>> map = new HashMap<>();
 
-    public ListMapConfigurable(Map<String, List<T>> map) {
+    public ListMapConfigurable(Map<String, List<E>> map) {
         this.map.putAll(map);
     }
 
@@ -24,10 +24,10 @@ public class ListMapConfigurable<T> implements Configurable {
     public ListMapConfigurable() {}
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
         map.forEach((key, value) -> {
-            configBuilder.appendCollection(2, key, value);
+            configBuilder.appendCollection(depth, key, value);
         });
         return configBuilder.build();
     }
@@ -37,10 +37,10 @@ public class ListMapConfigurable<T> implements Configurable {
     public void fromConfig(Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;
         map.clear();
-        config.getKeys(false).forEach(key -> map.put(key, (List<T>) config.getList(key)));
+        config.getKeys(false).forEach(key -> map.put(key, (List<E>) config.getList(key)));
     }
 
-    public Map<String, List<T>> getMap() {
+    public Map<String, List<E>> getMap() {
         return map;
     }
 

@@ -2,14 +2,14 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.common.MapUtils;
 import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurable.Configurable;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericMapConfigurable<K, V> implements Configurable, CompositeConfigurable {
+public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
 
     private final Map<K, V> map = new HashMap<>();
     private final MapUtils.MapFunction<K, V, String, String> valueMapper;
@@ -30,11 +30,6 @@ public class GenericMapConfigurable<K, V> implements Configurable, CompositeConf
     public GenericMapConfigurable(MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
         this.configMapper = configMapper;
         this.valueMapper = valueMapper;
-    }
-
-    @Override
-    public String toConfig(ConfigEntry configEntry) {
-        return toConfig(2, configEntry);
     }
 
     @Override

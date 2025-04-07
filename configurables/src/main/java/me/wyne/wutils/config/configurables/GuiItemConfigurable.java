@@ -7,7 +7,6 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -24,51 +23,51 @@ import java.util.Optional;
 
 public class GuiItemConfigurable extends ItemStackConfigurable {
 
-    private Optional<String> print;
-    private Optional<Sound> sound;
+    private String print;
+    private final SoundConfigurable sound;
 
     public GuiItemConfigurable(Object configObject, @Nullable String print, @Nullable Sound sound) {
         super(configObject);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, model, lore, flags, enchantments);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, lore, flags, enchantments);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, lore, flags, enchantments);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
         super(name, material, lore);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, lore);
-        this.print = Optional.ofNullable(print);
-        this.sound = Optional.ofNullable(sound);
+        this.print = print;
+        this.sound = sound == null ? null : new SoundConfigurable(sound);
     }
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         String itemStackConfig = super.toConfig(configEntry);
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(2, "print", print.orElse(null));
-        configBuilder.append(2, "sound", sound.map(soundMapper -> soundMapper.name().asString()).orElse(null));
+        configBuilder.append(depth, "print", print);
+        configBuilder.append(depth, "sound", sound == null ? null : sound.getSound().name().asString());
         return itemStackConfig + configBuilder.build();
     }
 
@@ -76,8 +75,9 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     public void fromConfig(Object configObject) {
         super.fromConfig(configObject);
         ConfigurationSection config = (ConfigurationSection) configObject;
-        print = Optional.ofNullable(config.getString("print"));
-        sound = Optional.ofNullable(config.contains("sound") ? Sound.sound(Key.key(config.getString("sound")), Sound.Source.MASTER, 1f, 1f) : null);
+        print = config.getString("print");
+        if (sound != null && config.contains("sound"))
+            sound.fromConfig(config.getConfigurationSection("sound"));
     }
 
     public GuiItem buildGuiItem(TextReplacement... textReplacements)
@@ -119,15 +119,15 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     }
 
     public Optional<String> getPrint() {
-        return print;
+        return Optional.ofNullable(print);
     }
 
     public Optional<Component> getPrint(@Nullable Player player, TextReplacement... textReplacements) {
-        return print.map(printString -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, printString, textReplacements));
+        return getPrint().map(printString -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, printString, textReplacements));
     }
 
     public Optional<Sound> getSound() {
-        return sound;
+        return Optional.ofNullable(sound != null ? sound.getSound() : null);
     }
 
 }

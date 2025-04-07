@@ -1,13 +1,13 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurable.Configurable;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class SoundConfigurable implements Configurable {
+public class SoundConfigurable implements CompositeConfigurable {
 
     private Sound sound;
 
@@ -20,15 +20,16 @@ public class SoundConfigurable implements Configurable {
     }
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(2, "sound", sound.name().asString());
-        configBuilder.append(2, "source", sound.source());
-        configBuilder.append(2, "volume", sound.volume());
-        configBuilder.append(2, "pitch", sound.pitch());
+        configBuilder.append(depth, "sound", sound.name().asString());
+        configBuilder.append(depth, "source", sound.source());
+        configBuilder.append(depth, "volume", sound.volume());
+        configBuilder.append(depth, "pitch", sound.pitch());
         return configBuilder.build();
     }
 
+    @SuppressWarnings({"PatternValidation", "DataFlowIssue"})
     @Override
     public void fromConfig(Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;

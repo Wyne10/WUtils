@@ -7,10 +7,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@SuppressWarnings("UnusedReturnValue")
 public class ConfigBuilder {
+
+    /**
+     * <pre>
+     * Default depth is set to 2 due to how config is generated.
+     * Config example:
+     *
+     * section: (depth 0)
+     *   item: (depth 1)
+     *     parameter: 5 (depth 2)
+     * </pre>
+     */
+    public final static int DEFAULT_DEPTH = 2;
 
     private final Table<Integer, String, String> valueTable = HashBasedTable.create();
     private final Set<Pair<Integer, String>> valueSequence = new LinkedHashSet<>();
+
+    public <T> ConfigBuilder append(String path, @Nullable T value)
+    {
+        return append(DEFAULT_DEPTH, path, value);
+    }
 
     public <T> ConfigBuilder append(int depth, String path, @Nullable T value)
     {
@@ -24,6 +42,11 @@ public class ConfigBuilder {
         return this;
     }
 
+    public <T> ConfigBuilder appendString(String path, @Nullable String value)
+    {
+        return appendString(DEFAULT_DEPTH, path, value);
+    }
+
     public <T> ConfigBuilder appendString(int depth, String path, @Nullable String value)
     {
         if (value == null)
@@ -31,6 +54,11 @@ public class ConfigBuilder {
         valueTable.put(depth, path, value);
         valueSequence.add(new Pair<>(depth, path));
         return this;
+    }
+
+    public <T> ConfigBuilder appendIfNotEqual(String path, @Nullable T value, T otherValue)
+    {
+        return appendIfNotEqual(DEFAULT_DEPTH, path, value, otherValue);
     }
 
     public <T> ConfigBuilder appendIfNotEqual(int depth, String path, @Nullable T value, T otherValue)
@@ -47,16 +75,9 @@ public class ConfigBuilder {
         return this;
     }
 
-    public ConfigBuilder appendObject(int depth, String path, @Nullable Object value)
+    public ConfigBuilder appendCollection(String path, Collection<?> value)
     {
-        if (value == null)
-            return this;
-        if (value instanceof String stringValue)
-            valueTable.put(depth, path, "'" + stringValue + "'");
-        else
-            valueTable.put(depth, path, value.toString());
-        valueSequence.add(new Pair<>(depth, path));
-        return this;
+        return appendCollection(DEFAULT_DEPTH, path, value);
     }
 
     public ConfigBuilder appendCollection(int depth, String path, Collection<?> value)
