@@ -12,11 +12,14 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public class GuiItemConfigurable extends ItemStackConfigurable {
@@ -24,12 +27,38 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     private Optional<String> print;
     private Optional<Sound> sound;
 
-    public GuiItemConfigurable(Object configObject) {
+    public GuiItemConfigurable(Object configObject, @Nullable String print, @Nullable Sound sound) {
         super(configObject);
+        this.print = Optional.ofNullable(print);
+        this.sound = Optional.ofNullable(sound);
     }
 
-    public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
-        super(name, material, slot, model, lore);
+    public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
+        super(name, material, slot, model, lore, flags, enchantments);
+        this.print = Optional.ofNullable(print);
+        this.sound = Optional.ofNullable(sound);
+    }
+
+    public GuiItemConfigurable(String name, Material material, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
+        super(name, material, lore, flags, enchantments);
+        this.print = Optional.ofNullable(print);
+        this.sound = Optional.ofNullable(sound);
+    }
+
+    public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
+        super(name, material, slot, lore, flags, enchantments);
+        this.print = Optional.ofNullable(print);
+        this.sound = Optional.ofNullable(sound);
+    }
+
+    public GuiItemConfigurable(String name, Material material, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
+        super(name, material, lore);
+        this.print = Optional.ofNullable(print);
+        this.sound = Optional.ofNullable(sound);
+    }
+
+    public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
+        super(name, material, slot, lore);
         this.print = Optional.ofNullable(print);
         this.sound = Optional.ofNullable(sound);
     }

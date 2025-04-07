@@ -5,11 +5,11 @@ import me.wyne.wutils.config.configurable.Configurable;
 
 import java.util.*;
 
-public class ListConfigurable<T> implements Configurable {
+public class ListConfigurable<E> implements Configurable {
 
-    private final List<T> list = new ArrayList<>();
+    private final List<E> list = new ArrayList<>();
 
-    public ListConfigurable(Collection<T> list) {
+    public ListConfigurable(Collection<E> list) {
         this.list.addAll(list);
     }
 
@@ -39,10 +39,10 @@ public class ListConfigurable<T> implements Configurable {
     @Override
     public void fromConfig(Object configObject) {
         list.clear();
-        list.addAll((List<T>)configObject);
+        list.addAll((List<E>)configObject);
     }
 
-    public List<T> getList() {
+    public List<E> getList() {
         return list;
     }
 

@@ -3,13 +3,15 @@ package me.wyne.wutils.common;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class ConfigUtils {
 
+    @SuppressWarnings("DataFlowIssue")
     public static List<String> getStringList(ConfigurationSection config, String path) {
         if (!config.isList(path))
-            return List.of(config.getString(path, ""));
+            return config.getString(path, "").isEmpty() ? Collections.emptyList() : List.of(config.getString(path));
         return config.getStringList(path);
     }
 

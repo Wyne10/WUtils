@@ -1,5 +1,7 @@
 package me.wyne.wutils.config.configurables;
 
+import me.wyne.wutils.common.ConfigUtils;
+import me.wyne.wutils.common.MapUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurable.Configurable;
@@ -8,15 +10,16 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ItemStackConfigurable implements Configurable {
 
@@ -25,17 +28,40 @@ public class ItemStackConfigurable implements Configurable {
     private int slot;
     private int model;
     private final Collection<String> lore = new ArrayList<>();
+    private final Collection<ItemFlag> flags = new ArrayList<>();
+    private final GenericMapConfigurable<Enchantment, Integer> enchantments = new GenericMapConfigurable<>(
+            entry -> MapUtils.entry(entry.getKey().getKey().toString(), entry.getValue().toString()),
+            entry -> MapUtils.entry(Enchantment.getByKey(NamespacedKey.fromString(entry.getKey())), (int) entry.getValue())
+    );
 
     public ItemStackConfigurable(Object configObject) {
         fromConfig(configObject);
     }
 
-    public ItemStackConfigurable(String name, Material material, int slot, int model, Collection<String> lore) {
+    public ItemStackConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
         this.name = name;
         this.material = material;
         this.slot = slot;
         this.model = model;
         this.lore.addAll(lore);
+        this.flags.addAll(flags);
+        this.enchantments.putAll(enchantments);
+    }
+
+    public ItemStackConfigurable(String name, Material material, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
+        this(name, material, -1, -1, lore, flags, enchantments);
+    }
+
+    public ItemStackConfigurable(String name, Material material, int slot, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
+        this(name, material, slot, -1, lore, flags, enchantments);
+    }
+
+    public ItemStackConfigurable(String name, Material material, Collection<String> lore) {
+        this(name, material, -1, -1, lore, Collections.emptyList(), Collections.emptyMap());
+    }
+
+    public ItemStackConfigurable(String name, Material material, int slot, Collection<String> lore) {
+        this(name, material, slot, -1, lore, Collections.emptyList(), Collections.emptyMap());
     }
 
     @Override
@@ -46,6 +72,11 @@ public class ItemStackConfigurable implements Configurable {
         configBuilder.append(2, "slot", slot != -1 ? slot : null);
         configBuilder.append(2, "model", model != -1 ? model : null);
         configBuilder.appendCollection(2, "lore", lore);
+        configBuilder.appendCollection(2, "flags", flags);
+        String enchantmentsString = enchantments.toConfig(3, configEntry);
+        if (!enchantmentsString.isEmpty()) {
+            configBuilder.appendString(2, "enchantments", enchantmentsString);
+        }
         return configBuilder.build();
     }
 
@@ -57,19 +88,16 @@ public class ItemStackConfigurable implements Configurable {
         slot = config.getInt("slot", -1);
         model = config.getInt("model", -1);
         lore.clear();
+        flags.clear();
         lore.addAll(ConfigUtils.getStringList(config, "lore"));
+        flags.addAll(ConfigUtils.getStringList(config, "flags").stream().map(ItemFlag::valueOf).toList());
+        if (config.contains("enchantments"))
+            enchantments.fromConfig(config.getConfigurationSection("enchantments"));
     }
 
     public ItemStack build(TextReplacement... textReplacements)
     {
-        ItemStack itemStack = new ItemStack(getMaterial());
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(getName(null, textReplacements));
-        itemMeta.lore(getLore(null, textReplacements));
-        if (model != -1)
-            itemMeta.setCustomModelData(model);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return build(null, textReplacements);
     }
 
     public ItemStack build(@Nullable Player player, TextReplacement... textReplacements)
@@ -80,6 +108,8 @@ public class ItemStackConfigurable implements Configurable {
         itemMeta.lore(getLore(player, textReplacements));
         if (model != -1)
             itemMeta.setCustomModelData(model);
+        itemMeta.addItemFlags(flags.toArray(ItemFlag[]::new));
+        enchantments.getMap().forEach((enchantment, integer) -> itemMeta.addEnchant(enchantment, integer, true));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
@@ -116,6 +146,14 @@ public class ItemStackConfigurable implements Configurable {
 
     public List<Component> getLore(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
+    }
+
+    public Collection<ItemFlag> getFlags() {
+        return flags;
+    }
+
+    public Map<Enchantment, Integer> getEnchantments() {
+        return enchantments.getMap();
     }
 
 }

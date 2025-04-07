@@ -24,6 +24,15 @@ public class ConfigBuilder {
         return this;
     }
 
+    public <T> ConfigBuilder appendString(int depth, String path, @Nullable String value)
+    {
+        if (value == null)
+            return this;
+        valueTable.put(depth, path, value);
+        valueSequence.add(new Pair<>(depth, path));
+        return this;
+    }
+
     public <T> ConfigBuilder appendIfNotEqual(int depth, String path, @Nullable T value, T otherValue)
     {
         if (value == null)

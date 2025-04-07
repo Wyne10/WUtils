@@ -1,44 +1,28 @@
 package me.wyne.wutils.config.configurables;
 
-import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurable.Configurable;
-import org.bukkit.configuration.ConfigurationSection;
+import me.wyne.wutils.common.MapUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class MapConfigurable<T> implements Configurable {
+public class MapConfigurable<V> extends GenericMapConfigurable<String, V> {
 
-    private final Map<String, T> map = new HashMap<>();
-
-    public MapConfigurable(Map<String, T> map) {
-        this.map.putAll(map);
+    public MapConfigurable(Map<String, V> map, MapUtils.MapFunction<String, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, String, V> configMapper) {
+        super(map, valueMapper, configMapper);
     }
 
-    public MapConfigurable(Object configObject) {
-        fromConfig(configObject);
+    public MapConfigurable(Object configObject, MapUtils.MapFunction<String, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, String, V> configMapper) {
+        super(configObject, valueMapper, configMapper);
     }
 
-    public MapConfigurable() {}
-
-    @Override
-    public String toConfig(ConfigEntry configEntry) {
-        ConfigBuilder configBuilder = new ConfigBuilder();
-        map.forEach((key, value) -> configBuilder.append(2, key, value));
-        return configBuilder.build();
+    public MapConfigurable(MapUtils.MapFunction<String, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, String, V> configMapper) {
+        super(valueMapper, configMapper);
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public void fromConfig(Object configObject) {
-        ConfigurationSection config = (ConfigurationSection) configObject;
-        map.clear();
-        config.getKeys(false).forEach(key -> map.put(key, (T) config.get(key)));
-    }
-
-    public Map<String, T> getMap() {
-        return map;
+    public MapConfigurable(Map<String, V> map) {
+        this(map,
+                entry -> MapUtils.entry(entry.getKey(), entry.getValue().toString()),
+                entry -> MapUtils.entry(entry.getKey(), (V) entry.getValue()));
     }
 
 }

@@ -14,10 +14,11 @@ dependencies {
         exclude group: 'net.kyori'
     }
     compileOnly project(':WUtils-i18n')
+    implementation project(":WUtils-common")
     api project(':WUtils-config')
 }
 
-version = '1.5.3'
+version = '1.6.0'
 
 publishing {
     publications {
