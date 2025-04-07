@@ -34,6 +34,8 @@ public class ItemStackConfigurable implements CompositeConfigurable {
             entry -> MapUtils.entry(Enchantment.getByKey(NamespacedKey.fromString(entry.getKey())), (int) entry.getValue())
     );
 
+    protected ItemStackConfigurable() {}
+
     public ItemStackConfigurable(Object configObject) {
         fromConfig(configObject);
     }

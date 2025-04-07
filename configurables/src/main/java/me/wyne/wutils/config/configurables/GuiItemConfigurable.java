@@ -27,8 +27,8 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     private final SoundConfigurable sound;
 
     public GuiItemConfigurable(Object configObject) {
-        super(configObject);
         this.sound = new SoundConfigurable(null);
+        fromConfig(configObject);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
@@ -99,7 +99,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        String itemStackConfig = super.toConfig(configEntry);
+        String itemStackConfig = super.toConfig(depth, configEntry);
         ConfigBuilder configBuilder = new ConfigBuilder();
         configBuilder.append(depth, "print", print);
         configBuilder.appendComposite(depth, "sound", sound, configEntry);
