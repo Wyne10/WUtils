@@ -2,6 +2,7 @@ package me.wyne.wutils.config.configurable;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import me.wyne.wutils.config.ConfigEntry;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,6 +96,15 @@ public class ConfigBuilder {
                     .map(val -> " ".repeat((depth + 1) * 2) + "- " + val)
                     .reduce("", ((s1, s2) -> s1 + "\n" + s2)));
         valueSequence.add(new Pair<>(depth, path));
+        return this;
+    }
+
+    public ConfigBuilder appendComposite(int depth, String path, CompositeConfigurable value, ConfigEntry configEntry)
+    {
+        String string = value.toConfig(depth + 1, configEntry);
+        if (!string.isEmpty()) {
+            return appendString(depth, path, string);
+        }
         return this;
     }
 

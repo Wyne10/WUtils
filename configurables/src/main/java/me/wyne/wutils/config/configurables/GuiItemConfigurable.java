@@ -67,10 +67,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         String itemStackConfig = super.toConfig(configEntry);
         ConfigBuilder configBuilder = new ConfigBuilder();
         configBuilder.append(depth, "print", print);
-        String soundString = sound.toConfig(depth + 1, configEntry);
-        if (!soundString.isEmpty()) {
-            configBuilder.appendString(depth, "sound", soundString);
-        }
+        configBuilder.appendComposite(depth, "sound", sound, configEntry);
         return itemStackConfig + configBuilder.build();
     }
 

@@ -19,7 +19,7 @@ dependencies {
     api project(':WUtils-configLogBridge')
 }
 
-version = '2.7.15'
+version = '2.7.16'
 
 publishing {
     publications {

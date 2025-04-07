@@ -73,10 +73,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         configBuilder.append(depth, "model", model != -1 ? model : null);
         configBuilder.appendCollection(depth, "lore", lore);
         configBuilder.appendCollection(depth, "flags", flags);
-        String enchantmentsString = enchantments.toConfig(depth + 1, configEntry);
-        if (!enchantmentsString.isEmpty()) {
-            configBuilder.appendString(depth, "enchantments", enchantmentsString);
-        }
+        configBuilder.appendComposite(depth, "enchantments", enchantments, configEntry);
         return configBuilder.build();
     }
 
