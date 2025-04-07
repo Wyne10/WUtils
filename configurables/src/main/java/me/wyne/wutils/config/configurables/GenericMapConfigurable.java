@@ -5,6 +5,7 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +43,11 @@ public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
     }
 
     @Override
-    public void fromConfig(Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;
         map.clear();
+        if (configObject == null)
+            return;
         config.getKeys(false).stream()
                 .map(key -> configMapper.map(MapUtils.entry(key, config.get(key))))
                 .forEach(entry -> map.put(entry.getKey(), entry.getValue()));

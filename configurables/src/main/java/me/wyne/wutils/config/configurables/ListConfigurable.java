@@ -2,6 +2,7 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -42,8 +43,10 @@ public class ListConfigurable<E> implements CompositeConfigurable {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void fromConfig(Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
         list.clear();
+        if (configObject == null)
+            return;
         list.addAll((List<E>)configObject);
     }
 

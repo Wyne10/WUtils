@@ -4,6 +4,7 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,11 @@ public class ListMapConfigurable<E> implements CompositeConfigurable {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void fromConfig(Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
         ConfigurationSection config = (ConfigurationSection) configObject;
         map.clear();
+        if (configObject == null)
+            return;
         config.getKeys(false).forEach(key -> map.put(key, (List<E>) config.getList(key)));
     }
 

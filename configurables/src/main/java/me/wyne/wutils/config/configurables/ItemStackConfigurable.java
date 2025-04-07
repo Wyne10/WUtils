@@ -91,8 +91,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         flags.clear();
         lore.addAll(ConfigUtils.getStringList(config, "lore"));
         flags.addAll(ConfigUtils.getStringList(config, "flags").stream().map(ItemFlag::valueOf).toList());
-        if (config.contains("enchantments"))
-            enchantments.fromConfig(config.getConfigurationSection("enchantments"));
+        enchantments.fromConfig(config.getConfigurationSection("enchantments"));
     }
 
     public ItemStack build(TextReplacement... textReplacements)

@@ -29,37 +29,37 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     public GuiItemConfigurable(Object configObject, @Nullable String print, @Nullable Sound sound) {
         super(configObject);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, model, lore, flags, enchantments);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, lore, flags, enchantments);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, lore, flags, enchantments);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
         super(name, material, lore);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, lore);
         this.print = print;
-        this.sound = sound == null ? null : new SoundConfigurable(sound);
+        this.sound = new SoundConfigurable(sound);
     }
 
     @Override
@@ -67,7 +67,10 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         String itemStackConfig = super.toConfig(configEntry);
         ConfigBuilder configBuilder = new ConfigBuilder();
         configBuilder.append(depth, "print", print);
-        configBuilder.append(depth, "sound", sound == null ? null : sound.getSound().name().asString());
+        String soundString = sound.toConfig(depth + 1, configEntry);
+        if (!soundString.isEmpty()) {
+            configBuilder.appendString(depth, "sound", soundString);
+        }
         return itemStackConfig + configBuilder.build();
     }
 
@@ -76,8 +79,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         super.fromConfig(configObject);
         ConfigurationSection config = (ConfigurationSection) configObject;
         print = config.getString("print");
-        if (sound != null && config.contains("sound"))
-            sound.fromConfig(config.getConfigurationSection("sound"));
+        sound.fromConfig(config.getConfigurationSection("sound"));
     }
 
     public GuiItem buildGuiItem(TextReplacement... textReplacements)
@@ -127,7 +129,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     }
 
     public Optional<Sound> getSound() {
-        return Optional.ofNullable(sound != null ? sound.getSound() : null);
+        return Optional.ofNullable(sound.getSound());
     }
 
 }
