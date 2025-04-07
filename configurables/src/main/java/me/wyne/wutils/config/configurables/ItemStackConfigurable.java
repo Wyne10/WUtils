@@ -60,6 +60,10 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         this(name, material, -1, -1, lore, Collections.emptyList(), Collections.emptyMap());
     }
 
+    public ItemStackConfigurable(String name, Material material) {
+        this(name, material, -1, -1, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap());
+    }
+
     public ItemStackConfigurable(String name, Material material, int slot, Collection<String> lore) {
         this(name, material, slot, -1, lore, Collections.emptyList(), Collections.emptyMap());
     }
