@@ -55,6 +55,12 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         this.sound = new SoundConfigurable(sound);
     }
 
+    public GuiItemConfigurable(String name, Material material, @Nullable String print, @Nullable Sound sound) {
+        super(name, material);
+        this.print = print;
+        this.sound = new SoundConfigurable(sound);
+    }
+
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, @Nullable String print, @Nullable Sound sound) {
         super(name, material, slot, lore);
         this.print = print;
@@ -78,6 +84,11 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore) {
         super(name, material, lore);
+        this.sound = new SoundConfigurable(null);
+    }
+
+    public GuiItemConfigurable(String name, Material material) {
+        super(name, material);
         this.sound = new SoundConfigurable(null);
     }
 
