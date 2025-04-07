@@ -73,7 +73,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(depth, "name", name);
+        configBuilder.appendIfNotEqual(depth, "name", name, "");
         configBuilder.append(depth, "material", material);
         configBuilder.append(depth, "slot", slot != -1 ? slot : null);
         configBuilder.append(depth, "model", model != -1 ? model : null);
