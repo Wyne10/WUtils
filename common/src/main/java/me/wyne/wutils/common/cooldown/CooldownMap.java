@@ -19,6 +19,10 @@ public class CooldownMap<T> {
         cooldownMap = concurrent ? new ConcurrentHashMap<>() : new HashMap<>();
     }
 
+    public Map<T, Long> getMap() {
+        return cooldownMap;
+    }
+
     public boolean isCooldowned(T key) {
         return cooldownMap.containsKey(key) && cooldownMap.get(key) > System.currentTimeMillis();
     }
