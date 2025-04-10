@@ -42,7 +42,7 @@ public class ViewConfigurable implements CompositeConfigurable {
     @Override
     public void fromConfig(Object configObject) {
         ConfigurationSection section = (ConfigurationSection) configObject;
-        name = section.getString("name");
+        name = section.getString("name", "");
         lore.clear();
         lore.addAll(ConfigUtils.getStringList(section, "lore"));
     }
