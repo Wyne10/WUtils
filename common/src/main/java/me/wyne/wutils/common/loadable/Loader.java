@@ -28,7 +28,8 @@ public class Loader {
 
     public void load() {
         loadableMap.forEach((loadable, path) -> {
-            loadable.load(configMap.get(path));
+            if (configMap.containsKey(path))
+                loadable.load(configMap.get(path));
         });
     }
 
