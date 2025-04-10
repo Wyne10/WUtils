@@ -18,19 +18,19 @@ public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
 
     public GenericMapConfigurable(Map<K, V> map, MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
         this.map.putAll(map);
-        this.configMapper = configMapper;
         this.valueMapper = valueMapper;
+        this.configMapper = configMapper;
     }
 
     public GenericMapConfigurable(Object configObject, MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
-        fromConfig(configObject);
-        this.configMapper = configMapper;
         this.valueMapper = valueMapper;
+        this.configMapper = configMapper;
+        fromConfig(configObject);
     }
 
     public GenericMapConfigurable(MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
-        this.configMapper = configMapper;
         this.valueMapper = valueMapper;
+        this.configMapper = configMapper;
     }
 
     @Override
