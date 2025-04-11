@@ -14,6 +14,10 @@ public class Period {
         this.finishAt = finishAt;
     }
 
+    public Period(long duration, TimeUnit timeUnit) {
+        put(duration, timeUnit);
+    }
+
     public boolean isExpired() {
         return finishAt == null || System.currentTimeMillis() > finishAt;
     }
