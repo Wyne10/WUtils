@@ -2,8 +2,7 @@ package me.wyne.wutils.common.loadable;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Loader {
 
@@ -12,14 +11,10 @@ public class Loader {
     public static final Loader global = new Loader();
 
     private final Map<String, ConfigurationSection> configMap = new HashMap<>();
-    private final Map<Loadable, String> loadableMap = new HashMap<>();
+    private final Map<Loadable, String> loadableMap = new TreeMap<>(Comparator.comparingInt(Loadable::getPriority));
 
     public void registerLoadable(Loadable loadable) {
-        String path = DEFAULT_PATH;
-        if (loadable.getClass().isAnnotationPresent(LoadablePath.class)) {
-            path = loadable.getClass().getAnnotation(LoadablePath.class).path();
-        }
-        loadableMap.put(loadable, path);
+        loadableMap.put(loadable, loadable.getPath());
     }
 
     public void registerConfig(String path, ConfigurationSection config) {

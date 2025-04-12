@@ -7,8 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface LoadablePath {
+public @interface LoadableMeta {
 
-    String path();
+    String path() default Loader.DEFAULT_PATH;
+    int priority() default 0;
 
 }
