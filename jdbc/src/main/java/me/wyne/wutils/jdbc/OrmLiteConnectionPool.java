@@ -32,7 +32,7 @@ public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectio
             connectionSource.initialize();
             isInitialized = true;
         } catch (SQLException e) {
-            LogWrapper.exception("An exception occurred trying to establish connection with " + url, e);
+            LogWrapper.INSTANCE.exception("An exception occurred trying to establish connection with " + url, e);
         }
     }
 

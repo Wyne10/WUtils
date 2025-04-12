@@ -38,7 +38,7 @@ public class HikariConnectionPool implements ConnectionPool<HikariDataSource> {
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {
-            LogWrapper.exception("An exception occurred trying to establish connection with " + url, e);
+            LogWrapper.INSTANCE.exception("An exception occurred trying to establish connection with " + url, e);
         }
         return null;
     }

@@ -5,6 +5,7 @@ import me.wyne.wutils.config.ConfigField;
 
 import java.lang.reflect.Field;
 
+@Deprecated(since = "3.2.0")
 public class ConfigurableLogConfig implements LogConfig {
 
     private boolean logInfo = false;

@@ -1,5 +1,6 @@
 package me.wyne.wutils.log;
 
+@Deprecated(since = "3.2.0")
 public class BasicLogConfig implements LogConfig {
 
     private boolean logInfo = false;

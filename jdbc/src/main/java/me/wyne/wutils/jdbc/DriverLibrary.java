@@ -77,7 +77,7 @@ public enum DriverLibrary {
         try {
             this.mavenRepoURL = new URL("https://repo1.maven.org/maven2/" + mavenPath);
         } catch (MalformedURLException e) {
-            LogWrapper.exception("An exception occurred trying to format maven path to URL", e);
+            LogWrapper.INSTANCE.exception("An exception occurred trying to format maven path to URL", e);
         }
     }
 
@@ -89,16 +89,16 @@ public enum DriverLibrary {
                     Files.createDirectories(this.filenamePath.getParent());
                     Files.copy(in, Files.createFile(this.filenamePath), StandardCopyOption.REPLACE_EXISTING);
                 }
-                LogWrapper.info("Loaded '" + mavenRepoURL.toString() + "' JDBC driver");
+                LogWrapper.INSTANCE.info("Loaded '" + mavenRepoURL.toString() + "' JDBC driver");
             } catch (IOException e) {
-                LogWrapper.exception("An exception occurred trying to load '" + mavenRepoURL.toString() + "' driver", e);
+                LogWrapper.INSTANCE.exception("An exception occurred trying to load '" + mavenRepoURL.toString() + "' driver", e);
             }
         }
 
         try {
             return this.filenamePath.toUri().toURL();
         } catch (MalformedURLException e) {
-            LogWrapper.exception("An exception occurred trying to format path to URL", e);
+            LogWrapper.INSTANCE.exception("An exception occurred trying to format path to URL", e);
         }
         return null;
     }
@@ -111,10 +111,10 @@ public enum DriverLibrary {
             URLClassLoader loader = new URLClassLoader(new URL[]{getClassLoaderURL()}, DriverLibrary.class.getClassLoader());
             DriverManager.registerDriver(new DriverShim((Driver) loader.loadClass(driverClass).getConstructor().newInstance()));
             isRegistered = true;
-            LogWrapper.info("Registered '" + driverClass + "' JDBC driver");
+            LogWrapper.INSTANCE.info("Registered '" + driverClass + "' JDBC driver");
         } catch (SQLException | InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException | ClassNotFoundException e) {
-            LogWrapper.exception("An exception occurred trying to register driver '" + driverClass + "'", e);
+            LogWrapper.INSTANCE.exception("An exception occurred trying to register driver '" + driverClass + "'", e);
         }
     }
 }

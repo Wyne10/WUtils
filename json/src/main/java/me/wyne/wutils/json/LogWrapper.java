@@ -1,11 +1,13 @@
 package me.wyne.wutils.json;
 
 import me.wyne.wutils.log.Log;
+import org.slf4j.Logger;
 
 public final class LogWrapper {
 
     public final static boolean IS_LOGGER_PRESENT;
     public Log logger;
+    public Logger slf4jLogger;
 
     static {
         boolean isLoggerPresent;
@@ -19,39 +21,42 @@ public final class LogWrapper {
     }
 
     public void info(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.info(message);
+        if (isLoggerPresent())
+            logger.info(message);
+        if (slf4jLogger != null)
+            slf4jLogger.info(message);
     }
 
     public void warn(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.warn(message);
+        if (isLoggerPresent())
+            logger.warn(message);
+        if (slf4jLogger != null)
+            slf4jLogger.warn(message);
     }
 
     public void error(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.error(message);
+        if (isLoggerPresent())
+            logger.error(message);
+        if (slf4jLogger != null)
+            slf4jLogger.error(message);
     }
 
     public void exception(Throwable exception) {
-        if (!isLoggerPresent())
-            return;
-        logger.exception(exception);
+        if (isLoggerPresent())
+            logger.exception(exception);
+        if (slf4jLogger != null)
+            slf4jLogger.error("", exception);
     }
 
     public void exception(String message, Throwable exception) {
-        if (!isLoggerPresent())
-            return;
-        logger.exception(message, exception);
+        if (isLoggerPresent())
+            logger.exception(message, exception);
+        if (slf4jLogger != null)
+            slf4jLogger.error(message, exception);
     }
     
     private boolean isLoggerPresent() {
-        if (IS_LOGGER_PRESENT && logger == null)
-            logger = Log.global;
-        return IS_LOGGER_PRESENT;
+        return IS_LOGGER_PRESENT && logger != null;
     }
 
 }

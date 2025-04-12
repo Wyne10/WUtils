@@ -1,11 +1,15 @@
 package me.wyne.wutils.jdbc;
 
 import me.wyne.wutils.log.Log;
+import org.slf4j.Logger;
 
 public final class LogWrapper {
 
+    public final static LogWrapper INSTANCE = new LogWrapper();
+
     public final static boolean IS_LOGGER_PRESENT;
-    private static Log logger;
+    public Log logger;
+    public Logger slf4jLogger;
 
     static {
         boolean isLoggerPresent;
@@ -18,40 +22,43 @@ public final class LogWrapper {
         IS_LOGGER_PRESENT = isLoggerPresent;
     }
 
-    public static void info(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.info(message);
+    public void info(String message) {
+        if (isLoggerPresent())
+            logger.info(message);
+        if (slf4jLogger != null)
+            slf4jLogger.info(message);
     }
 
-    public static void warn(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.warn(message);
+    public void warn(String message) {
+        if (isLoggerPresent())
+            logger.warn(message);
+        if (slf4jLogger != null)
+            slf4jLogger.warn(message);
     }
 
-    public static void error(String message) {
-        if (!isLoggerPresent())
-            return;
-        logger.error(message);
+    public void error(String message) {
+        if (isLoggerPresent())
+            logger.error(message);
+        if (slf4jLogger != null)
+            slf4jLogger.error(message);
     }
 
-    public static void exception(Throwable exception) {
-        if (!isLoggerPresent())
-            return;
-        logger.exception(exception);
+    public void exception(Throwable exception) {
+        if (isLoggerPresent())
+            logger.exception(exception);
+        if (slf4jLogger != null)
+            slf4jLogger.error("", exception);
     }
 
-    public static void exception(String message, Throwable exception) {
-        if (!isLoggerPresent())
-            return;
-        logger.exception(message, exception);
+    public void exception(String message, Throwable exception) {
+        if (isLoggerPresent())
+            logger.exception(message, exception);
+        if (slf4jLogger != null)
+            slf4jLogger.error(message, exception);
     }
-
-    private static boolean isLoggerPresent() {
-        if (IS_LOGGER_PRESENT && logger == null)
-            logger = Log.global;
-        return IS_LOGGER_PRESENT;
+    
+    private boolean isLoggerPresent() {
+        return IS_LOGGER_PRESENT && logger != null;
     }
 
 }

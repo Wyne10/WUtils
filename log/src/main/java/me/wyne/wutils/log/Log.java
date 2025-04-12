@@ -19,6 +19,7 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Deprecated(since = "3.2.0")
 public class Log {
 
     public static final int DAY_DURATION_MILLISECONDS = 86400000;
