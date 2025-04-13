@@ -19,7 +19,6 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Deprecated(since = "3.2.0")
 public class Log {
 
     public static final int DAY_DURATION_MILLISECONDS = 86400000;
@@ -123,7 +122,7 @@ public class Log {
     public static final class Builder
     {
         private Logger logger;
-        private LogConfig config = new BasicLogConfig(false, false, false, false);
+        private LogConfig config = new BasicLogConfig(false, false, false, false, false, false);
         private Executor fileWriteExecutor;
         private File logDirectory;
 
@@ -190,6 +189,8 @@ public class Log {
                 logger.info(message);
             if (level == Level.WARNING && config.logWarn())
                 logger.warning(message);
+            if (level == Level.FINE && config.logDebug())
+                logger.fine(message);
             return true;
         }
         return false;
@@ -197,7 +198,7 @@ public class Log {
 
     public boolean info(String message)
     {
-        if (isActive() && config.logInfo())
+        if (isActive() && config.logInfo() && logger.isLoggable(Level.INFO))
         {
             logger.info(message);
             writeLog(Level.INFO, message);
@@ -208,7 +209,7 @@ public class Log {
 
     public boolean warn(String message)
     {
-        if (isActive() && config.logWarn())
+        if (isActive() && config.logWarn() && logger.isLoggable(Level.WARNING))
         {
             logger.warning(message);
             writeLog(Level.WARNING, message);
@@ -219,7 +220,7 @@ public class Log {
 
     public boolean error(String message)
     {
-        if (isActive())
+        if (isActive() && logger.isLoggable(Level.SEVERE))
         {
             logger.severe(message);
             writeLog(Level.SEVERE, message);
@@ -228,9 +229,20 @@ public class Log {
         return false;
     }
 
+    public boolean debug(String message)
+    {
+        if (isActive() && config.logDebug() && logger.isLoggable(Level.FINE))
+        {
+            logger.fine(message);
+            writeLog(Level.FINE, message);
+            return true;
+        }
+        return false;
+    }
+
     public boolean info(Object message)
     {
-        if (isActive() && config.logInfo())
+        if (isActive() && config.logInfo() && logger.isLoggable(Level.INFO))
         {
             logger.info(message.toString());
             writeLog(Level.INFO, message.toString());
@@ -241,7 +253,7 @@ public class Log {
 
     public boolean warn(Object message)
     {
-        if (isActive() && config.logWarn())
+        if (isActive() && config.logWarn() && logger.isLoggable(Level.WARNING))
         {
             logger.warning(message.toString());
             writeLog(Level.WARNING, message.toString());
@@ -252,7 +264,7 @@ public class Log {
 
     public boolean error(Object message)
     {
-        if (isActive())
+        if (isActive() && logger.isLoggable(Level.SEVERE))
         {
             logger.severe(message.toString());
             writeLog(Level.SEVERE, message.toString());
@@ -261,9 +273,20 @@ public class Log {
         return false;
     }
 
+    public boolean debug(Object message)
+    {
+        if (isActive() && config.logDebug() && logger.isLoggable(Level.FINE))
+        {
+            logger.fine(message.toString());
+            writeLog(Level.FINE, message.toString());
+            return true;
+        }
+        return false;
+    }
+
     public boolean exception(String message, Throwable exception)
     {
-        if (isActive())
+        if (isActive() && logger.isLoggable(Level.SEVERE))
         {
             error(message);
             error(ExceptionUtils.getStackTrace(exception));
@@ -274,7 +297,7 @@ public class Log {
 
     public boolean exception(Throwable exception)
     {
-        if (isActive())
+        if (isActive() && logger.isLoggable(Level.SEVERE))
         {
             error(ExceptionUtils.getStackTrace(exception));
             return true;
@@ -290,6 +313,8 @@ public class Log {
             return;
         if (level == Level.WARNING && config.writeWarn() == false)
             return;
+        if (level == Level.FINE && config.writeDebug() == false)
+            return;
 
         fileWriteExecutor.execute(() -> {
             String levelMessage = "INFO";
@@ -298,8 +323,10 @@ public class Log {
                 levelMessage = "WARN";
             else if (level == Level.SEVERE)
                 levelMessage = "ERROR";
+            else if (level == Level.FINE)
+                levelMessage = "DEBUG";
 
-            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: " + log;
+            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: [" + logger.getName() + "] " + log;
 
             String logFileName = LocalDate.now() + ".txt";
             File logFile = cachedFiles.getOrDefault(logFileName, new File(logDirectory, logFileName));

@@ -5,13 +5,14 @@ import me.wyne.wutils.config.ConfigField;
 
 import java.lang.reflect.Field;
 
-@Deprecated(since = "3.2.0")
 public class ConfigurableLogConfig implements LogConfig {
 
     private boolean logInfo = false;
     private boolean logWarn = false;
+    private boolean logDebug = false;
     private boolean writeInfo = false;
     private boolean writeWarn = false;
+    private boolean writeDebug = false;
 
     private final String loggerName;
     private final ConfigFieldRegistry config;
@@ -29,8 +30,10 @@ public class ConfigurableLogConfig implements LogConfig {
         this.config = config;
         this.logInfo = baseConfig.logInfo();
         this.logWarn = baseConfig.logWarn();
+        this.logDebug = baseConfig.logDebug();
         this.writeInfo = baseConfig.writeInfo();
         this.writeWarn = baseConfig.writeWarn();
+        this.writeDebug = baseConfig.writeDebug();
         generateConfig();
     }
 
@@ -65,6 +68,11 @@ public class ConfigurableLogConfig implements LogConfig {
     }
 
     @Override
+    public boolean logDebug() {
+        return logDebug;
+    }
+
+    @Override
     public boolean writeInfo() {
         return writeInfo;
     }
@@ -72,5 +80,10 @@ public class ConfigurableLogConfig implements LogConfig {
     @Override
     public boolean writeWarn() {
         return writeWarn;
+    }
+
+    @Override
+    public boolean writeDebug() {
+        return writeDebug;
     }
 }

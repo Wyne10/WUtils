@@ -1,18 +1,21 @@
 package me.wyne.wutils.log;
 
-@Deprecated(since = "3.2.0")
 public class BasicLogConfig implements LogConfig {
 
     private boolean logInfo = false;
     private boolean logWarn = false;
+    private boolean logDebug = false;
     private boolean writeInfo = false;
     private boolean writeWarn = false;
+    private boolean writeDebug = false;
 
-    public BasicLogConfig(boolean logInfo, boolean logWarn, boolean writeInfo, boolean writeWarn) {
+    public BasicLogConfig(boolean logInfo, boolean logWarn, boolean logDebug, boolean writeInfo, boolean writeWarn, boolean writeDebug) {
         this.logInfo = logInfo;
         this.logWarn = logWarn;
+        this.logDebug = logDebug;
         this.writeInfo = writeInfo;
         this.writeWarn = writeWarn;
+        this.writeDebug = writeDebug;
     }
 
     @Override
@@ -26,6 +29,11 @@ public class BasicLogConfig implements LogConfig {
     }
 
     @Override
+    public boolean logDebug() {
+        return logDebug;
+    }
+
+    @Override
     public boolean writeInfo() {
         return writeInfo;
     }
@@ -33,5 +41,10 @@ public class BasicLogConfig implements LogConfig {
     @Override
     public boolean writeWarn() {
         return writeWarn;
+    }
+
+    @Override
+    public boolean writeDebug() {
+        return writeDebug;
     }
 }
