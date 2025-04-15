@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 
 import java.util.logging.Level;
 
+/**
+ * Slf4j wrapper of deprecated {@link Log} that will be used if server doesn't support log4j
+ */
 public class JulLogger implements Logger {
 
     private final Log julLogger;

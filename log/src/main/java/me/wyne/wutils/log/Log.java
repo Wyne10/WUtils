@@ -21,6 +21,17 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * <pre>
+ * JUL wrapper allowing writing logs to file and providing global singleton.
+ *
+ * Deprecated due to migration to slf4j/log4j based logging.
+ * Used as fallback if server core doesn't support necessary log4j version.
+ * </pre>
+ * @see Log4jFactory
+ * @see JulLogger
+ */
+@Deprecated
 public class Log {
 
     public static final int DAY_DURATION_MILLISECONDS = 86400000;
