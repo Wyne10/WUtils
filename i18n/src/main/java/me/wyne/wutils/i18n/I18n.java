@@ -17,6 +17,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -25,7 +27,7 @@ import java.util.function.Function;
 public class I18n {
     
     public static I18n global = new I18n();
-    public final LogWrapper log = new LogWrapper();
+    public Logger log = LoggerFactory.getLogger(getClass());
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private Language defaultLanguage;
@@ -62,7 +64,7 @@ public class I18n {
         if (languageMap.containsKey(FilenameUtils.removeExtension(languageFile.getName())))
             return;
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(defaultResourceLanguage, languageFile, log));
-        log.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
     public void loadLanguage(String languageResourcePath, InputStream languageResourceStream, File dataFolder)
@@ -72,10 +74,10 @@ public class I18n {
         try {
             FileUtils.copyInputStreamToFile(languageResourceStream, languageResource);
         } catch (IOException e) {
-            log.exception("An exception occurred trying to load " + languageResourcePath + " language", e); 
+            log.error("An exception occurred trying to load {} language", languageResourcePath, e);
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(new BaseLanguage(languageResource, log), languageFile, log));
-        log.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
     public void loadLanguage(String languageResourcePath, JavaPlugin plugin)
@@ -86,10 +88,10 @@ public class I18n {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResource);
         } catch (IOException e) {
-            log.exception("An exception occurred trying to load " + languageResourcePath + " language", e);
+            log.error("An exception occurred trying to load {} language", languageResourcePath, e);
         }
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(new BaseLanguage(languageResource, log), languageFile, log));
-        log.info("Loaded " + FilenameUtils.removeExtension(languageFile.getName()) + " language");
+        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
     public void loadLanguages(JavaPlugin plugin)
@@ -129,7 +131,7 @@ public class I18n {
             FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
             defaultResourceLanguage = new BaseLanguage(languageResource, log);
         } catch (IOException e) {
-            log.exception("An exception occurred trying to load default language from resources", e);
+            log.error("An exception occurred trying to load default language from resources", e);
         }
     }
 
@@ -147,7 +149,7 @@ public class I18n {
             FileUtils.copyInputStreamToFile(resourceProvider.apply("lang/" + pluginConfig.getString("lang")), languageResource);
             defaultResourceLanguage = new BaseLanguage(languageResource, log);
         } catch (IOException e) {
-            log.exception("An exception occurred trying to load default plugin language", e);
+            log.error("An exception occurred trying to load default plugin language", e);
         }
     }
 
@@ -168,14 +170,14 @@ public class I18n {
     {
         if (languageFile == null || !languageFile.exists())
         {
-            log.error("Couldn't set default language to " + (languageFile != null ? languageFile.getName() : "null"));
+            log.error("Couldn't set default language to {}", languageFile != null ? languageFile.getName() : "null");
             if (defaultLanguage == null)
             {
                 log.warn("Will try to get language file from plugins resources");
                 if (defaultResourceLanguage != null)
                 {
                     defaultLanguage = defaultResourceLanguage;
-                    log.warn("Using " + defaultResourceLanguage.getLanguageCode() + " as default language");
+                    log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
                     return;
                 }
                 log.warn("Couldn't get language file from plugin's resources");
@@ -186,21 +188,21 @@ public class I18n {
         defaultLanguage = defaultResourceLanguage != null
                 ? new BaseLanguage(defaultResourceLanguage, languageFile, log)
                 : new BaseLanguage(languageFile, log);
-        log.info("Default language is set to " + defaultLanguage.getLanguageCode());
+        log.info("Default language is set to {}", defaultLanguage.getLanguageCode());
     }
 
     public void setDefaultLanguage(String languageCode)
     {
         if (!languageMap.containsKey(languageCode))
         {
-            log.error("Couldn't set default language to " + languageCode);
+            log.error("Couldn't set default language to {}", languageCode);
             if (defaultLanguage == null)
             {
                 log.warn("Will try to get language file from plugins resources");
                 if (defaultResourceLanguage != null)
                 {
                     defaultLanguage = defaultResourceLanguage;
-                    log.warn("Using " + defaultResourceLanguage.getLanguageCode() + " as default language");
+                    log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
                     return;
                 }
                 log.warn("Couldn't get language file from plugin's resources");
@@ -209,7 +211,7 @@ public class I18n {
         }
 
         defaultLanguage = languageMap.get(languageCode);
-        log.info("Default language is set to " + defaultLanguage.getLanguageCode());
+        log.info("Default language is set to {}", defaultLanguage.getLanguageCode());
     }
 
     public void setStringInterpreter(StringInterpreter stringInterpreter) {

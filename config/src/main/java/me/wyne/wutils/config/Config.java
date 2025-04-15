@@ -7,6 +7,8 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javatuples.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.*;
 public class Config implements ConfigFieldRegistry {
 
     public static final Config global = new Config();
-    public final LogWrapper log = new LogWrapper();
+    public Logger log = LoggerFactory.getLogger(getClass());
 
     private ConfigGenerator configGenerator;
     /**
@@ -44,7 +46,7 @@ public class Config implements ConfigFieldRegistry {
         try {
             Files.copy(plugin.getResource(configPath), defaultConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.exception("An exception occurred trying to load default config for WUtils config", e);
+            log.error("An exception occurred trying to load default config for WUtils config", e);
         }
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
@@ -82,7 +84,7 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        log.exception("An exception occurred trying to reload WUtils config", e);
+                        log.error("An exception occurred trying to reload WUtils config", e);
                     }
                 });
         log.info("Reloaded WUtils config");
@@ -103,7 +105,7 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        log.exception("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
+                        log.error("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
                     }
                 });
     }

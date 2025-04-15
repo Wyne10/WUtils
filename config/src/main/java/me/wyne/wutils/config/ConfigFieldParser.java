@@ -4,13 +4,14 @@ import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurable.Configurable;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.javatuples.Pair;
+import org.slf4j.Logger;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class ConfigFieldParser {
 
-    public static ConfigField getConfigField(Object holder, Field field, LogWrapper log)
+    public static ConfigField getConfigField(Object holder, Field field, Logger log)
     {
         field.setAccessible(true);
         var configEntry = field.getAnnotation(ConfigEntry.class);
@@ -24,7 +25,7 @@ public class ConfigFieldParser {
             else
                 value = field.get(holder) != null ? field.get(holder).toString() : "";
         } catch (IllegalAccessException e) {
-            log.exception("An exception occurred trying to parse reflected field to ConfigField", e);
+            log.error("An exception occurred trying to parse reflected field to ConfigField", e);
         }
         String comment = configEntry.comment();
 
@@ -42,7 +43,7 @@ public class ConfigFieldParser {
         return configBuilder.build();
     }
 
-    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field, LogWrapper log)
+    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field, Logger log)
     {
         return new Pair<>(field.getAnnotation(ConfigEntry.class).section(), getConfigField(holder, field, log));
     }

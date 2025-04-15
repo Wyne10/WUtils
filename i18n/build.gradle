@@ -19,10 +19,9 @@ dependencies {
     implementation 'dev.vankka:enhancedlegacytext:1.0.0'
     implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'commons-io:commons-io:2.13.0'
-    compileOnly project(':WUtils-log')
 }
 
-version = '3.4.0'
+version = '3.4.1'
 
 publishing {
     publications {

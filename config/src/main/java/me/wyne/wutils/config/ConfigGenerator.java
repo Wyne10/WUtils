@@ -1,6 +1,7 @@
 package me.wyne.wutils.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
 
 import java.io.*;
@@ -10,14 +11,14 @@ import java.util.Set;
 
 public class ConfigGenerator {
 
-    private final LogWrapper log;
+    private final Logger log;
 
     private final File configFile;
     private final File defaultConfigFile;
 
     private final StringBuilder generatedText = new StringBuilder();
 
-    public ConfigGenerator(File configFile, File defaultConfigFile, LogWrapper log)
+    public ConfigGenerator(File configFile, File defaultConfigFile, Logger log)
     {
         this.log = log;
         this.configFile = configFile;
@@ -46,7 +47,7 @@ public class ConfigGenerator {
             });
             generatedText.append("\n");
         } catch (IOException e) {
-            log.exception("An exception occurred trying to read default config file data", e);
+            log.error("An exception occurred trying to read default config file data", e);
         }
     }
 
@@ -67,7 +68,7 @@ public class ConfigGenerator {
                     .update();
             log.info("Generated WUtils config");
         } catch (IOException e) {
-            log.exception("An exception occurred trying to write WUtils config", e);
+            log.error("An exception occurred trying to write WUtils config", e);
         }
     }
 

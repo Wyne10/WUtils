@@ -3,11 +3,14 @@ package me.wyne.wutils.jdbc;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectionSource> {
+
+    private final Logger logger;
 
     private final String url;
     private final String username;
@@ -16,10 +19,11 @@ public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectio
     private final JdbcPooledConnectionSource connectionSource = new JdbcPooledConnectionSource();
     private boolean isInitialized = false;
 
-    public OrmLiteConnectionPool(String url, String username, String password) {
+    public OrmLiteConnectionPool(String url, String username, String password, Logger logger) {
         this.url = url;
         this.username = username;
         this.password = password;
+        this.logger = logger;
         initializeDataSource();
     }
 
@@ -32,7 +36,7 @@ public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectio
             connectionSource.initialize();
             isInitialized = true;
         } catch (SQLException e) {
-            LogWrapper.INSTANCE.exception("An exception occurred trying to establish connection with " + url, e);
+            logger.error("An exception occurred trying to establish connection with {}", url, e);
         }
     }
 

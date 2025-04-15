@@ -13,13 +13,10 @@ dependencies {
     compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
     implementation 'ru.vyarus:yaml-config-updater:1.4.2'
     implementation 'org.javatuples:javatuples:1.2'
-    compileOnly(project(':WUtils-log')) {
-        exclude group: 'me.wyne', module: 'WUtils-configLogBridge'
-    }
     api project(':WUtils-configLogBridge')
 }
 
-version = '2.8.0'
+version = '2.8.1'
 
 publishing {
     publications {

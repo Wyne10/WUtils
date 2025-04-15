@@ -1,6 +1,7 @@
 package me.wyne.wutils.log;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +36,8 @@ public class Log {
 
     private final Map<String, File> cachedFiles = new HashMap<>();
     private final Map<String, PrintWriter> cachedWriters = new HashMap<>();
+
+    private final Map<Level, Supplier<Boolean>> levelToConfig = new HashMap<>();
 
     public boolean isActive()
     {
@@ -94,12 +98,14 @@ public class Log {
         this.dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(ZoneId.systemDefault());
         if (isFileWriteActive() && !logDirectory.exists())
             logDirectory.mkdirs();
+        initializeLevelToConfig();
     }
 
     public Log(Logger logger, LogConfig logConfig)
     {
         this.logger = logger;
         this.config = logConfig;
+        initializeLevelToConfig();
     }
 
     public Log(Logger logger, LogConfig logConfig, Executor fileWriteExecutor, File logDirectory)
@@ -109,6 +115,16 @@ public class Log {
         this.logDirectory = logDirectory;
         if (isFileWriteActive() && !logDirectory.exists())
             logDirectory.mkdirs();
+    }
+
+    private void initializeLevelToConfig() {
+        levelToConfig.putAll(
+                Map.of(Level.INFO, config::logInfo,
+                        Level.WARNING, config::logWarn,
+                        Level.SEVERE, () -> true,
+                        Level.FINE, config::logDebug,
+                        Level.FINEST, config::logDebug)
+        );
     }
 
     @Contract("-> new")
@@ -181,16 +197,52 @@ public class Log {
         }
     }
 
+    public boolean isLoggable(Level level) {
+        return levelToConfig.get(level).get();
+    }
+
     public boolean log(Level level, String message)
     {
-        if (isActive())
+        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
         {
-            if (level == Level.INFO && config.logInfo())
-                logger.info(message);
-            if (level == Level.WARNING && config.logWarn())
-                logger.warning(message);
-            if (level == Level.FINE && config.logDebug())
-                logger.fine(message);
+            logger.log(level, message);
+            writeLog(level, message);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level level, String message, Throwable t)
+    {
+        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
+            logger.log(level, parameterizedMessage.getFormattedMessage());
+            writeLog(level, parameterizedMessage.getFormattedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level level, String message, Object arg)
+    {
+        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arg);
+            logger.log(level, parameterizedMessage.getFormattedMessage());
+            writeLog(level, parameterizedMessage.getFormattedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level level, String message, Object... arguments)
+    {
+        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arguments);
+            logger.log(level, parameterizedMessage.getFormattedMessage());
+            writeLog(level, parameterizedMessage.getFormattedMessage());
             return true;
         }
         return false;
@@ -313,7 +365,7 @@ public class Log {
             return;
         if (level == Level.WARNING && config.writeWarn() == false)
             return;
-        if (level == Level.FINE && config.writeDebug() == false)
+        if (level.intValue() <= 500 && config.writeDebug() == false)
             return;
 
         fileWriteExecutor.execute(() -> {
@@ -323,7 +375,7 @@ public class Log {
                 levelMessage = "WARN";
             else if (level == Level.SEVERE)
                 levelMessage = "ERROR";
-            else if (level == Level.FINE)
+            else if (level.intValue() <= 500)
                 levelMessage = "DEBUG";
 
             String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: [" + logger.getName() + "] " + log;
