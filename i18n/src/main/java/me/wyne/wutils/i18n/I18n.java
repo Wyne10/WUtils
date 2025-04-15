@@ -2,9 +2,12 @@ package me.wyne.wutils.i18n;
 
 import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
+import me.wyne.wutils.i18n.language.component.*;
 import me.wyne.wutils.i18n.language.interpretation.*;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -23,10 +26,12 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class I18n {
     
     public static I18n global = new I18n();
+    public BukkitAudiences audiences;
     public Logger log = LoggerFactory.getLogger(getClass());
 
     private final Map<String, Language> languageMap = new HashMap<>();
@@ -263,420 +268,524 @@ public class I18n {
         return componentInterpreter;
     }
 
-    public String getString(String path) {
+    public LocalizedString getString(String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getStringList(path));
-        return string().getString(defaultLanguage, path);
+            return lsd(path, reduceString(getStringList(path)));
+        return lsd(path, string().getString(defaultLanguage, path));
     }
 
-    public String getString(@Nullable Locale locale, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getStringList(locale, path));
-        return string().getString(getLanguage(locale), path);
+    public LocalizedString getString(@Nullable Locale locale, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return ls(language, path, reduceString(getStringList(locale, path)));
+        return ls(language, path, string().getString(language, path));
     }
 
-    public String getString(String path, TextReplacement... textReplacements) {
+    public LocalizedString getString(String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getStringList(path, textReplacements));
-        return string().getString(defaultLanguage, path, textReplacements);
+            return lsd(path, reduceString(getStringList(path, textReplacements)));
+        return lsd(path, string().getString(defaultLanguage, path, textReplacements));
     }
 
-    public String getString(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getStringList(locale, path, textReplacements));
-        return string().getString(getLanguage(locale), path, textReplacements);
+    public LocalizedString getString(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return ls(language, path, reduceString(getStringList(locale, path, textReplacements)));
+        return ls(language, path, string().getString(language, path, textReplacements));
     }
 
-    public String getPlaceholderString(@Nullable Player player, String path) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Player player, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(player, path));
-        return string().getPlaceholderString(defaultLanguage, player, path);
+            return plsd(path, reduceString(getPlaceholderStringList(player, path)), player);
+        return plsd(path, string().getPlaceholderString(defaultLanguage, player, path), player);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, player, path));
-        return string().getPlaceholderString(getLanguage(locale), player, path);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, player, path)), player);
+        return pls(language, path, string().getPlaceholderString(language, player, path), player);
     }
 
-    public String getPlaceholderString(@Nullable Player player, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Player player, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(player, path, textReplacements));
-        return string().getPlaceholderString(defaultLanguage, player, path, textReplacements);
+            return plsd(path, reduceString(getPlaceholderStringList(player, path, textReplacements)), player);
+        return plsd(path, string().getPlaceholderString(defaultLanguage, player, path, textReplacements), player);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, player, path, textReplacements));
-        return string().getPlaceholderString(getLanguage(locale), player, path, textReplacements);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, player, path, textReplacements)), player);
+        return pls(language, path, string().getPlaceholderString(language, player, path, textReplacements), player);
     }
 
-    public String getPlaceholderString(@Nullable OfflinePlayer player, String path) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(player, path));
-        return string().getPlaceholderString(defaultLanguage, player, path);
+            return plsd(path, reduceString(getPlaceholderStringList(player, path)), player);
+        return plsd(path, string().getPlaceholderString(defaultLanguage, player, path), player);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, player, path));
-        return string().getPlaceholderString(getLanguage(locale), player, path);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, player, path)), player);
+        return pls(language, path, string().getPlaceholderString(language, player, path), player);
     }
 
-    public String getPlaceholderString(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(player, path, textReplacements));
-        return string().getPlaceholderString(defaultLanguage, player, path, textReplacements);
+            return plsd(path, reduceString(getPlaceholderStringList(player, path, textReplacements)), player);
+        return plsd(path, string().getPlaceholderString(defaultLanguage, player, path, textReplacements), player);
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, player, path, textReplacements));
-        return string().getPlaceholderString(getLanguage(locale), player, path, textReplacements);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, player, path, textReplacements)), player);
+        return pls(language, path, string().getPlaceholderString(language, player, path, textReplacements), player);
     }
 
-    public String getPlaceholderString(@Nullable CommandSender sender, String path) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(sender, path));
-        return string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path);
+            return plsd(path, reduceString(getPlaceholderStringList(sender, path)), I18n.toPlayer(sender));
+        return plsd(path, string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path), I18n.toPlayer(sender));
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, sender, path));
-        return string().getPlaceholderString(getLanguage(locale), I18n.toPlayer(sender), path);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, sender, path)), I18n.toPlayer(sender));
+        return pls(language, path, string().getPlaceholderString(language, I18n.toPlayer(sender), path), I18n.toPlayer(sender));
     }
 
-    public String getPlaceholderString(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(sender, path, textReplacements));
-        return string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
+            return plsd(path, reduceString(getPlaceholderStringList(sender, path, textReplacements)), I18n.toPlayer(sender));
+        return plsd(path, string().getPlaceholderString(defaultLanguage, I18n.toPlayer(sender), path, textReplacements), I18n.toPlayer(sender));
     }
 
-    public String getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceString(getPlaceholderStringList(locale, sender, path, textReplacements));
-        return string().getPlaceholderString(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
+    public PlaceholderLocalizedString getPlaceholderString(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return pls(language, path, reduceString(getPlaceholderStringList(locale, sender, path, textReplacements)), I18n.toPlayer(sender));
+        return pls(language, path, string().getPlaceholderString(language, I18n.toPlayer(sender), path, textReplacements), I18n.toPlayer(sender));
     }
 
-    public List<String> getStringList(String path) {
+    public List<LocalizedString> getStringList(String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getString(path));
-        return string().getStringList(defaultLanguage, path);
+        return string().getStringList(defaultLanguage, path).stream().map(string -> lsd(path, string)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getStringList(@Nullable Locale locale, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<LocalizedString> getStringList(@Nullable Locale locale, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getString(locale, path));
-        return string().getStringList(getLanguage(locale), path);
+        return string().getStringList(language, path).stream().map(string -> ls(language, path, string)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getStringList(String path, TextReplacement... textReplacements) {
+    public List<LocalizedString> getStringList(String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getString(path, textReplacements));
-        return string().getStringList(defaultLanguage, path, textReplacements);
+        return string().getStringList(defaultLanguage, path, textReplacements).stream().map(string -> lsd(path, string)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getStringList(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<LocalizedString> getStringList(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getString(locale, path, textReplacements));
-        return string().getStringList(getLanguage(locale), path, textReplacements);
+        return string().getStringList(language, path, textReplacements).stream().map(string -> ls(language, path, string)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Player player, String path) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(player, path));
-        return string().getPlaceholderStringList(defaultLanguage, player, path);
+        return string().getPlaceholderStringList(defaultLanguage, player, path).stream().map(string -> plsd(path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, player, path));
-        return string().getPlaceholderStringList(getLanguage(locale), player, path);
+        return string().getPlaceholderStringList(language, player, path).stream().map(string -> pls(language, path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Player player, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(player, path, textReplacements));
-        return string().getPlaceholderStringList(defaultLanguage, player, path, textReplacements);
+        return string().getPlaceholderStringList(defaultLanguage, player, path, textReplacements).stream().map(string -> plsd(path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, player, path, textReplacements));
-        return string().getPlaceholderStringList(getLanguage(locale), player, path, textReplacements);
+        return string().getPlaceholderStringList(language, player, path, textReplacements).stream().map(string -> pls(language, path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable OfflinePlayer player, String path) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(player, path));
-        return string().getPlaceholderStringList(defaultLanguage, player, path);
+        return string().getPlaceholderStringList(defaultLanguage, player, path).stream().map(string -> plsd(path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, player, path));
-        return string().getPlaceholderStringList(getLanguage(locale), player, path);
+        return string().getPlaceholderStringList(language, player, path).stream().map(string -> pls(language, path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(player, path, textReplacements));
-        return string().getPlaceholderStringList(defaultLanguage, player, path, textReplacements);
+        return string().getPlaceholderStringList(defaultLanguage, player, path, textReplacements).stream().map(string -> plsd(path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, player, path, textReplacements));
-        return string().getPlaceholderStringList(getLanguage(locale), player, path, textReplacements);
+        return string().getPlaceholderStringList(language, player, path, textReplacements).stream().map(string -> pls(language, path, string, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable CommandSender sender, String path) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(sender, path));
-        return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path);
+        return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path).stream().map(string -> plsd(path, string, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, sender, path));
-        return string().getPlaceholderStringList(getLanguage(locale), I18n.toPlayer(sender), path);
+        return string().getPlaceholderStringList(language, I18n.toPlayer(sender), path).stream().map(string -> pls(language, path, string, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderString(sender, path, textReplacements));
-        return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
+        return string().getPlaceholderStringList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements).stream().map(string -> plsd(path, string, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderString(locale, sender, path, textReplacements));
-        return string().getPlaceholderStringList(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
+        return string().getPlaceholderStringList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(string -> pls(language, path, string, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public Component getComponent(String path) {
+    public LocalizedComponent getComponent(String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getComponentList(path));
-        return component().getComponent(defaultLanguage, path);
+            return lcd(path, reduceComponent(getComponentList(path)));
+        return lcd(path, component().getComponent(defaultLanguage, path));
     }
 
-    public Component getComponent(@Nullable Locale locale, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getComponentList(locale, path));
-        return component().getComponent(getLanguage(locale), path);
+    public LocalizedComponent getComponent(@Nullable Locale locale, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return lc(language, path, reduceComponent(getComponentList(locale, path)));
+        return lc(language, path, component().getComponent(language, path));
     }
 
-    public Component getComponent(String path, TextReplacement... textReplacements) {
+    public LocalizedComponent getComponent(String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getComponentList(path, textReplacements));
-        return component().getComponent(defaultLanguage, path, textReplacements);
+            return lcd(path, reduceComponent(getComponentList(path, textReplacements)));
+        return lcd(path, component().getComponent(defaultLanguage, path, textReplacements));
     }
 
-    public Component getComponent(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getComponentList(locale, path, textReplacements));
-        return component().getComponent(getLanguage(locale), path, textReplacements);
+    public LocalizedComponent getComponent(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return lc(language, path, reduceComponent(getComponentList(locale, path, textReplacements)));
+        return lc(language, path, component().getComponent(language, path, textReplacements));
     }
 
-    public Component getPlaceholderComponent(@Nullable Player player, String path) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(player, path));
-        return component().getPlaceholderComponent(defaultLanguage, player, path);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(player, path)), player);
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, player, path), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, player, path));
-        return component().getPlaceholderComponent(getLanguage(locale), player, path);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, player, path)), player);
+        return plc(language, path, component().getPlaceholderComponent(language, player, path), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable Player player, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(player, path, textReplacements));
-        return component().getPlaceholderComponent(defaultLanguage, player, path, textReplacements);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(player, path, textReplacements)), player);
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, player, path, textReplacements), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, player, path, textReplacements));
-        return component().getPlaceholderComponent(getLanguage(locale), player, path, textReplacements);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, player, path, textReplacements)), player);
+        return plc(language, path, component().getPlaceholderComponent(language, player, path, textReplacements), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(player, path));
-        return component().getPlaceholderComponent(defaultLanguage, player, path);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(player, path)), player);
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, player, path), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, player, path));
-        return component().getPlaceholderComponent(getLanguage(locale), player, path);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, player, path)), player);
+        return plc(language, path, component().getPlaceholderComponent(language, player, path), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(player, path, textReplacements));
-        return component().getPlaceholderComponent(defaultLanguage, player, path, textReplacements);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(player, path, textReplacements)), player);
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, player, path, textReplacements), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, player, path, textReplacements));
-        return component().getPlaceholderComponent(getLanguage(locale), player, path, textReplacements);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, player, path, textReplacements)), player);
+        return plc(language, path, component().getPlaceholderComponent(language, player, path, textReplacements), player);
     }
 
-    public Component getPlaceholderComponent(@Nullable CommandSender sender, String path) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender, String path) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(sender, path));
-        return component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(sender, path)), I18n.toPlayer(sender));
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path), I18n.toPlayer(sender));
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, sender, path));
-        return component().getPlaceholderComponent(getLanguage(locale), I18n.toPlayer(sender), path);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, sender, path)), I18n.toPlayer(sender));
+        return plc(language, path, component().getPlaceholderComponent(language, I18n.toPlayer(sender), path), I18n.toPlayer(sender));
     }
 
-    public Component getPlaceholderComponent(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
         if (defaultLanguage.getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(sender, path, textReplacements));
-        return component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
+            return plcd(path, reduceComponent(getPlaceholderComponentList(sender, path, textReplacements)), I18n.toPlayer(sender));
+        return plcd(path, component().getPlaceholderComponent(defaultLanguage, I18n.toPlayer(sender), path, textReplacements), I18n.toPlayer(sender));
     }
 
-    public Component getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
-        if (getLanguage(locale).getStrings().isList(path))
-            return reduceComponent(getPlaceholderComponentList(locale, sender, path, textReplacements));
-        return component().getPlaceholderComponent(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
+    public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (language.getStrings().isList(path))
+            return plc(language, path, reduceComponent(getPlaceholderComponentList(locale, sender, path, textReplacements)), I18n.toPlayer(sender));
+        return plc(language, path, component().getPlaceholderComponent(language, I18n.toPlayer(sender), path, textReplacements), I18n.toPlayer(sender));
     }
 
-    public List<Component> getComponentList(String path) {
+    public List<LocalizedComponent> getComponentList(String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getComponent(path));
-        return component().getComponentList(defaultLanguage, path);
+        return component().getComponentList(defaultLanguage, path).stream().map(component -> lcd(path, component)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getComponentList(@Nullable Locale locale, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<LocalizedComponent> getComponentList(@Nullable Locale locale, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getComponent(locale, path));
-        return component().getComponentList(getLanguage(locale), path);
+        return component().getComponentList(language, path).stream().map(component -> lc(language, path, component)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getComponentList(String path, TextReplacement... textReplacements) {
+    public List<LocalizedComponent> getComponentList(String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getComponent(path, textReplacements));
-        return component().getComponentList(defaultLanguage, path, textReplacements);
+        return component().getComponentList(defaultLanguage, path, textReplacements).stream().map(component -> lcd(path, component)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getComponentList(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<LocalizedComponent> getComponentList(@Nullable Locale locale, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getComponent(locale, path, textReplacements));
-        return component().getComponentList(getLanguage(locale), path, textReplacements);
+        return component().getComponentList(language, path, textReplacements).stream().map(component -> lc(language, path, component)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Player player, String path) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(player, path));
-        return component().getPlaceholderComponentList(defaultLanguage, player, path);
+        return component().getPlaceholderComponentList(defaultLanguage, player, path).stream().map(component -> plcd(path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, player, path));
-        return component().getPlaceholderComponentList(getLanguage(locale), player, path);
+        return component().getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Player player, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(player, path, textReplacements));
-        return component().getPlaceholderComponentList(defaultLanguage, player, path, textReplacements);
+        return component().getPlaceholderComponentList(defaultLanguage, player, path, textReplacements).stream().map(component -> plcd(path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable Player player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, player, path, textReplacements));
-        return component().getPlaceholderComponentList(getLanguage(locale), player, path, textReplacements);
+        return component().getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(player, path));
-        return component().getPlaceholderComponentList(defaultLanguage, player, path);
+        return component().getPlaceholderComponentList(defaultLanguage, player, path).stream().map(component -> plcd(path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, player, path));
-        return component().getPlaceholderComponentList(getLanguage(locale), player, path);
+        return component().getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(player, path, textReplacements));
-        return component().getPlaceholderComponentList(defaultLanguage, player, path, textReplacements);
+        return component().getPlaceholderComponentList(defaultLanguage, player, path, textReplacements).stream().map(component -> plcd(path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, player, path, textReplacements));
-        return component().getPlaceholderComponentList(getLanguage(locale), player, path, textReplacements);
+        return component().getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, String path) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(sender, path));
-        return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path);
+        return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path).stream().map(component -> plcd(path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, sender, path));
-        return component().getPlaceholderComponentList(getLanguage(locale), I18n.toPlayer(sender), path);
+        return component().getPlaceholderComponentList(language, I18n.toPlayer(sender), path).stream().map(component -> plc(language, path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
         if (!defaultLanguage.getStrings().isList(path))
             return List.of(getPlaceholderComponent(sender, path, textReplacements));
-        return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements);
+        return component().getPlaceholderComponentList(defaultLanguage, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plcd(path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<Component> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
-        if (!getLanguage(locale).getStrings().isList(path))
+    public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Locale locale, @Nullable CommandSender sender, String path, TextReplacement... textReplacements) {
+        Language language = getLanguage(locale);
+        if (!language.getStrings().isList(path))
             return List.of(getPlaceholderComponent(locale, sender, path, textReplacements));
-        return component().getPlaceholderComponentList(getLanguage(locale), I18n.toPlayer(sender), path, textReplacements);
+        return component().getPlaceholderComponentList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plc(language, path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static String reduceString(Collection<String> stringList)
+    public LocalizedString ls(Language language, String path, String string) {
+        return new LocalizedString(string(), language, path, string);
+    }
+
+    public PlaceholderLocalizedString pls(Language language, String path, String string, @Nullable OfflinePlayer player) {
+        return new PlaceholderLocalizedString(string(), language, path, string, player);
+    }
+
+    public LocalizedString lsd(String path, String string) {
+        return new LocalizedString(string(), defaultLanguage, path, string);
+    }
+
+    public PlaceholderLocalizedString plsd(String path, String string, @Nullable OfflinePlayer player) {
+        return new PlaceholderLocalizedString(string(), defaultLanguage, path, string, player);
+    }
+
+    public LocalizedComponent lc(Language language, String path, Component component) {
+        return new LocalizedComponent(component(), language, path, component);
+    }
+
+    public PlaceholderLocalizedComponent plc(Language language, String path, Component component, @Nullable OfflinePlayer player) {
+        return new PlaceholderLocalizedComponent(component(), language, path, component, player);
+    }
+
+    public LocalizedComponent lcd(String path, Component component) {
+        return new LocalizedComponent(component(), defaultLanguage, path, component);
+    }
+
+    public PlaceholderLocalizedComponent plcd(String path, Component component, @Nullable OfflinePlayer player) {
+        return new PlaceholderLocalizedComponent(component(), defaultLanguage, path, component, player);
+    }
+
+    public static String reduceRawString(Collection<String> stringList)
     {
-        return stringList.stream().reduce(I18n::reduceString).orElse("");
+        return stringList.stream().reduce(I18n::reduceRawString).orElse("");
     }
 
-    public static String reduceString(String s1, String s2)
+    public static String reduceRawString(String s1, String s2)
     {
         return s1 + "\n" + s2;
     }
 
-    public static Component reduceComponent(Collection<Component> componentList)
+    public static Component reduceRawComponent(Collection<Component> componentList)
     {
-        return componentList.stream().reduce(I18n::reduceComponent).orElse(Component.empty());
+        return componentList.stream().reduce(I18n::reduceRawComponent).orElse(Component.empty());
     }
 
-    public static Component reduceComponent(Component c1, Component c2)
+    public static Component reduceRawComponent(Component c1, Component c2)
     {
         return c1.append(Component.newline()).append(c2);
     }
 
-    public static List<String> ofStrings(Collection<String> paths, Function<String, String> operation) {
+    public static <T extends LocalizedString> String reduceString(Collection<T> stringList)
+    {
+        return stringList.stream().map(T::get).reduce(I18n::reduceRawString).orElse("");
+    }
+
+    public static <T extends LocalizedString> String reduceString(T s1, T s2)
+    {
+        return s1.get() + "\n" + s2.get();
+    }
+
+    public static <T extends LocalizedComponent> Component reduceComponent(Collection<T> componentList)
+    {
+        return componentList.stream().map(T::get).reduce(I18n::reduceRawComponent).orElse(Component.empty());
+    }
+
+    public static <T extends LocalizedComponent> Component reduceComponent(T c1, T c2)
+    {
+        return c1.get().append(Component.newline()).append(c2.get());
+    }
+
+    public static List<String> ofRawStrings(Collection<String> paths, Function<String, String> operation) {
         return paths.stream()
                 .map(operation)
                 .toList();
     }
 
-    public static List<Component> ofComponents(Collection<String> paths, Function<String, Component> operation) {
+    public static List<Component> ofRawComponents(Collection<String> paths, Function<String, Component> operation) {
         return paths.stream()
                 .map(operation)
                 .toList();
+    }
+
+    public static List<LocalizedString> ofStrings(Collection<String> paths, Function<String, LocalizedString> operation) {
+        return paths.stream()
+                .map(operation)
+                .toList();
+    }
+
+    public static List<LocalizedComponent> ofComponents(Collection<String> paths, Function<String, LocalizedComponent> operation) {
+        return paths.stream()
+                .map(operation)
+                .toList();
+    }
+
+    public static List<Component> asComponents(Collection<LocalizedComponent> localizedComponents) {
+        return localizedComponents.stream().map(LocalizedComponent::asComponent).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static List<LocalizedComponent> applyComponentReplacements(Collection<LocalizedComponent> localizedComponents, ComponentReplacement... replacements) {
+        return localizedComponents.stream().map(lc -> lc.replace(replacements)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements)

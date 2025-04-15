@@ -1,5 +1,6 @@
 package me.wyne.wutils.i18n.language.interpretation;
 
+import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.PlaceholderAPIWrapper;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
@@ -38,7 +39,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
 
     @Override
     public String getString(Language language, String path, TextReplacement... textReplacements) {
-        return applyTextReplacements(getString(language, path), textReplacements);
+        return I18n.applyTextReplacements(getString(language, path), textReplacements);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     public List<String> getStringList(Language language, String path, TextReplacement... textReplacements) {
         return language.getStrings().getStringList(path).stream()
                 .map(s -> getStringValidator().validateString(language.getLanguageCode(), language.getStrings(), s))
-                .map(s -> applyTextReplacements(s, textReplacements))
+                .map(s -> I18n.applyTextReplacements(s, textReplacements))
                 .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -82,28 +83,28 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -141,7 +142,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getStringList(language, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -149,7 +150,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getStringList(language, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -157,7 +158,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -165,7 +166,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -173,7 +174,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -181,7 +182,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
                 .map(Component::asComponent)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

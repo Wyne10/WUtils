@@ -8,12 +8,15 @@ import ru.vyarus.yaml.updater.YamlUpdater;
 import ru.vyarus.yaml.updater.report.UpdateReport;
 
 import java.io.File;
+import java.util.Locale;
 
 public class BaseLanguage implements Language {
 
     private final Logger log;
 
     private final String languageCode;
+    private final Locale locale;
+
     private final File languageFile;
     private final FileConfiguration strings;
 
@@ -21,6 +24,7 @@ public class BaseLanguage implements Language {
     {
         this.log = log;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
+        this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
     }
@@ -30,6 +34,7 @@ public class BaseLanguage implements Language {
         this.log = log;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
+        this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
     }
@@ -51,6 +56,11 @@ public class BaseLanguage implements Language {
     @Override
     public String getLanguageCode() {
         return languageCode;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return locale;
     }
 
     @Override

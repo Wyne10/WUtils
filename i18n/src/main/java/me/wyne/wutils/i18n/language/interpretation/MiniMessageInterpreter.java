@@ -9,7 +9,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MiniMessageInterpreter extends BaseInterpreter implements ComponentInterpreter {
 
@@ -66,7 +68,7 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
     public List<Component> getComponentList(Language language, String path) {
         return getStringList(language, path).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 /*    @Override
@@ -78,14 +80,14 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
     public List<Component> getComponentList(Language language, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path) {
         return getPlaceholderStringList(language, player, path).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 /*    @Override
@@ -97,14 +99,14 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path) {
         return getPlaceholderStringList(language, player, path).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 /*    @Override
@@ -116,7 +118,7 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> MiniMessage.miniMessage().deserialize(s))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

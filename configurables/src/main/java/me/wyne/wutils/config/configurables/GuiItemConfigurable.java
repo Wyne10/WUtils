@@ -6,6 +6,7 @@ import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.i18n.I18n;
+import me.wyne.wutils.i18n.language.component.LocalizedComponent;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -156,7 +157,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         return Optional.ofNullable(print);
     }
 
-    public Optional<Component> getPrint(@Nullable Player player, TextReplacement... textReplacements) {
+    public Optional<LocalizedComponent> getPrint(@Nullable Player player, TextReplacement... textReplacements) {
         return getPrint().map(printString -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, printString, textReplacements));
     }
 

@@ -5,6 +5,7 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.i18n.I18n;
+import me.wyne.wutils.i18n.language.component.LocalizedComponent;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,7 +52,7 @@ public class ViewConfigurable implements CompositeConfigurable {
         return name;
     }
 
-    public Component getName(@Nullable Player player, TextReplacement... textReplacements) {
+    public LocalizedComponent getName(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name, textReplacements);
     }
 
@@ -59,7 +60,7 @@ public class ViewConfigurable implements CompositeConfigurable {
         return lore;
     }
 
-    public List<Component> getLore(@Nullable Player player, TextReplacement... textReplacements) {
+    public List<LocalizedComponent> getLore(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
     }
 

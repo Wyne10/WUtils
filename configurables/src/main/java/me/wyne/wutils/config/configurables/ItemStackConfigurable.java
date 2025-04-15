@@ -6,6 +6,7 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.i18n.I18n;
+import me.wyne.wutils.i18n.language.component.LocalizedComponent;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -106,8 +107,8 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(getName(player, textReplacements));
-        itemMeta.lore(getLore(player, textReplacements));
+        itemMeta.displayName(getName(player, textReplacements).asComponent());
+        itemMeta.lore(I18n.asComponents(getLore(player, textReplacements)));
         if (model != -1)
             itemMeta.setCustomModelData(model);
         itemMeta.addItemFlags(flags.toArray(ItemFlag[]::new));
@@ -120,14 +121,12 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         return name;
     }
 
-    public Component getName(@Nullable Player player, TextReplacement... textReplacements) {
-        if (name.trim().isEmpty())
-            return Component.empty();
+    public LocalizedComponent getName(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name, textReplacements);
     }
 
     public Component getNameWithLore(@Nullable Player player, TextReplacement... textReplacements) {
-        return getName(player, textReplacements).hoverEvent(HoverEvent.showText(I18n.reduceComponent(getLore(player, textReplacements))));
+        return getName(player, textReplacements).asComponent().hoverEvent(HoverEvent.showText(I18n.reduceComponent(getLore(player, textReplacements))));
     }
 
     public Material getMaterial() {
@@ -146,7 +145,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         return lore;
     }
 
-    public List<Component> getLore(@Nullable Player player, TextReplacement... textReplacements) {
+    public List<LocalizedComponent> getLore(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
     }
 
