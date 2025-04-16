@@ -214,7 +214,7 @@ public class Log {
 
     public boolean log(Level level, String message)
     {
-        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        if (isActive() && levelToConfig.get(level).get())
         {
             logger.log(level, message);
             writeLog(level, message);
@@ -225,7 +225,7 @@ public class Log {
 
     public boolean log(Level level, String message, Throwable t)
     {
-        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        if (isActive() && levelToConfig.get(level).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
             logger.log(level, parameterizedMessage.getFormattedMessage());
@@ -237,7 +237,7 @@ public class Log {
 
     public boolean log(Level level, String message, Object arg)
     {
-        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        if (isActive() && levelToConfig.get(level).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arg);
             logger.log(level, parameterizedMessage.getFormattedMessage());
@@ -249,7 +249,7 @@ public class Log {
 
     public boolean log(Level level, String message, Object... arguments)
     {
-        if (isActive() && levelToConfig.get(level).get() && logger.isLoggable(level))
+        if (isActive() && levelToConfig.get(level).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arguments);
             logger.log(level, parameterizedMessage.getFormattedMessage());
@@ -261,7 +261,7 @@ public class Log {
 
     public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message)
     {
-        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        if (isActive() && levelToConfig.get(checkLevel).get())
         {
             logger.log(logLevel, message);
             writeLog(writeLevel, message);
@@ -272,7 +272,7 @@ public class Log {
 
     public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Throwable t)
     {
-        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        if (isActive() && levelToConfig.get(checkLevel).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
             logger.log(logLevel, parameterizedMessage.getFormattedMessage());
@@ -284,7 +284,7 @@ public class Log {
 
     public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Object arg)
     {
-        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        if (isActive() && levelToConfig.get(checkLevel).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arg);
             logger.log(logLevel, parameterizedMessage.getFormattedMessage());
@@ -296,7 +296,7 @@ public class Log {
 
     public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Object... arguments)
     {
-        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        if (isActive() && levelToConfig.get(checkLevel).get())
         {
             ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arguments);
             logger.log(logLevel, parameterizedMessage.getFormattedMessage());
@@ -308,7 +308,7 @@ public class Log {
 
     public boolean info(String message)
     {
-        if (isActive() && config.logInfo() && logger.isLoggable(Level.INFO))
+        if (isActive() && config.logInfo())
         {
             logger.info(message);
             writeLog(Level.INFO, message);
@@ -319,7 +319,7 @@ public class Log {
 
     public boolean warn(String message)
     {
-        if (isActive() && config.logWarn() && logger.isLoggable(Level.WARNING))
+        if (isActive() && config.logWarn())
         {
             logger.warning(message);
             writeLog(Level.WARNING, message);
@@ -330,7 +330,7 @@ public class Log {
 
     public boolean error(String message)
     {
-        if (isActive() && logger.isLoggable(Level.SEVERE))
+        if (isActive())
         {
             logger.severe(message);
             writeLog(Level.SEVERE, message);
@@ -341,7 +341,7 @@ public class Log {
 
     public boolean debug(String message)
     {
-        if (isActive() && config.logDebug() && logger.isLoggable(Level.FINE))
+        if (isActive() && config.logDebug())
         {
             logger.fine(message);
             writeLog(Level.FINE, message);
@@ -352,7 +352,7 @@ public class Log {
 
     public boolean info(Object message)
     {
-        if (isActive() && config.logInfo() && logger.isLoggable(Level.INFO))
+        if (isActive() && config.logInfo())
         {
             logger.info(message.toString());
             writeLog(Level.INFO, message.toString());
@@ -363,7 +363,7 @@ public class Log {
 
     public boolean warn(Object message)
     {
-        if (isActive() && config.logWarn() && logger.isLoggable(Level.WARNING))
+        if (isActive() && config.logWarn())
         {
             logger.warning(message.toString());
             writeLog(Level.WARNING, message.toString());
@@ -374,7 +374,7 @@ public class Log {
 
     public boolean error(Object message)
     {
-        if (isActive() && logger.isLoggable(Level.SEVERE))
+        if (isActive())
         {
             logger.severe(message.toString());
             writeLog(Level.SEVERE, message.toString());
@@ -385,7 +385,7 @@ public class Log {
 
     public boolean debug(Object message)
     {
-        if (isActive() && config.logDebug() && logger.isLoggable(Level.FINE))
+        if (isActive() && config.logDebug())
         {
             logger.fine(message.toString());
             writeLog(Level.FINE, message.toString());
@@ -396,7 +396,7 @@ public class Log {
 
     public boolean exception(String message, Throwable exception)
     {
-        if (isActive() && logger.isLoggable(Level.SEVERE))
+        if (isActive())
         {
             error(message);
             error(ExceptionUtils.getStackTrace(exception));
@@ -407,7 +407,7 @@ public class Log {
 
     public boolean exception(Throwable exception)
     {
-        if (isActive() && logger.isLoggable(Level.SEVERE))
+        if (isActive())
         {
             error(ExceptionUtils.getStackTrace(exception));
             return true;
