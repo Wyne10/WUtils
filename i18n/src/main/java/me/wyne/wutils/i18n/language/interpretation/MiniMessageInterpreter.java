@@ -125,4 +125,5 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
     public String toString(Component component) {
         return MiniMessage.miniMessage().serialize(component);
     }
+
 }

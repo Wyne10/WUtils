@@ -1,29 +1,21 @@
 package me.wyne.wutils.i18n.language.interpretation;
 
-import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 
+import java.util.function.Function;
+
 public enum ComponentInterpreters {
-    LEGACY(new LegacyInterpreter(new EmptyValidator())),
-    ENHANCED_LEGACY(new EnhancedLegacyInterpreter(new EmptyValidator())),
-    MINI_MESSAGE(new MiniMessageInterpreter(new EmptyValidator()));
+    LEGACY(LegacyInterpreter::new),
+    ENHANCED_LEGACY(EnhancedLegacyInterpreter::new),
+    MINI_MESSAGE(MiniMessageInterpreter::new);
 
-    private final ComponentInterpreter interpreter;
+    private final Function<StringValidator, ComponentInterpreter> factory;
 
-    ComponentInterpreters(ComponentInterpreter interpreter) {
-        this.interpreter = interpreter;
-    }
-
-    public ComponentInterpreter get() {
-        return interpreter;
-    }
-
-    public void setStringValidator(StringValidator validator) {
-        this.interpreter.setStringValidator(validator);
+    ComponentInterpreters(Function<StringValidator, ComponentInterpreter> factory) {
+        this.factory = factory;
     }
 
     public ComponentInterpreter get(StringValidator validator) {
-        setStringValidator(validator);
-        return this.interpreter;
+        return factory.apply(validator);
     }
 }

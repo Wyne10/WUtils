@@ -6,7 +6,6 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import me.wyne.wutils.i18n.language.validation.StringValidator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -99,8 +98,4 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    @Override
-    public String toString(Component component) {
-        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
-    }
 }
