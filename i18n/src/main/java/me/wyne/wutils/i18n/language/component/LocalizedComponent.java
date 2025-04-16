@@ -6,6 +6,7 @@ import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -107,6 +108,11 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
 
     public BaseComponent[] bungee() {
         return BungeeComponentSerializer.get().serialize(component);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public Object minecraft() {
+        return MinecraftComponentSerializer.get().serialize(component);
     }
 
     @Override
