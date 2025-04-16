@@ -343,7 +343,7 @@ public class Log {
     {
         if (isActive() && config.logDebug())
         {
-            logger.fine(message);
+            logger.info(message);
             writeLog(Level.FINE, message);
             return true;
         }
@@ -387,7 +387,7 @@ public class Log {
     {
         if (isActive() && config.logDebug())
         {
-            logger.fine(message.toString());
+            logger.info(message.toString());
             writeLog(Level.FINE, message.toString());
             return true;
         }
