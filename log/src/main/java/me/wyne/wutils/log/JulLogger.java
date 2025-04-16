@@ -17,7 +17,7 @@ public class JulLogger implements Logger {
     }
 
     private boolean isLoggable(Level level) {
-        return julLogger.getLogger().isLoggable(level) && julLogger.isLoggable(level);
+        return julLogger.isLoggable(level);
     }
 
     @Override
@@ -32,27 +32,27 @@ public class JulLogger implements Logger {
 
     @Override
     public void trace(String msg) {
-        julLogger.debug(msg);
+        julLogger.info(msg);
     }
 
     @Override
     public void trace(String format, Object arg) {
-        julLogger.log(Level.FINEST, format, arg);
+        julLogger.log(Level.INFO, format, arg);
     }
 
     @Override
     public void trace(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.FINEST, format, arg1, arg2);
+        julLogger.log(Level.INFO, format, arg1, arg2);
     }
 
     @Override
     public void trace(String format, Object... arguments) {
-        julLogger.log(Level.FINEST, format, arguments);
+        julLogger.log(Level.INFO, format, arguments);
     }
 
     @Override
     public void trace(String msg, Throwable t) {
-        julLogger.log(Level.FINEST, msg, t);
+        julLogger.log(Level.INFO, msg, t);
     }
 
     @Override
@@ -92,27 +92,27 @@ public class JulLogger implements Logger {
 
     @Override
     public void debug(String msg) {
-        julLogger.log(Level.FINE, msg);
+        julLogger.log(Level.INFO, msg);
     }
 
     @Override
     public void debug(String format, Object arg) {
-        julLogger.log(Level.FINE, format, arg);
+        julLogger.log(Level.INFO, format, arg);
     }
 
     @Override
     public void debug(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.FINE, format, arg1, arg2);
+        julLogger.log(Level.INFO, format, arg1, arg2);
     }
 
     @Override
     public void debug(String format, Object... arguments) {
-        julLogger.log(Level.FINE, format, arguments);
+        julLogger.log(Level.INFO, format, arguments);
     }
 
     @Override
     public void debug(String msg, Throwable t) {
-        julLogger.log(Level.FINE, msg, t);
+        julLogger.log(Level.INFO, msg, t);
     }
 
     @Override
