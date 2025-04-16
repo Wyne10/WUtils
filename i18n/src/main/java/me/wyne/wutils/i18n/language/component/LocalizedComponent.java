@@ -8,6 +8,13 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +82,36 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     @Override
     public Component get() {
         return component;
+    }
+
+    public String legacy() {
+        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+    }
+
+    public String gson() {
+        return GsonComponentSerializer.gson().serialize(component);
+    }
+
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    public String plain() {
+        return PlainComponentSerializer.plain().serialize(component);
+    }
+
+    public String plainText() {
+        return PlainTextComponentSerializer.plainText().serialize(component);
+    }
+
+    public String miniMessage() {
+        return MiniMessage.miniMessage().serialize(component);
+    }
+
+    public BaseComponent[] bungee() {
+        return BungeeComponentSerializer.get().serialize(component);
+    }
+
+    @Override
+    public String toString() {
+        return I18n.global.component().toString(component);
     }
 
     public LocalizedComponent replace(ComponentReplacement... componentReplacements) {
