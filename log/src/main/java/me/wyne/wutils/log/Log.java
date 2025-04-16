@@ -259,6 +259,53 @@ public class Log {
         return false;
     }
 
+    public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message)
+    {
+        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        {
+            logger.log(logLevel, message);
+            writeLog(writeLevel, message);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Throwable t)
+    {
+        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
+            logger.log(logLevel, parameterizedMessage.getFormattedMessage());
+            writeLog(writeLevel, parameterizedMessage.getFormattedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Object arg)
+    {
+        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arg);
+            logger.log(logLevel, parameterizedMessage.getFormattedMessage());
+            writeLog(writeLevel, parameterizedMessage.getFormattedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean log(Level checkLevel, Level logLevel, Level writeLevel, String message, Object... arguments)
+    {
+        if (isActive() && levelToConfig.get(checkLevel).get() && logger.isLoggable(checkLevel))
+        {
+            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, arguments);
+            logger.log(logLevel, parameterizedMessage.getFormattedMessage());
+            writeLog(writeLevel, parameterizedMessage.getFormattedMessage());
+            return true;
+        }
+        return false;
+    }
+
     public boolean info(String message)
     {
         if (isActive() && config.logInfo() && logger.isLoggable(Level.INFO))
