@@ -17,10 +17,6 @@ public class AnnotationStep implements PluginStep {
 
     @Override
     public void run(JavaPlugin plugin) {
-        if (method.getParameterCount() != 1 || !JavaPlugin.class.isAssignableFrom(method.getParameterTypes()[0])) {
-            throw new IllegalArgumentException("Method " + method.getName() + " must have one JavaPlugin parameter");
-        }
-
         method.setAccessible(true);
         try {
             method.invoke(plugin, plugin);
