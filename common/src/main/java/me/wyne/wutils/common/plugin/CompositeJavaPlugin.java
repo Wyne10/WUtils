@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 public abstract class CompositeJavaPlugin extends JavaPlugin {
 
-    private final Set<PluginStep> loadingSteps = new TreeSet<>(Comparator.comparing(PluginStep::getPriority));
+    private final Set<PluginStep> steps = new TreeSet<>(Comparator.comparing(PluginStep::getPriority));
 
     private void loadAnnotations() {
         for (Method method : getClass().getDeclaredMethods()) {
@@ -43,15 +43,15 @@ public abstract class CompositeJavaPlugin extends JavaPlugin {
     }
 
     public void addStep(PluginStep step) {
-        loadingSteps.add(step);
+        steps.add(step);
     }
 
     public void addSteps(PluginStep... steps) {
-        loadingSteps.addAll(List.of(steps));
+        this.steps.addAll(List.of(steps));
     }
 
     private void runSteps(StepScope scope) {
-        loadingSteps.stream()
+        steps.stream()
                 .filter(step -> step.getScope() == scope)
                 .forEachOrdered(step -> step.run(this));
     }
