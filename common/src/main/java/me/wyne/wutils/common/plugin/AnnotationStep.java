@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class AnnotationStep implements PluginStep {
+public class AnnotationStep<T extends JavaPlugin> implements PluginStep<T> {
 
     private final Method method;
     private final Step annotation;
@@ -16,7 +16,7 @@ public class AnnotationStep implements PluginStep {
     }
 
     @Override
-    public void run(JavaPlugin plugin) {
+    public void run(T plugin) {
         method.setAccessible(true);
         try {
             method.invoke(plugin);

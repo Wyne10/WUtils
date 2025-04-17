@@ -18,7 +18,7 @@ dependencies {
     compileOnly(project(':WUtils-json'))
 }
 
-version = '1.2.8'
+version = '1.2.9'
 
 publishing {
     publications {
