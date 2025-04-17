@@ -1,327 +1,363 @@
 package me.wyne.wutils.log;
 
-import org.slf4j.Marker;
 import org.slf4j.Logger;
-
-import java.util.logging.Level;
+import org.slf4j.Marker;
 
 /**
- * Slf4j wrapper of deprecated {@link Log} that will be used if server doesn't support log4j
+ * Slf4j wrapper of log4j logger that makes debug and trace logs go to info level
  */
-public class JulLogger implements Logger {
+public class Log4jLogger implements Logger {
 
-    private final Log julLogger;
+    private final Logger parent;
 
-    public JulLogger(Log logger) {
-        this.julLogger = logger;
-    }
-
-    private boolean isLoggable(Level level) {
-        return julLogger.isLoggable(level);
+    public Log4jLogger(Logger logger) {
+        this.parent = logger;
     }
 
     @Override
     public String getName() {
-        return julLogger.getLogger().getName();
+        return parent.getName();
     }
 
     @Override
     public boolean isTraceEnabled() {
-        return isLoggable(Level.FINEST);
+        return parent.isTraceEnabled();
     }
 
     @Override
     public void trace(String msg) {
-        julLogger.log(Level.FINEST, Level.INFO, Level.FINEST, msg);
+        if (!isTraceEnabled())
+            return;
+        parent.info(msg);
     }
 
     @Override
     public void trace(String format, Object arg) {
-        julLogger.log(Level.FINEST, Level.INFO, Level.FINEST, format, arg);
+        if (!isTraceEnabled())
+            return;
+        parent.info(format, arg);
     }
 
     @Override
     public void trace(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.FINEST, Level.INFO, Level.FINEST, format, arg1, arg2);
+        if (!isTraceEnabled())
+            return;
+        parent.info(format, arg1, arg2);
     }
 
     @Override
     public void trace(String format, Object... arguments) {
-        julLogger.log(Level.FINEST, Level.INFO, Level.FINEST, format, arguments);
+        if (!isTraceEnabled())
+            return;
+        parent.info(format, arguments);
     }
 
     @Override
     public void trace(String msg, Throwable t) {
-        julLogger.log(Level.FINEST, Level.INFO, Level.FINEST, msg, t);
+        if (!isTraceEnabled())
+            return;
+        parent.info(msg, t);
     }
 
     @Override
     public boolean isTraceEnabled(Marker marker) {
-        return isTraceEnabled();
+        return parent.isTraceEnabled(marker);
     }
 
     @Override
     public void trace(Marker marker, String msg) {
-        trace(msg);
+        if (!isTraceEnabled(marker))
+            return;
+        parent.info(marker, msg);
     }
 
     @Override
     public void trace(Marker marker, String format, Object arg) {
-        trace(format, arg);
+        if (!isTraceEnabled(marker))
+            return;
+        parent.info(marker, format, arg);
     }
 
     @Override
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        trace(format, arg1, arg2);
+        if (!isTraceEnabled(marker))
+            return;
+        parent.info(marker, format, arg1, arg2);
     }
 
     @Override
     public void trace(Marker marker, String format, Object... arguments) {
-        trace(format, arguments);
+        if (!isTraceEnabled(marker))
+            return;
+        parent.info(marker, format, arguments);
     }
 
     @Override
     public void trace(Marker marker, String msg, Throwable t) {
-        trace(msg, t);
+        if (!isTraceEnabled(marker))
+            return;
+        parent.info(marker, msg, t);
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return isLoggable(Level.FINE);
+        return parent.isDebugEnabled();
     }
 
     @Override
     public void debug(String msg) {
-        julLogger.log(Level.FINE, Level.INFO, Level.FINE, msg);
+        if (!isDebugEnabled())
+            return;
+        parent.info(msg);
     }
 
     @Override
     public void debug(String format, Object arg) {
-        julLogger.log(Level.FINE, Level.INFO, Level.FINE, format, arg);
+        if (!isDebugEnabled())
+            return;
+        parent.info(format, arg);
     }
 
     @Override
     public void debug(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.FINE, Level.INFO, Level.FINE, format, arg1, arg2);
+        if (!isDebugEnabled())
+            return;
+        parent.info(format, arg1, arg2);
     }
 
     @Override
     public void debug(String format, Object... arguments) {
-        julLogger.log(Level.FINE, Level.INFO, Level.FINE, format, arguments);
+        if (!isDebugEnabled())
+            return;
+        parent.info(format, arguments);
     }
 
     @Override
     public void debug(String msg, Throwable t) {
-        julLogger.log(Level.FINE, Level.INFO, Level.FINE, msg, t);
+        if (!isDebugEnabled())
+            return;
+        parent.info(msg, t);
     }
 
     @Override
     public boolean isDebugEnabled(Marker marker) {
-        return isDebugEnabled();
+        return parent.isDebugEnabled(marker);
     }
 
     @Override
     public void debug(Marker marker, String msg) {
-        debug(msg);
+        if (!isDebugEnabled(marker))
+            return;
+        parent.info(marker, msg);
     }
 
     @Override
     public void debug(Marker marker, String format, Object arg) {
-        debug(format, arg);
+        if (!isDebugEnabled(marker))
+            return;
+        parent.info(marker, format, arg);
     }
 
     @Override
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
-        debug(format, arg1, arg2);
+        if (!isDebugEnabled(marker))
+            return;
+        parent.info(marker, format, arg1, arg2);
     }
 
     @Override
     public void debug(Marker marker, String format, Object... arguments) {
-        debug(format, arguments);
+        if (!isDebugEnabled(marker))
+            return;
+        parent.info(marker, format, arguments);
     }
 
     @Override
     public void debug(Marker marker, String msg, Throwable t) {
-        debug(msg, t);
+        if (!isDebugEnabled(marker))
+            return;
+        parent.info(marker, msg, t);
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return isLoggable(Level.INFO);
+        return parent.isInfoEnabled();
     }
 
     @Override
     public void info(String msg) {
-        julLogger.log(Level.INFO, msg);
+        parent.info(msg);
     }
 
     @Override
     public void info(String format, Object arg) {
-        julLogger.log(Level.INFO, format, arg);
+        parent.info(format, arg);
     }
 
     @Override
     public void info(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.INFO, format, arg1, arg2);
+        parent.info(format, arg1, arg2);
     }
 
     @Override
     public void info(String format, Object... arguments) {
-        julLogger.log(Level.INFO, format, arguments);
+        parent.info(format, arguments);
     }
 
     @Override
     public void info(String msg, Throwable t) {
-        julLogger.log(Level.INFO, msg, t);
+        parent.info(msg, t);
     }
 
     @Override
     public boolean isInfoEnabled(Marker marker) {
-        return isInfoEnabled();
+        return parent.isInfoEnabled(marker);
     }
 
     @Override
     public void info(Marker marker, String msg) {
-        info(msg);
+        parent.info(marker, msg);
     }
 
     @Override
     public void info(Marker marker, String format, Object arg) {
-        info(format, arg);
+        parent.info(marker, format, arg);
     }
 
     @Override
     public void info(Marker marker, String format, Object arg1, Object arg2) {
-        info(format, arg1, arg2);
+        parent.info(marker, format, arg1, arg2);
     }
 
     @Override
     public void info(Marker marker, String format, Object... arguments) {
-        info(format, arguments);
+        parent.info(marker, format, arguments);
     }
 
     @Override
     public void info(Marker marker, String msg, Throwable t) {
-        info(msg, t);
+        parent.info(marker, msg, t);
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return isLoggable(Level.WARNING);
+        return parent.isWarnEnabled();
     }
 
     @Override
     public void warn(String msg) {
-        julLogger.log(Level.WARNING, msg);
+        parent.warn(msg);
     }
 
     @Override
     public void warn(String format, Object arg) {
-        julLogger.log(Level.WARNING, format, arg);
+        parent.warn(format, arg);
     }
 
     @Override
     public void warn(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.WARNING, format, arg1, arg2);
+        parent.warn(format, arg1, arg2);
     }
 
     @Override
     public void warn(String format, Object... arguments) {
-        julLogger.log(Level.WARNING, format, arguments);
+        parent.warn(format, arguments);
     }
 
     @Override
     public void warn(String msg, Throwable t) {
-        julLogger.log(Level.WARNING, msg, t);
+        parent.warn(msg, t);
     }
 
     @Override
     public boolean isWarnEnabled(Marker marker) {
-        return isWarnEnabled();
+        return parent.isWarnEnabled(marker);
     }
 
     @Override
     public void warn(Marker marker, String msg) {
-        warn(msg);
+        parent.warn(marker, msg);
     }
 
     @Override
     public void warn(Marker marker, String format, Object arg) {
-        warn(format, arg);
+        parent.warn(marker, format, arg);
     }
 
     @Override
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
-        warn(format, arg1, arg2);
+        parent.warn(marker, format, arg1, arg2);
     }
 
     @Override
     public void warn(Marker marker, String format, Object... arguments) {
-        warn(format, arguments);
+        parent.warn(marker, format, arguments);
     }
 
     @Override
     public void warn(Marker marker, String msg, Throwable t) {
-        warn(msg, t);
+        parent.warn(marker, msg, t);
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return isLoggable(Level.SEVERE);
+        return parent.isErrorEnabled();
     }
 
     @Override
     public void error(String msg) {
-        julLogger.log(Level.SEVERE, msg);
+        parent.error(msg);
     }
 
     @Override
     public void error(String format, Object arg) {
-        julLogger.log(Level.SEVERE, format, arg);
+        parent.error(format, arg);
     }
 
     @Override
     public void error(String format, Object arg1, Object arg2) {
-        julLogger.log(Level.SEVERE, format, arg1, arg2);
+        parent.error(format, arg1, arg2);
     }
 
     @Override
     public void error(String format, Object... arguments) {
-        julLogger.log(Level.SEVERE, format, arguments);
+        parent.error(format, arguments);
     }
 
     @Override
     public void error(String msg, Throwable t) {
-        julLogger.log(Level.SEVERE, msg, t);
+        parent.error(msg, t);
     }
 
     @Override
     public boolean isErrorEnabled(Marker marker) {
-        return isErrorEnabled();
+        return parent.isErrorEnabled(marker);
     }
 
     @Override
     public void error(Marker marker, String msg) {
-        error(msg);
+        parent.error(marker, msg);
     }
 
     @Override
     public void error(Marker marker, String format, Object arg) {
-        error(format, arg);
+        parent.error(marker, format, arg);
     }
 
     @Override
     public void error(Marker marker, String format, Object arg1, Object arg2) {
-        error(format, arg1, arg2);
+        parent.error(marker, format, arg1, arg2);
     }
 
     @Override
     public void error(Marker marker, String format, Object... arguments) {
-        error(format, arguments);
+        parent.error(marker, format, arguments);
     }
 
     @Override
     public void error(Marker marker, String msg, Throwable t) {
-        error(msg, t);
+        parent.error(marker, msg, t);
     }
+
 }
+

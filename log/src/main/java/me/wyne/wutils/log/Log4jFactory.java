@@ -271,7 +271,7 @@ public final class Log4jFactory {
             config.addLogger(plugin.getLogger().getName(), loggerConfig);
             context.updateLoggers();
 
-            existingLoggers.putIfAbsent(plugin.getClass(), LoggerFactory.getLogger(plugin.getLogger().getName()));
+            existingLoggers.putIfAbsent(plugin.getClass(), new Log4jLogger(LoggerFactory.getLogger(plugin.getLogger().getName())));
         } catch (NoSuchMethodError ignored) {
             existingLoggers.putIfAbsent(plugin.getClass(), new JulLogger(fallback));
         }
