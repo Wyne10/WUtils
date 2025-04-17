@@ -19,7 +19,7 @@ public class AnnotationStep implements PluginStep {
     public void run(JavaPlugin plugin) {
         method.setAccessible(true);
         try {
-            method.invoke(plugin, plugin);
+            method.invoke(plugin);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to invoke composite plugin step: " + method.getName(), e);
         }
