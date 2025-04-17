@@ -33,11 +33,11 @@ public class CompositeStep implements PluginStep {
         this.steps.addAll(List.of(steps));
     }
 
-    public void thisRun() {}
+    public void thisRun(JavaPlugin plugin) {}
 
     @Override
     public final void run(JavaPlugin plugin) {
-        thisRun();
+        thisRun(plugin);
         steps.forEach(step -> step.run(plugin));
     }
 
