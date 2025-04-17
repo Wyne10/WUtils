@@ -1,6 +1,12 @@
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
+
 rootProject.name = 'WUtils'
+
 include(':WUtils-config')
 include(':WUtils-i18n')
+include(':WUtils-i18n-kotlin')
 include(':WUtils-log')
 include(':WUtils-configLogBridge')
 include(':WUtils-configurables')
@@ -9,6 +15,7 @@ include(':WUtils-jdbc')
 include(':WUtils-json')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-i18n").projectDir = file('i18n')
+project(":WUtils-i18n-kotlin").projectDir = file('i18nKt')
 project(":WUtils-log").projectDir = file('log')
 project(":WUtils-configLogBridge").projectDir = file('configLogBridge')
 project(":WUtils-configurables").projectDir = file('configurables')

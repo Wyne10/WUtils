@@ -117,7 +117,7 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
 
     @Override
     public String toString() {
-        return I18n.global.component().toString(component);
+        return getInterpreter().toString(component);
     }
 
     public LocalizedComponent replace(ComponentReplacement... componentReplacements) {
