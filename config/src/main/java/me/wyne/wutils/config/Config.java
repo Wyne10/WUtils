@@ -4,6 +4,7 @@ import me.wyne.wutils.config.configurable.Configurable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javatuples.Pair;
@@ -70,7 +71,7 @@ public class Config implements ConfigFieldRegistry {
         registeredConfigFields.get(section).add(field);
     }
 
-    public void reloadConfig(FileConfiguration config) {
+    public void reloadConfig(ConfigurationSection config) {
         registeredConfigFields.values()
                 .stream()
                 .flatMap(Collection::stream)
@@ -90,7 +91,7 @@ public class Config implements ConfigFieldRegistry {
         log.info("Reloaded WUtils config");
     }
 
-    public void loadConfig(FileConfiguration config, Object object) {
+    public void loadConfig(ConfigurationSection config, Object object) {
         registeredConfigFields.values()
                 .stream()
                 .flatMap(Collection::stream)
