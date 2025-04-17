@@ -107,8 +107,8 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(getName(player, textReplacements).asComponent());
-        itemMeta.lore(I18n.asComponents(getLore(player, textReplacements)));
+        itemMeta.setDisplayNameComponent(getName(player, textReplacements).bungee());
+        itemMeta.setLoreComponents(getLore(player, textReplacements).stream().map(LocalizedComponent::bungee).toList());
         if (model != -1)
             itemMeta.setCustomModelData(model);
         itemMeta.addItemFlags(flags.toArray(ItemFlag[]::new));

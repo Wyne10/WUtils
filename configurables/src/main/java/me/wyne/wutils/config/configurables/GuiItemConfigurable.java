@@ -9,7 +9,6 @@ import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.component.LocalizedComponent;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -119,7 +118,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     {
         return ItemBuilder.from(build(textReplacements))
                 .asGuiItem(event -> {
-                    getPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getPrint(null, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
@@ -129,7 +128,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         return ItemBuilder.from(build(textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);
-                    getPrint(null, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getPrint(null, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
@@ -138,7 +137,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     {
         return ItemBuilder.from(build(player, textReplacements))
                 .asGuiItem(event -> {
-                    getPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getPrint(player, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
@@ -148,7 +147,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         return ItemBuilder.from(build(player, textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);
-                    getPrint(player, textReplacements).ifPresent(print -> event.getWhoClicked().sendMessage(print));
+                    getPrint(player, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
                     getSound().ifPresent(sound -> event.getWhoClicked().playSound(sound));
                 });
     }
