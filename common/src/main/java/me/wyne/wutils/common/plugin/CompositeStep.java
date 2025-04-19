@@ -20,8 +20,8 @@ public class CompositeStep<T extends JavaPlugin> implements PluginStep<T> {
     }
 
     public CompositeStep(PluginStep<T>... steps) {
-        this.scope = getScope();
-        this.priority = getPriority();
+        this.scope = PluginStep.super.getScope();
+        this.priority = PluginStep.super.getPriority();
         this.steps.addAll(List.of(steps));
     }
 
