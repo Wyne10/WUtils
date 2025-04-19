@@ -3,13 +3,13 @@ package me.wyne.wutils.common.plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class CompositeStep<T extends JavaPlugin> implements PluginStep<T> {
 
-    private final Set<PluginStep<T>> steps = new TreeSet<>(Comparator.comparing(PluginStep::getPriority));
+    private final Set<PluginStep<T>> steps = new LinkedHashSet<>();
     private final StepScope scope;
     private final int priority;
 
@@ -39,7 +39,9 @@ public class CompositeStep<T extends JavaPlugin> implements PluginStep<T> {
     @Override
     public final void run(T plugin) {
         before(plugin);
-        steps.forEach(step -> step.run(plugin));
+        steps.stream()
+                .sorted(Comparator.comparingInt(PluginStep::getPriority))
+                .forEachOrdered(step -> step.run(plugin));
         after(plugin);
     }
 

@@ -4,13 +4,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 public abstract class CompositeJavaPlugin<T extends JavaPlugin> extends JavaPlugin {
 
-    private final Set<PluginStep<T>> steps = new TreeSet<>(Comparator.comparing(PluginStep::getPriority));
+    private final Set<PluginStep<T>> steps = new LinkedHashSet<>();
 
     private void loadAnnotations() {
         for (Method method : getClass().getDeclaredMethods()) {
@@ -47,12 +46,13 @@ public abstract class CompositeJavaPlugin<T extends JavaPlugin> extends JavaPlug
     }
 
     public void addSteps(PluginStep<T>... steps) {
-        this.steps.addAll(List.of(steps));
+        this.steps.addAll(Set.of(steps));
     }
 
     private void runSteps(StepScope scope) {
         steps.stream()
                 .filter(step -> step.getScope() == scope)
+                .sorted(Comparator.comparingInt(PluginStep::getPriority))
                 .forEachOrdered(step -> step.run((T) this));
     }
 
