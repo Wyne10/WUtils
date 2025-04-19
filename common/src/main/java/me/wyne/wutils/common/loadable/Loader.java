@@ -2,7 +2,10 @@ package me.wyne.wutils.common.loadable;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Loader {
 
@@ -11,7 +14,7 @@ public class Loader {
     public static final Loader global = new Loader();
 
     private final Map<String, ConfigurationSection> configMap = new HashMap<>();
-    private final Map<Loadable, String> loadableMap = new TreeMap<>(Comparator.comparingInt(Loadable::getPriority));
+    private final Map<Loadable, String> loadableMap = new LinkedHashMap<>();
 
     public void registerLoadable(Loadable loadable) {
         loadableMap.put(loadable, loadable.getPath());
@@ -22,10 +25,12 @@ public class Loader {
     }
 
     public void load() {
-        loadableMap.forEach((loadable, path) -> {
-            if (configMap.containsKey(path))
-                loadable.load(configMap.get(path));
-        });
+        loadableMap.entrySet().stream()
+                .sorted(Comparator.comparingInt(entry -> entry.getKey().getPriority()))
+                .forEachOrdered(entry -> {
+                    if (configMap.containsKey(entry.getValue()))
+                        entry.getKey().load(configMap.get(entry.getValue()));
+                });
     }
 
 }
