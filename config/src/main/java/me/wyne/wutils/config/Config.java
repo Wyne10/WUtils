@@ -43,7 +43,7 @@ public class Config implements ConfigFieldRegistry {
 
     public void setConfigGenerator(JavaPlugin plugin, String configPath)
     {
-        File defaultConfig = new File(plugin.getDataFolder(), "defaults/config.yml");
+        File defaultConfig = new File(plugin.getDataFolder(), "defaults/" + configPath);
         try {
             Files.copy(plugin.getResource(configPath), defaultConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
