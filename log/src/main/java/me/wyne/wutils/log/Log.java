@@ -438,7 +438,7 @@ public class Log {
 
             String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: [" + logger.getName() + "] " + log;
 
-            String logFileName = LocalDate.now() + ".txt";
+            String logFileName = LocalDate.now() + ".log";
             File logFile = cachedFiles.getOrDefault(logFileName, new File(logDirectory, logFileName));
             cachedFiles.putIfAbsent(logFileName, logFile);
 
