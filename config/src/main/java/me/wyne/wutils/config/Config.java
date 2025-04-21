@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
@@ -43,9 +43,13 @@ public class Config implements ConfigFieldRegistry {
 
     public void setConfigGenerator(JavaPlugin plugin, String configPath)
     {
+        Path defaultConfigPath = Path.of(plugin.getDataFolder().getAbsolutePath(), "defaults/", configPath);
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/" + configPath);
         try {
-            Files.copy(plugin.getResource(configPath), defaultConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.createDirectories(defaultConfigPath.getParent());
+            if (!defaultConfig.exists())
+                defaultConfig.createNewFile();
+            Files.copy(plugin.getResource(configPath), defaultConfigPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("An exception occurred trying to load default config for WUtils config", e);
         }

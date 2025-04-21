@@ -60,16 +60,17 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
-            YamlUpdater.create(configFile, defaultConfigFile)
-                    .backup(backup)
-                    .backupDir(new File(configFile.getParentFile(), "backups"))
-                    .vars(replaceVars)
-                    .deleteProps(deleteProps)
-                    .update();
             log.info("Generated WUtils config");
         } catch (IOException e) {
             log.error("An exception occurred trying to write WUtils config", e);
         }
+
+        YamlUpdater.create(configFile, defaultConfigFile)
+                .backup(backup)
+                .backupDir(new File(configFile.getParentFile(), "backups"))
+                .vars(replaceVars)
+                .deleteProps(deleteProps)
+                .update();
     }
 
 }
