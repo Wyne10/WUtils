@@ -7,13 +7,21 @@ import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedComponent
 import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedString
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement
 import me.wyne.wutils.i18n.language.replacement.TextReplacement
+import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-fun Player.localizedString(path: String): LocalizedString = 
+fun Player.localizedString(path: String): LocalizedString =
     I18n.global.getString(this.locale(), path)
 
 fun Player.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
@@ -195,3 +203,49 @@ val CommandSender.player
 
 val CommandSender.locale
     get() = this.player?.locale()
+
+val Component.legacy
+    get() = LegacyComponentSerializer.legacyAmpersand().serialize(this)
+
+val Component.gson
+    get() = GsonComponentSerializer.gson().serialize(this)
+
+@Suppress("DEPRECATION", "UnstableApiUsage")
+val Component.plain
+    get() = PlainComponentSerializer.plain().serialize(this)
+
+val Component.plainText
+    get() = PlainTextComponentSerializer.plainText().serialize(this)
+
+val Component.miniMessage
+    get() = MiniMessage.miniMessage().serialize(this)
+
+val Component.bungee
+    get() = BungeeComponentSerializer.get().serialize(this)
+
+@Suppress("UnstableApiUsage")
+val Component.minecraft
+    get() = MinecraftComponentSerializer.get().serialize(this)
+
+val String.legacy
+    get() = LegacyComponentSerializer.legacyAmpersand().deserialize(this)
+
+val String.gson
+    get() = GsonComponentSerializer.gson().deserialize(this)
+
+@Suppress("DEPRECATION", "UnstableApiUsage")
+val String.plain
+    get() = PlainComponentSerializer.plain().deserialize(this)
+
+val String.plainText
+    get() = PlainTextComponentSerializer.plainText().deserialize(this)
+
+val String.miniMessage
+    get() = MiniMessage.miniMessage().deserialize(this)
+
+val Array<BaseComponent>.component
+    get() = BungeeComponentSerializer.get().deserialize(this)
+
+@Suppress("UnstableApiUsage")
+val Any.component
+    get() = MinecraftComponentSerializer.get().deserialize(this)
