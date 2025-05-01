@@ -5,6 +5,7 @@ import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public class Placeholder {
@@ -29,7 +30,13 @@ public class Placeholder {
         return string -> string.replaceAll("<"+key+">", interpreter.toString(value));
     }
 
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     public static TextReplacement plain(String key, Component value)
+    {
+        return string -> string.replaceAll("<"+key+">", PlainComponentSerializer.plain().serialize(value));
+    }
+
+    public static TextReplacement plainText(String key, Component value)
     {
         return string -> string.replaceAll("<"+key+">", PlainTextComponentSerializer.plainText().serialize(value));
     }
