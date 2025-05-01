@@ -60,6 +60,6 @@ infix fun Pattern.regexComponent(value: Component): ComponentReplacement =
 infix fun Pattern.regexComponent(value: Array<BaseComponent>): ComponentReplacement =
     ComponentPlaceholder.regex(this, value)
 
-infix fun Replacement<*>.then(replacement: Replacement<*>): Replacement<*> =
+infix fun <T : Replacement<*>> T.then(replacement: T): T =
     this.then(replacement)
 
