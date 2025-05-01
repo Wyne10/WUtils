@@ -61,6 +61,6 @@ infix fun Pattern.regexComponent(value: Array<BaseComponent>): ComponentReplacem
     ComponentPlaceholder.regex(this, value)
 
 @Suppress("UNCHECKED_CAST")
-infix fun <T : Replacement<Any>> T.and(replacement: T): T =
-    this.then(replacement) as T
+infix fun <T> Replacement<T>.andThen(replacement: Replacement<T>): Replacement<T> =
+    this.then(replacement)
 
