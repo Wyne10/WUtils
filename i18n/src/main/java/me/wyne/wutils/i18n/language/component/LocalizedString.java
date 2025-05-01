@@ -23,4 +23,9 @@ public class LocalizedString extends BaseLocalized<String, StringInterpreter> {
         return string;
     }
 
+    @Override
+    public String toString() {
+        return string;
+    }
+
 }
