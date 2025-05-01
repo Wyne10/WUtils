@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n.kotlin
 import me.wyne.wutils.i18n.language.replacement.ComponentPlaceholder
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement
 import me.wyne.wutils.i18n.language.replacement.Placeholder
+import me.wyne.wutils.i18n.language.replacement.Replacement
 import me.wyne.wutils.i18n.language.replacement.TextReplacement
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.chat.BaseComponent
@@ -58,4 +59,7 @@ infix fun Pattern.regexComponent(value: Component): ComponentReplacement =
 
 infix fun Pattern.regexComponent(value: Array<BaseComponent>): ComponentReplacement =
     ComponentPlaceholder.regex(this, value)
+
+infix fun Replacement<*>.then(replacement: Replacement<*>): Replacement<*> =
+    this.then(replacement)
 
