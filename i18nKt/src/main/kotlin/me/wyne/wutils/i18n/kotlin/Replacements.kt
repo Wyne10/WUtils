@@ -3,7 +3,6 @@ package me.wyne.wutils.i18n.kotlin
 import me.wyne.wutils.i18n.language.replacement.ComponentPlaceholder
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement
 import me.wyne.wutils.i18n.language.replacement.Placeholder
-import me.wyne.wutils.i18n.language.replacement.Replacement
 import me.wyne.wutils.i18n.language.replacement.TextReplacement
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.chat.BaseComponent
@@ -60,7 +59,11 @@ infix fun Pattern.regexComponent(value: Component): ComponentReplacement =
 infix fun Pattern.regexComponent(value: Array<BaseComponent>): ComponentReplacement =
     ComponentPlaceholder.regex(this, value)
 
-@Suppress("UNCHECKED_CAST")
-infix fun <T> Replacement<T>.andThen(replacement: Replacement<T>): Replacement<T> =
+infix fun TextReplacement.andThen(replacement: TextReplacement): TextReplacement =
     this.then(replacement)
+
+infix fun ComponentReplacement.andThen(replacement: ComponentReplacement): ComponentReplacement =
+    this.then(replacement)
+
+
 
