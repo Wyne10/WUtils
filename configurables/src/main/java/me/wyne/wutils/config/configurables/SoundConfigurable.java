@@ -13,12 +13,14 @@ public class SoundConfigurable implements CompositeConfigurable {
     @Nullable
     private Sound sound;
 
-    public SoundConfigurable(@Nullable Sound sound) {
-        this.sound = sound;
+    public SoundConfigurable() {}
+
+    public SoundConfigurable(ConfigurationSection section) {
+        fromConfig(section);
     }
 
-    public SoundConfigurable(Object configObject) {
-        fromConfig(configObject);
+    public SoundConfigurable(@Nullable Sound sound) {
+        this.sound = sound;
     }
 
     @Override

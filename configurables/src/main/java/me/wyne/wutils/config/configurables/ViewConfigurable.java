@@ -20,7 +20,7 @@ public class ViewConfigurable implements CompositeConfigurable {
     private String name;
     private final List<String> lore = new ArrayList<>();
 
-    ViewConfigurable() {}
+    public ViewConfigurable() {}
 
     public ViewConfigurable(ConfigurationSection section) {
         fromConfig(section);

@@ -27,7 +27,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     private final SoundConfigurable sound;
 
     public GuiItemConfigurable(Object configObject) {
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
         fromConfig(configObject);
     }
 
@@ -69,32 +69,32 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
 
     public GuiItemConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
         super(name, material, slot, model, lore, flags, enchantments);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
         super(name, material, lore, flags, enchantments);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
         super(name, material, slot, lore, flags, enchantments);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     public GuiItemConfigurable(String name, Material material, Collection<String> lore) {
         super(name, material, lore);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     public GuiItemConfigurable(String name, Material material) {
         super(name, material);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     public GuiItemConfigurable(String name, Material material, int slot, Collection<String> lore) {
         super(name, material, slot, lore);
-        this.sound = new SoundConfigurable(null);
+        this.sound = new SoundConfigurable();
     }
 
     @Override

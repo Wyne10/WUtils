@@ -10,15 +10,15 @@ public class ListConfigurable<E> implements CompositeConfigurable {
 
     private final List<E> list = new ArrayList<>();
 
-    public ListConfigurable(Collection<E> list) {
-        this.list.addAll(list);
-    }
+    public ListConfigurable() {}
 
     public ListConfigurable(Object configObject) {
         fromConfig(configObject);
     }
 
-    public ListConfigurable() {}
+    public ListConfigurable(Collection<E> list) {
+        this.list.addAll(list);
+    }
 
     @Override
     public String toConfig(ConfigEntry configEntry) {

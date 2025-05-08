@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
+@Deprecated
 public class ItemViewConfigurable extends ViewConfigurable {
 
     @Nullable

@@ -14,15 +14,15 @@ public class ListMapConfigurable<E> implements CompositeConfigurable {
 
     private final Map<String, List<E>> map = new HashMap<>();
 
+    public ListMapConfigurable() {}
+
+    public ListMapConfigurable(ConfigurationSection section) {
+        fromConfig(section);
+    }
+
     public ListMapConfigurable(Map<String, List<E>> map) {
         this.map.putAll(map);
     }
-
-    public ListMapConfigurable(Object configObject) {
-        fromConfig(configObject);
-    }
-
-    public ListMapConfigurable() {}
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
