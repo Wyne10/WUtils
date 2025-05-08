@@ -36,6 +36,10 @@ public class ItemConfigurable implements CompositeConfigurable {
         return itemConfig;
     }
 
+    public ItemConfig.Builder getBuilder() {
+        return itemConfig.toBuilder();
+    }
+
     public <T> Attribute<T> getAttribute(ItemAttribute attribute) {
         return itemConfig.getAttribute(attribute.getKey());
     }

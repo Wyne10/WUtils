@@ -148,4 +148,52 @@ public class ItemConfig {
         return new ItemConfig(ATTRIBUTE_MAP.createAllMap(config));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static final class Builder {
+
+        private final Map<String, Attribute<?>> itemAttributes;
+
+        public Builder() {
+            itemAttributes = new LinkedHashMap<>();
+        }
+
+        public Builder(ItemConfig itemConfig) {
+            this.itemAttributes = new LinkedHashMap<>(itemConfig.itemAttributes);
+        }
+
+        public Builder ignore(ItemAttribute... ignore) {
+            for (ItemAttribute ignoreAttribute : ignore)
+                itemAttributes.remove(ignoreAttribute.getKey());
+            return this;
+        }
+
+        public Builder ignore(String... ignore) {
+            for (String ignoreKey : ignore)
+                itemAttributes.remove(ignoreKey);
+            return this;
+        }
+
+        public Builder with(Attribute<?> attribute) {
+            itemAttributes.put(attribute.getKey(), attribute);
+            return this;
+        }
+
+        public Builder with(String key, Attribute<?> attribute) {
+            itemAttributes.put(key, attribute);
+            return this;
+        }
+
+        public ItemConfig build() {
+            return new ItemConfig(itemAttributes);
+        }
+
+    }
+
 }

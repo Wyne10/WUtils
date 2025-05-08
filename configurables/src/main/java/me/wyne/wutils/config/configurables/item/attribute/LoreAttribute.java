@@ -5,6 +5,8 @@ import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import me.wyne.wutils.config.configurables.item.PlayerAwareAttribute;
 import me.wyne.wutils.i18n.I18n;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
+import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,6 +28,26 @@ public class LoreAttribute extends MetaAttribute<List<String>> implements Player
     public void apply(ItemStack item, Player player) {
         item.editMeta(meta ->
                 meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s).bungee()).toList())
+        );
+    }
+
+    public void apply(ItemMeta meta, TextReplacement... replacements) {
+        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(null, s, replacements).bungee()).toList());
+    }
+
+    public void apply(ItemStack item, Player player, TextReplacement... replacements) {
+        item.editMeta(meta ->
+                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s, replacements).bungee()).toList())
+        );
+    }
+
+    public void apply(ItemMeta meta, ComponentReplacement... replacements) {
+        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(null, s).replace(replacements).bungee()).toList());
+    }
+
+    public void apply(ItemStack item, Player player, ComponentReplacement... replacements) {
+        item.editMeta(meta ->
+                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s).replace(replacements).bungee()).toList())
         );
     }
 
