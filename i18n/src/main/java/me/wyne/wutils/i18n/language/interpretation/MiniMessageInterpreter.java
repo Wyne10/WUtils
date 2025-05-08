@@ -127,4 +127,8 @@ public class MiniMessageInterpreter extends BaseInterpreter implements Component
         return MiniMessage.miniMessage().serialize(component);
     }
 
+    @Override
+    public Component fromString(String string) {
+        return MiniMessage.miniMessage().deserialize(string);
+    }
 }
