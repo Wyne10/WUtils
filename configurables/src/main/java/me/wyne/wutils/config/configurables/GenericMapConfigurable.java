@@ -16,16 +16,16 @@ public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
     private final MapUtils.MapFunction<K, V, String, String> valueMapper;
     private final MapUtils.MapFunction<String, Object, K, V> configMapper;
 
+    public GenericMapConfigurable(ConfigurationSection section, MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
+        this.valueMapper = valueMapper;
+        this.configMapper = configMapper;
+        fromConfig(section);
+    }
+
     public GenericMapConfigurable(Map<K, V> map, MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
         this.map.putAll(map);
         this.valueMapper = valueMapper;
         this.configMapper = configMapper;
-    }
-
-    public GenericMapConfigurable(Object configObject, MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {
-        this.valueMapper = valueMapper;
-        this.configMapper = configMapper;
-        fromConfig(configObject);
     }
 
     public GenericMapConfigurable(MapUtils.MapFunction<K, V, String, String> valueMapper, MapUtils.MapFunction<String, Object, K, V> configMapper) {

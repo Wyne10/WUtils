@@ -18,12 +18,11 @@ public class CooldownMapSerializer<T> implements JsonSerializer<CooldownMap<T>>,
     public CooldownMap<T> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         CooldownMap<T> cooldownMap = new CooldownMap<>();
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        long now = System.currentTimeMillis();
 
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             T key = jsonDeserializationContext.deserialize(new JsonPrimitive(entry.getKey()), keyClass);
             long remaining = entry.getValue().getAsLong();
-            cooldownMap.put(key, now + remaining);
+            cooldownMap.put(key, remaining);
         }
 
         return cooldownMap;

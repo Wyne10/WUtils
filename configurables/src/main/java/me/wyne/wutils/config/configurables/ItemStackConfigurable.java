@@ -7,6 +7,7 @@ import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.component.LocalizedComponent;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -37,8 +38,8 @@ public class ItemStackConfigurable implements CompositeConfigurable {
 
     ItemStackConfigurable() {}
 
-    public ItemStackConfigurable(Object configObject) {
-        fromConfig(configObject);
+    public ItemStackConfigurable(ConfigurationSection section) {
+        fromConfig(section);
     }
 
     public ItemStackConfigurable(String name, Material material, int slot, int model, Collection<String> lore, Collection<ItemFlag> flags, Map<Enchantment, Integer> enchantments) {
@@ -117,6 +118,25 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         return itemStack;
     }
 
+    public ItemStack buildComponent(ComponentReplacement... componentReplacements)
+    {
+        return buildComponent(null, componentReplacements);
+    }
+
+    public ItemStack buildComponent(@Nullable Player player, ComponentReplacement... componentReplacements)
+    {
+        ItemStack itemStack = new ItemStack(getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayNameComponent(getComponentName(player, componentReplacements).bungee());
+        itemMeta.setLoreComponents(getComponentLore(player, componentReplacements).stream().map(LocalizedComponent::bungee).toList());
+        if (model != -1)
+            itemMeta.setCustomModelData(model);
+        itemMeta.addItemFlags(flags.toArray(ItemFlag[]::new));
+        enchantments.getMap().forEach((enchantment, integer) -> itemMeta.addEnchant(enchantment, integer, true));
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
     public String getName() {
         return name;
     }
@@ -127,6 +147,14 @@ public class ItemStackConfigurable implements CompositeConfigurable {
 
     public Component getNameWithLore(@Nullable Player player, TextReplacement... textReplacements) {
         return getName(player, textReplacements).asComponent().hoverEvent(HoverEvent.showText(I18n.reduceComponent(getLore(player, textReplacements))));
+    }
+
+    public LocalizedComponent getComponentName(@Nullable Player player, ComponentReplacement... componentReplacements) {
+        return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name).replace(componentReplacements);
+    }
+
+    public Component getComponentNameWithLore(@Nullable Player player, ComponentReplacement... componentReplacements) {
+        return getComponentName(player, componentReplacements).asComponent().hoverEvent(HoverEvent.showText(I18n.reduceComponent(getComponentLore(player, componentReplacements))));
     }
 
     public Material getMaterial() {
@@ -147,6 +175,10 @@ public class ItemStackConfigurable implements CompositeConfigurable {
 
     public List<LocalizedComponent> getLore(@Nullable Player player, TextReplacement... textReplacements) {
         return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
+    }
+
+    public List<LocalizedComponent> getComponentLore(@Nullable Player player, ComponentReplacement... componentReplacements) {
+        return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s).replace(componentReplacements));
     }
 
     public Collection<ItemFlag> getFlags() {

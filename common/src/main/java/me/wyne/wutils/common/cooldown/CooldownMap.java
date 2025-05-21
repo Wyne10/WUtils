@@ -39,6 +39,10 @@ public class CooldownMap<T> {
         cooldownMap.remove(key);
     }
 
+    public Period getAsPeriod(T key) {
+        return new Period(cooldownMap.getOrDefault(key, 0L));
+    }
+
     public long getRemaining(T key) {
         if (!isCooldowned(key))
             return 0;

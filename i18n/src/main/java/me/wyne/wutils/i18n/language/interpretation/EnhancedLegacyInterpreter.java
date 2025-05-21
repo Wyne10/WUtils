@@ -22,38 +22,38 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
 
     @Override
     public Component getComponent(Language language, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getString(language, path)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getString(language, path)));
     }
 
     @Override
     public Component getComponent(Language language, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getString(language, path, textReplacements)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getString(language, path, textReplacements)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable Player player, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getPlaceholderString(language, player, path)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getPlaceholderString(language, player, path)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable OfflinePlayer player, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getPlaceholderString(language, player, path)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getPlaceholderString(language, player, path)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)).build());
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
     }
 
     @Override
     public List<Component> getComponentList(Language language, String path) {
         return baseInterpreter.getStringList(language, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -61,7 +61,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     @Override
     public List<Component> getComponentList(Language language, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getStringList(language, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -69,7 +69,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path) {
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -77,7 +77,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -85,7 +85,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path) {
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -93,9 +93,13 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().buildComponent(s).build()))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Override
+    public Component fromString(String string) {
+        return EnhancedLegacyText.get().parse(string);
+    }
 }

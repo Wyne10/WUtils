@@ -1,6 +1,7 @@
 **.gradle/
 **build/
 **target/
+.kotlin/
 
 ### IntelliJ IDEA ###
 .idea/

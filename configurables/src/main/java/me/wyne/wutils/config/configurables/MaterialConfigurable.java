@@ -8,13 +8,12 @@ public class MaterialConfigurable implements Configurable {
 
     private Material material;
 
-    public MaterialConfigurable(Material material)
-    {
-        this.material = material;
+    public MaterialConfigurable(String materialString) {
+        fromConfig(materialString);
     }
 
-    public MaterialConfigurable(Object configObject) {
-        fromConfig(configObject);
+    public MaterialConfigurable(Material material) {
+        this.material = material;
     }
 
     @Override

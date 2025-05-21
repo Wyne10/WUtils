@@ -10,8 +10,8 @@ repositories {
 
 dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
-    implementation 'ru.vyarus:yaml-config-updater:1.4.2'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.3'
+    implementation 'ru.vyarus:yaml-config-updater:1.4.4'
     implementation 'org.javatuples:javatuples:1.2'
     api project(':WUtils-configLogBridge')
 }
