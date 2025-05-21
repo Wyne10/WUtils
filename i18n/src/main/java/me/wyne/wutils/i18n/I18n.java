@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class I18n {
     
     public static I18n global = new I18n();
-    public BukkitAudiences audiences;
+    public ComponentAudience audiences = new NativeComponentAudience();
     public Logger log = LoggerFactory.getLogger(getClass());
 
     private final Map<String, Language> languageMap = new HashMap<>();

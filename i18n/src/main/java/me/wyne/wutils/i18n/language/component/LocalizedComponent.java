@@ -37,47 +37,47 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     }
 
     public void sendMessage(Player player) {
-        I18n.global.audiences.player(player).sendMessage(component);
+        I18n.global.audiences.sendMessage(player, component);
     }
 
     public void sendMessage(CommandSender sender) {
-        I18n.global.audiences.sender(sender).sendMessage(component);
+        I18n.global.audiences.sendMessage(sender, component);
     }
 
     public void sendMessage(UUID playerId) {
-        I18n.global.audiences.player(playerId).sendMessage(component);
+        I18n.global.audiences.sendMessage(playerId, component);
     }
 
     public void sendMessageAll() {
-        I18n.global.audiences.all().sendMessage(component);
+        I18n.global.audiences.sendMessageAll(component);
     }
 
     public void sendMessage(Predicate<CommandSender> filter) {
-        I18n.global.audiences.filter(filter).sendMessage(component);
+        I18n.global.audiences.sendMessage(filter, component);
     }
 
     public void sendMessageConsole() {
-        I18n.global.audiences.console().sendMessage(component);
+        I18n.global.audiences.sendMessageConsole(component);
     }
 
     public void sendMessage(Key permission) {
-        I18n.global.audiences.permission(permission).sendMessage(component);
+        I18n.global.audiences.sendMessage(permission, component);
     }
 
     public void sendMessage(String permission) {
-        I18n.global.audiences.permission(permission).sendMessage(component);
+        I18n.global.audiences.sendMessage(permission, component);
     }
 
     public void sendMessagePlayers() {
-        I18n.global.audiences.players().sendMessage(component);
+        I18n.global.audiences.sendMessagePlayers(component);
     }
 
     public void sendMessageServer(String serverName) {
-        I18n.global.audiences.server(serverName).sendMessage(component);
+        I18n.global.audiences.sendMessageServer(serverName, component);
     }
 
-    public void sendMessageWorld(Key world) {
-        I18n.global.audiences.world(world).sendMessage(component);
+    public void sendMessageWorld(Key worldKey) {
+        I18n.global.audiences.sendMessageWorld(worldKey, component);
     }
 
     @Override
