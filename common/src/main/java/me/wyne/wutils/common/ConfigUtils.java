@@ -21,13 +21,11 @@ public final class ConfigUtils {
         return config.getString(path, def);
     }
 
-    public static String reduceString(Collection<String> stringList)
-    {
+    public static String reduceString(Collection<String> stringList) {
         return stringList.stream().reduce(ConfigUtils::reduceString).orElse("");
     }
 
-    public static String reduceString(String s1, String s2)
-    {
+    public static String reduceString(String s1, String s2) {
         return s1 + "\n" + s2;
     }
 

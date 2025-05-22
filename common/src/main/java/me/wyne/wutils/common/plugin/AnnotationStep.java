@@ -21,7 +21,7 @@ public class AnnotationStep<T extends JavaPlugin> implements PluginStep<T> {
         try {
             method.invoke(plugin);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to invoke composite plugin step: " + method.getName(), e);
+            throw new RuntimeException("Failed to invoke composite plugin step " + method.getName(), e);
         }
     }
 

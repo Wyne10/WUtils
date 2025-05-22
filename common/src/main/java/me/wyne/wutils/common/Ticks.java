@@ -5,9 +5,14 @@ import java.util.concurrent.TimeUnit;
 
 public final class Ticks {
 
+    public final static long MILLIS_PER_TICK = 50;
     public final static long TICKS_PER_SECOND = 20;
     public final static long TICKS_PER_MINUTE = TICKS_PER_SECOND * 60;
     public final static long TICKS_PER_HOUR = TICKS_PER_MINUTE * 60;
+
+    public static long ofMillis(long durationMillis) {
+        return durationMillis / MILLIS_PER_TICK;
+    }
 
     public static long of(long durationSeconds) {
         return durationSeconds * TICKS_PER_SECOND;
@@ -15,6 +20,10 @@ public final class Ticks {
 
     public static long of(long duration, TimeUnit unit) {
         return unit.toSeconds(duration) * TICKS_PER_SECOND;
+    }
+
+    public static long from(long ticks) {
+        return ticks / TICKS_PER_SECOND;
     }
 
     public static Duration duration(long ticks) {

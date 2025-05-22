@@ -10,7 +10,7 @@ public class Period {
 
     public Period() {}
 
-    public Period(long finishAt) {
+    public Period(Long finishAt) {
         this.finishAt = finishAt;
     }
 

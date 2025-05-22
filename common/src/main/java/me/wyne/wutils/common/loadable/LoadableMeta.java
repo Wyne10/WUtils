@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 public @interface LoadableMeta {
 
     String path() default Loader.DEFAULT_PATH;
+
     int priority() default 0;
 
 }

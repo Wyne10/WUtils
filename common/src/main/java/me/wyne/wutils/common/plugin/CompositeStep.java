@@ -34,6 +34,7 @@ public class CompositeStep<T extends JavaPlugin> implements PluginStep<T> {
     }
 
     public void before(T plugin) {}
+
     public void after(T plugin) {}
 
     @Override
