@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SkullPlayerAttribute extends MetaAttribute<Void> implements PlayerAwareAttribute<Void> {
+public class SkullPlayerAttribute extends MetaAttribute<Void> implements PlayerAwareAttribute {
 
     public SkullPlayerAttribute() {
         super(ItemAttribute.SKULL_PLAYER.getKey(), null);
