@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.ListConfigurable;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
@@ -11,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class LoreAttribute extends MetaAttribute<List<String>> implements Attribute<List<String>>, PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class LoreAttribute extends MetaAttribute<List<String>> implements PlayerAwareAttribute, ContextPlaceholderAttribute {
 
     public LoreAttribute(List<String> value) {
         super(ItemAttribute.LORE.getKey(), value);
@@ -58,8 +59,8 @@ public class LoreAttribute extends MetaAttribute<List<String>> implements Attrib
     }
 
     @Override
-    public String toString() {
-        return new ListConfigurable<>(getValue()).toConfig(0, null);
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().appendCollection(depth, getKey(), getValue()).buildNoSpace();
     }
 
 }

@@ -12,8 +12,7 @@ public record ConfigField(Object holder, Field field, String path, String value,
         this.comment = comment;
     }
 
-    public String generateConfigLine()
-    {
+    public String generateConfigLine() {
         StringBuilder stringBuilder = new StringBuilder();
         if (!comment.isEmpty()) {
             stringBuilder.append("  ").append("# ").append(comment).append("\n");
@@ -22,8 +21,7 @@ public record ConfigField(Object holder, Field field, String path, String value,
         stringBuilder.append(": ");
         if (field.getType() == String.class) {
             stringBuilder.append("'").append(value).append("'");
-        }
-        else
+        } else
             stringBuilder.append(value);
         return stringBuilder.toString();
     }

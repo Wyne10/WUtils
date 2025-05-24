@@ -20,8 +20,7 @@ public class BaseLanguage implements Language {
     private final File languageFile;
     private final FileConfiguration strings;
 
-    public BaseLanguage(File languageFile, Logger log)
-    {
+    public BaseLanguage(File languageFile, Logger log) {
         this.log = log;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
@@ -29,8 +28,7 @@ public class BaseLanguage implements Language {
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
     }
 
-    public BaseLanguage(Language defaultLanguage, File languageFile, Logger log)
-    {
+    public BaseLanguage(Language defaultLanguage, File languageFile, Logger log) {
         this.log = log;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
@@ -39,8 +37,7 @@ public class BaseLanguage implements Language {
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
     }
 
-    private void mergeDefaultStrings(Language defaultLanguage, File languageFile)
-    {
+    private void mergeDefaultStrings(Language defaultLanguage, File languageFile) {
         if (defaultLanguage.getLanguageFile().length() == 0)
             return;
         log.info("Searching for missing strings in {}", languageFile.getName());

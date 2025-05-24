@@ -7,4 +7,12 @@ public interface ComponentReplacement extends Replacement<Component> {
     default TextReplacement as() {
         return string -> I18n.global.component().toString(replace(I18n.global.component().fromString(string)));
     }
+
+    default ComponentReplacement then(ComponentReplacement replacement) {
+        return obj -> {
+            obj = this.replace(obj);
+            obj = replacement.replace(obj);
+            return obj;
+        };
+    }
 }

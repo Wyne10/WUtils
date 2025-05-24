@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n.language.component;
 
-import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;

@@ -1,6 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.common.Args;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
@@ -11,6 +13,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class PotionEffectAttribute extends MetaAttribute<PotionEffect> {
+
+    public PotionEffectAttribute(String key, PotionEffect value) {
+        super(key, value);
+    }
 
     public PotionEffectAttribute(PotionEffect value) {
         super(ItemAttribute.POTION_EFFECT.getKey(), value);
@@ -23,8 +29,8 @@ public class PotionEffectAttribute extends MetaAttribute<PotionEffect> {
     }
 
     @Override
-    public String toString() {
-        return getValue().getType() + " " + getValue().getDuration() + " " + getValue().getAmplifier() + " " + getValue().isAmbient() + " " + getValue().hasParticles() + " " + getValue().hasIcon();
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().getType() + " " + getValue().getDuration() + " " + getValue().getAmplifier() + " " + getValue().isAmbient() + " " + getValue().hasParticles() + " " + getValue().hasIcon()).buildNoSpace();
     }
 
     public static class Factory implements CompositeAttributeFactory {

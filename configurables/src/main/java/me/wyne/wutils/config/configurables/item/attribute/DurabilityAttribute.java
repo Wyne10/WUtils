@@ -10,6 +10,10 @@ public class DurabilityAttribute extends MetaAttribute<Integer> {
 
     private ItemStack itemStack;
 
+    public DurabilityAttribute(String key, Integer value) {
+        super(key, value);
+    }
+
     public DurabilityAttribute(Integer value) {
         super(ItemAttribute.DURABILITY.getKey(), value);
     }
@@ -25,11 +29,6 @@ public class DurabilityAttribute extends MetaAttribute<Integer> {
         if (!(meta instanceof Damageable)) return;
         var maxDurability = itemStack.getType().getMaxDurability();
         ((Damageable)meta).setDamage(maxDurability - getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

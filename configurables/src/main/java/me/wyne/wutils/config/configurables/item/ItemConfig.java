@@ -1,5 +1,8 @@
 package me.wyne.wutils.config.configurables.item;
 
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.attribute.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
@@ -11,11 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ItemConfig {
+public class ItemConfig implements CompositeConfigurable {
 
     private final static AttributeMap ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
 
@@ -40,7 +44,7 @@ public class ItemConfig {
             return new SkullAttribute(Bukkit.getOfflinePlayer(uuid));
         });
         ATTRIBUTE_MAP.put("skull64", (key, config) -> new Skull64Attribute(config.getString(key)));
-        ATTRIBUTE_MAP.put("skullPlayer", (key, config) -> new SkullPlayerAttribute());
+        ATTRIBUTE_MAP.put("skullPlayer", (key, config) -> new SkullPlayerAttribute(config.getBoolean(key, false)));
         ATTRIBUTE_MAP.put("unbreakable", (key, config) -> new UnbreakableAttribute(config.getBoolean(key, false)));
         ATTRIBUTE_MAP.put("enchantment", new EnchantmentAttribute.Factory());
         ATTRIBUTE_MAP.put("enchantments", (key, config) -> new CompositeAttribute(key, config, new EnchantmentAttribute.Factory()));
@@ -86,10 +90,18 @@ public class ItemConfig {
         return (Attribute<T>) itemAttributes.get(key);
     }
 
-    public String toConfig(int depth) {
+    @Override
+    public String toConfig(int depth, ConfigEntry configEntry) {
         StringBuilder builder = new StringBuilder();
-        itemAttributes.values().forEach(attribute -> builder.append(" ".repeat(depth * 2)).append(attribute.toConfig()).append('\n'));
+        builder.append("\n");
+        itemAttributes.values().forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
         return builder.toString();
+    }
+
+    @Override
+    public void fromConfig(@Nullable Object configObject) {
+        itemAttributes.clear();
+        itemAttributes.putAll(ATTRIBUTE_MAP.createAllMap((ConfigurationSection) configObject));
     }
 
     public ItemStack createItemStack(TextReplacement... textReplacements) {
@@ -193,6 +205,11 @@ public class ItemConfig {
 
         public Builder with(String key, Attribute<?> attribute) {
             itemAttributes.put(key, attribute);
+            return this;
+        }
+
+        public Builder with(ItemAttribute key, Attribute<?> attribute) {
+            itemAttributes.put(key.getKey(), attribute);
             return this;
         }
 

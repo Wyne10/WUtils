@@ -1,6 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.common.Args;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
@@ -10,6 +12,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class EnchantmentAttribute extends MetaAttribute<EnchantmentAttribute.EnchantmentData> {
+
+    public EnchantmentAttribute(String key, EnchantmentData value) {
+        super(key, value);
+    }
 
     public EnchantmentAttribute(EnchantmentData value) {
         super(ItemAttribute.ENCHANTMENT.getKey(), value);
@@ -21,8 +27,8 @@ public class EnchantmentAttribute extends MetaAttribute<EnchantmentAttribute.Enc
     }
 
     @Override
-    public String toString() {
-        return getValue().enchantment().getKey() + " " + getValue().level();
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().enchantment().getKey() + " " + getValue().level()).buildNoSpace();
     }
 
     public record EnchantmentData(Enchantment enchantment, int level) {}

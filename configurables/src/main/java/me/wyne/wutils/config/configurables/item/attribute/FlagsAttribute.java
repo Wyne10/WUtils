@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.ListConfigurable;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.inventory.ItemFlag;
@@ -9,6 +10,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 
 public class FlagsAttribute extends MetaAttribute<ItemFlag[]> {
+
+    public FlagsAttribute(String key, ItemFlag... value) {
+        super(key, value);
+    }
 
     public FlagsAttribute(ItemFlag[] value) {
         super(ItemAttribute.FLAGS.getKey(), value);
@@ -20,8 +25,8 @@ public class FlagsAttribute extends MetaAttribute<ItemFlag[]> {
     }
 
     @Override
-    public String toString() {
-        return new ListConfigurable<>(Arrays.stream(getValue()).map(ItemFlag::toString).toList()).toConfig(0, null);
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().appendCollection(depth, getKey(), Arrays.stream(getValue()).map(ItemFlag::toString).toList()).buildNoSpace();
     }
 
 }

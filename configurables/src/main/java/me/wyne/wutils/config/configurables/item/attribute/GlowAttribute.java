@@ -8,6 +8,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class GlowAttribute extends MetaAttribute<Boolean> {
 
+    public GlowAttribute(String key, Boolean value) {
+        super(key, value);
+    }
+
     public GlowAttribute(Boolean value) {
         super(ItemAttribute.GLOW.getKey(), value);
     }
@@ -18,11 +22,6 @@ public class GlowAttribute extends MetaAttribute<Boolean> {
         if (!getValue()) return;
         meta.addEnchant(Enchantment.LURE, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

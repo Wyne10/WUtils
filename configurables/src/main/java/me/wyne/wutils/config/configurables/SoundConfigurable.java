@@ -43,7 +43,7 @@ public class SoundConfigurable implements CompositeConfigurable {
             return;
         }
         ConfigurationSection config = (ConfigurationSection) configObject;
-        sound = Sound.sound(Key.key(config.getString("sound")), Sound.Source.valueOf(config.getString("source", "MASTER")), (float)config.getDouble("volume", 1.0), (float)config.getDouble("pitch", 1.0));
+        sound = Sound.sound(Key.key(config.getString("sound")), Sound.Source.valueOf(config.getString("source", "MASTER")), (float) config.getDouble("volume", 1.0), (float) config.getDouble("pitch", 1.0));
     }
 
     @Nullable

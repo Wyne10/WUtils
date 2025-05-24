@@ -60,10 +60,10 @@ infix fun Pattern.regexComponent(value: Array<BaseComponent>): ComponentReplacem
     ComponentPlaceholder.regex(this, value)
 
 infix fun TextReplacement.andThen(replacement: TextReplacement): TextReplacement =
-    this.then(replacement) as TextReplacement
+    this.then(replacement)
 
 infix fun ComponentReplacement.andThen(replacement: ComponentReplacement): ComponentReplacement =
-    this.then(replacement) as ComponentReplacement
+    this.then(replacement)
 
 
 

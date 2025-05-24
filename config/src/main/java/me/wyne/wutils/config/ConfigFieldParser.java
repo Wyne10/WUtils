@@ -11,8 +11,7 @@ import java.util.*;
 
 public class ConfigFieldParser {
 
-    public static ConfigField getConfigField(Object holder, Field field, Logger log)
-    {
+    public static ConfigField getConfigField(Object holder, Field field, Logger log) {
         field.setAccessible(true);
         var configEntry = field.getAnnotation(ConfigEntry.class);
         String path = configEntry.path().isEmpty() ? field.getName() : configEntry.path();
@@ -35,19 +34,17 @@ public class ConfigFieldParser {
                 value, comment);
     }
 
-    private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable)
-    {
+    private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable) {
         ConfigBuilder configBuilder = new ConfigBuilder();
         configBuilder.append(1, "==", configurationSerializable.getClass().getTypeName());
         configurationSerializable.serialize().forEach((string, o) -> configBuilder.append(1, string, o));
         return configBuilder.build();
     }
 
-    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field, Logger log)
-    {
+    public static Pair<String, ConfigField> getSectionedConfigField(Object holder, Field field, Logger log) {
         return new Pair<>(field.getAnnotation(ConfigEntry.class).section(), getConfigField(holder, field, log));
     }
-    
+
     public static Set<ConfigSection> getConfigSections(Map<String, Set<ConfigField>> registeredConfigFields) {
         Map<String, ConfigSection> result = new LinkedHashMap<>();
 
@@ -62,14 +59,12 @@ public class ConfigFieldParser {
         return new LinkedHashSet<>(result.values());
     }
 
-    private static String getPrimarySection(String section)
-    {
+    private static String getPrimarySection(String section) {
         String[] sectionPath = section.split("\\.");
         return sectionPath.length > 0 ? sectionPath[0] : "";
     }
 
-    private static String getSubSection(String section)
-    {
+    private static String getSubSection(String section) {
         String[] sectionPath = section.split("\\.");
         return sectionPath.length > 1 ? sectionPath[1] : "";
     }

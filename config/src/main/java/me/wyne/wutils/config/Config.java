@@ -36,13 +36,11 @@ public class Config implements ConfigFieldRegistry {
         } catch (NoSuchMethodError ignored) {}
     }
 
-    public void setConfigGenerator(File configFile, File defaultConfigFile)
-    {
+    public void setConfigGenerator(File configFile, File defaultConfigFile) {
         configGenerator = new ConfigGenerator(configFile, defaultConfigFile, log);
     }
 
-    public void setConfigGenerator(JavaPlugin plugin, String configPath)
-    {
+    public void setConfigGenerator(JavaPlugin plugin, String configPath) {
         Path defaultConfigPath = Path.of(plugin.getDataFolder().getAbsolutePath(), "defaults/", configPath);
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/" + configPath);
         try {
@@ -56,10 +54,8 @@ public class Config implements ConfigFieldRegistry {
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
 
-    public void registerConfigObject(Object object)
-    {
-        for(Field field : object.getClass().getDeclaredFields())
-        {
+    public void registerConfigObject(Object object) {
+        for(Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(ConfigEntry.class))
                 continue;
             Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field, log);
@@ -110,15 +106,13 @@ public class Config implements ConfigFieldRegistry {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        log.error("An exception occurred trying to load config field '" + configField.field().getName() + "'", e);
+                        log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
                 });
     }
 
-    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
-    {
-        if (configGenerator == null)
-        {
+    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps) {
+        if (configGenerator == null) {
             log.error("Trying to generate config, but configGenerator is null");
             return;
         }
@@ -129,8 +123,8 @@ public class Config implements ConfigFieldRegistry {
         configGenerator.generateConfig(backup, replaceVars, deleteProps);
     }
 
-    public void generateConfig()
-    {
+    public void generateConfig() {
         generateConfig(true, new HashMap<>(), new ArrayList<>());
     }
+
 }

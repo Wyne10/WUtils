@@ -114,8 +114,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
         sound.fromConfig(config.getConfigurationSection("sound"));
     }
 
-    public GuiItem buildGuiItem(TextReplacement... textReplacements)
-    {
+    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
         return ItemBuilder.from(build(textReplacements))
                 .asGuiItem(event -> {
                     getPrint(null, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
@@ -123,8 +122,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
                 });
     }
 
-    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, TextReplacement... textReplacements)
-    {
+    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, TextReplacement... textReplacements) {
         return ItemBuilder.from(build(textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);
@@ -133,8 +131,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
                 });
     }
 
-    public GuiItem buildGuiItem(@Nullable Player player, TextReplacement... textReplacements)
-    {
+    public GuiItem buildGuiItem(@Nullable Player player, TextReplacement... textReplacements) {
         return ItemBuilder.from(build(player, textReplacements))
                 .asGuiItem(event -> {
                     getPrint(player, textReplacements).ifPresent(print -> print.sendMessage(event.getWhoClicked()));
@@ -142,8 +139,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
                 });
     }
 
-    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, @Nullable Player player, TextReplacement... textReplacements)
-    {
+    public GuiItem buildGuiItem(GuiAction<InventoryClickEvent> action, @Nullable Player player, TextReplacement... textReplacements) {
         return ItemBuilder.from(build(player, textReplacements))
                 .asGuiItem(event -> {
                     action.execute(event);

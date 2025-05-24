@@ -7,7 +7,9 @@ import java.sql.Connection;
 public interface ConnectionPool<T> extends AutoCloseable {
 
     boolean isActive();
+
     @Nullable Connection getConnection();
+
     @Nullable T getSource();
 
 }

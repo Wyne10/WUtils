@@ -26,13 +26,11 @@ public class ConfigBuilder {
     private final Table<Integer, String, String> valueTable = HashBasedTable.create();
     private final Set<Pair<Integer, String>> valueSequence = new LinkedHashSet<>();
 
-    public <T> ConfigBuilder append(String path, @Nullable T value)
-    {
+    public <T> ConfigBuilder append(String path, @Nullable T value) {
         return append(DEFAULT_DEPTH, path, value);
     }
 
-    public <T> ConfigBuilder append(int depth, String path, @Nullable T value)
-    {
+    public <T> ConfigBuilder append(int depth, String path, @Nullable T value) {
         if (value == null)
             return this;
         if (value instanceof String stringValue)
@@ -43,13 +41,11 @@ public class ConfigBuilder {
         return this;
     }
 
-    public <T> ConfigBuilder appendString(String path, @Nullable String value)
-    {
+    public ConfigBuilder appendString(String path, @Nullable String value) {
         return appendString(DEFAULT_DEPTH, path, value);
     }
 
-    public <T> ConfigBuilder appendString(int depth, String path, @Nullable String value)
-    {
+    public ConfigBuilder appendString(int depth, String path, @Nullable String value) {
         if (value == null)
             return this;
         valueTable.put(depth, path, value);
@@ -57,13 +53,11 @@ public class ConfigBuilder {
         return this;
     }
 
-    public <T> ConfigBuilder appendIfNotEqual(String path, @Nullable T value, T otherValue)
-    {
+    public <T> ConfigBuilder appendIfNotEqual(String path, @Nullable T value, T otherValue) {
         return appendIfNotEqual(DEFAULT_DEPTH, path, value, otherValue);
     }
 
-    public <T> ConfigBuilder appendIfNotEqual(int depth, String path, @Nullable T value, T otherValue)
-    {
+    public <T> ConfigBuilder appendIfNotEqual(int depth, String path, @Nullable T value, T otherValue) {
         if (value == null)
             return this;
         if (value.equals(otherValue))
@@ -76,13 +70,11 @@ public class ConfigBuilder {
         return this;
     }
 
-    public ConfigBuilder appendCollection(String path, Collection<?> value)
-    {
+    public ConfigBuilder appendCollection(String path, Collection<?> value) {
         return appendCollection(DEFAULT_DEPTH, path, value);
     }
 
-    public ConfigBuilder appendCollection(int depth, String path, Collection<?> value)
-    {
+    public ConfigBuilder appendCollection(int depth, String path, Collection<?> value) {
         if (value.isEmpty())
             return this;
         if (value.stream().findAny().get() instanceof String)
@@ -99,8 +91,7 @@ public class ConfigBuilder {
         return this;
     }
 
-    public ConfigBuilder appendComposite(int depth, String path, CompositeConfigurable value, ConfigEntry configEntry)
-    {
+    public ConfigBuilder appendComposite(int depth, String path, CompositeConfigurable value, ConfigEntry configEntry) {
         String string = value.toConfig(depth + 1, configEntry);
         if (!string.isEmpty()) {
             return appendString(depth, path, string);
@@ -108,14 +99,22 @@ public class ConfigBuilder {
         return this;
     }
 
-    public String build()
-    {
+    public String build() {
         if (valueSequence.isEmpty())
             return "";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
-        for (Pair<Integer, String> entry : valueSequence)
-        {
+        for (Pair<Integer, String> entry : valueSequence) {
+            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    public String buildNoSpace() {
+        if (valueSequence.isEmpty())
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Pair<Integer, String> entry : valueSequence) {
             stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
         }
         return stringBuilder.toString();

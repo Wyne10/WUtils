@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class I18n {
-    
+
     public static I18n global = new I18n();
     public ComponentAudience audiences = new NativeComponentAudience();
     public Logger log = LoggerFactory.getLogger(getClass());
@@ -40,7 +40,7 @@ public class I18n {
     private StringInterpreter stringInterpreter = new BaseInterpreter(new EmptyValidator());
     private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
-    private boolean usePlayerLanguage = true;
+    public boolean usePlayerLanguage = true;
 
     static {
         try {
@@ -56,23 +56,20 @@ public class I18n {
         setDefaultLanguage(defaultLanguageFile);
     }
 
-    public I18n(JavaPlugin plugin)
-    {
+    public I18n(JavaPlugin plugin) {
         loadDefaultResourceLanguage(plugin);
         loadLanguages(plugin);
         setDefaultLanguage(getDefaultLanguageCode(plugin));
     }
 
-    public void loadLanguage(File languageFile)
-    {
+    public void loadLanguage(File languageFile) {
         if (languageMap.containsKey(FilenameUtils.removeExtension(languageFile.getName())))
             return;
         languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(defaultResourceLanguage, languageFile, log));
         log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
-    public void loadLanguage(String languageResourcePath, InputStream languageResourceStream, File dataFolder)
-    {
+    public void loadLanguage(String languageResourcePath, InputStream languageResourceStream, File dataFolder) {
         File languageResource = new File(dataFolder, "defaults/" + languageResourcePath);
         File languageFile = new File(dataFolder, languageResourcePath);
         try {
@@ -84,8 +81,7 @@ public class I18n {
         log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
-    public void loadLanguage(String languageResourcePath, JavaPlugin plugin)
-    {
+    public void loadLanguage(String languageResourcePath, JavaPlugin plugin) {
         plugin.saveResource(languageResourcePath, false);
         File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
@@ -98,31 +94,26 @@ public class I18n {
         log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
     }
 
-    public void loadLanguages(JavaPlugin plugin)
-    {
+    public void loadLanguages(JavaPlugin plugin) {
         File langFolder = new File(plugin.getDataFolder(), "lang");
         if (!langFolder.exists())
             langFolder.mkdirs();
 
-        for (File file : langFolder.listFiles())
-        {
+        for (File file : langFolder.listFiles()) {
             loadLanguage(file);
         }
     }
 
-    public void loadLanguages(File langFolder)
-    {
+    public void loadLanguages(File langFolder) {
         if (!langFolder.exists())
             langFolder.mkdirs();
 
-        for (File file : langFolder.listFiles())
-        {
+        for (File file : langFolder.listFiles()) {
             loadLanguage(file);
         }
     }
 
-    public void loadDefaultResourceLanguage(JavaPlugin plugin)
-    {
+    public void loadDefaultResourceLanguage(JavaPlugin plugin) {
         File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
@@ -139,8 +130,7 @@ public class I18n {
         }
     }
 
-    public void loadDefaultResourceLanguage(File dataFolder, JavaPlugin plugin, Function<String, InputStream> resourceProvider)
-    {
+    public void loadDefaultResourceLanguage(File dataFolder, JavaPlugin plugin, Function<String, InputStream> resourceProvider) {
         File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
@@ -158,10 +148,8 @@ public class I18n {
     }
 
     @Nullable
-    public String getDefaultLanguageCode(JavaPlugin plugin)
-    {
-        if (!plugin.getConfig().contains("lang", true))
-        {
+    public String getDefaultLanguageCode(JavaPlugin plugin) {
+        if (!plugin.getConfig().contains("lang", true)) {
             log.warn("Plugin config doesn't contain default language path");
             log.warn("Absence of default language may and will cause issues");
             return null;
@@ -170,16 +158,12 @@ public class I18n {
         return FilenameUtils.removeExtension(plugin.getConfig().getString("lang"));
     }
 
-    public void setDefaultLanguage(@Nullable File languageFile)
-    {
-        if (languageFile == null || !languageFile.exists())
-        {
+    public void setDefaultLanguage(@Nullable File languageFile) {
+        if (languageFile == null || !languageFile.exists()) {
             log.error("Couldn't set default language to {}", languageFile != null ? languageFile.getName() : "null");
-            if (defaultLanguage == null)
-            {
+            if (defaultLanguage == null) {
                 log.warn("Will try to get language file from plugins resources");
-                if (defaultResourceLanguage != null)
-                {
+                if (defaultResourceLanguage != null) {
                     defaultLanguage = defaultResourceLanguage;
                     log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
                     return;
@@ -195,16 +179,12 @@ public class I18n {
         log.info("Default language is set to {}", defaultLanguage.getLanguageCode());
     }
 
-    public void setDefaultLanguage(String languageCode)
-    {
-        if (!languageMap.containsKey(languageCode))
-        {
+    public void setDefaultLanguage(String languageCode) {
+        if (!languageMap.containsKey(languageCode)) {
             log.error("Couldn't set default language to {}", languageCode);
-            if (defaultLanguage == null)
-            {
+            if (defaultLanguage == null) {
                 log.warn("Will try to get language file from plugins resources");
-                if (defaultResourceLanguage != null)
-                {
+                if (defaultResourceLanguage != null) {
                     defaultLanguage = defaultResourceLanguage;
                     log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
                     return;
@@ -226,20 +206,11 @@ public class I18n {
         this.componentInterpreter = componentInterpreter;
     }
 
-    public void setUsePlayerLanguage(boolean usePlayerLanguage) {
-        this.usePlayerLanguage = usePlayerLanguage;
-    }
-
-    public boolean isUsePlayerLanguage() {
-        return usePlayerLanguage;
-    }
-
     public void clearLanguageMap() {
         languageMap.clear();
     }
 
-    public Language getLanguage(@Nullable Locale locale)
-    {
+    public Language getLanguage(@Nullable Locale locale) {
         if (!usePlayerLanguage)
             return defaultLanguage;
         if (locale == null)
@@ -715,43 +686,35 @@ public class I18n {
         return new PlaceholderLocalizedComponent(component(), defaultLanguage, path, component, player);
     }
 
-    public static String reduceRawString(Collection<String> stringList)
-    {
+    public static String reduceRawString(Collection<String> stringList) {
         return stringList.stream().reduce(I18n::reduceRawString).orElse("");
     }
 
-    public static String reduceRawString(String s1, String s2)
-    {
+    public static String reduceRawString(String s1, String s2) {
         return s1 + "\n" + s2;
     }
 
-    public static Component reduceRawComponent(Collection<Component> componentList)
-    {
+    public static Component reduceRawComponent(Collection<Component> componentList) {
         return componentList.stream().reduce(I18n::reduceRawComponent).orElse(Component.empty());
     }
 
-    public static Component reduceRawComponent(Component c1, Component c2)
-    {
+    public static Component reduceRawComponent(Component c1, Component c2) {
         return c1.append(Component.newline()).append(c2);
     }
 
-    public static <T extends LocalizedString> String reduceString(Collection<T> stringList)
-    {
+    public static <T extends LocalizedString> String reduceString(Collection<T> stringList) {
         return stringList.stream().map(T::get).reduce(I18n::reduceRawString).orElse("");
     }
 
-    public static <T extends LocalizedString> String reduceString(T s1, T s2)
-    {
+    public static <T extends LocalizedString> String reduceString(T s1, T s2) {
         return s1.get() + "\n" + s2.get();
     }
 
-    public static <T extends LocalizedComponent> Component reduceComponent(Collection<T> componentList)
-    {
+    public static <T extends LocalizedComponent> Component reduceComponent(Collection<T> componentList) {
         return componentList.stream().map(T::get).reduce(I18n::reduceRawComponent).orElse(Component.empty());
     }
 
-    public static <T extends LocalizedComponent> Component reduceComponent(T c1, T c2)
-    {
+    public static <T extends LocalizedComponent> Component reduceComponent(T c1, T c2) {
         return c1.get().append(Component.newline()).append(c2.get());
     }
 
@@ -787,23 +750,20 @@ public class I18n {
         return localizedComponents.stream().map(lc -> lc.replace(replacements)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static String applyTextReplacements(String string, TextReplacement ...textReplacements)
-    {
+    public static String applyTextReplacements(String string, TextReplacement ...textReplacements) {
         String result = string;
         for (TextReplacement replacement : textReplacements)
             result = replacement.replace(result);
         return result;
     }
 
-    public static @Nullable <T> Player toPlayer(@Nullable T something)
-    {
+    public static @Nullable <T> Player toPlayer(@Nullable T something) {
         if (something instanceof Player player)
             return player;
         return null;
     }
 
-    public static @Nullable <T> Locale toLocale(@Nullable T something)
-    {
+    public static @Nullable <T> Locale toLocale(@Nullable T something) {
         if (something instanceof Player player)
             return player.locale();
         return null;

@@ -3,6 +3,10 @@ plugins {
     kotlin("jvm") version "2.1.20"
 }
 
+kotlin {
+    jvmToolchain(16)
+}
+
 repositories {
     maven {
         url = uri("https://repo.papermc.io/repository/maven-public/")
@@ -16,7 +20,7 @@ dependencies {
     api(project(":WUtils-i18n"))
 }
 
-version = "1.0.9"
+version = "1.0.10"
 
 publishing {
     publications {

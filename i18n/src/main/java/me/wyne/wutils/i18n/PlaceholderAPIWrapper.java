@@ -20,15 +20,13 @@ public final class PlaceholderAPIWrapper {
         IS_PLACEHOLDER_API_PRESENT = isPlaceholderApiPresent;
     }
 
-    public static String setPlaceholders(@Nullable Player player, String string)
-    {
+    public static String setPlaceholders(@Nullable Player player, String string) {
         if (!IS_PLACEHOLDER_API_PRESENT)
             return string;
         return PlaceholderAPI.setPlaceholders(player, string);
     }
 
-    public static String setPlaceholders(@Nullable OfflinePlayer player, String string)
-    {
+    public static String setPlaceholders(@Nullable OfflinePlayer player, String string) {
         if (!IS_PLACEHOLDER_API_PRESENT)
             return string;
         return PlaceholderAPI.setPlaceholders(player, string);

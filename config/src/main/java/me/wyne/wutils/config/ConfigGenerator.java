@@ -18,8 +18,7 @@ public class ConfigGenerator {
 
     private final StringBuilder generatedText = new StringBuilder();
 
-    public ConfigGenerator(File configFile, File defaultConfigFile, Logger log)
-    {
+    public ConfigGenerator(File configFile, File defaultConfigFile, Logger log) {
         this.log = log;
         this.configFile = configFile;
         this.defaultConfigFile = defaultConfigFile;
@@ -30,16 +29,13 @@ public class ConfigGenerator {
         generatedText.append(section.generateConfigSection());
     }
 
-    public void writeConfigSections(Set<ConfigSection> sectionSet)
-    {
-        for (ConfigSection section : sectionSet)
-        {
+    public void writeConfigSections(Set<ConfigSection> sectionSet) {
+        for (ConfigSection section : sectionSet) {
             writeConfigSection(section);
         }
     }
 
-    public void copyDefaultConfig()
-    {
+    public void copyDefaultConfig() {
         try (BufferedReader reader = new BufferedReader(new FileReader(defaultConfigFile))) {
             reader.lines().skip(1).forEachOrdered(s -> {
                 generatedText.append(s);
@@ -51,8 +47,7 @@ public class ConfigGenerator {
         }
     }
 
-    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps)
-    {
+    public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps) {
         boolean generationRequested = YamlConfiguration.loadConfiguration(configFile).getBoolean("regenerate", false);
         if (!generationRequested)
             return;

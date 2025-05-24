@@ -8,6 +8,7 @@ public interface Configurable {
      * @see ConfigBuilder
      */
     String toConfig(ConfigEntry configEntry);
+
     void fromConfig(Object configObject);
 
 }

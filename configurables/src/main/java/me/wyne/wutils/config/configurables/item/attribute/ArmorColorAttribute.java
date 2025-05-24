@@ -1,5 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.Color;
@@ -7,6 +9,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class ArmorColorAttribute extends MetaAttribute<Color> {
+
+    public ArmorColorAttribute(String key, Color value) {
+        super(key, value);
+    }
 
     public ArmorColorAttribute(Color value) {
         super(ItemAttribute.ARMOR_COLOR.getKey(), value);
@@ -19,8 +25,8 @@ public class ArmorColorAttribute extends MetaAttribute<Color> {
     }
 
     @Override
-    public String toString() {
-        return String.valueOf(getValue().asRGB());
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().asRGB()).buildNoSpace();
     }
 
 }

@@ -7,6 +7,10 @@ import org.bukkit.inventory.meta.Repairable;
 
 public class RepairCostAttribute extends MetaAttribute<Integer> {
 
+    public RepairCostAttribute(String key, Integer value) {
+        super(key, value);
+    }
+
     public RepairCostAttribute(Integer value) {
         super(ItemAttribute.REPAIR_COST.getKey(), value);
     }
@@ -15,11 +19,6 @@ public class RepairCostAttribute extends MetaAttribute<Integer> {
     public void apply(ItemMeta meta) {
         if (!(meta instanceof Repairable)) return;
         ((Repairable)meta).setRepairCost(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

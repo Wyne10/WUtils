@@ -14,8 +14,8 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemConfigurable() {}
 
-    public ItemConfigurable(Object configObject) {
-        fromConfig(configObject);
+    public ItemConfigurable(ConfigurationSection section) {
+        fromConfig(section);
     }
 
     public ItemConfigurable(ItemConfig itemConfig) {
@@ -24,12 +24,12 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return "\n" + itemConfig.toConfig(depth);
+        return itemConfig.toConfig(depth, configEntry);
     }
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        itemConfig = ItemConfig.fromConfig((ConfigurationSection) configObject);
+        itemConfig.fromConfig(configObject);
     }
 
     public ItemConfig getItemConfig() {

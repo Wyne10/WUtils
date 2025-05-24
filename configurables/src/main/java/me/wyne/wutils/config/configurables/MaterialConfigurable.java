@@ -1,15 +1,15 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.Configurable;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import org.bukkit.Material;
 
-public class MaterialConfigurable implements Configurable {
+public class MaterialConfigurable implements CompositeConfigurable {
 
     private Material material;
 
-    public MaterialConfigurable(String materialString) {
-        fromConfig(materialString);
+    public MaterialConfigurable(String materialName) {
+        fromConfig(materialName);
     }
 
     public MaterialConfigurable(Material material) {
@@ -17,7 +17,7 @@ public class MaterialConfigurable implements Configurable {
     }
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         return material.toString();
     }
 

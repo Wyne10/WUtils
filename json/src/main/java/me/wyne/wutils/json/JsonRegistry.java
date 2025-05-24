@@ -20,8 +20,7 @@ public class JsonRegistry {
     private final Map<String, JsonObject> objectMap = new HashMap<>();
 
     public void registerObject(Object object) {
-        for(Field field : object.getClass().getDeclaredFields())
-        {
+        for (Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(JSON.class))
                 continue;
             registerField(object, field);

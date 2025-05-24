@@ -27,8 +27,7 @@ public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectio
         initializeDataSource();
     }
 
-    private void initializeDataSource()
-    {
+    private void initializeDataSource() {
         connectionSource.setUrl(url);
         connectionSource.setUsername(username);
         connectionSource.setPassword(password);

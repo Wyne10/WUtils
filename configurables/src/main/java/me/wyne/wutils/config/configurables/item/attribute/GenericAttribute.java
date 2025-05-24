@@ -1,6 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.common.Args;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
@@ -16,6 +18,10 @@ import java.util.UUID;
 
 public class GenericAttribute extends MetaAttribute<GenericAttribute.AttributeData> {
 
+    public GenericAttribute(String key, AttributeData value) {
+        super(key, value);
+    }
+
     public GenericAttribute(AttributeData value) {
         super(ItemAttribute.ATTRIBUTE.getKey(), value);
     }
@@ -26,8 +32,8 @@ public class GenericAttribute extends MetaAttribute<GenericAttribute.AttributeDa
     }
 
     @Override
-    public String toString() {
-        return getValue().attribute.getKey() + " " + getValue().modifier().getAmount() + " " + getValue().modifier().getOperation() + " " + getValue().modifier().getSlot();
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().attribute().getKey() + " " + getValue().modifier().getAmount() + " " + getValue().modifier().getOperation() + " " + getValue().modifier().getSlot()).buildNoSpace();
     }
 
     public record AttributeData(Attribute attribute, AttributeModifier modifier) {}

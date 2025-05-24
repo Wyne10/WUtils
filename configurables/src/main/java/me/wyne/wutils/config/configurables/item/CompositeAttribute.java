@@ -1,5 +1,6 @@
 package me.wyne.wutils.config.configurables.item;
 
+import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -35,10 +36,10 @@ public class CompositeAttribute implements Attribute<Map<String, Attribute<?>>> 
     }
 
     @Override
-    public String toString() {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
-        attributes.keySet().forEach(key -> builder.append(1, key, attributes.get(key).toConfig()));
-        return builder.toString();
+        attributes.keySet().forEach(key -> builder.appendComposite(depth, key, attributes.get(key), configEntry));
+        return builder.build();
     }
 
 }

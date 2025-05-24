@@ -102,4 +102,5 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
     public Component fromString(String string) {
         return EnhancedLegacyText.get().parse(string);
     }
+
 }

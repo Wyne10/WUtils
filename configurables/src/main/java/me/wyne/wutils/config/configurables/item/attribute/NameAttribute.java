@@ -8,7 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class NameAttribute extends MetaAttribute<String> implements Attribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class NameAttribute extends MetaAttribute<String> implements PlayerAwareAttribute, ContextPlaceholderAttribute {
+
+    public NameAttribute(String key, String value) {
+        super(key, value);
+    }
 
     public NameAttribute(String value) {
         super(ItemAttribute.NAME.getKey(), value);
@@ -52,11 +56,6 @@ public class NameAttribute extends MetaAttribute<String> implements Attribute<St
         item.editMeta(meta ->
                 meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(player.locale(), player, getValue()).replace(replacements).bungee())
         );
-    }
-
-    @Override
-    public String toString() {
-        return getValue();
     }
 
 }

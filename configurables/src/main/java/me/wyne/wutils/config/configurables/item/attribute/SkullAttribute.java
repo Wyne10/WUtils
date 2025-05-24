@@ -8,6 +8,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class SkullAttribute extends MetaAttribute<OfflinePlayer> {
 
+    public SkullAttribute(String key, OfflinePlayer value) {
+        super(key, value);
+    }
+
     public SkullAttribute(OfflinePlayer value) {
         super(ItemAttribute.SKULL.getKey(), value);
     }
@@ -16,11 +20,6 @@ public class SkullAttribute extends MetaAttribute<OfflinePlayer> {
     public void apply(ItemMeta meta) {
         if (!(meta instanceof SkullMeta)) return;
         ((SkullMeta)meta).setOwningPlayer(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue().getName());
     }
 
 }

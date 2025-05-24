@@ -9,6 +9,7 @@ public interface PlaceholderLocalized<T, I extends Interpreter> extends Localize
 
     @Nullable
     OfflinePlayer getOfflinePlayer();
+
     @Nullable
     Player getPlayer();
 

@@ -9,6 +9,10 @@ import org.bukkit.potion.PotionType;
 
 public class PotionModifierAttribute extends MetaAttribute<PotionModifierAttribute.PotionModifier> {
 
+    public PotionModifierAttribute(String key, PotionModifier value) {
+        super(key, value);
+    }
+
     public PotionModifierAttribute(PotionModifier value) {
         super(ItemAttribute.POTION_MODIFIER.getKey(), value);
     }
@@ -22,11 +26,6 @@ public class PotionModifierAttribute extends MetaAttribute<PotionModifierAttribu
             case EXTENDED -> pmeta.setBasePotionData(new PotionData(baseData.getType(), true, false));
             case UPGRADED -> pmeta.setBasePotionData(new PotionData(baseData.getType(), false, true));
         }
-    }
-
-    @Override
-    public String toString() {
-        return getValue().toString();
     }
 
     public enum PotionModifier {

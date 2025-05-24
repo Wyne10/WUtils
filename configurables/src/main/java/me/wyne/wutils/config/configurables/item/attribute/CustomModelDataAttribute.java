@@ -6,6 +6,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class CustomModelDataAttribute extends MetaAttribute<Integer> {
 
+    public CustomModelDataAttribute(String key, Integer value) {
+        super(key, value);
+    }
+
     public CustomModelDataAttribute(Integer value) {
         super(ItemAttribute.MODEL.getKey(), value);
     }
@@ -13,11 +17,6 @@ public class CustomModelDataAttribute extends MetaAttribute<Integer> {
     @Override
     public void apply(ItemMeta meta) {
         meta.setCustomModelData(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

@@ -9,10 +9,12 @@ import org.jetbrains.annotations.Nullable;
 public interface CompositeConfigurable extends Configurable {
 
     String toConfig(int depth, ConfigEntry configEntry);
+
     @Override
     default String toConfig(ConfigEntry configEntry) {
         return toConfig(ConfigBuilder.DEFAULT_DEPTH, configEntry);
     }
+
     @Override
     void fromConfig(@Nullable Object configObject);
 

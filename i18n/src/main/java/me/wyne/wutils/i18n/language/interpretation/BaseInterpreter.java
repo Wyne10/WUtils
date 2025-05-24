@@ -42,26 +42,22 @@ public class BaseInterpreter implements StringInterpreter {
     }
 
     @Override
-    public String getPlaceholderString(Language language, @Nullable Player player, String path)
-    {
+    public String getPlaceholderString(Language language, @Nullable Player player, String path) {
         return PlaceholderAPIWrapper.setPlaceholders(player, getString(language, path));
     }
 
     @Override
-    public String getPlaceholderString(Language language, @Nullable Player player, String path, TextReplacement... textReplacements)
-    {
+    public String getPlaceholderString(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return PlaceholderAPIWrapper.setPlaceholders(player, getString(language, path, textReplacements));
     }
 
     @Override
-    public String getPlaceholderString(Language language, @Nullable OfflinePlayer player, String path)
-    {
+    public String getPlaceholderString(Language language, @Nullable OfflinePlayer player, String path) {
         return PlaceholderAPIWrapper.setPlaceholders(player, getString(language, path));
     }
 
     @Override
-    public String getPlaceholderString(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements)
-    {
+    public String getPlaceholderString(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return PlaceholderAPIWrapper.setPlaceholders(player, getString(language, path, textReplacements));
     }
 

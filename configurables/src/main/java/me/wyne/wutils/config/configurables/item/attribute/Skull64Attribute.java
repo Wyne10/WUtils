@@ -11,6 +11,10 @@ import java.util.UUID;
 
 public class Skull64Attribute extends MetaAttribute<String> {
 
+    public Skull64Attribute(String key, String value) {
+        super(key, value);
+    }
+
     public Skull64Attribute(String value) {
         super(ItemAttribute.SKULL64.getKey(), value);
     }
@@ -21,11 +25,6 @@ public class Skull64Attribute extends MetaAttribute<String> {
         var profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", getValue()));
         ((SkullMeta)meta).setPlayerProfile(profile);
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

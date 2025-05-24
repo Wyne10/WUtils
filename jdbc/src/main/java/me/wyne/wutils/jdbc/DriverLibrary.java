@@ -20,39 +20,39 @@ import java.sql.SQLException;
 public enum DriverLibrary {
     NONE("", "", "", ""),
     H2_V1(
-      "com.h2database",
-              "h2",
-              "1.4.200",
+            "com.h2database",
+            "h2",
+            "1.4.200",
             "org.h2.Driver"
     ),
     H2_V2(
-      "com.h2database",
-              "h2",
-              "2.3.232",
+            "com.h2database",
+            "h2",
+            "2.3.232",
             "org.h2.Driver"
     ),
     MYSQL(
-      "com.mysql",
-              "mysql-connector-j",
-              "8.0.33",
+            "com.mysql",
+            "mysql-connector-j",
+            "8.0.33",
             "com.mysql.cj.jdbc.NonRegisteringDriver"
     ),
     MARIADB(
-      "org.mariadb.jdbc",
-              "mariadb-java-client",
-              "3.5.1",
+            "org.mariadb.jdbc",
+            "mariadb-java-client",
+            "3.5.1",
             "org.mariadb.jdbc.Driver"
     ),
     POSTGRESQL(
-      "org.postgresql",
-              "postgresql",
-              "42.7.4",
+            "org.postgresql",
+            "postgresql",
+            "42.7.4",
             "org.postgresql.Driver"
     ),
     SQLITE(
-      "org.xerial",
-              "sqlite-jdbc",
-              "3.47.0.0",
+            "org.xerial",
+            "sqlite-jdbc",
+            "3.47.0.0",
             "org.sqlite.JDBC"
     );
 
@@ -121,4 +121,5 @@ public enum DriverLibrary {
             logger.error("An exception occurred trying to register driver '{}'", driverClass, e);
         }
     }
+
 }

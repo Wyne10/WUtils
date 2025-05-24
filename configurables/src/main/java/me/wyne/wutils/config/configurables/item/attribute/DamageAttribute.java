@@ -7,6 +7,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class DamageAttribute extends MetaAttribute<Integer> {
 
+    public DamageAttribute(String key, Integer value) {
+        super(key, value);
+    }
+
     public DamageAttribute(Integer value) {
         super(ItemAttribute.DAMAGE.getKey(), value);
     }
@@ -15,11 +19,6 @@ public class DamageAttribute extends MetaAttribute<Integer> {
     public void apply(ItemMeta meta) {
         if (!(meta instanceof Damageable)) return;
         ((Damageable)meta).setDamage(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 
 }

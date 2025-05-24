@@ -9,6 +9,10 @@ import org.bukkit.potion.PotionType;
 
 public class PotionTypeAttribute extends MetaAttribute<PotionType> {
 
+    public PotionTypeAttribute(String key, PotionType value) {
+        super(key, value);
+    }
+
     public PotionTypeAttribute(PotionType value) {
         super(ItemAttribute.POTION_TYPE.getKey(), value);
     }
@@ -19,11 +23,6 @@ public class PotionTypeAttribute extends MetaAttribute<PotionType> {
         if (!(meta instanceof PotionMeta pmeta)) return;
         var baseData = pmeta.getBasePotionData() == null ? new PotionData(getValue(), false, false) : pmeta.getBasePotionData();
         pmeta.setBasePotionData(new PotionData(getValue(), baseData.isExtended(), baseData.isUpgraded()));
-    }
-
-    @Override
-    public String toString() {
-        return getValue().toString();
     }
 
 }

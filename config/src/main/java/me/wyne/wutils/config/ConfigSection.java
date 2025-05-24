@@ -19,28 +19,24 @@ public class ConfigSection {
         this.section = section;
     }
 
-    public ConfigSection(String section, Map<String, Set<ConfigField>> fields)
-    {
+    public ConfigSection(String section, Map<String, Set<ConfigField>> fields) {
         this(section);
         this.fields.putAll(fields);
     }
 
-    public void addField(String subSection, ConfigField field)
-    {
+    public void addField(String subSection, ConfigField field) {
         if (!fields.containsKey(subSection))
             fields.put(subSection, new LinkedHashSet<>());
         fields.get(subSection).add(field);
     }
 
-    public String generateConfigSection()
-    {
+    public String generateConfigSection() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
         stringBuilder.append(generateSectionHeader());
         stringBuilder.append(section.replaceAll(" ", "").toLowerCase()).append(":").append("\n");
 
-        for (String subSection : fields.keySet())
-        {
+        for (String subSection : fields.keySet()) {
             stringBuilder.append(generateSubSection(subSection));
             stringBuilder.append("\n");
         }
@@ -48,16 +44,14 @@ public class ConfigSection {
         return stringBuilder.toString();
     }
 
-    private String generateSubSection(String subSection)
-    {
+    private String generateSubSection(String subSection) {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (!subSection.isEmpty()) {
             stringBuilder.append("  ").append("### ").append(subSection).append("\n");
         }
 
-        for (ConfigField configField : fields.get(subSection))
-        {
+        for (ConfigField configField : fields.get(subSection)) {
             stringBuilder.append(configField.generateConfigLine());
             stringBuilder.append("\n");
         }

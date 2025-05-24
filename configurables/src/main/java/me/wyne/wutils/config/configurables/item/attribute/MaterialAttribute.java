@@ -7,6 +7,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class MaterialAttribute extends AttributeBase<Material> {
 
+    public MaterialAttribute(String key, Material value) {
+        super(key, value);
+    }
+
     public MaterialAttribute(Material value) {
         super(ItemAttribute.MATERIAL.getKey(), value);
     }
@@ -14,11 +18,6 @@ public class MaterialAttribute extends AttributeBase<Material> {
     @Override
     public void apply(ItemStack item) {
         item.setType(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return getValue().toString();
     }
 
 }

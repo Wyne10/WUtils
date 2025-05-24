@@ -99,13 +99,11 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         enchantments.fromConfig(config.getConfigurationSection("enchantments"));
     }
 
-    public ItemStack build(TextReplacement... textReplacements)
-    {
+    public ItemStack build(TextReplacement... textReplacements) {
         return build(null, textReplacements);
     }
 
-    public ItemStack build(@Nullable Player player, TextReplacement... textReplacements)
-    {
+    public ItemStack build(@Nullable Player player, TextReplacement... textReplacements) {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayNameComponent(getName(player, textReplacements).bungee());
@@ -118,13 +116,11 @@ public class ItemStackConfigurable implements CompositeConfigurable {
         return itemStack;
     }
 
-    public ItemStack buildComponent(ComponentReplacement... componentReplacements)
-    {
+    public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
         return buildComponent(null, componentReplacements);
     }
 
-    public ItemStack buildComponent(@Nullable Player player, ComponentReplacement... componentReplacements)
-    {
+    public ItemStack buildComponent(@Nullable Player player, ComponentReplacement... componentReplacements) {
         ItemStack itemStack = new ItemStack(getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayNameComponent(getComponentName(player, componentReplacements).bungee());
