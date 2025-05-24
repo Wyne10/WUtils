@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class LegacyInterpreter extends BaseInterpreter implements ComponentInterpreter {
 
+    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().character('&').hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+
     protected final BaseInterpreter baseInterpreter;
 
     public LegacyInterpreter(StringValidator stringValidator) {
@@ -109,38 +111,38 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
 
     @Override
     public Component getComponent(Language language, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getString(language, path)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getString(language, path)));
     }
 
     @Override
     public Component getComponent(Language language, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getString(language, path, textReplacements)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getString(language, path, textReplacements)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable Player player, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getPlaceholderString(language, player, path)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getPlaceholderString(language, player, path)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable OfflinePlayer player, String path) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getPlaceholderString(language, player, path)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getPlaceholderString(language, player, path)));
     }
 
     @Override
     public Component getPlaceholderComponent(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
-        return Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(baseInterpreter.getPlaceholderString(language, player, path, textReplacements)));
     }
 
     @Override
     public List<Component> getComponentList(Language language, String path) {
         return baseInterpreter.getStringList(language, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -148,7 +150,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<Component> getComponentList(Language language, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getStringList(language, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -156,7 +158,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path) {
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -164,7 +166,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -172,7 +174,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path) {
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -180,18 +182,18 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
     @Override
     public List<Component> getPlaceholderComponentList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
-                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(LegacyComponentSerializer.legacyAmpersand().deserialize(s)))
+                .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public String toString(Component component) {
-        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+        return SERIALIZER.serialize(component);
     }
 
     @Override
     public Component fromString(String string) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+        return SERIALIZER.deserialize(string);
     }
 }

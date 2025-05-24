@@ -2,9 +2,9 @@ package me.wyne.wutils.i18n.language.replacement;
 
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
+import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
@@ -43,7 +43,7 @@ public class Placeholder {
 
     public static TextReplacement legacy(String key, Component value)
     {
-        return string -> string.replaceAll("<"+key+">", LegacyComponentSerializer.legacyAmpersand().serialize(value));
+        return string -> string.replaceAll("<"+key+">", LegacyInterpreter.SERIALIZER.serialize(value));
     }
 
     public static TextReplacement miniMessage(String key, Component value)

@@ -5,6 +5,7 @@ import me.wyne.wutils.i18n.language.component.LocalizedComponent
 import me.wyne.wutils.i18n.language.component.LocalizedString
 import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedComponent
 import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedString
+import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement
 import me.wyne.wutils.i18n.language.replacement.TextReplacement
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
@@ -13,7 +14,6 @@ import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.md_5.bungee.api.chat.BaseComponent
@@ -205,7 +205,7 @@ val CommandSender.locale
     get() = this.player?.locale()
 
 val Component.legacy
-    get() = LegacyComponentSerializer.legacyAmpersand().serialize(this)
+    get() = LegacyInterpreter.SERIALIZER.serialize(this)
 
 val Component.gson
     get() = GsonComponentSerializer.gson().serialize(this)
@@ -228,7 +228,7 @@ val Component.minecraft
     get() = MinecraftComponentSerializer.get().serialize(this)
 
 val String.legacy
-    get() = LegacyComponentSerializer.legacyAmpersand().deserialize(this)
+    get() = LegacyInterpreter.SERIALIZER.deserialize(this)
 
 val String.gson
     get() = GsonComponentSerializer.gson().deserialize(this)
