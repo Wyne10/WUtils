@@ -1,6 +1,8 @@
 package me.wyne.wutils.config.configurables.item;
 
 import me.wyne.wutils.config.configurables.item.attribute.*;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
+import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -90,56 +92,60 @@ public class ItemConfig {
         return builder.toString();
     }
 
-    public ItemStack createItemStack() {
+    public ItemStack createItemStack(TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        itemAttributes.values().forEach(attribute -> attribute.apply(itemStack));
+        itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
+                .map(attribute -> (ContextPlaceholderAttribute) attribute)
+                .forEach(attribute -> attribute.apply(itemStack, textReplacements));
+        itemAttributes.values().stream()
+                .filter(attribute -> !(attribute instanceof ContextPlaceholderAttribute))
+                .forEach(attribute -> attribute.apply(itemStack));
         return itemStack;
     }
 
-    public ItemStack createItemStack(Player player) {
+    public ItemStack createItemStack(Player player, TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        itemAttributes.values().forEach(attribute -> {
-            if (attribute instanceof PlayerAwareAttribute<?> playerAwareAttribute)
-                playerAwareAttribute.apply(itemStack, player);
-            else
-                attribute.apply(itemStack);
-        });
-        return itemStack;
-    }
-
-    public ItemStack createItemStack(Attribute<?>... attributes) {
-        var itemStack = createItemStack();
-        for (Attribute<?> attribute : attributes)
-            attribute.apply(itemStack);
-        return itemStack;
-    }
-
-    public ItemStack createItemStack(Player player, Attribute<?>... attributes) {
-        var itemStack = createItemStack(player);
-        for (Attribute<?> attribute : attributes)
-            attribute.apply(itemStack);
-        return itemStack;
-    }
-
-    public ItemStack createItemStack(ItemAttribute... ignoring) {
-        Set<String> ignoreSet = Arrays.stream(ignoring).map(ItemAttribute::getKey).collect(Collectors.toSet());
-        var itemStack = new ItemStack(Material.STONE);
-        itemAttributes.keySet().stream()
-                .filter(ignoreSet::contains)
-                .forEach(key -> itemAttributes.get(key).apply(itemStack));
-        return itemStack;
-    }
-
-    public ItemStack createItemStack(Player player, ItemAttribute... ignoring) {
-        Set<String> ignoreSet = Arrays.stream(ignoring).map(ItemAttribute::getKey).collect(Collectors.toSet());
-        var itemStack = new ItemStack(Material.STONE);
-        itemAttributes.keySet().stream()
-                .filter(ignoreSet::contains)
-                .forEach(key -> {
-                    if (itemAttributes.get(key) instanceof PlayerAwareAttribute<?> playerAwareAttribute)
+        itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
+                .map(attribute -> (ContextPlaceholderAttribute) attribute)
+                .forEach(attribute -> attribute.apply(itemStack, player, textReplacements));
+        itemAttributes.values().stream()
+                .filter(attribute -> !(attribute instanceof ContextPlaceholderAttribute))
+                .forEach(attribute -> {
+                    if (attribute instanceof PlayerAwareAttribute playerAwareAttribute)
                         playerAwareAttribute.apply(itemStack, player);
                     else
-                        itemAttributes.get(key).apply(itemStack);
+                        attribute.apply(itemStack);
+                });
+        return itemStack;
+    }
+
+    public ItemStack createItemStackComponent(ComponentReplacement... componentReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
+                .map(attribute -> (ContextPlaceholderAttribute) attribute)
+                .forEach(attribute -> attribute.apply(itemStack, componentReplacements));
+        itemAttributes.values().stream()
+                .filter(attribute -> !(attribute instanceof ContextPlaceholderAttribute))
+                .forEach(attribute -> attribute.apply(itemStack));
+        return itemStack;
+    }
+
+    public ItemStack createItemStackComponent(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
+                .map(attribute -> (ContextPlaceholderAttribute) attribute)
+                .forEach(attribute -> attribute.apply(itemStack, player, componentReplacements));
+        itemAttributes.values().stream()
+                .filter(attribute -> !(attribute instanceof ContextPlaceholderAttribute))
+                .forEach(attribute -> {
+                    if (attribute instanceof PlayerAwareAttribute playerAwareAttribute)
+                        playerAwareAttribute.apply(itemStack, player);
+                    else
+                        attribute.apply(itemStack);
                 });
         return itemStack;
     }
