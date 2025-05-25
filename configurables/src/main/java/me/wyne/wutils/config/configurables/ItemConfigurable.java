@@ -4,10 +4,7 @@ import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
-import me.wyne.wutils.config.configurables.attribute.Attribute;
-import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
-import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
-import me.wyne.wutils.config.configurables.attribute.AttributeMap;
+import me.wyne.wutils.config.configurables.attribute.*;
 import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.config.configurables.item.attribute.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
@@ -21,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ItemConfigurable implements CompositeConfigurable {
 
@@ -53,6 +49,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), (key, config) -> new PrimitiveConfigurableAttribute<>(key, config.getInt("slot", 0)));
     }
     
     private AttributeContainer attributeContainer;
@@ -153,12 +150,20 @@ public class ItemConfigurable implements CompositeConfigurable {
         return attributeContainer.get(key);
     }
 
+    public <T> T get(ItemAttribute attribute) {
+        return attributeContainer.get(attribute.getKey());
+    }
+
     public <T> Set<T> getSet(Class<T> clazz) {
         return attributeContainer.getSet(clazz);
     }
 
     public <V> Attribute<V> getAttribute(String key) {
         return attributeContainer.getAttribute(key);
+    }
+
+    public <V> Attribute<V> getAttribute(ItemAttribute attribute) {
+        return attributeContainer.getAttribute(attribute.getKey());
     }
 
     public <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz) {
