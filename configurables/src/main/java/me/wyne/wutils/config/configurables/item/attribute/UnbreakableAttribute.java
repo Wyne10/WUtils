@@ -1,10 +1,12 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class UnbreakableAttribute extends MetaAttribute<Boolean> {
+public class UnbreakableAttribute extends AttributeBase<Boolean> implements MetaAttribute, ConfigurableAttribute<Boolean> {
 
     public UnbreakableAttribute(String key, Boolean value) {
         super(key, value);

@@ -1,12 +1,14 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class GlowAttribute extends MetaAttribute<Boolean> {
+public class GlowAttribute extends AttributeBase<Boolean> implements MetaAttribute, ConfigurableAttribute<Boolean> {
 
     public GlowAttribute(String key, Boolean value) {
         super(key, value);

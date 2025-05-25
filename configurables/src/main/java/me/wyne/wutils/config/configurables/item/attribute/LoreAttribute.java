@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class LoreAttribute extends MetaAttribute<List<String>> implements PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class LoreAttribute extends AttributeBase<List<String>> implements MetaAttribute, ConfigurableAttribute<List<String>>, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
     public LoreAttribute(List<String> value) {
         super(ItemAttribute.LORE.getKey(), value);

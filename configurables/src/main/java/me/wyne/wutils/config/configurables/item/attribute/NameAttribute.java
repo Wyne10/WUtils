@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class NameAttribute extends MetaAttribute<String> implements PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class NameAttribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
     public NameAttribute(String key, String value) {
         super(key, value);

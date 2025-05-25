@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class PrintAttribute extends AttributeBase<String> implements PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
+public class PrintAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements;
@@ -21,9 +21,6 @@ public class PrintAttribute extends AttributeBase<String> implements PlayerAware
     public PrintAttribute(String value) {
         super(ItemAttribute.PRINT.getKey(), value);
     }
-
-    @Override
-    public void apply(ItemStack item) {}
 
     @Override
     public void apply(ItemStack item, Player player) {

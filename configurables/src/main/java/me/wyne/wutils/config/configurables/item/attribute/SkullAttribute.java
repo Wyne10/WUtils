@@ -1,12 +1,14 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SkullAttribute extends MetaAttribute<OfflinePlayer> {
+public class SkullAttribute extends AttributeBase<OfflinePlayer> implements MetaAttribute, ConfigurableAttribute<OfflinePlayer> {
 
     public SkullAttribute(String key, OfflinePlayer value) {
         super(key, value);

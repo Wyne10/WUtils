@@ -1,6 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.Bukkit;
@@ -9,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 
-public class Skull64Attribute extends MetaAttribute<String> {
+public class Skull64Attribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String> {
 
     public Skull64Attribute(String key, String value) {
         super(key, value);

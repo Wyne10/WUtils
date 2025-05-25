@@ -17,6 +17,10 @@ public class AttributeMap {
         keyMap.put(key, factory);
     }
 
+    public Map<String, AttributeFactory> getKeyMap() {
+        return keyMap;
+    }
+
     public Set<Attribute<?>> createAll(ConfigurationSection config) {
         return keyMap.keySet().stream()
                 .filter(config::contains)

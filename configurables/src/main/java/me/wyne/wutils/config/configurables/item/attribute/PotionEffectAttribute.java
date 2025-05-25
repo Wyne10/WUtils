@@ -3,16 +3,14 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class PotionEffectAttribute extends MetaAttribute<PotionEffect> {
+public class PotionEffectAttribute extends AttributeBase<PotionEffect> implements MetaAttribute, ConfigurableAttribute<PotionEffect> {
 
     public PotionEffectAttribute(String key, PotionEffect value) {
         super(key, value);

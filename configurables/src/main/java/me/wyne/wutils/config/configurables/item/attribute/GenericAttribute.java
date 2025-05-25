@@ -3,9 +3,7 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -16,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class GenericAttribute extends MetaAttribute<GenericAttribute.AttributeData> {
+public class GenericAttribute extends AttributeBase<GenericAttribute.AttributeData> implements MetaAttribute, ConfigurableAttribute<GenericAttribute.AttributeData> {
 
     public GenericAttribute(String key, AttributeData value) {
         super(key, value);

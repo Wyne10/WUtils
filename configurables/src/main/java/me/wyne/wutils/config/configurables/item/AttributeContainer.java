@@ -1,0 +1,114 @@
+package me.wyne.wutils.config.configurables.item;
+
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class AttributeContainer implements CompositeConfigurable {
+
+    private final AttributeMap attributeMap;
+    private final Map<String, Attribute<?>> attributes;
+
+    public AttributeContainer() {
+        attributeMap = new AttributeMap(new LinkedHashMap<>());
+        attributes = new LinkedHashMap<>();
+    }
+
+    public AttributeContainer(AttributeMap attributeMap) {
+        this.attributeMap = attributeMap;
+        attributes = new LinkedHashMap<>();
+    }
+
+    public AttributeContainer(Map<String, Attribute<?>> attributes) {
+        attributeMap = new AttributeMap(new LinkedHashMap<>());
+        this.attributes = attributes;
+    }
+
+    public AttributeContainer(AttributeMap attributeMap, Map<String, Attribute<?>> attributes) {
+        this.attributeMap = attributeMap;
+        this.attributes = attributes;
+    }
+
+    public <T extends Attribute<V>, V> T getAttribute(String key) {
+        return (T) attributes.get(key);
+    }
+
+    public <T extends Attribute<V>, V> Set<T> getAttributes(Class<T> clazz) {
+        return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        getConfigurableAttributes().values()
+                .forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
+        return builder.toString();
+    }
+
+    @Override
+    public void fromConfig(@Nullable Object configObject) {
+        attributes.clear();
+        attributes.putAll(attributeMap.createAllMap((ConfigurationSection) configObject));
+    }
+
+    private Map<String, ConfigurableAttribute<?>> getConfigurableAttributes() {
+        Map<String, ConfigurableAttribute<?>> configurableAttributes = new LinkedHashMap<>();
+        attributes.keySet().stream()
+                .filter(key -> attributes.get(key) instanceof ConfigurableAttribute<?>)
+                .forEach(key-> configurableAttributes.put(key, (ConfigurableAttribute<?>) attributes.get(key)));
+        return configurableAttributes;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static final class Builder {
+
+        private final AttributeMap attributeMap;
+        private final Map<String, Attribute<?>> attributes;
+
+        public Builder() {
+            attributeMap = new AttributeMap(new LinkedHashMap<>());
+            attributes = new LinkedHashMap<>();
+        }
+
+        public Builder(AttributeContainer attributeContainer) {
+            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.getKeyMap());
+            this.attributes = new LinkedHashMap<>(attributeContainer.attributes);
+        }
+
+        public Builder ignore(String... ignore) {
+            for (String ignoreKey : ignore)
+                attributes.remove(ignoreKey);
+            return this;
+        }
+
+        public Builder with(String key, AttributeFactory factory) {
+            attributeMap.put(key, factory);
+            return this;
+        }
+
+        public Builder with(Attribute<?> attribute) {
+            attributes.put(attribute.getKey(), attribute);
+            return this;
+        }
+
+        public AttributeContainer build() {
+            return new AttributeContainer(attributeMap, attributes);
+        }
+
+    }
+
+}

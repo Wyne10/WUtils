@@ -1,5 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -7,7 +9,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
-public class PotionTypeAttribute extends MetaAttribute<PotionType> {
+public class PotionTypeAttribute extends AttributeBase<PotionType> implements MetaAttribute, ConfigurableAttribute<PotionType> {
 
     public PotionTypeAttribute(String key, PotionType value) {
         super(key, value);

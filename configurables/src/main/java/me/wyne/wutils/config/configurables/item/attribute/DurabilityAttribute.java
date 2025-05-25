@@ -1,12 +1,14 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class DurabilityAttribute extends MetaAttribute<Integer> {
+public class DurabilityAttribute extends AttributeBase<Integer> implements MetaAttribute, ConfigurableAttribute<Integer> {
 
     private ItemStack itemStack;
 
@@ -21,7 +23,7 @@ public class DurabilityAttribute extends MetaAttribute<Integer> {
     @Override
     public void apply(ItemStack item) {
         this.itemStack = item;
-        super.apply(item);
+        MetaAttribute.super.apply(item);
     }
 
     @Override

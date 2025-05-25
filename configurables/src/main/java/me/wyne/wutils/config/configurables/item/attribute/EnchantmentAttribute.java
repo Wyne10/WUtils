@@ -3,15 +3,13 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.item.CompositeAttributeFactory;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class EnchantmentAttribute extends MetaAttribute<EnchantmentAttribute.EnchantmentData> {
+public class EnchantmentAttribute extends AttributeBase<EnchantmentAttribute.EnchantmentData> implements MetaAttribute, ConfigurableAttribute<EnchantmentAttribute.EnchantmentData> {
 
     public EnchantmentAttribute(String key, EnchantmentData value) {
         super(key, value);

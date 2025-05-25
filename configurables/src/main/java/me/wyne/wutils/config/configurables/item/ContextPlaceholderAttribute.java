@@ -7,7 +7,10 @@ import org.bukkit.inventory.ItemStack;
 
 public interface ContextPlaceholderAttribute {
     void apply(ItemStack item, TextReplacement... replacements);
+
     void apply(ItemStack item, Player player, TextReplacement... replacements);
+
     void apply(ItemStack item, ComponentReplacement... replacements);
+
     void apply(ItemStack item, Player player, ComponentReplacement... replacements);
 }

@@ -2,13 +2,15 @@ package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
+import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
-public class PotionColorAttribute extends MetaAttribute<Color> {
+public class PotionColorAttribute extends AttributeBase<Color> implements MetaAttribute, ConfigurableAttribute<Color> {
 
     public PotionColorAttribute(String key, Color value) {
         super(key, value);
