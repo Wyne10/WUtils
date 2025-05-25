@@ -137,7 +137,7 @@ public class ItemConfig implements CompositeConfigurable {
         return itemStack;
     }
 
-    public ItemStack createItemStack(ComponentReplacement... componentReplacements) {
+    public ItemStack createItemStackComponent(ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
@@ -149,7 +149,7 @@ public class ItemConfig implements CompositeConfigurable {
         return itemStack;
     }
 
-    public ItemStack createItemStack(Player player, ComponentReplacement... componentReplacements) {
+    public ItemStack createItemStackComponent(Player player, ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
@@ -186,8 +186,8 @@ public class ItemConfig implements CompositeConfigurable {
                 .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
     }
 
-    public GuiItem createGuiItem(ComponentReplacement... componentReplacements) {
-        var itemStack = createItemStack(componentReplacements);
+    public GuiItem createGuiItemComponent(ComponentReplacement... componentReplacements) {
+        var itemStack = createItemStackComponent(componentReplacements);
         var guiActions = itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ClickEventAttribute)
                 .map(attribute -> (ClickEventAttribute) attribute)
@@ -196,8 +196,8 @@ public class ItemConfig implements CompositeConfigurable {
                 .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
     }
 
-    public GuiItem createGuiItem(Player player, ComponentReplacement... componentReplacements) {
-        var itemStack = createItemStack(player, componentReplacements);
+    public GuiItem createGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = createItemStackComponent(player, componentReplacements);
         var guiActions = itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ClickEventAttribute)
                 .map(attribute -> (ClickEventAttribute) attribute)
