@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import dev.triumphteam.gui.components.GuiAction;
-import me.wyne.wutils.config.configurables.item.AttributeBase;
+import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.item.ClickEventAttribute;
 import org.bukkit.event.inventory.InventoryClickEvent;
 

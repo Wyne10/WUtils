@@ -1,5 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.config.configurables.attribute.AttributeBase;
+import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;

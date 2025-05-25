@@ -1,4 +1,4 @@
-package me.wyne.wutils.config.configurables.item;
+package me.wyne.wutils.config.configurables.attribute;
 
 public abstract class AttributeBase<V> implements Attribute<V> {
 

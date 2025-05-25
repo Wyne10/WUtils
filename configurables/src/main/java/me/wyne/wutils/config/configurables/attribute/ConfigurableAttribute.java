@@ -1,4 +1,4 @@
-package me.wyne.wutils.config.configurables.item;
+package me.wyne.wutils.config.configurables.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;

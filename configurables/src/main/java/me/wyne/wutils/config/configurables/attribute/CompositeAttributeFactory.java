@@ -1,4 +1,4 @@
-package me.wyne.wutils.config.configurables.item;
+package me.wyne.wutils.config.configurables.attribute;
 
 import org.bukkit.configuration.ConfigurationSection;
 

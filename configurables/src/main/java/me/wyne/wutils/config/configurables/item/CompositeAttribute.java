@@ -2,6 +2,9 @@ package me.wyne.wutils.config.configurables.item;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
+import me.wyne.wutils.config.configurables.attribute.AttributeBase;
+import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
