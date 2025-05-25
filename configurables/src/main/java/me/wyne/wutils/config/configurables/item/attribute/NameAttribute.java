@@ -11,6 +11,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class NameAttribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
+    private Player player;
+    private TextReplacement[] textReplacements = {};
+    private ComponentReplacement[] componentReplacements = {};
+
     public NameAttribute(String key, String value) {
         super(key, value);
     }
@@ -21,42 +25,22 @@ public class NameAttribute extends AttributeBase<String> implements MetaAttribut
 
     @Override
     public void apply(ItemMeta meta) {
-        meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(null, getValue()).bungee());
+        meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, getValue(), textReplacements).replace(componentReplacements).bungee());
     }
 
     @Override
-    public void apply(ItemStack item, Player player) {
-        item.editMeta(meta ->
-                meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(player.locale(), player, getValue()).bungee())
-        );
+    public void apply(Player player) {
+        this.player = player;
     }
 
     @Override
     public void apply(ItemStack item, TextReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(null, getValue(), replacements).bungee())
-        );
-    }
-
-    @Override
-    public void apply(ItemStack item, Player player, TextReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(player.locale(), player, getValue(), replacements).bungee())
-        );
+        this.textReplacements = replacements;
     }
 
     @Override
     public void apply(ItemStack item, ComponentReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(null, getValue()).replace(replacements).bungee())
-        );
-    }
-
-    @Override
-    public void apply(ItemStack item, Player player, ComponentReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(player.locale(), player, getValue()).replace(replacements).bungee())
-        );
+        this.componentReplacements = replacements;
     }
 
     public static final class Factory implements AttributeFactory {

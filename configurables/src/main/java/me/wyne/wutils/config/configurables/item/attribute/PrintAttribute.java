@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 public class PrintAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
 
     private Player player;
-    private TextReplacement[] textReplacements;
-    private ComponentReplacement[] componentReplacements;
+    private TextReplacement[] textReplacements = {};
+    private ComponentReplacement[] componentReplacements = {};
 
     public PrintAttribute(String key, String value) {
         super(key, value);
@@ -24,7 +24,12 @@ public class PrintAttribute extends AttributeBase<String> implements Configurabl
     }
 
     @Override
-    public void apply(ItemStack item, Player player) {
+    public void apply(InventoryClickEvent event) {
+        I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, getValue(), textReplacements).replace(componentReplacements).sendMessage(event.getWhoClicked());
+    }
+
+    @Override
+    public void apply(Player player) {
         this.player = player;
     }
 
@@ -34,25 +39,8 @@ public class PrintAttribute extends AttributeBase<String> implements Configurabl
     }
 
     @Override
-    public void apply(ItemStack item, Player player, TextReplacement... replacements) {
-        this.player = player;
-        this.textReplacements = replacements;
-    }
-
-    @Override
     public void apply(ItemStack item, ComponentReplacement... replacements) {
         this.componentReplacements = replacements;
-    }
-
-    @Override
-    public void apply(ItemStack item, Player player, ComponentReplacement... replacements) {
-        this.player = player;
-        this.componentReplacements = replacements;
-    }
-
-    @Override
-    public void apply(InventoryClickEvent event) {
-        I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, getValue(), textReplacements).replace(componentReplacements).sendMessage(event.getWhoClicked());
     }
 
     public static final class Factory implements AttributeFactory {

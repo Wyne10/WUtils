@@ -1,47 +1,182 @@
 package me.wyne.wutils.config.configurables;
 
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
-import me.wyne.wutils.config.configurables.item.Attribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.ItemConfig;
+import me.wyne.wutils.config.configurables.item.*;
+import me.wyne.wutils.config.configurables.item.attribute.*;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
+import me.wyne.wutils.i18n.language.replacement.TextReplacement;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.LinkedHashMap;
 
 public class ItemConfigurable implements CompositeConfigurable {
 
-    private ItemConfig itemConfig = new ItemConfig();
+    public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
+    
+    static {
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.MATERIAL.getKey(), new MaterialAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.NAME.getKey(), new NameAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.LORE.getKey(), new LoreAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.FLAGS.getKey(), new FlagsAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SKULL.getKey(), new SkullAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SKULL64.getKey(), new Skull64Attribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SKULL_PLAYER.getKey(), new SkullPlayerAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.UNBREAKABLE.getKey(), new UnbreakableAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ENCHANTMENT.getKey(), new EnchantmentAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ENCHANTMENTS.getKey(), (key, config) -> new CompositeAttribute(key, config, new EnchantmentAttribute.Factory()));
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ATTRIBUTE.getKey(), new GenericAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ATTRIBUTES.getKey(), (key, config) -> new CompositeAttribute(key, config, new GenericAttribute.Factory()));
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.GLOW.getKey(), new GlowAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.DURABILITY.getKey(), new DurabilityAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.DAMAGE.getKey(), new DamageAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.MODEL.getKey(), new CustomModelDataAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.REPAIR_COST.getKey(), new RepairCostAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_COLOR.getKey(), new PotionColorAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_TYPE.getKey(), new PotionTypeAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_MODIFIER.getKey(), new PotionModifierAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_EFFECT.getKey(), new PotionEffectAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_EFFECTS.getKey(), (key, config) -> new CompositeAttribute(key, config, new PotionEffectAttribute.Factory()));
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
+    }
+    
+    private AttributeContainer attributeContainer;
 
-    public ItemConfigurable() {}
+    public ItemConfigurable() {
+        attributeContainer = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
+    }
 
     public ItemConfigurable(ConfigurationSection section) {
         fromConfig(section);
     }
 
-    public ItemConfigurable(ItemConfig itemConfig) {
-        this.itemConfig = itemConfig;
+    public ItemConfigurable(AttributeContainer attributeContainer) {
+        this.attributeContainer = attributeContainer;
     }
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return itemConfig.toConfig(depth, configEntry);
+        return attributeContainer.toConfig(depth, configEntry);
     }
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        itemConfig.fromConfig(configObject);
+        attributeContainer.fromConfig(configObject);
     }
 
-    public ItemConfig getItemConfig() {
-        return itemConfig;
+    public ItemStack build(TextReplacement... textReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        attributeContainer.getAttributes(ContextPlaceholderAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack, textReplacements));
+        attributeContainer.getAttributes(ItemStackAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack));
+        return itemStack;
     }
 
-    public ItemConfig.Builder getBuilder() {
-        return itemConfig.toBuilder();
+    public ItemStack build(Player player, TextReplacement... textReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        attributeContainer.getAttributes(ContextPlaceholderAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack, textReplacements));
+        attributeContainer.getAttributes(PlayerAwareAttribute.class)
+                .forEach(attribute -> attribute.apply(player));
+        attributeContainer.getAttributes(ItemStackAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack));
+        return itemStack;
     }
 
-    public <T> Attribute<T> getAttribute(ItemAttribute attribute) {
-        return itemConfig.getAttribute(attribute.getKey());
+    public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        attributeContainer.getAttributes(ContextPlaceholderAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack, componentReplacements));
+        attributeContainer.getAttributes(ItemStackAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack));
+        return itemStack;
+    }
+
+    public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = new ItemStack(Material.STONE);
+        attributeContainer.getAttributes(ContextPlaceholderAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack, componentReplacements));
+        attributeContainer.getAttributes(PlayerAwareAttribute.class)
+                .forEach(attribute -> attribute.apply(player));
+        attributeContainer.getAttributes(ItemStackAttribute.class)
+                .forEach(attribute -> attribute.apply(itemStack));
+        return itemStack;
+    }
+
+    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
+        var itemStack = build(textReplacements);
+        var actions = attributeContainer.getAttributes(ClickEventAttribute.class);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
+    }
+
+    public GuiItem buildGuiItem(Player player, TextReplacement... textReplacements) {
+        var itemStack = build(player, textReplacements);
+        var actions = attributeContainer.getAttributes(ClickEventAttribute.class);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
+
+    }
+
+    public GuiItem buildGuiItemComponent(ComponentReplacement... componentReplacements) {
+        var itemStack = buildComponent(componentReplacements);
+        var actions = attributeContainer.getAttributes(ClickEventAttribute.class);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
+    }
+
+    public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = buildComponent(player, componentReplacements);
+        var actions = attributeContainer.getAttributes(ClickEventAttribute.class);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
+    }
+
+    public AttributeContainer getAttributeContainer() {
+        return attributeContainer;
+    }
+
+    public static final class Builder {
+
+        private final AttributeContainer.Builder attributeContainerBuilder;
+
+        public Builder(ItemConfigurable itemConfigurable) {
+            this.attributeContainerBuilder = itemConfigurable.getAttributeContainer().toBuilder();
+        }
+
+        public Builder ignore(ItemAttribute... ignore) {
+            for (ItemAttribute ignoreAttribute : ignore)
+                attributeContainerBuilder.ignore(ignoreAttribute.getKey());
+            return this;
+        }
+
+        public Builder ignore(String... ignore) {
+            attributeContainerBuilder.ignore(ignore);
+            return this;
+        }
+
+        public Builder with(String key, AttributeFactory factory) {
+            attributeContainerBuilder.with(key, factory);
+            return this;
+        }
+
+        public Builder with(Attribute<?> attribute) {
+            attributeContainerBuilder.with(attribute);
+            return this;
+        }
+
+        public ItemConfigurable build() {
+            return new ItemConfigurable(attributeContainerBuilder.build());
+        }
+
     }
 
 }

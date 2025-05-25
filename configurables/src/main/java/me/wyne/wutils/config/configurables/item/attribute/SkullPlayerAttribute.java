@@ -3,10 +3,12 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SkullPlayerAttribute extends AttributeBase<Boolean> implements ConfigurableAttribute<Boolean>, PlayerAwareAttribute {
+public class SkullPlayerAttribute extends AttributeBase<Boolean> implements MetaAttribute, ConfigurableAttribute<Boolean>, PlayerAwareAttribute {
+
+    private Player player;
 
     public SkullPlayerAttribute(String key, Boolean value) {
         super(key, value);
@@ -17,10 +19,15 @@ public class SkullPlayerAttribute extends AttributeBase<Boolean> implements Conf
     }
 
     @Override
-    public void apply(ItemStack item, Player player) {
+    public void apply(ItemMeta meta) {
         if (!getValue()) return;
-        if (!(item.getItemMeta() instanceof SkullMeta)) return;
-        item.editMeta(meta -> ((SkullMeta)meta).setOwningPlayer(player));
+        if (!(meta instanceof SkullMeta)) return;
+        ((SkullMeta)meta).setOwningPlayer(player);
+    }
+
+    @Override
+    public void apply(Player player) {
+        this.player = player;
     }
 
     public static final class Factory implements AttributeFactory {

@@ -15,48 +15,32 @@ import java.util.List;
 
 public class LoreAttribute extends AttributeBase<List<String>> implements MetaAttribute, ConfigurableAttribute<List<String>>, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
+    private Player player;
+    private TextReplacement[] textReplacements = {};
+    private ComponentReplacement[] componentReplacements = {};
+
     public LoreAttribute(List<String> value) {
         super(ItemAttribute.LORE.getKey(), value);
     }
 
     @Override
     public void apply(ItemMeta meta) {
-        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(null, s).bungee()).toList());
+        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements).replace(componentReplacements).bungee()).toList());
     }
 
     @Override
-    public void apply(ItemStack item, Player player) {
-        item.editMeta(meta ->
-                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s).bungee()).toList())
-        );
+    public void apply(Player player) {
+        this.player = player;
     }
 
     @Override
     public void apply(ItemStack item, TextReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(null, s, replacements).bungee()).toList())
-        );
-    }
-
-    @Override
-    public void apply(ItemStack item, Player player, TextReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s, replacements).bungee()).toList())
-        );
+        this.textReplacements = replacements;
     }
 
     @Override
     public void apply(ItemStack item, ComponentReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(null, s).replace(replacements).bungee()).toList())
-        );
-    }
-
-    @Override
-    public void apply(ItemStack item, Player player, ComponentReplacement... replacements) {
-        item.editMeta(meta ->
-                meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(player.locale(), player, s).replace(replacements).bungee()).toList())
-        );
+        this.componentReplacements = replacements;
     }
 
     @Override

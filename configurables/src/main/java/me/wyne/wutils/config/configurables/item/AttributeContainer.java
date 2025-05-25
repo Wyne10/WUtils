@@ -5,9 +5,7 @@ import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AttributeContainer implements CompositeConfigurable {
@@ -35,12 +33,16 @@ public class AttributeContainer implements CompositeConfigurable {
         this.attributes = attributes;
     }
 
-    public <T extends Attribute<V>, V> T getAttribute(String key) {
+    public <T> T getAttribute(String key) {
         return (T) attributes.get(key);
     }
 
-    public <T extends Attribute<V>, V> Set<T> getAttributes(Class<T> clazz) {
+    public <T> Set<T> getAttributes(Class<T> clazz) {
         return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
+    }
+
+    public Map<String, Attribute<?>> getAttributes() {
+        return attributes;
     }
 
     @Override
@@ -85,7 +87,7 @@ public class AttributeContainer implements CompositeConfigurable {
         }
 
         public Builder(AttributeContainer attributeContainer) {
-            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.getKeyMap());
+            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.keyMap());
             this.attributes = new LinkedHashMap<>(attributeContainer.attributes);
         }
 

@@ -2,23 +2,16 @@ package me.wyne.wutils.config.configurables.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AttributeMap {
-
-    private final Map<String, AttributeFactory> keyMap;
-
-    public AttributeMap(Map<String, AttributeFactory> keyMap) {
-        this.keyMap = keyMap;
-    }
+public record AttributeMap(Map<String, AttributeFactory> keyMap) {
 
     public void put(String key, AttributeFactory factory) {
         keyMap.put(key, factory);
-    }
-
-    public Map<String, AttributeFactory> getKeyMap() {
-        return keyMap;
     }
 
     public Set<Attribute<?>> createAll(ConfigurationSection config) {
