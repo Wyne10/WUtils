@@ -49,7 +49,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), (key, config) -> new PrimitiveConfigurableAttribute<>(key, config.getInt("slot", 0)));
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), new SlotAttribute.Factory());
     }
     
     private AttributeContainer attributeContainer;
