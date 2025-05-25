@@ -33,11 +33,19 @@ public class AttributeContainer implements CompositeConfigurable {
         this.attributes = attributes;
     }
 
-    public <T> T getAttribute(String key) {
+    public <T> T get(String key) {
         return (T) attributes.get(key);
     }
 
-    public <T> Set<T> getAttributes(Class<T> clazz) {
+    public <T> Set<T> getSet(Class<T> clazz) {
+        return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
+    }
+
+    public <V> Attribute<V> getAttribute(String key) {
+        return (Attribute<V>) attributes.get(key);
+    }
+
+    public <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz) {
         return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
     }
 
