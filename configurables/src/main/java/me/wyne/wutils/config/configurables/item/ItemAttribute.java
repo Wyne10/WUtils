@@ -24,7 +24,8 @@ public enum ItemAttribute {
     POTION_EFFECT("potionEffect"),
     POTION_EFFECTS("potionEffects"),
     ARMOR_COLOR("armorColor"),
-    PRINT("print");
+    PRINT("print"),
+    SOUND("sound");
 
     private final String key;
 
