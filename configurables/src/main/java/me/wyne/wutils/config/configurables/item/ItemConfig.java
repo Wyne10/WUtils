@@ -1,8 +1,9 @@
 package me.wyne.wutils.config.configurables.item;
 
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
-import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.item.attribute.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
@@ -73,6 +74,7 @@ public class ItemConfig implements CompositeConfigurable {
         ATTRIBUTE_MAP.put("potionEffect", new PotionEffectAttribute.Factory());
         ATTRIBUTE_MAP.put("potionEffects", (key, config) -> new CompositeAttribute(key, config, new PotionEffectAttribute.Factory()));
         ATTRIBUTE_MAP.put("armorColor", (key, config) -> new ArmorColorAttribute(Color.fromRGB(config.getInt(key, 0))));
+        ATTRIBUTE_MAP.put("print", (key, config) -> new PrintAttribute(config.getString(key)));
     }
 
     private final Map<String, Attribute<?>> itemAttributes;
@@ -94,7 +96,9 @@ public class ItemConfig implements CompositeConfigurable {
     public String toConfig(int depth, ConfigEntry configEntry) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
-        itemAttributes.values().forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
+        itemAttributes.values().stream()
+                .filter(attribute -> !(attribute instanceof GuiActionAttribute))
+                .forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
         return builder.toString();
     }
 
@@ -133,7 +137,7 @@ public class ItemConfig implements CompositeConfigurable {
         return itemStack;
     }
 
-    public ItemStack createItemStackComponent(ComponentReplacement... componentReplacements) {
+    public ItemStack createItemStack(ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
@@ -145,7 +149,7 @@ public class ItemConfig implements CompositeConfigurable {
         return itemStack;
     }
 
-    public ItemStack createItemStackComponent(Player player, ComponentReplacement... componentReplacements) {
+    public ItemStack createItemStack(Player player, ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         itemAttributes.values().stream()
                 .filter(attribute -> attribute instanceof ContextPlaceholderAttribute)
@@ -160,6 +164,46 @@ public class ItemConfig implements CompositeConfigurable {
                         attribute.apply(itemStack);
                 });
         return itemStack;
+    }
+
+    public GuiItem createGuiItem(TextReplacement... textReplacements) {
+        var itemStack = createItemStack(textReplacements);
+        var guiActions = itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ClickEventAttribute)
+                .map(attribute -> (ClickEventAttribute) attribute)
+                .toList();
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
+    }
+
+    public GuiItem createGuiItem(Player player, TextReplacement... textReplacements) {
+        var itemStack = createItemStack(player, textReplacements);
+        var guiActions = itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ClickEventAttribute)
+                .map(attribute -> (ClickEventAttribute) attribute)
+                .toList();
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
+    }
+
+    public GuiItem createGuiItem(ComponentReplacement... componentReplacements) {
+        var itemStack = createItemStack(componentReplacements);
+        var guiActions = itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ClickEventAttribute)
+                .map(attribute -> (ClickEventAttribute) attribute)
+                .toList();
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
+    }
+
+    public GuiItem createGuiItem(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = createItemStack(player, componentReplacements);
+        var guiActions = itemAttributes.values().stream()
+                .filter(attribute -> attribute instanceof ClickEventAttribute)
+                .map(attribute -> (ClickEventAttribute) attribute)
+                .toList();
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> guiActions.forEach(action -> action.apply(e)));
     }
 
     public static ItemConfig fromConfig(ConfigurationSection config) {
