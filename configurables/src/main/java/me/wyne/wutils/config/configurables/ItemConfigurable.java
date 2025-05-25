@@ -54,6 +54,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     public ItemConfigurable(ConfigurationSection section) {
+        super();
         fromConfig(section);
     }
 
@@ -144,9 +145,21 @@ public class ItemConfigurable implements CompositeConfigurable {
         return attributeContainer;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
     public static final class Builder {
 
         private final AttributeContainer.Builder attributeContainerBuilder;
+
+        public Builder() {
+            this.attributeContainerBuilder = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
+        }
 
         public Builder(ItemConfigurable itemConfigurable) {
             this.attributeContainerBuilder = itemConfigurable.getAttributeContainer().toBuilder();
