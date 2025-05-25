@@ -31,7 +31,7 @@ public class PotionEffectAttribute extends AttributeBase<PotionEffect> implement
         return new ConfigBuilder().append(depth, getKey(), getValue().getType() + " " + getValue().getDuration() + " " + getValue().getAmplifier() + " " + getValue().isAmbient() + " " + getValue().hasParticles() + " " + getValue().hasIcon()).buildNoSpace();
     }
 
-    public static class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory {
         @Override
         public PotionEffectAttribute fromSection(String key, ConfigurationSection section) {
             PotionEffectType type = PotionEffectType.getByName(section.getString("type", "SPEED"));

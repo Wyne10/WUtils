@@ -6,6 +6,7 @@ import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -61,6 +62,13 @@ public class LoreAttribute extends AttributeBase<List<String>> implements MetaAt
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder().appendCollection(depth, getKey(), getValue()).buildNoSpace();
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new LoreAttribute(config.getStringList(key));
+        }
     }
 
 }

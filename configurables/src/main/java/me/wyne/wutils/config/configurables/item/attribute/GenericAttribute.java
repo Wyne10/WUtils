@@ -36,7 +36,7 @@ public class GenericAttribute extends AttributeBase<GenericAttribute.AttributeDa
 
     public record AttributeData(Attribute attribute, AttributeModifier modifier) {}
 
-    public static class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory {
         @Override
         public GenericAttribute fromSection(String key, ConfigurationSection section) {
             var attribute = getByKey(NamespacedKey.fromString(section.getString("attribute", "generic.armor")));

@@ -1,9 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 
@@ -21,6 +19,13 @@ public class RepairCostAttribute extends AttributeBase<Integer> implements MetaA
     public void apply(ItemMeta meta) {
         if (!(meta instanceof Repairable)) return;
         ((Repairable)meta).setRepairCost(getValue());
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new RepairCostAttribute(config.getInt(key, 1));
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -56,6 +57,13 @@ public class NameAttribute extends AttributeBase<String> implements MetaAttribut
         item.editMeta(meta ->
                 meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(player.locale(), player, getValue()).replace(replacements).bungee())
         );
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new NameAttribute(config.getString(key));
+        }
     }
 
 }

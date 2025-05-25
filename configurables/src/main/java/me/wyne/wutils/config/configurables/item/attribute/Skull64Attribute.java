@@ -1,11 +1,9 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
-import me.wyne.wutils.config.configurables.item.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -27,6 +25,13 @@ public class Skull64Attribute extends AttributeBase<String> implements MetaAttri
         var profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", getValue()));
         ((SkullMeta)meta).setPlayerProfile(profile);
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new Skull64Attribute(config.getString(key));
+        }
     }
 
 }

@@ -31,7 +31,7 @@ public class EnchantmentAttribute extends AttributeBase<EnchantmentAttribute.Enc
 
     public record EnchantmentData(Enchantment enchantment, int level) {}
 
-    public static class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory {
         @Override
         public EnchantmentAttribute fromSection(String key, ConfigurationSection section) {
             return new EnchantmentAttribute(

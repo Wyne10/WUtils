@@ -1,10 +1,8 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.ItemStackAttribute;
+import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 public class MaterialAttribute extends AttributeBase<Material> implements ItemStackAttribute, ConfigurableAttribute<Material> {
@@ -20,6 +18,13 @@ public class MaterialAttribute extends AttributeBase<Material> implements ItemSt
     @Override
     public void apply(ItemStack item) {
         item.setType(getValue());
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new MaterialAttribute(Material.matchMaterial(config.getString(key, "STONE")));
+        }
     }
 
 }

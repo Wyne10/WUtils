@@ -1,9 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,6 +29,13 @@ public class DurabilityAttribute extends AttributeBase<Integer> implements MetaA
         if (!(meta instanceof Damageable)) return;
         var maxDurability = itemStack.getType().getMaxDurability();
         ((Damageable)meta).setDamage(maxDurability - getValue());
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            return new DurabilityAttribute(config.getInt(key, 1));
+        }
     }
 
 }

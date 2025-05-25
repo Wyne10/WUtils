@@ -1,9 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
-import me.wyne.wutils.config.configurables.item.MetaAttribute;
+import me.wyne.wutils.config.configurables.item.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -34,6 +32,17 @@ public class PotionModifierAttribute extends AttributeBase<PotionModifierAttribu
         NONE,
         EXTENDED,
         UPGRADED
+    }
+
+    public static final class Factory implements AttributeFactory {
+        @Override
+        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+            try {
+                return new PotionModifierAttribute(PotionModifierAttribute.PotionModifier.valueOf(config.getString(key, "NONE")));
+            } catch (IllegalArgumentException e) {
+                return new PotionModifierAttribute(PotionModifierAttribute.PotionModifier.NONE);
+            }
+        }
     }
 
 }
