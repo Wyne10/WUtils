@@ -33,6 +33,22 @@ public class AttributeContainer implements CompositeConfigurable {
         this.attributes = attributes;
     }
 
+    public AttributeContainer ignore(String... ignore) {
+        for (String ignoreKey : ignore)
+            attributes.remove(ignoreKey);
+        return this;
+    }
+
+    public AttributeContainer with(String key, AttributeFactory factory) {
+        attributeMap.put(key, factory);
+        return this;
+    }
+
+    public AttributeContainer with(Attribute<?> attribute) {
+        attributes.put(attribute.getKey(), attribute);
+        return this;
+    }
+
     public <T> T get(String key) {
         return (T) attributes.get(key);
     }

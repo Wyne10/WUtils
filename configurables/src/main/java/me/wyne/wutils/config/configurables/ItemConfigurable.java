@@ -146,6 +146,27 @@ public class ItemConfigurable implements CompositeConfigurable {
                 .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
     }
 
+    public ItemConfigurable ignore(ItemAttribute... ignore) {
+        for (ItemAttribute ignoreAttribute : ignore)
+            attributeContainer.ignore(ignoreAttribute.getKey());
+        return this;
+    }
+
+    public ItemConfigurable ignore(String... ignore) {
+        attributeContainer.ignore(ignore);
+        return this;
+    }
+
+    public ItemConfigurable with(String key, AttributeFactory factory) {
+        attributeContainer.with(key, factory);
+        return this;
+    }
+
+    public ItemConfigurable with(Attribute<?> attribute) {
+        attributeContainer.with(attribute);
+        return this;
+    }
+
     public <T> T get(String key) {
         return attributeContainer.get(key);
     }
