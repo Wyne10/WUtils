@@ -59,7 +59,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     public ItemConfigurable(ConfigurationSection section) {
-        super();
+        this();
         fromConfig(section);
     }
 
