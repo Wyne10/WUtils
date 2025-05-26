@@ -80,7 +80,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     public ItemStack build(TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, textReplacements));
+                .forEach(attribute -> attribute.apply(textReplacements));
         attributeContainer.getSet(ItemStackAttribute.class)
                 .forEach(attribute -> attribute.apply(itemStack));
         return itemStack;
@@ -89,7 +89,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     public ItemStack build(Player player, TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, textReplacements));
+                .forEach(attribute -> attribute.apply(textReplacements));
         attributeContainer.getSet(PlayerAwareAttribute.class)
                 .forEach(attribute -> attribute.apply(player));
         attributeContainer.getSet(ItemStackAttribute.class)
@@ -100,7 +100,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, componentReplacements));
+                .forEach(attribute -> attribute.apply(componentReplacements));
         attributeContainer.getSet(ItemStackAttribute.class)
                 .forEach(attribute -> attribute.apply(itemStack));
         return itemStack;
@@ -109,7 +109,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
         attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, componentReplacements));
+                .forEach(attribute -> attribute.apply(componentReplacements));
         attributeContainer.getSet(PlayerAwareAttribute.class)
                 .forEach(attribute -> attribute.apply(player));
         attributeContainer.getSet(ItemStackAttribute.class)

@@ -9,7 +9,6 @@ import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class NameAttribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute {
@@ -37,12 +36,12 @@ public class NameAttribute extends AttributeBase<String> implements MetaAttribut
     }
 
     @Override
-    public void apply(ItemStack item, TextReplacement... replacements) {
+    public void apply(TextReplacement... replacements) {
         this.textReplacements = replacements;
     }
 
     @Override
-    public void apply(ItemStack item, ComponentReplacement... replacements) {
+    public void apply(ComponentReplacement... replacements) {
         this.componentReplacements = replacements;
     }
 

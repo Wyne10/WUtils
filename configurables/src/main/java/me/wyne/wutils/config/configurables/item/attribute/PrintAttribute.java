@@ -10,7 +10,6 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class PrintAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
 
@@ -37,12 +36,12 @@ public class PrintAttribute extends AttributeBase<String> implements Configurabl
     }
 
     @Override
-    public void apply(ItemStack item, TextReplacement... replacements) {
+    public void apply(TextReplacement... replacements) {
         this.textReplacements = replacements;
     }
 
     @Override
-    public void apply(ItemStack item, ComponentReplacement... replacements) {
+    public void apply(ComponentReplacement... replacements) {
         this.componentReplacements = replacements;
     }
 
