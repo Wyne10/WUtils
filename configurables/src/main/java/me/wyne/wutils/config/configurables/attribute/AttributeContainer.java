@@ -49,6 +49,11 @@ public class AttributeContainer implements CompositeConfigurable {
         return this;
     }
 
+    public AttributeContainer copy(AttributeContainer container) {
+        attributes.putAll(container.attributes);
+        return this;
+    }
+
     @Nullable
     public <T> T get(String key) {
         return (T) attributes.get(key);
@@ -169,6 +174,11 @@ public class AttributeContainer implements CompositeConfigurable {
 
         public Builder with(Attribute<?> attribute) {
             attributes.put(attribute.getKey(), attribute);
+            return this;
+        }
+
+        public Builder copy(AttributeContainer container) {
+            attributes.putAll(container.attributes);
             return this;
         }
 

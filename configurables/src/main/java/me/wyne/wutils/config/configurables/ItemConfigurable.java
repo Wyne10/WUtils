@@ -167,6 +167,16 @@ public class ItemConfigurable implements CompositeConfigurable {
         return this;
     }
 
+    public ItemConfigurable copy(AttributeContainer container) {
+        attributeContainer.copy(container);
+        return this;
+    }
+
+    public ItemConfigurable copy(ItemConfigurable itemConfigurable) {
+        attributeContainer.copy(itemConfigurable.getAttributeContainer());
+        return this;
+    }
+
     @Nullable
     public <T> T get(String key) {
         return attributeContainer.get(key);
@@ -279,6 +289,16 @@ public class ItemConfigurable implements CompositeConfigurable {
 
         public Builder with(Attribute<?> attribute) {
             attributeContainerBuilder.with(attribute);
+            return this;
+        }
+
+        public Builder copy(AttributeContainer container) {
+            attributeContainerBuilder.copy(container);
+            return this;
+        }
+
+        public Builder copy(ItemConfigurable itemConfigurable) {
+            attributeContainerBuilder.copy(itemConfigurable.getAttributeContainer());
             return this;
         }
 
