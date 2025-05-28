@@ -18,11 +18,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ItemConfigurable implements CompositeConfigurable {
 
     public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
-    
+
     static {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.MATERIAL.getKey(), new MaterialAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.NAME.getKey(), new NameAttribute.Factory());
@@ -51,8 +52,8 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), new SlotAttribute.Factory());
     }
-    
-    private AttributeContainer attributeContainer;
+
+    private final AttributeContainer attributeContainer;
 
     public ItemConfigurable() {
         attributeContainer = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
@@ -167,28 +168,43 @@ public class ItemConfigurable implements CompositeConfigurable {
         return this;
     }
 
+    @Nullable
     public <T> T get(String key) {
         return attributeContainer.get(key);
     }
 
-    public <T> T get(ItemAttribute attribute) {
-        return attributeContainer.get(attribute.getKey());
+    public <T> T get(String key, T def) {
+        return attributeContainer.get(key, def);
     }
 
     public <T> Set<T> getSet(Class<T> clazz) {
         return attributeContainer.getSet(clazz);
     }
 
+    @Nullable
     public <V> Attribute<V> getAttribute(String key) {
         return attributeContainer.getAttribute(key);
     }
 
-    public <V> Attribute<V> getAttribute(ItemAttribute attribute) {
-        return attributeContainer.getAttribute(attribute.getKey());
+    public <V> Attribute<V> getAttribute(String key, Attribute<V> def) {
+        return attributeContainer.getAttribute(key, def);
     }
 
     public <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz) {
         return attributeContainer.getAttributes(clazz);
+    }
+
+    @Nullable
+    public <V> V getValue(String key) {
+        return attributeContainer.getValue(key);
+    }
+
+    public <V> V getValue(String key, V def) {
+        return attributeContainer.getValue(key, def);
+    }
+
+    public <V> Set<V> getValues(Class<V> clazz) {
+        return attributeContainer.getValues(clazz);
     }
 
     public Map<String, Attribute<?>> getAttributes() {

@@ -49,20 +49,58 @@ public class AttributeContainer implements CompositeConfigurable {
         return this;
     }
 
+    @Nullable
     public <T> T get(String key) {
         return (T) attributes.get(key);
+    }
+
+    public <T> T get(String key, T def) {
+        T value = get(key);
+        if (value == null)
+            return def;
+        return value;
     }
 
     public <T> Set<T> getSet(Class<T> clazz) {
         return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
     }
 
+    @Nullable
     public <V> Attribute<V> getAttribute(String key) {
         return (Attribute<V>) attributes.get(key);
     }
 
+    public <V> Attribute<V> getAttribute(String key, Attribute<V> def) {
+        var attribute = (Attribute<V>) attributes.get(key);
+        if (attribute == null)
+            return def;
+        return attribute;
+    }
+
     public <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz) {
-        return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
+        return attributes.values().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .collect(Collectors.toSet());
+    }
+
+    @Nullable
+    public <V> V getValue(String key) {
+        return ((Attribute<V>) attributes.get(key)).getValue();
+    }
+
+    public <V> V getValue(String key, V def) {
+        var attribute = (Attribute<V>) attributes.get(key);
+        if (attribute == null)
+            return def;
+        return attribute.getValue();
+    }
+
+    public <V> Set<V> getValues(Class<V> clazz) {
+        return attributes.values().stream()
+                .filter(attribute -> clazz.isInstance(attribute.getValue()))
+                .map(attribute -> clazz.cast(attribute.getValue()))
+                .collect(Collectors.toSet());
     }
 
     public Map<String, Attribute<?>> getAttributes() {
