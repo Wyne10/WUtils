@@ -62,7 +62,10 @@ public class AttributeContainer implements CompositeConfigurable {
     }
 
     public <T> Set<T> getSet(Class<T> clazz) {
-        return attributes.values().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toSet());
+        return attributes.values().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Nullable
@@ -81,7 +84,7 @@ public class AttributeContainer implements CompositeConfigurable {
         return attributes.values().stream()
                 .filter(clazz::isInstance)
                 .map(clazz::cast)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Nullable
@@ -100,7 +103,7 @@ public class AttributeContainer implements CompositeConfigurable {
         return attributes.values().stream()
                 .filter(attribute -> clazz.isInstance(attribute.getValue()))
                 .map(attribute -> clazz.cast(attribute.getValue()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Map<String, Attribute<?>> getAttributes() {
