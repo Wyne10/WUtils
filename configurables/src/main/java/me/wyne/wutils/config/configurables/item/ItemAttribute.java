@@ -26,7 +26,8 @@ public enum ItemAttribute {
     ARMOR_COLOR("armorColor"),
     PRINT("print"),
     SOUND("sound"),
-    SLOT("slot");
+    SLOT("slot"),
+    COMMAND("command");
 
     private final String key;
 

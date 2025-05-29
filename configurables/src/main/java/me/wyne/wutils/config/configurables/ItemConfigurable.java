@@ -50,6 +50,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), new SlotAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.COMMAND.getKey(), new CommandAttribute.Factory());
     }
 
     private final AttributeContainer attributeContainer;
