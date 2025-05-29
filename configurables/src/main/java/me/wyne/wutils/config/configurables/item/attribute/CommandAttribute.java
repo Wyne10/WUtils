@@ -3,6 +3,7 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
+import me.wyne.wutils.config.configurables.attribute.ManualAttribute;
 import me.wyne.wutils.config.configurables.item.ClickEventAttribute;
 import me.wyne.wutils.config.configurables.item.ContextPlaceholderAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
@@ -15,7 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class CommandAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
+public class CommandAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute, ManualAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements = {};
@@ -30,8 +31,13 @@ public class CommandAttribute extends AttributeBase<String> implements Configura
     }
 
     @Override
-    public void apply(InventoryClickEvent event) {
+    public void apply() {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.getPlaceholderString(I18n.toLocale(player), player, getValue(), textReplacements).get());
+    }
+
+    @Override
+    public void apply(InventoryClickEvent event) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.getPlaceholderString(I18n.toLocale(event.getWhoClicked()), I18n.toPlayer(event.getWhoClicked()), getValue(), textReplacements).get());
     }
 
     @Override
