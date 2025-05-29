@@ -14,23 +14,28 @@ public class AttributeContainer implements CompositeConfigurable {
     private final Map<String, Attribute<?>> attributes;
 
     public AttributeContainer() {
-        attributeMap = new AttributeMap(new LinkedHashMap<>());
-        attributes = new LinkedHashMap<>();
+        this.attributeMap = new AttributeMap(new LinkedHashMap<>());
+        this.attributes = new LinkedHashMap<>();
     }
 
     public AttributeContainer(AttributeMap attributeMap) {
         this.attributeMap = attributeMap;
-        attributes = new LinkedHashMap<>();
+        this.attributes = new LinkedHashMap<>();
     }
 
     public AttributeContainer(Map<String, Attribute<?>> attributes) {
-        attributeMap = new AttributeMap(new LinkedHashMap<>());
+        this.attributeMap = new AttributeMap(new LinkedHashMap<>());
         this.attributes = attributes;
     }
 
     public AttributeContainer(AttributeMap attributeMap, Map<String, Attribute<?>> attributes) {
         this.attributeMap = attributeMap;
         this.attributes = attributes;
+    }
+
+    public AttributeContainer(AttributeContainer container) {
+        this.attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
+        this.attributes = new LinkedHashMap<>(container.attributes);
     }
 
     public AttributeContainer ignore(String... ignore) {
@@ -52,6 +57,10 @@ public class AttributeContainer implements CompositeConfigurable {
     public AttributeContainer copy(AttributeContainer container) {
         attributes.putAll(container.attributes);
         return this;
+    }
+
+    public AttributeContainer copy() {
+        return new AttributeContainer(this);
     }
 
     @Nullable
@@ -157,7 +166,7 @@ public class AttributeContainer implements CompositeConfigurable {
         }
 
         public Builder(AttributeContainer attributeContainer) {
-            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.keyMap());
+            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.getKeyMap());
             this.attributes = new LinkedHashMap<>(attributeContainer.attributes);
         }
 

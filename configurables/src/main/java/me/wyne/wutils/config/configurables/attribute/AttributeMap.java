@@ -8,7 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record AttributeMap(Map<String, AttributeFactory> keyMap) {
+public class AttributeMap {
+
+    private final Map<String, AttributeFactory> keyMap = new LinkedHashMap<>();
+
+    public AttributeMap(Map<String, AttributeFactory> keyMap) {
+        this.keyMap.putAll(keyMap);
+    }
 
     public void put(String key, AttributeFactory factory) {
         keyMap.put(key, factory);
@@ -27,6 +33,10 @@ public record AttributeMap(Map<String, AttributeFactory> keyMap) {
                 .filter(config::contains)
                 .forEach(key -> result.put(key, keyMap.get(key).create(key, config)));
         return result;
+    }
+
+    public Map<String, AttributeFactory> getKeyMap() {
+        return keyMap;
     }
 
 }

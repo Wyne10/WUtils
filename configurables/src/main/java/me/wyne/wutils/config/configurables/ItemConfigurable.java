@@ -177,6 +177,10 @@ public class ItemConfigurable implements CompositeConfigurable {
         return this;
     }
 
+    public ItemConfigurable copy() {
+        return new ItemConfigurable(attributeContainer.copy());
+    }
+
     @Nullable
     public <T> T get(String key) {
         return attributeContainer.get(key);
