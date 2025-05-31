@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -9,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class DurabilityAttribute extends AttributeBase<Integer> implements MetaAttribute, ConfigurableAttribute<Integer> {
+public class DurabilityAttribute extends ConfigurableAttribute<Integer> implements MetaAttribute {
 
     private ItemStack itemStack;
 
@@ -36,8 +35,8 @@ public class DurabilityAttribute extends AttributeBase<Integer> implements MetaA
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new DurabilityAttribute(config.getInt(key, 1));
+        public DurabilityAttribute create(String key, ConfigurationSection config) {
+            return new DurabilityAttribute(key, config.getInt(key, 1));
         }
     }
 

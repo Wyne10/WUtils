@@ -1,7 +1,6 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -12,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 
-public class Skull64Attribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String> {
+public class Skull64Attribute extends ConfigurableAttribute<String> implements MetaAttribute {
 
     public Skull64Attribute(String key, String value) {
         super(key, value);
@@ -32,8 +31,8 @@ public class Skull64Attribute extends AttributeBase<String> implements MetaAttri
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new Skull64Attribute(config.getString(key));
+        public Skull64Attribute create(String key, ConfigurationSection config) {
+            return new Skull64Attribute(key, config.getString(key));
         }
     }
 

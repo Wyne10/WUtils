@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -10,7 +9,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
-public class PotionTypeAttribute extends AttributeBase<PotionType> implements MetaAttribute, ConfigurableAttribute<PotionType> {
+public class PotionTypeAttribute extends ConfigurableAttribute<PotionType> implements MetaAttribute {
 
     public PotionTypeAttribute(String key, PotionType value) {
         super(key, value);
@@ -30,11 +29,11 @@ public class PotionTypeAttribute extends AttributeBase<PotionType> implements Me
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+        public PotionTypeAttribute create(String key, ConfigurationSection config) {
             try {
-                return new PotionTypeAttribute(PotionType.valueOf(config.getString(key, "WATER")));
+                return new PotionTypeAttribute(key, PotionType.valueOf(config.getString(key, "WATER")));
             } catch (IllegalArgumentException e) {
-                return new PotionTypeAttribute(PotionType.WATER);
+                return new PotionTypeAttribute(key, PotionType.WATER);
             }
         }
     }

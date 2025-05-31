@@ -2,7 +2,6 @@ package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -15,11 +14,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class LoreAttribute extends AttributeBase<List<String>> implements MetaAttribute, ConfigurableAttribute<List<String>>, PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class LoreAttribute extends ConfigurableAttribute<List<String>> implements MetaAttribute, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements = {};
     private ComponentReplacement[] componentReplacements = {};
+
+    public LoreAttribute(String key, List<String> value) {
+        super(key, value);
+    }
 
     public LoreAttribute(List<String> value) {
         super(ItemAttribute.LORE.getKey(), value);
@@ -52,8 +55,8 @@ public class LoreAttribute extends AttributeBase<List<String>> implements MetaAt
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new LoreAttribute(config.getStringList(key));
+        public LoreAttribute create(String key, ConfigurationSection config) {
+            return new LoreAttribute(key, config.getStringList(key));
         }
     }
 

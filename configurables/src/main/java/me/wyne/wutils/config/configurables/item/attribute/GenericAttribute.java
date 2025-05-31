@@ -3,7 +3,6 @@ package me.wyne.wutils.config.configurables.item.attribute;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -17,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class GenericAttribute extends AttributeBase<GenericAttribute.AttributeData> implements MetaAttribute, ConfigurableAttribute<GenericAttribute.AttributeData> {
+public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.AttributeData> implements MetaAttribute {
 
     public GenericAttribute(String key, AttributeData value) {
         super(key, value);
@@ -44,6 +43,7 @@ public class GenericAttribute extends AttributeBase<GenericAttribute.AttributeDa
         public GenericAttribute fromSection(String key, ConfigurationSection section) {
             var attribute = getByKey(NamespacedKey.fromString(section.getString("attribute", "generic.armor")));
             return new GenericAttribute(
+                    key,
                     new AttributeData(
                             attribute != null ? attribute : org.bukkit.attribute.Attribute.GENERIC_ARMOR,
                             new AttributeModifier(
@@ -62,6 +62,7 @@ public class GenericAttribute extends AttributeBase<GenericAttribute.AttributeDa
             var args = new Args(string, " ");
             var attribute = getByKey(NamespacedKey.fromString(args.get(0, "generic.armor")));
             return new GenericAttribute(
+                    key,
                     new AttributeData(
                             attribute != null ? attribute : org.bukkit.attribute.Attribute.GENERIC_ARMOR,
                             new AttributeModifier(

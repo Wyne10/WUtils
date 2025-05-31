@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -8,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class MaterialAttribute extends AttributeBase<Material> implements ItemStackAttribute, ConfigurableAttribute<Material> {
+public class MaterialAttribute extends ConfigurableAttribute<Material> implements ItemStackAttribute {
 
     public MaterialAttribute(String key, Material value) {
         super(key, value);
@@ -25,8 +24,8 @@ public class MaterialAttribute extends AttributeBase<Material> implements ItemSt
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new MaterialAttribute(Material.matchMaterial(config.getString(key, "STONE")));
+        public MaterialAttribute create(String key, ConfigurationSection config) {
+            return new MaterialAttribute(key, Material.matchMaterial(config.getString(key, "STONE")));
         }
     }
 

@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -9,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SkullPlayerAttribute extends AttributeBase<Boolean> implements MetaAttribute, ConfigurableAttribute<Boolean>, PlayerAwareAttribute {
+public class SkullPlayerAttribute extends ConfigurableAttribute<Boolean> implements MetaAttribute, PlayerAwareAttribute {
 
     private Player player;
 
@@ -35,8 +34,8 @@ public class SkullPlayerAttribute extends AttributeBase<Boolean> implements Meta
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new SkullPlayerAttribute(config.getBoolean(key, false));
+        public SkullPlayerAttribute create(String key, ConfigurationSection config) {
+            return new SkullPlayerAttribute(key, config.getBoolean(key, false));
         }
     }
 

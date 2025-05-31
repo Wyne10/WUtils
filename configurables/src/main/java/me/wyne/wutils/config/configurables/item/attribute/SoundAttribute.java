@@ -2,7 +2,6 @@ package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -11,7 +10,7 @@ import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class SoundAttribute extends AttributeBase<Sound> implements ConfigurableAttribute<Sound>, ClickEventAttribute {
+public class SoundAttribute extends ConfigurableAttribute<Sound> implements ClickEventAttribute {
 
     public SoundAttribute(String key, Sound value) {
         super(key, value);
@@ -38,12 +37,13 @@ public class SoundAttribute extends AttributeBase<Sound> implements Configurable
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+        public SoundAttribute create(String key, ConfigurationSection config) {
             return new SoundAttribute(
+                    key,
                     Sound.sound(Key.key(config.getString("sound")),
-                    Sound.Source.valueOf(config.getString("source", "MASTER")),
-                    (float) config.getDouble("volume", 1.0),
-                    (float) config.getDouble("pitch", 1.0)
+                            Sound.Source.valueOf(config.getString("source", "MASTER")),
+                            (float) config.getDouble("volume", 1.0),
+                            (float) config.getDouble("pitch", 1.0)
                     )
             );
         }

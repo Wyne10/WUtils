@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -10,7 +9,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
-public class PotionModifierAttribute extends AttributeBase<PotionModifierAttribute.PotionModifier> implements MetaAttribute, ConfigurableAttribute<PotionModifierAttribute.PotionModifier> {
+public class PotionModifierAttribute extends ConfigurableAttribute<PotionModifierAttribute.PotionModifier> implements MetaAttribute {
 
     public PotionModifierAttribute(String key, PotionModifier value) {
         super(key, value);
@@ -39,11 +38,11 @@ public class PotionModifierAttribute extends AttributeBase<PotionModifierAttribu
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+        public PotionModifierAttribute create(String key, ConfigurationSection config) {
             try {
-                return new PotionModifierAttribute(PotionModifierAttribute.PotionModifier.valueOf(config.getString(key, "NONE")));
+                return new PotionModifierAttribute(key, PotionModifierAttribute.PotionModifier.valueOf(config.getString(key, "NONE")));
             } catch (IllegalArgumentException e) {
-                return new PotionModifierAttribute(PotionModifierAttribute.PotionModifier.NONE);
+                return new PotionModifierAttribute(key, PotionModifierAttribute.PotionModifier.NONE);
             }
         }
     }

@@ -2,7 +2,6 @@ package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -14,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class FlagsAttribute extends AttributeBase<ItemFlag[]> implements MetaAttribute, ConfigurableAttribute<ItemFlag[]> {
+public class FlagsAttribute extends ConfigurableAttribute<ItemFlag[]> implements MetaAttribute {
 
     public FlagsAttribute(String key, ItemFlag... value) {
         super(key, value);
@@ -36,7 +35,7 @@ public class FlagsAttribute extends AttributeBase<ItemFlag[]> implements MetaAtt
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+        public FlagsAttribute create(String key, ConfigurationSection config) {
             List<ItemFlag> flags = config.getStringList(key).stream()
                     .map(s -> {
                         try {
@@ -47,7 +46,7 @@ public class FlagsAttribute extends AttributeBase<ItemFlag[]> implements MetaAtt
                     })
                     .filter(Objects::nonNull)
                     .toList();
-            return new FlagsAttribute(flags.toArray(ItemFlag[]::new));
+            return new FlagsAttribute(key, flags.toArray(ItemFlag[]::new));
         }
     }
 

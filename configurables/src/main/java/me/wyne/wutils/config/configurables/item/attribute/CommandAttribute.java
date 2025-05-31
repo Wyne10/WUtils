@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.attribute.ManualAttribute;
@@ -16,11 +15,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class CommandAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute, ManualAttribute {
+import java.util.Arrays;
+
+public class CommandAttribute extends ConfigurableAttribute<String> implements PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute, ManualAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements = {};
-    private ComponentReplacement[] componentReplacements = {};
 
     public CommandAttribute(String key, String value) {
         super(key, value);
@@ -52,13 +52,13 @@ public class CommandAttribute extends AttributeBase<String> implements Configura
 
     @Override
     public void apply(ComponentReplacement... replacements) {
-        this.componentReplacements = replacements;
+        this.textReplacements = Arrays.stream(replacements).map(ComponentReplacement::asTextReplacement).toArray(TextReplacement[]::new);
     }
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new CommandAttribute(config.getString(key));
+        public CommandAttribute create(String key, ConfigurationSection config) {
+            return new CommandAttribute(key, config.getString(key));
         }
     }
 

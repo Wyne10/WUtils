@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -11,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class PrintAttribute extends AttributeBase<String> implements ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
+public class PrintAttribute extends ConfigurableAttribute<String> implements PlayerAwareAttribute, ContextPlaceholderAttribute, ClickEventAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements = {};
@@ -47,8 +46,8 @@ public class PrintAttribute extends AttributeBase<String> implements Configurabl
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new PrintAttribute(config.getString(key));
+        public PrintAttribute create(String key, ConfigurationSection config) {
+            return new PrintAttribute(key, config.getString(key));
         }
     }
 

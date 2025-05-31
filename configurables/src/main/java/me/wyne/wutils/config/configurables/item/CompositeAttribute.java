@@ -3,7 +3,6 @@ package me.wyne.wutils.config.configurables.item;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.Attribute;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CompositeAttribute<V extends Attribute<?>> extends AttributeBase<Map<String, V>> implements ConfigurableAttribute<Map<String, V>> {
+public class CompositeAttribute<V extends Attribute<?>> extends ConfigurableAttribute<Map<String, V>> {
 
     public CompositeAttribute(String key, Map<String, V> attributes) {
         super(key, attributes);

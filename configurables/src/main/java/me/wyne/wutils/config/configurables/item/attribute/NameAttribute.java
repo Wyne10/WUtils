@@ -1,6 +1,5 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -11,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class NameAttribute extends AttributeBase<String> implements MetaAttribute, ConfigurableAttribute<String>, PlayerAwareAttribute, ContextPlaceholderAttribute {
+public class NameAttribute extends ConfigurableAttribute<String> implements MetaAttribute, PlayerAwareAttribute, ContextPlaceholderAttribute {
 
     private Player player;
     private TextReplacement[] textReplacements = {};
@@ -47,8 +46,8 @@ public class NameAttribute extends AttributeBase<String> implements MetaAttribut
 
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
-            return new NameAttribute(config.getString(key));
+        public NameAttribute create(String key, ConfigurationSection config) {
+            return new NameAttribute(key, config.getString(key));
         }
     }
 

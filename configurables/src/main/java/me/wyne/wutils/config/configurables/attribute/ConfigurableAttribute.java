@@ -6,15 +6,19 @@ import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-public interface ConfigurableAttribute<V> extends Attribute<V>, CompositeConfigurable {
+public abstract class ConfigurableAttribute<V> extends AttributeBase<V> implements CompositeConfigurable {
+
+    public ConfigurableAttribute(String key, V value) {
+        super(key, value);
+    }
 
     @Override
-    default String toConfig(int depth, ConfigEntry configEntry) {
+    public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(), getValue()).buildNoSpace();
     }
 
     @Override
-    default void fromConfig(@Nullable Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
         throw new NotImplementedException();
     }
 

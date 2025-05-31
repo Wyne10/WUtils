@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 
-public class SkullAttribute extends AttributeBase<OfflinePlayer> implements MetaAttribute, ConfigurableAttribute<OfflinePlayer> {
+public class SkullAttribute extends ConfigurableAttribute<OfflinePlayer> implements MetaAttribute {
 
     public SkullAttribute(String key, OfflinePlayer value) {
         super(key, value);
@@ -28,11 +29,16 @@ public class SkullAttribute extends AttributeBase<OfflinePlayer> implements Meta
         ((SkullMeta)meta).setOwningPlayer(getValue());
     }
 
+    @Override
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().getName()).buildNoSpace();
+    }
+
     public static final class Factory implements AttributeFactory {
         @Override
-        public ConfigurableAttribute<?> create(String key, ConfigurationSection config) {
+        public SkullAttribute create(String key, ConfigurationSection config) {
             UUID uuid = Bukkit.getPlayerUniqueId(config.getString(key));
-            return new SkullAttribute(Bukkit.getOfflinePlayer(uuid));
+            return new SkullAttribute(key, Bukkit.getOfflinePlayer(uuid));
         }
     }
 
