@@ -36,10 +36,10 @@ public class ListMapConfigurable<E> implements CompositeConfigurable {
     @SuppressWarnings("unchecked")
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        ConfigurationSection config = (ConfigurationSection) configObject;
         map.clear();
         if (configObject == null)
             return;
+        ConfigurationSection config = (ConfigurationSection) configObject;
         config.getKeys(false).forEach(key -> map.put(key, (List<E>) config.getList(key)));
     }
 

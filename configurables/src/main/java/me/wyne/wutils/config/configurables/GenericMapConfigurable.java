@@ -44,10 +44,10 @@ public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        ConfigurationSection config = (ConfigurationSection) configObject;
         map.clear();
         if (configObject == null)
             return;
+        ConfigurationSection config = (ConfigurationSection) configObject;
         config.getKeys(false).stream()
                 .map(key -> configMapper.map(MapUtils.entry(key, config.get(key))))
                 .forEach(entry -> map.put(entry.getKey(), entry.getValue()));

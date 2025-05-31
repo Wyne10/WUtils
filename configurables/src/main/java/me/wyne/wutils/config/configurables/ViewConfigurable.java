@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ViewConfigurable implements CompositeConfigurable {
 
-    private String name;
+    private String name = "";
     private final List<String> lore = new ArrayList<>();
 
     public ViewConfigurable() {}
@@ -40,7 +40,9 @@ public class ViewConfigurable implements CompositeConfigurable {
     }
 
     @Override
-    public void fromConfig(Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
+        if (configObject == null)
+            return;
         ConfigurationSection section = (ConfigurationSection) configObject;
         name = section.getString("name", "");
         lore.clear();

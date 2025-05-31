@@ -141,6 +141,8 @@ public class AttributeContainer implements CompositeConfigurable {
     @Override
     public void fromConfig(@Nullable Object configObject) {
         attributes.clear();
+        if (configObject == null)
+            return;
         attributes.putAll(attributeMap.createAllMap((ConfigurationSection) configObject));
     }
 

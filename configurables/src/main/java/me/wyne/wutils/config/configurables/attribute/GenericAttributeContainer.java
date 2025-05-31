@@ -109,6 +109,8 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
     @Override
     public void fromConfig(@Nullable Object configObject) {
         attributes.clear();
+        if (configObject == null)
+            return;
         attributes.putAll(MapUtils.map(attributeMap.createAllMap((ConfigurationSection) configObject), entry -> MapUtils.entry(entry.getKey(), (T) entry.getValue()), LinkedHashMap::new));
     }
 
