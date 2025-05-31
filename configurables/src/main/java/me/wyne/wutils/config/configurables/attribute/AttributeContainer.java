@@ -143,7 +143,7 @@ public class AttributeContainer implements CompositeConfigurable {
         Map<String, ConfigurableAttribute<?>> configurableAttributes = new LinkedHashMap<>();
         attributes.keySet().stream()
                 .filter(key -> attributes.get(key) instanceof ConfigurableAttribute<?>)
-                .forEach(key-> configurableAttributes.put(key, (ConfigurableAttribute<?>) attributes.get(key)));
+                .forEach(key -> configurableAttributes.put(key, (ConfigurableAttribute<?>) attributes.get(key)));
         return configurableAttributes;
     }
 
