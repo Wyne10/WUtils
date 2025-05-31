@@ -163,6 +163,11 @@ public class ItemConfigurable implements CompositeConfigurable {
         return this;
     }
 
+    public ItemConfigurable with(Map<String, AttributeFactory> keyMap) {
+        attributeContainer.with(keyMap);
+        return this;
+    }
+
     public ItemConfigurable with(Attribute<?> attribute) {
         attributeContainer.with(attribute);
         return this;
@@ -289,6 +294,11 @@ public class ItemConfigurable implements CompositeConfigurable {
 
         public Builder with(String key, AttributeFactory factory) {
             attributeContainerBuilder.with(key, factory);
+            return this;
+        }
+
+        public Builder with(Map<String, AttributeFactory> keyMap) {
+            attributeContainerBuilder.with(keyMap);
             return this;
         }
 

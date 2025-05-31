@@ -49,6 +49,11 @@ public class AttributeContainer implements CompositeConfigurable {
         return this;
     }
 
+    public AttributeContainer with(Map<String, AttributeFactory> keyMap) {
+        attributeMap.putAll(keyMap);
+        return this;
+    }
+
     public AttributeContainer with(Attribute<?> attribute) {
         attributes.put(attribute.getKey(), attribute);
         return this;
@@ -178,6 +183,11 @@ public class AttributeContainer implements CompositeConfigurable {
 
         public Builder with(String key, AttributeFactory factory) {
             attributeMap.put(key, factory);
+            return this;
+        }
+
+        public Builder with(Map<String, AttributeFactory> keyMap) {
+            attributeMap.putAll(keyMap);
             return this;
         }
 

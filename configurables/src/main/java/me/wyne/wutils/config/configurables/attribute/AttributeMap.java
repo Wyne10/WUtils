@@ -20,6 +20,10 @@ public class AttributeMap {
         keyMap.put(key, factory);
     }
 
+    public void putAll(Map<String, AttributeFactory> keyMap) {
+        this.keyMap.putAll(keyMap);
+    }
+
     public Set<Attribute<?>> createAll(ConfigurationSection config) {
         return keyMap.keySet().stream()
                 .filter(config::contains)
