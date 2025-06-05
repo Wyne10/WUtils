@@ -34,6 +34,12 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
         this.attributes = attributes;
     }
 
+    public GenericAttributeContainer(AttributeMap attributeMap, ConfigurationSection config) {
+        this.attributeMap = attributeMap;
+        this.attributes = new LinkedHashMap<>();
+        fromConfig(config);
+    }
+
     public GenericAttributeContainer(GenericAttributeContainer<T> container) {
         this.attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
         this.attributes = new LinkedHashMap<>(container.attributes);
