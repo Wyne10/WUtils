@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n.language.component;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,4 +36,8 @@ public interface ComponentAudience {
     void sendMessageServer(String serverName, Component component);
 
     void sendMessageWorld(Key worldKey, Component component);
+
+    void sendActionBar(Player player, Component component);
+
+    void sendActionBar(Player player, ComponentLike component);
 }

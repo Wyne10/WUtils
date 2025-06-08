@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n.language.component;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -70,6 +71,16 @@ public class BukkitComponentAudience implements ComponentAudience {
     @Override
     public void sendMessageWorld(Key worldKey, Component component) {
         audiences.world(worldKey).sendMessage(component);
+    }
+
+    @Override
+    public void sendActionBar(Player player, Component component) {
+        audiences.player(player).sendActionBar(component);
+    }
+
+    @Override
+    public void sendActionBar(Player player, ComponentLike component) {
+        audiences.player(player).sendActionBar(component);
     }
 
 }
