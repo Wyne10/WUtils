@@ -80,11 +80,7 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         I18n.global.audiences.sendMessageWorld(worldKey, component);
     }
 
-    public void sendActionBar(Player player, Component component) {
-        I18n.global.audiences.sendActionBar(player, component);
-    }
-
-    public void sendActionBar(Player player, ComponentLike component) {
+    public void sendActionBar(Player player) {
         I18n.global.audiences.sendActionBar(player, component);
     }
 
