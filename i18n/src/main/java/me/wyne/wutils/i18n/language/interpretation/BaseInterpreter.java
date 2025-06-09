@@ -33,7 +33,7 @@ public class BaseInterpreter implements StringInterpreter {
 
     @Override
     public String getString(Language language, String path) {
-        return stringValidator.validateString(language.getLanguageCode(), language.getStrings(), path);
+        return stringValidator.validateString(language.getLanguageCode(), language.getStringMap(), path);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class BaseInterpreter implements StringInterpreter {
     @Override
     public List<String> getStringList(Language language, String path) {
         return language.getStrings().getStringList(path).stream()
-                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStrings(), s))
+                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStringMap(), s))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<String> getStringList(Language language, String path, TextReplacement... textReplacements) {
         return language.getStrings().getStringList(path).stream()
-                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStrings(), s))
+                .map(s -> stringValidator.validateString(language.getLanguageCode(), language.getStringMap(), s))
                 .map(s -> I18n.applyTextReplacements(s, textReplacements))
                 .collect(Collectors.toCollection(ArrayList::new));
     }

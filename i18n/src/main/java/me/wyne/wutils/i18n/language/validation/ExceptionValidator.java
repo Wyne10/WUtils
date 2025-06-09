@@ -1,12 +1,12 @@
 package me.wyne.wutils.i18n.language.validation;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.Map;
 
 public class ExceptionValidator implements StringValidator {
     @Override
-    public String validateString(String languageCode, FileConfiguration strings, String path) {
-        if (path.trim().isEmpty() || !strings.contains(path))
+    public String validateString(String languageCode, Map<String, String> strings, String path) {
+        if (!strings.containsKey(path))
             throw new IllegalArgumentException("String " + path + " was not found in " + languageCode + " language");
-        return strings.getString(path);
+        return strings.get(path);
     }
 }

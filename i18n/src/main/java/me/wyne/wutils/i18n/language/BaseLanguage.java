@@ -8,7 +8,9 @@ import ru.vyarus.yaml.updater.YamlUpdater;
 import ru.vyarus.yaml.updater.report.UpdateReport;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class BaseLanguage implements Language {
 
@@ -19,6 +21,7 @@ public class BaseLanguage implements Language {
 
     private final File languageFile;
     private final FileConfiguration strings;
+    private final Map<String, String> stringMap = new HashMap<>();
 
     public BaseLanguage(File languageFile, Logger log) {
         this.log = log;
@@ -26,6 +29,9 @@ public class BaseLanguage implements Language {
         this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
+        strings.getKeys(false).stream()
+                .filter(strings::isString)
+                .forEach(path -> stringMap.put(path, strings.getString(path)));
     }
 
     public BaseLanguage(Language defaultLanguage, File languageFile, Logger log) {
@@ -35,6 +41,9 @@ public class BaseLanguage implements Language {
         this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
         this.strings = YamlConfiguration.loadConfiguration(languageFile);
+        strings.getKeys(false).stream()
+                .filter(strings::isString)
+                .forEach(path -> stringMap.put(path, strings.getString(path)));
     }
 
     private void mergeDefaultStrings(Language defaultLanguage, File languageFile) {
@@ -68,6 +77,11 @@ public class BaseLanguage implements Language {
     @Override
     public FileConfiguration getStrings() {
         return strings;
+    }
+
+    @Override
+    public Map<String, String> getStringMap() {
+        return stringMap;
     }
 
     @Override
