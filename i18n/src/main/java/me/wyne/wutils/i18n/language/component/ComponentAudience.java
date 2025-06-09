@@ -2,8 +2,6 @@ package me.wyne.wutils.i18n.language.component;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,33 +9,25 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public interface ComponentAudience {
-    default void sendMessage(Audience audience, Component component) {
-        audience.sendMessage(component);
-    }
+    Audience player(Player player);
 
-    void sendMessage(Player player, Component component);
+    Audience sender(CommandSender sender);
 
-    void sendMessage(CommandSender sender, Component component);
+    Audience player(UUID playerId);
 
-    void sendMessage(UUID playerId, Component component);
+    Audience all();
 
-    void sendMessageAll(Component component);
+    Audience filter(Predicate<CommandSender> filter);
 
-    void sendMessage(Predicate<CommandSender> filter, Component component);
+    Audience console();
 
-    void sendMessageConsole(Component component);
+    Audience permission(Key permission);
 
-    void sendMessage(Key permission, Component component);
+    Audience permission(String permission);
 
-    void sendMessage(String permission, Component component);
+    Audience players();
 
-    void sendMessagePlayers(Component component);
+    Audience server(String serverName);
 
-    void sendMessageServer(String serverName, Component component);
-
-    void sendMessageWorld(Key worldKey, Component component);
-
-    void sendActionBar(Player player, Component component);
-
-    void sendActionBar(Player player, ComponentLike component);
+    Audience world(Key worldKey);
 }

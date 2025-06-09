@@ -1,9 +1,8 @@
 package me.wyne.wutils.i18n.language.component;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,68 +18,58 @@ public class BukkitComponentAudience implements ComponentAudience {
     }
 
     @Override
-    public void sendMessage(Player player, Component component) {
-        audiences.player(player).sendMessage(component);
+    public Audience player(Player player) {
+        return audiences.player(player);
     }
 
     @Override
-    public void sendMessage(CommandSender sender, Component component) {
-        audiences.sender(sender).sendMessage(component);
+    public Audience sender(CommandSender sender) {
+        return audiences.sender(sender);
     }
 
     @Override
-    public void sendMessage(UUID playerId, Component component) {
-        audiences.player(playerId).sendMessage(component);
+    public Audience player(UUID playerId) {
+        return audiences.player(playerId);
     }
 
     @Override
-    public void sendMessageAll(Component component) {
-        audiences.all().sendMessage(component);
+    public Audience all() {
+        return audiences.all();
     }
 
     @Override
-    public void sendMessage(Predicate<CommandSender> filter, Component component) {
-        audiences.filter(filter).sendMessage(component);
+    public Audience filter(Predicate<CommandSender> filter) {
+        return audiences.filter(filter);
     }
 
     @Override
-    public void sendMessageConsole(Component component) {
-        audiences.console().sendMessage(component);
+    public Audience console() {
+        return audiences.console();
     }
 
     @Override
-    public void sendMessage(Key permission, Component component) {
-        audiences.permission(permission).sendMessage(component);
+    public Audience permission(Key permission) {
+        return audiences.permission(permission);
     }
 
     @Override
-    public void sendMessage(String permission, Component component) {
-        audiences.permission(permission).sendMessage(component);
+    public Audience permission(String permission) {
+        return audiences.permission(permission);
     }
 
     @Override
-    public void sendMessagePlayers(Component component) {
-        audiences.players().sendMessage(component);
+    public Audience players() {
+        return audiences.players();
     }
 
     @Override
-    public void sendMessageServer(String serverName, Component component) {
-        audiences.server(serverName).sendMessage(component);
+    public Audience server(String serverName) {
+        return audiences.server(serverName);
     }
 
     @Override
-    public void sendMessageWorld(Key worldKey, Component component) {
-        audiences.world(worldKey).sendMessage(component);
-    }
-
-    @Override
-    public void sendActionBar(Player player, Component component) {
-        audiences.player(player).sendActionBar(component);
-    }
-
-    @Override
-    public void sendActionBar(Player player, ComponentLike component) {
-        audiences.player(player).sendActionBar(component);
+    public Audience world(Key worldKey) {
+        return audiences.world(worldKey);
     }
 
 }
