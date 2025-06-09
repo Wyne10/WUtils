@@ -20,7 +20,7 @@ dependencies {
     api(project(":WUtils-i18n"))
 }
 
-version = "1.0.10"
+version = "1.0.12"
 
 publishing {
     publications {
