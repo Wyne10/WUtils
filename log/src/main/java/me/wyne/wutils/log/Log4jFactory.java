@@ -2,7 +2,6 @@ package me.wyne.wutils.log;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.appender.rolling.DefaultRolloverStrategy;
 import org.apache.logging.log4j.core.appender.rolling.TimeBasedTriggeringPolicy;
@@ -26,208 +25,6 @@ public final class Log4jFactory {
     private static final Map<Class<?>, Logger> existingLoggers = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(Log4jFactory.class);
 
-    public static Logger createLogger(Class<?> clazz, String messagePattern, Level logLevel) {
-        if (existingLoggers.containsKey(clazz))
-            return existingLoggers.get(clazz);
-
-        try {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-
-            Configuration config = context.getConfiguration();
-
-            PatternLayout layout = PatternLayout.newBuilder()
-                    .withPattern(messagePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            ConsoleAppender appender = ConsoleAppender.newBuilder()
-                    .setName("Console")
-                    .setLayout(layout)
-                    .setTarget(ConsoleAppender.Target.SYSTEM_OUT)
-                    .setConfiguration(config)
-                    .build();
-
-            appender.start();
-            config.addAppender(appender);
-
-            LoggerConfig loggerConfig = new LoggerConfig(clazz.getName(), logLevel.getLevel(), false);
-            loggerConfig.addAppender(appender, logLevel.getLevel(), null);
-            config.addLogger(clazz.getName(), loggerConfig);
-            context.updateLoggers();
-        } catch (NoSuchMethodError ignored) {}
-
-        existingLoggers.putIfAbsent(clazz, LoggerFactory.getLogger(clazz));
-        return existingLoggers.get(clazz);
-    }
-
-    public static Logger createLogger(Class<?> clazz, String consolePattern, String filePattern, Level logLevel, String logDirectory) {
-        if (existingLoggers.containsKey(clazz))
-            return existingLoggers.get(clazz);
-
-        try {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-
-            Configuration config = context.getConfiguration();
-
-            PatternLayout consoleLayout = PatternLayout.newBuilder()
-                    .withPattern(consolePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
-                    .setName("Console")
-                    .setLayout(consoleLayout)
-                    .setTarget(ConsoleAppender.Target.SYSTEM_OUT)
-                    .setConfiguration(config)
-                    .build();
-            consoleAppender.start();
-            config.addAppender(consoleAppender);
-
-            String logFileName = logDirectory + "/" + LocalDate.now() + ".log";
-            String logFilePattern = logDirectory + "/%d{yyyy-MM-dd}.log";
-
-            PatternLayout fileLayout = PatternLayout.newBuilder()
-                    .withPattern(filePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            TriggeringPolicy triggeringPolicy = TimeBasedTriggeringPolicy.newBuilder()
-                    .withInterval(1)
-                    .withModulate(true)
-                    .build();
-
-            DefaultRolloverStrategy rollingPolicy = DefaultRolloverStrategy.newBuilder()
-                    .withMax("7")
-                    .withConfig(config)
-                    .build();
-
-            RollingFileAppender rollingFileAppender = RollingFileAppender.newBuilder()
-                    .setName("RollingFile")
-                    .withFileName(logFileName)
-                    .withFilePattern(logFilePattern)
-                    .withPolicy(triggeringPolicy)
-                    .withStrategy(rollingPolicy)
-                    .setLayout(fileLayout)
-                    .setConfiguration(config)
-                    .build();
-            rollingFileAppender.start();
-            config.addAppender(rollingFileAppender);
-
-            LoggerConfig loggerConfig = new LoggerConfig(clazz.getName(), logLevel.getLevel(), false);
-            loggerConfig.addAppender(consoleAppender, logLevel.getLevel(), null);
-            loggerConfig.addAppender(rollingFileAppender, logLevel.getLevel(), null);
-            config.addLogger(clazz.getName(), loggerConfig);
-            context.updateLoggers();
-        } catch (NoSuchMethodError ignored) {}
-
-        existingLoggers.put(clazz, LoggerFactory.getLogger(clazz));
-        return existingLoggers.get(clazz);
-    }
-
-    public static Logger createLogger(Class<?> clazz, String messagePattern, Level logLevel, Log fallback) {
-        if (existingLoggers.containsKey(clazz))
-            return existingLoggers.get(clazz);
-
-        try {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-
-            Configuration config = context.getConfiguration();
-
-            PatternLayout layout = PatternLayout.newBuilder()
-                    .withPattern(messagePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            ConsoleAppender appender = ConsoleAppender.newBuilder()
-                    .setName("Console")
-                    .setLayout(layout)
-                    .setTarget(ConsoleAppender.Target.SYSTEM_OUT)
-                    .setConfiguration(config)
-                    .build();
-
-            appender.start();
-            config.addAppender(appender);
-
-            LoggerConfig loggerConfig = new LoggerConfig(clazz.getName(), logLevel.getLevel(), false);
-            loggerConfig.addAppender(appender, logLevel.getLevel(), null);
-            config.addLogger(clazz.getName(), loggerConfig);
-            context.updateLoggers();
-
-            existingLoggers.putIfAbsent(clazz, LoggerFactory.getLogger(clazz));
-        } catch (NoSuchMethodError ignored) {
-            existingLoggers.putIfAbsent(clazz, new JulLogger(fallback));
-        }
-
-        return existingLoggers.get(clazz);
-    }
-
-    public static Logger createLogger(Class<?> clazz, String consolePattern, String filePattern, Level logLevel, String logDirectory, Log fallback) {
-        if (existingLoggers.containsKey(clazz))
-            return existingLoggers.get(clazz);
-
-        try {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-
-            Configuration config = context.getConfiguration();
-
-            PatternLayout consoleLayout = PatternLayout.newBuilder()
-                    .withPattern(consolePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
-                    .setName("Console")
-                    .setLayout(consoleLayout)
-                    .setTarget(ConsoleAppender.Target.SYSTEM_OUT)
-                    .setConfiguration(config)
-                    .build();
-            consoleAppender.start();
-            config.addAppender(consoleAppender);
-
-            String logFileName = logDirectory + "/" + LocalDate.now() + ".log";
-            String logFilePattern = logDirectory + "/%d{yyyy-MM-dd}.log";
-
-            PatternLayout fileLayout = PatternLayout.newBuilder()
-                    .withPattern(filePattern)
-                    .withConfiguration(config)
-                    .build();
-
-            TriggeringPolicy triggeringPolicy = TimeBasedTriggeringPolicy.newBuilder()
-                    .withInterval(1)
-                    .withModulate(true)
-                    .build();
-
-            DefaultRolloverStrategy rollingPolicy = DefaultRolloverStrategy.newBuilder()
-                    .withMax("7")
-                    .withConfig(config)
-                    .build();
-
-            RollingFileAppender rollingFileAppender = RollingFileAppender.newBuilder()
-                    .setName("RollingFile")
-                    .withFileName(logFileName)
-                    .withFilePattern(logFilePattern)
-                    .withPolicy(triggeringPolicy)
-                    .withStrategy(rollingPolicy)
-                    .setLayout(fileLayout)
-                    .setConfiguration(config)
-                    .build();
-            rollingFileAppender.start();
-            config.addAppender(rollingFileAppender);
-
-            LoggerConfig loggerConfig = new LoggerConfig(clazz.getName(), logLevel.getLevel(), false);
-            loggerConfig.addAppender(consoleAppender, logLevel.getLevel(), null);
-            loggerConfig.addAppender(rollingFileAppender, logLevel.getLevel(), null);
-            config.addLogger(clazz.getName(), loggerConfig);
-            context.updateLoggers();
-
-            existingLoggers.putIfAbsent(clazz, LoggerFactory.getLogger(clazz));
-        } catch (NoSuchMethodError ignored) {
-            existingLoggers.putIfAbsent(clazz, new JulLogger(fallback));
-        }
-
-        return existingLoggers.get(clazz);
-    }
-
     public static Logger createLogger(JavaPlugin plugin, String filePattern, Level logLevel, String logDirectory, Log fallback) {
         if (existingLoggers.containsKey(plugin.getClass()))
             return existingLoggers.get(plugin.getClass());
@@ -244,25 +41,26 @@ public final class Log4jFactory {
                     .withConfiguration(config)
                     .build();
 
-            TriggeringPolicy triggeringPolicy = TimeBasedTriggeringPolicy.newBuilder()
-                    .withInterval(1)
-                    .withModulate(true)
-                    .build();
+            TriggeringPolicy triggeringPolicy = TimeBasedTriggeringPolicy.createPolicy("1", "true");
 
-            DefaultRolloverStrategy rollingPolicy = DefaultRolloverStrategy.newBuilder()
-                    .withMax("7")
-                    .withConfig(config)
-                    .build();
+            DefaultRolloverStrategy rollingPolicy = DefaultRolloverStrategy.createStrategy("7", null, null, null, null, true, config);
 
-            RollingFileAppender rollingFileAppender = RollingFileAppender.newBuilder()
-                    .setName("RollingFile")
-                    .withFileName(logFileName)
-                    .withFilePattern(logFilePattern)
-                    .withPolicy(triggeringPolicy)
-                    .withStrategy(rollingPolicy)
-                    .setLayout(fileLayout)
-                    .setConfiguration(config)
-                    .build();
+            RollingFileAppender rollingFileAppender = RollingFileAppender.createAppender(
+                    logFileName,
+                    logFilePattern,
+                    null,
+                    "RollingFile-" + plugin.getClass().getName(),
+                    null,
+                    null,
+                    null,
+                    triggeringPolicy,
+                    rollingPolicy,
+                    fileLayout,
+                    null,
+                    null,
+                    null,
+                    null,
+                    config);
             rollingFileAppender.start();
             config.addAppender(rollingFileAppender);
 
