@@ -28,7 +28,8 @@ public enum ItemAttribute {
     PRINT("print"),
     SOUND("sound"),
     SLOT("slot"),
-    COMMAND("command");
+    COMMAND("command"),
+    COMMANDS("commands");
 
     private final String key;
 
