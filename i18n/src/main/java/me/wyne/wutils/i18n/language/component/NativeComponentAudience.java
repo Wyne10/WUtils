@@ -1,10 +1,8 @@
 package me.wyne.wutils.i18n.language.component;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -14,75 +12,61 @@ import java.util.function.Predicate;
 public class NativeComponentAudience implements ComponentAudience {
 
     @Override
-    public void sendMessage(Player player, Component component) {
-        player.sendMessage(component);
+    public Audience player(Player player) {
+        return player;
     }
 
     @Override
-    public void sendMessage(CommandSender sender, Component component) {
-        sender.sendMessage(component);
+    public Audience sender(CommandSender sender) {
+        return sender;
     }
 
     @Override
-    public void sendMessage(UUID playerId, Component component) {
+    public Audience player(UUID playerId) {
         Player player = Bukkit.getPlayer(playerId);
-        if (player != null)
-            player.sendMessage(component);
+        return player;
     }
 
     @Override
-    public void sendMessageAll(Component component) {
-        Bukkit.broadcast(component);
+    public Audience all() {
+        return Bukkit.getServer();
     }
 
     @Override
-    public void sendMessage(Predicate<CommandSender> filter, Component component) {
-        Bukkit.getOnlinePlayers().stream()
+    public Audience filter(Predicate<CommandSender> filter) {
+        return Audience.audience(Bukkit.getOnlinePlayers().stream()
                 .filter(filter)
-                .forEach(player -> player.sendMessage(component));
+                .toList());
     }
 
     @Override
-    public void sendMessageConsole(Component component) {
-        Bukkit.getConsoleSender().sendMessage(component);
+    public Audience console() {
+        return Bukkit.getConsoleSender();
     }
 
     @Override
-    public void sendMessage(Key permission, Component component) {
-        sendMessage(permission.namespace() + '.' + permission.value(), component);
+    public Audience permission(Key permission) {
+        return permission(permission.namespace() + '.' + permission.value());
     }
 
     @Override
-    public void sendMessage(String permission, Component component) {
-        Bukkit.broadcast(component, permission);
+    public Audience permission(String permission) {
+        return filter(sender -> sender.hasPermission(permission));
     }
 
     @Override
-    public void sendMessagePlayers(Component component) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(component));
+    public Audience players() {
+        return Audience.audience(Bukkit.getOnlinePlayers());
     }
 
     @Override
-    public void sendMessageServer(String serverName, Component component) {
-        if (Bukkit.getServer().getName().equals(serverName))
-            Bukkit.broadcast(component);
+    public Audience server(String serverName) {
+        return Bukkit.getServer();
     }
 
     @Override
-    public void sendMessageWorld(Key worldKey, Component component) {
-        World world = Bukkit.getWorld(worldKey.value());
-        if (world != null)
-            world.sendMessage(component);
-    }
-
-    @Override
-    public void sendActionBar(Player player, Component component) {
-        player.sendActionBar(component);
-    }
-
-    @Override
-    public void sendActionBar(Player player, ComponentLike component) {
-        player.sendActionBar(component);
+    public Audience world(Key worldKey) {
+        return Bukkit.getWorld(worldKey.value());
     }
 
 }

@@ -1,6 +1,6 @@
 package me.wyne.wutils.i18n.language.validation;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.Map;
 
 public class ReplaceValidator implements StringValidator {
 
@@ -12,10 +12,8 @@ public class ReplaceValidator implements StringValidator {
     }
 
     @Override
-    public String validateString(String languageCode, FileConfiguration strings, String path) {
-        if (path.trim().isEmpty())
-            return replaceString;
-        return strings.contains(path) ? strings.getString(path) : replaceString;
+    public String validateString(String languageCode, Map<String, String> strings, String path) {
+        return strings.getOrDefault(path, replaceString);
     }
 
 }

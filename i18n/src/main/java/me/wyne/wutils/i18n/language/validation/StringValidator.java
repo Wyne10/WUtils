@@ -1,10 +1,10 @@
 package me.wyne.wutils.i18n.language.validation;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.Map;
 
 @FunctionalInterface
 public interface StringValidator {
 
-    String validateString(String languageCode, FileConfiguration strings, String path);
+    String validateString(String languageCode, Map<String, String> strings, String path);
 
 }

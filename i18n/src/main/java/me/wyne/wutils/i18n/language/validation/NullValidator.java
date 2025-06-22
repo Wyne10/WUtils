@@ -1,12 +1,10 @@
 package me.wyne.wutils.i18n.language.validation;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.Map;
 
 public class NullValidator implements StringValidator {
     @Override
-    public String validateString(String languageCode, FileConfiguration strings, String path) {
-        if (path.trim().isEmpty())
-            return null;
-        return strings.getString(path);
+    public String validateString(String languageCode, Map<String, String> strings, String path) {
+        return strings.get(path);
     }
 }

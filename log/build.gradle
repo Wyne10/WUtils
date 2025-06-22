@@ -10,11 +10,11 @@ repositories {
 
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.3'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.11.2'
     api project(':WUtils-configLogBridge')
 }
 
-version = '3.3.8'
+version = '3.3.10'
 
 publishing {
     publications {
