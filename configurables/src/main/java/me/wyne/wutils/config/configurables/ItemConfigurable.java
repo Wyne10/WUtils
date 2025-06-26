@@ -25,6 +25,7 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     static {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.MATERIAL.getKey(), new MaterialAttribute.Factory());
+        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.AMOUNT.getKey(), new AmountAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.NAME.getKey(), new NameAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.LORE.getKey(), new LoreAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.FLAGS.getKey(), new FlagsAttribute.Factory());

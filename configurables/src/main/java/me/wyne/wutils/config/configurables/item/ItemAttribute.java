@@ -2,6 +2,7 @@ package me.wyne.wutils.config.configurables.item;
 
 public enum ItemAttribute {
     MATERIAL("material"),
+    AMOUNT("amount"),
     NAME("name"),
     LORE("lore"),
     FLAGS("flags"),
