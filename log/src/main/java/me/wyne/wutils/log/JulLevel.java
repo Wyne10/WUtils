@@ -18,7 +18,7 @@ public enum JulLevel {
         this.level = level;
     }
 
-    Level getLevel() {
+    public Level getLevel() {
         return level;
     }
 }

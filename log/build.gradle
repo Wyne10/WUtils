@@ -13,7 +13,7 @@ dependencies {
     compileOnly 'org.apache.logging.log4j:log4j-core:2.11.2'
 }
 
-version = '3.4.1'
+version = '3.4.2'
 
 publishing {
     publications {
