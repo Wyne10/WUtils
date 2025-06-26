@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-public class Config implements ConfigFieldRegistry {
+public class Config {
 
     public static final Config global = new Config();
     public Logger log = LoggerFactory.getLogger(getClass());
@@ -63,7 +63,6 @@ public class Config implements ConfigFieldRegistry {
         }
     }
 
-    @Override
     public void registerConfigField(String section, ConfigField field) {
         if (!registeredConfigFields.containsKey(section) || registeredConfigFields.get(section) == null)
             registeredConfigFields.put(section, new LinkedHashSet<>());
