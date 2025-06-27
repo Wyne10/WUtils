@@ -8,43 +8,45 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
+import java.util.regex.Matcher;
+
 public class Placeholder {
 
     public static <T> TextReplacement replace(String key, T value) {
-        return string -> string.replaceAll("<"+key+">", String.valueOf(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(String.valueOf(value)));
     }
 
     public static TextReplacement replace(String key, String value) {
-        return string -> string.replaceAll("<"+key+">", value);
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(value));
     }
 
     public static TextReplacement replace(String key, Component value) {
-        return string -> string.replaceAll("<"+key+">", I18n.global.component().toString(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(I18n.global.component().toString(value)));
     }
 
     public static TextReplacement replace(String key, Component value, ComponentInterpreter interpreter) {
-        return string -> string.replaceAll("<"+key+">", interpreter.toString(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(interpreter.toString(value)));
     }
 
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     public static TextReplacement plain(String key, Component value) {
-        return string -> string.replaceAll("<"+key+">", PlainComponentSerializer.plain().serialize(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(PlainComponentSerializer.plain().serialize(value)));
     }
 
     public static TextReplacement plainText(String key, Component value) {
-        return string -> string.replaceAll("<"+key+">", PlainTextComponentSerializer.plainText().serialize(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(PlainTextComponentSerializer.plainText().serialize(value)));
     }
 
     public static TextReplacement legacy(String key, Component value) {
-        return string -> string.replaceAll("<"+key+">", LegacyInterpreter.SERIALIZER.serialize(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(LegacyInterpreter.SERIALIZER.serialize(value)));
     }
 
     public static TextReplacement miniMessage(String key, Component value) {
-        return string -> string.replaceAll("<"+key+">", MiniMessage.miniMessage().serialize(value));
+        return string -> string.replaceAll("<"+key+">", Matcher.quoteReplacement(MiniMessage.miniMessage().serialize(value)));
     }
 
     public static TextReplacement regex(String regex, String value) {
-        return string -> string.replaceAll(regex, value);
+        return string -> string.replaceAll(regex, Matcher.quoteReplacement(value));
     }
 
 }
