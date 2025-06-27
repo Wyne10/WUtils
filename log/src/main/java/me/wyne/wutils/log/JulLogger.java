@@ -324,4 +324,5 @@ public class JulLogger implements Logger {
     public void error(Marker marker, String msg, Throwable t) {
         error(msg, t);
     }
+
 }

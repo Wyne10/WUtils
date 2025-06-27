@@ -7,6 +7,7 @@ import org.apache.logging.log4j.core.appender.rolling.DefaultRolloverStrategy;
 import org.apache.logging.log4j.core.appender.rolling.TimeBasedTriggeringPolicy;
 import org.apache.logging.log4j.core.appender.rolling.TriggeringPolicy;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +31,10 @@ public final class Log4jFactory {
             return existingLoggers.get(plugin.getClass());
 
         try {
+            // This should fail on fuckass servers
+            Configurator.setLevel(plugin.getLogger().getName(), logLevel.getLevel());
+            Configurator.setLevel(LogManager.getLogger(plugin.getLogger().getName()), logLevel.getLevel());
+
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
             Configuration config = context.getConfiguration();
 
