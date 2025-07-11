@@ -654,35 +654,35 @@ public class I18n {
         return component().getPlaceholderComponentList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plc(language, path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public LocalizedString ls(Language language, String path, String string) {
+    private LocalizedString ls(Language language, String path, String string) {
         return new LocalizedString(string(), language, path, string);
     }
 
-    public PlaceholderLocalizedString pls(Language language, String path, String string, @Nullable OfflinePlayer player) {
+    private PlaceholderLocalizedString pls(Language language, String path, String string, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedString(string(), language, path, string, player);
     }
 
-    public LocalizedString lsd(String path, String string) {
+    private LocalizedString lsd(String path, String string) {
         return new LocalizedString(string(), defaultLanguage, path, string);
     }
 
-    public PlaceholderLocalizedString plsd(String path, String string, @Nullable OfflinePlayer player) {
+    private PlaceholderLocalizedString plsd(String path, String string, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedString(string(), defaultLanguage, path, string, player);
     }
 
-    public LocalizedComponent lc(Language language, String path, Component component) {
+    private LocalizedComponent lc(Language language, String path, Component component) {
         return new LocalizedComponent(component(), language, path, component);
     }
 
-    public PlaceholderLocalizedComponent plc(Language language, String path, Component component, @Nullable OfflinePlayer player) {
+    private PlaceholderLocalizedComponent plc(Language language, String path, Component component, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedComponent(component(), language, path, component, player);
     }
 
-    public LocalizedComponent lcd(String path, Component component) {
+    private LocalizedComponent lcd(String path, Component component) {
         return new LocalizedComponent(component(), defaultLanguage, path, component);
     }
 
-    public PlaceholderLocalizedComponent plcd(String path, Component component, @Nullable OfflinePlayer player) {
+    private PlaceholderLocalizedComponent plcd(String path, Component component, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedComponent(component(), defaultLanguage, path, component, player);
     }
 
