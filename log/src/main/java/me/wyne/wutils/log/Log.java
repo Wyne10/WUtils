@@ -193,7 +193,7 @@ public class Log {
     }
 
     public boolean isLoggable(Level level) {
-        return this.level.intValue() >= level.intValue();
+        return this.level.intValue() <= level.intValue();
     }
 
     public boolean log(Level level, String message)
