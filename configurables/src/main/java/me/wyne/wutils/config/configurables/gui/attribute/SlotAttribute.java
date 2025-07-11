@@ -1,8 +1,8 @@
-package me.wyne.wutils.config.configurables.item.attribute;
+package me.wyne.wutils.config.configurables.gui.attribute;
 
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
+import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class SlotAttribute extends ConfigurableAttribute<Integer> {
@@ -12,7 +12,7 @@ public class SlotAttribute extends ConfigurableAttribute<Integer> {
     }
 
     public SlotAttribute(Integer value) {
-        super(ItemAttribute.SLOT.getKey(), value);
+        super(GuiItemAttribute.SLOT.getKey(), value);
     }
 
     public static final class Factory implements AttributeFactory {

@@ -1,10 +1,11 @@
-package me.wyne.wutils.config.configurables.item.attribute;
+package me.wyne.wutils.config.configurables.gui.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.item.*;
+import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +18,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
     }
 
     public SoundAttribute(Sound value) {
-        super(ItemAttribute.SOUND.getKey(), value);
+        super(GuiItemAttribute.SOUND.getKey(), value);
     }
 
     @Override

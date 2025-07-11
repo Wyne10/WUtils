@@ -20,22 +20,22 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
     }
 
     public GenericAttributeContainer(AttributeMap attributeMap) {
-        this.attributeMap = attributeMap;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
         this.attributes = new LinkedHashMap<>();
     }
 
     public GenericAttributeContainer(Map<String, T> attributes) {
         this.attributeMap = new AttributeMap(new LinkedHashMap<>());
-        this.attributes = attributes;
+        this.attributes = new LinkedHashMap<>(attributes);
     }
 
     public GenericAttributeContainer(AttributeMap attributeMap, Map<String, T> attributes) {
-        this.attributeMap = attributeMap;
-        this.attributes = attributes;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
+        this.attributes = new LinkedHashMap<>(attributes);
     }
 
     public GenericAttributeContainer(AttributeMap attributeMap, ConfigurationSection config) {
-        this.attributeMap = attributeMap;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
         this.attributes = new LinkedHashMap<>();
         fromConfig(config);
     }
@@ -66,9 +66,14 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
         return this;
     }
 
-    public GenericAttributeContainer<T> copy(GenericAttributeContainer<T> container) {
+    public GenericAttributeContainer<T> with(GenericAttributeContainer<T> container) {
+        attributeMap.putAll(container.attributeMap.getKeyMap());
         attributes.putAll(container.attributes);
         return this;
+    }
+
+    public GenericAttributeContainer<T> copy(GenericAttributeContainer<T> container) {
+        return new GenericAttributeContainer<>(container);
     }
 
     public GenericAttributeContainer<T> copy() {
@@ -138,8 +143,8 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
 
     public static final class Builder<T extends Attribute<?>> {
 
-        private final AttributeMap attributeMap;
-        private final Map<String, T> attributes;
+        private AttributeMap attributeMap;
+        private Map<String, T> attributes;
 
         public Builder() {
             attributeMap = new AttributeMap(new LinkedHashMap<>());
@@ -172,8 +177,15 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
             return this;
         }
 
-        public Builder<T> copy(GenericAttributeContainer<T> container) {
+        public Builder<T> with(GenericAttributeContainer<T> container) {
+            attributeMap.putAll(container.attributeMap.getKeyMap());
             attributes.putAll(container.attributes);
+            return this;
+        }
+
+        public Builder<T> copy(GenericAttributeContainer<T> container) {
+            attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
+            attributes = new LinkedHashMap<>(container.attributes);
             return this;
         }
 

@@ -19,22 +19,22 @@ public class AttributeContainer implements CompositeConfigurable {
     }
 
     public AttributeContainer(AttributeMap attributeMap) {
-        this.attributeMap = attributeMap;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
         this.attributes = new LinkedHashMap<>();
     }
 
     public AttributeContainer(Map<String, Attribute<?>> attributes) {
         this.attributeMap = new AttributeMap(new LinkedHashMap<>());
-        this.attributes = attributes;
+        this.attributes = new LinkedHashMap<>(attributes);
     }
 
     public AttributeContainer(AttributeMap attributeMap, Map<String, Attribute<?>> attributes) {
-        this.attributeMap = attributeMap;
-        this.attributes = attributes;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
+        this.attributes = new LinkedHashMap<>(attributes);
     }
 
     public AttributeContainer(AttributeMap attributeMap, ConfigurationSection config) {
-        this.attributeMap = attributeMap;
+        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
         this.attributes = new LinkedHashMap<>();
         fromConfig(config);
     }
@@ -65,9 +65,14 @@ public class AttributeContainer implements CompositeConfigurable {
         return this;
     }
 
-    public AttributeContainer copy(AttributeContainer container) {
+    public AttributeContainer with(AttributeContainer container) {
+        attributeMap.putAll(container.attributeMap.getKeyMap());
         attributes.putAll(container.attributes);
         return this;
+    }
+
+    public AttributeContainer copy(AttributeContainer container) {
+        return new AttributeContainer(container);
     }
 
     public AttributeContainer copy() {
@@ -170,8 +175,8 @@ public class AttributeContainer implements CompositeConfigurable {
 
     public static final class Builder {
 
-        private final AttributeMap attributeMap;
-        private final Map<String, Attribute<?>> attributes;
+        private AttributeMap attributeMap;
+        private Map<String, Attribute<?>> attributes;
 
         public Builder() {
             attributeMap = new AttributeMap(new LinkedHashMap<>());
@@ -204,8 +209,15 @@ public class AttributeContainer implements CompositeConfigurable {
             return this;
         }
 
-        public Builder copy(AttributeContainer container) {
+        public Builder with(AttributeContainer container) {
+            attributeMap.putAll(container.attributeMap.getKeyMap());
             attributes.putAll(container.attributes);
+            return this;
+        }
+
+        public Builder copy(AttributeContainer container) {
+            attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
+            attributes = new LinkedHashMap<>(container.attributes);
             return this;
         }
 

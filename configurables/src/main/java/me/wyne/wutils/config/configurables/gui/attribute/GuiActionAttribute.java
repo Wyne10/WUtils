@@ -1,8 +1,8 @@
-package me.wyne.wutils.config.configurables.item.attribute;
+package me.wyne.wutils.config.configurables.gui.attribute;
 
 import dev.triumphteam.gui.components.GuiAction;
 import me.wyne.wutils.config.configurables.attribute.AttributeBase;
-import me.wyne.wutils.config.configurables.item.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GuiActionAttribute extends AttributeBase<GuiAction<InventoryClickEvent>> implements ClickEventAttribute {

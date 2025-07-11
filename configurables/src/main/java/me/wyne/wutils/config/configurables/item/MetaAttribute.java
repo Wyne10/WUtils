@@ -9,6 +9,16 @@ public interface MetaAttribute extends ItemStackAttribute {
         item.editMeta(this::apply);
     }
 
-    void apply(ItemMeta meta);
+    default void apply(ItemStack item, ItemAttributeContext context) {
+        item.editMeta(meta -> apply(meta, context));
+    }
+
+    default void apply(ItemMeta meta) {
+        apply(meta, ItemAttributeContext.EMPTY);
+    }
+
+    default void apply(ItemMeta meta, ItemAttributeContext context) {
+        apply(meta);
+    }
 
 }
