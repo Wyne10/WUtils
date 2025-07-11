@@ -1,230 +1,49 @@
 package me.wyne.wutils.config.configurables.attribute;
 
-import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Set;
 
-public class AttributeContainer implements CompositeConfigurable {
+public interface AttributeContainer extends CompositeConfigurable {
+    AttributeContainer ignore(String... ignore);
 
-    private final AttributeMap attributeMap;
-    private final Map<String, Attribute<?>> attributes;
+    AttributeContainer with(String key, AttributeFactory factory);
 
-    public AttributeContainer() {
-        this.attributeMap = new AttributeMap(new LinkedHashMap<>());
-        this.attributes = new LinkedHashMap<>();
+    AttributeContainer with(Map<String, AttributeFactory> keyMap);
+
+    AttributeContainer with(Attribute<?> attribute);
+
+    AttributeContainer with(AttributeContainer container);
+
+    AttributeContainer copy(AttributeContainer container);
+
+    AttributeContainer copy();
+
+    @Nullable <T> T get(String key);
+
+    <T> T get(String key, T def);
+
+    <T> Set<T> getSet(Class<T> clazz);
+
+    @Nullable <V> Attribute<V> getAttribute(String key);
+
+    <V> Attribute<V> getAttribute(String key, Attribute<V> def);
+
+    <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz);
+
+    @Nullable <V> V getValue(String key);
+
+    <V> V getValue(String key, V def);
+
+    <V> Set<V> getValues(Class<V> clazz);
+
+    AttributeMap getAttributeMap();
+
+    Map<String, Attribute<?>> getAttributes();
+
+    default AttributeContainerBuilder toBuilder() {
+        return new AttributeContainerBuilder(this);
     }
-
-    public AttributeContainer(AttributeMap attributeMap) {
-        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
-        this.attributes = new LinkedHashMap<>();
-    }
-
-    public AttributeContainer(Map<String, Attribute<?>> attributes) {
-        this.attributeMap = new AttributeMap(new LinkedHashMap<>());
-        this.attributes = new LinkedHashMap<>(attributes);
-    }
-
-    public AttributeContainer(AttributeMap attributeMap, Map<String, Attribute<?>> attributes) {
-        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
-        this.attributes = new LinkedHashMap<>(attributes);
-    }
-
-    public AttributeContainer(AttributeMap attributeMap, ConfigurationSection config) {
-        this.attributeMap = new AttributeMap(attributeMap.getKeyMap());
-        this.attributes = new LinkedHashMap<>();
-        fromConfig(config);
-    }
-
-    public AttributeContainer(AttributeContainer container) {
-        this.attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
-        this.attributes = new LinkedHashMap<>(container.attributes);
-    }
-
-    public AttributeContainer ignore(String... ignore) {
-        for (String ignoreKey : ignore)
-            attributes.remove(ignoreKey);
-        return this;
-    }
-
-    public AttributeContainer with(String key, AttributeFactory factory) {
-        attributeMap.put(key, factory);
-        return this;
-    }
-
-    public AttributeContainer with(Map<String, AttributeFactory> keyMap) {
-        attributeMap.putAll(keyMap);
-        return this;
-    }
-
-    public AttributeContainer with(Attribute<?> attribute) {
-        attributes.put(attribute.getKey(), attribute);
-        return this;
-    }
-
-    public AttributeContainer with(AttributeContainer container) {
-        attributeMap.putAll(container.attributeMap.getKeyMap());
-        attributes.putAll(container.attributes);
-        return this;
-    }
-
-    public AttributeContainer copy(AttributeContainer container) {
-        return new AttributeContainer(container);
-    }
-
-    public AttributeContainer copy() {
-        return new AttributeContainer(this);
-    }
-
-    @Nullable
-    public <T> T get(String key) {
-        return (T) attributes.get(key);
-    }
-
-    public <T> T get(String key, T def) {
-        T value = get(key);
-        if (value == null)
-            return def;
-        return value;
-    }
-
-    public <T> Set<T> getSet(Class<T> clazz) {
-        return attributes.values().stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    @Nullable
-    public <V> Attribute<V> getAttribute(String key) {
-        return (Attribute<V>) attributes.get(key);
-    }
-
-    public <V> Attribute<V> getAttribute(String key, Attribute<V> def) {
-        var attribute = (Attribute<V>) attributes.get(key);
-        if (attribute == null)
-            return def;
-        return attribute;
-    }
-
-    public <V> Set<Attribute<V>> getAttributes(Class<Attribute<V>> clazz) {
-        return attributes.values().stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    @Nullable
-    public <V> V getValue(String key) {
-        return ((Attribute<V>) attributes.get(key)).getValue();
-    }
-
-    public <V> V getValue(String key, V def) {
-        var attribute = (Attribute<V>) attributes.get(key);
-        if (attribute == null)
-            return def;
-        return attribute.getValue();
-    }
-
-    public <V> Set<V> getValues(Class<V> clazz) {
-        return attributes.values().stream()
-                .filter(attribute -> clazz.isInstance(attribute.getValue()))
-                .map(attribute -> clazz.cast(attribute.getValue()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    public Map<String, Attribute<?>> getAttributes() {
-        return attributes;
-    }
-
-    @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        getConfigurableAttributes().values()
-                .forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
-        return builder.toString();
-    }
-
-    @Override
-    public void fromConfig(@Nullable Object configObject) {
-        attributes.clear();
-        if (configObject == null)
-            return;
-        attributes.putAll(attributeMap.createAllMap((ConfigurationSection) configObject));
-    }
-
-    private Map<String, ConfigurableAttribute<?>> getConfigurableAttributes() {
-        Map<String, ConfigurableAttribute<?>> configurableAttributes = new LinkedHashMap<>();
-        attributes.keySet().stream()
-                .filter(key -> attributes.get(key) instanceof ConfigurableAttribute<?>)
-                .forEach(key -> configurableAttributes.put(key, (ConfigurableAttribute<?>) attributes.get(key)));
-        return configurableAttributes;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Builder toBuilder() {
-        return new Builder(this);
-    }
-
-    public static final class Builder {
-
-        private AttributeMap attributeMap;
-        private Map<String, Attribute<?>> attributes;
-
-        public Builder() {
-            attributeMap = new AttributeMap(new LinkedHashMap<>());
-            attributes = new LinkedHashMap<>();
-        }
-
-        public Builder(AttributeContainer attributeContainer) {
-            this.attributeMap = new AttributeMap(attributeContainer.attributeMap.getKeyMap());
-            this.attributes = new LinkedHashMap<>(attributeContainer.attributes);
-        }
-
-        public Builder ignore(String... ignore) {
-            for (String ignoreKey : ignore)
-                attributes.remove(ignoreKey);
-            return this;
-        }
-
-        public Builder with(String key, AttributeFactory factory) {
-            attributeMap.put(key, factory);
-            return this;
-        }
-
-        public Builder with(Map<String, AttributeFactory> keyMap) {
-            attributeMap.putAll(keyMap);
-            return this;
-        }
-
-        public Builder with(Attribute<?> attribute) {
-            attributes.put(attribute.getKey(), attribute);
-            return this;
-        }
-
-        public Builder with(AttributeContainer container) {
-            attributeMap.putAll(container.attributeMap.getKeyMap());
-            attributes.putAll(container.attributes);
-            return this;
-        }
-
-        public Builder copy(AttributeContainer container) {
-            attributeMap = new AttributeMap(container.attributeMap.getKeyMap());
-            attributes = new LinkedHashMap<>(container.attributes);
-            return this;
-        }
-
-        public AttributeContainer build() {
-            return new AttributeContainer(attributeMap, attributes);
-        }
-
-    }
-
 }

@@ -51,7 +51,7 @@ public class ItemConfigurable implements CompositeConfigurable {
     private final AttributeContainer attributeContainer;
 
     public ItemConfigurable() {
-        attributeContainer = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
+        attributeContainer = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
     }
 
     public ItemConfigurable(ConfigurationSection section) {
@@ -221,6 +221,10 @@ public class ItemConfigurable implements CompositeConfigurable {
         return attributeContainer.getAttributes();
     }
 
+    public AttributeMap getAttributeMap() {
+        return attributeContainer.getAttributeMap();
+    }
+
     public AttributeContainer getAttributeContainer() {
         return attributeContainer;
     }
@@ -235,10 +239,10 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public static final class Builder {
 
-        private final AttributeContainer.Builder attributeContainerBuilder;
+        private final AttributeContainerBuilder attributeContainerBuilder;
 
         public Builder() {
-            this.attributeContainerBuilder = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
+            this.attributeContainerBuilder = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
         }
 
         public Builder(ItemConfigurable itemConfigurable) {
@@ -271,12 +275,12 @@ public class ItemConfigurable implements CompositeConfigurable {
             return this;
         }
 
-        public Builder with(AttributeContainer container) {
+        public Builder with(MutableAttributeContainer container) {
             attributeContainerBuilder.with(container);
             return this;
         }
 
-        public Builder copy(AttributeContainer container) {
+        public Builder copy(MutableAttributeContainer container) {
             attributeContainerBuilder.copy(container);
             return this;
         }
