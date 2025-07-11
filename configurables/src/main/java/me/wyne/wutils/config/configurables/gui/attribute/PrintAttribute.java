@@ -2,14 +2,14 @@ package me.wyne.wutils.config.configurables.gui.attribute;
 
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.ContextClickEventAttribute;
 import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttributeContext;
 import me.wyne.wutils.i18n.I18n;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class PrintAttribute extends ConfigurableAttribute<String> implements ClickEventAttribute {
+public class PrintAttribute extends ConfigurableAttribute<String> implements ContextClickEventAttribute {
 
     public PrintAttribute(String key, String value) {
         super(key, value);

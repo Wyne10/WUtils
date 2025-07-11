@@ -32,10 +32,5 @@ public class GenericsAttribute extends CompositeAttribute<GenericAttribute> impl
         getValue().values().forEach(attribute -> attribute.apply(meta));
     }
 
-    @Override
-    public void apply(ItemMeta meta, ItemAttributeContext context) {
-        getValue().values().forEach(attribute -> attribute.apply(meta, context));
-    }
-
 }
 

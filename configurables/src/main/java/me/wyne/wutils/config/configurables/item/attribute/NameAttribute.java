@@ -7,7 +7,7 @@ import me.wyne.wutils.i18n.I18n;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class NameAttribute extends ConfigurableAttribute<String> implements MetaAttribute {
+public class NameAttribute extends ConfigurableAttribute<String> implements ContextMetaAttribute {
 
     public NameAttribute(String key, String value) {
         super(key, value);

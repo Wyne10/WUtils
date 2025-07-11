@@ -2,7 +2,7 @@ package me.wyne.wutils.config.configurables.gui.attribute;
 
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
-import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.ContextClickEventAttribute;
 import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttributeContext;
 import me.wyne.wutils.config.configurables.item.ManualAttribute;
@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class CommandAttribute extends ConfigurableAttribute<String> implements ClickEventAttribute, ManualAttribute {
+public class CommandAttribute extends ConfigurableAttribute<String> implements ContextClickEventAttribute, ManualAttribute {
 
     public CommandAttribute(String key, String value) {
         super(key, value);

@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SkullPlayerAttribute extends ConfigurableAttribute<Boolean> implements MetaAttribute {
+public class SkullPlayerAttribute extends ConfigurableAttribute<Boolean> implements ContextMetaAttribute {
 
     public SkullPlayerAttribute(String key, Boolean value) {
         super(key, value);

@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class LoreAttribute extends ConfigurableAttribute<List<String>> implements MetaAttribute {
+public class LoreAttribute extends ConfigurableAttribute<List<String>> implements ContextMetaAttribute {
 
     public LoreAttribute(String key, List<String> value) {
         super(key, value);

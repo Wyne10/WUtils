@@ -1,6 +1,6 @@
 package me.wyne.wutils.config.configurables.gui.attribute;
 
-import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.ContextClickEventAttribute;
 import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import me.wyne.wutils.config.configurables.item.ManualAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Map;
 
-public class CommandsAttribute extends CompositeAttribute<CommandAttribute> implements ClickEventAttribute, ManualAttribute {
+public class CommandsAttribute extends CompositeAttribute<CommandAttribute> implements ContextClickEventAttribute, ManualAttribute {
 
     public CommandsAttribute(String key, Map<String, CommandAttribute> commands) {
         super(key, commands);
