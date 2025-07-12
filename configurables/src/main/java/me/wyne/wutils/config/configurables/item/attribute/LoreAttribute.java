@@ -6,19 +6,12 @@ import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
-import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
-import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class LoreAttribute extends ConfigurableAttribute<List<String>> implements MetaAttribute, PlayerAwareAttribute, ContextPlaceholderAttribute {
-
-    private Player player;
-    private TextReplacement[] textReplacements = {};
-    private ComponentReplacement[] componentReplacements = {};
+public class LoreAttribute extends ConfigurableAttribute<List<String>> implements ContextMetaAttribute {
 
     public LoreAttribute(String key, List<String> value) {
         super(key, value);
@@ -29,23 +22,8 @@ public class LoreAttribute extends ConfigurableAttribute<List<String>> implement
     }
 
     @Override
-    public void apply(ItemMeta meta) {
-        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements).replace(componentReplacements).bungee()).toList());
-    }
-
-    @Override
-    public void apply(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public void apply(TextReplacement... replacements) {
-        this.textReplacements = replacements;
-    }
-
-    @Override
-    public void apply(ComponentReplacement... replacements) {
-        this.componentReplacements = replacements;
+    public void apply(ItemMeta meta, ItemAttributeContext context) {
+        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(I18n.toLocale(context.getPlayer()), context.getPlayer(), s, context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
     }
 
     @Override

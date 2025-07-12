@@ -2,6 +2,7 @@ package me.wyne.wutils.config.configurables.item.attribute;
 
 import me.wyne.wutils.config.configurables.item.CompositeAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
+import me.wyne.wutils.config.configurables.item.ItemAttributeContext;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;

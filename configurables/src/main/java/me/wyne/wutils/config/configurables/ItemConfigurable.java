@@ -1,7 +1,5 @@
 package me.wyne.wutils.config.configurables;
 
-import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurables.attribute.*;
@@ -48,17 +46,12 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_EFFECT.getKey(), new PotionEffectAttribute.Factory());
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.POTION_EFFECTS.getKey(), PotionEffectsAttribute::new);
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.SLOT.getKey(), new SlotAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.COMMAND.getKey(), new CommandAttribute.Factory());
-        ITEM_ATTRIBUTE_MAP.put(ItemAttribute.COMMANDS.getKey(), CommandsAttribute::new);
     }
 
-    private final AttributeContainer attributeContainer;
+    protected final AttributeContainer attributeContainer;
 
     public ItemConfigurable() {
-        attributeContainer = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
+        attributeContainer = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
     }
 
     public ItemConfigurable(ConfigurationSection section) {
@@ -68,6 +61,11 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemConfigurable(AttributeContainer attributeContainer) {
         this.attributeContainer = attributeContainer;
+    }
+
+    public ItemConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+        this(attributeContainer);
+        fromConfig(section);
     }
 
     @Override
@@ -82,71 +80,54 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemStack build(TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(textReplacements));
+        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
         attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack));
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack build(Player player, TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(textReplacements));
-        attributeContainer.getSet(PlayerAwareAttribute.class)
-                .forEach(attribute -> attribute.apply(player));
+        var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
         attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack));
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(componentReplacements));
+        var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
         attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack));
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextPlaceholderAttribute.class)
-                .forEach(attribute -> attribute.apply(componentReplacements));
-        attributeContainer.getSet(PlayerAwareAttribute.class)
-                .forEach(attribute -> attribute.apply(player));
+        var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack));
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
-    }
-
-    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
-        var itemStack = build(textReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
-    }
-
-    public GuiItem buildGuiItem(Player player, TextReplacement... textReplacements) {
-        var itemStack = build(player, textReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
-
-    }
-
-    public GuiItem buildGuiItemComponent(ComponentReplacement... componentReplacements) {
-        var itemStack = buildComponent(componentReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
-    }
-
-    public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
-        var itemStack = buildComponent(player, componentReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> attribute.apply(e)));
     }
 
     public ItemConfigurable ignore(ItemAttribute... ignore) {
@@ -172,6 +153,16 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemConfigurable with(Attribute<?> attribute) {
         attributeContainer.with(attribute);
+        return this;
+    }
+
+    public ItemConfigurable with(AttributeContainer container) {
+        attributeContainer.with(container);
+        return this;
+    }
+
+    public ItemConfigurable with(ItemConfigurable itemConfigurable) {
+        attributeContainer.with(itemConfigurable.getAttributeContainer());
         return this;
     }
 
@@ -259,6 +250,10 @@ public class ItemConfigurable implements CompositeConfigurable {
         return attributeContainer.getAttributes();
     }
 
+    public AttributeMap getAttributeMap() {
+        return attributeContainer.getAttributeMap();
+    }
+
     public AttributeContainer getAttributeContainer() {
         return attributeContainer;
     }
@@ -271,12 +266,16 @@ public class ItemConfigurable implements CompositeConfigurable {
         return new Builder(this);
     }
 
-    public static final class Builder {
+    public static class Builder {
 
-        private final AttributeContainer.Builder attributeContainerBuilder;
+        protected final AttributeContainerBuilder attributeContainerBuilder;
 
         public Builder() {
-            this.attributeContainerBuilder = new AttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
+            this.attributeContainerBuilder = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
+        }
+
+        public Builder(AttributeContainer attributeContainer) {
+            this.attributeContainerBuilder = attributeContainer.toBuilder();
         }
 
         public Builder(ItemConfigurable itemConfigurable) {
@@ -306,6 +305,11 @@ public class ItemConfigurable implements CompositeConfigurable {
 
         public Builder with(Attribute<?> attribute) {
             attributeContainerBuilder.with(attribute);
+            return this;
+        }
+
+        public Builder with(AttributeContainer container) {
+            attributeContainerBuilder.with(container);
             return this;
         }
 
