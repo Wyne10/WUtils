@@ -50,10 +50,9 @@ public class GuiConfigurable extends ItemConfigurable {
         fromConfig(section);
     }
 
-    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
-        var itemStack = build(textReplacements);
+    public GuiItem buildGuiItem(ItemAttributeContext context) {
+        var itemStack = build(context);
         var actions = attributeContainer.getSet(ClickEventAttribute.class);
-        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
         return ItemBuilder.from(itemStack)
                 .asGuiItem(e -> actions.forEach(attribute -> {
                     if (attribute instanceof ContextClickEventAttribute)
@@ -61,45 +60,26 @@ public class GuiConfigurable extends ItemConfigurable {
                     else
                         attribute.apply(e);
                 }));
+    }
+
+    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
+        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
+        return buildGuiItem(context);
     }
 
     public GuiItem buildGuiItem(Player player, TextReplacement... textReplacements) {
-        var itemStack = build(player, textReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
         var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> {
-                    if (attribute instanceof ContextClickEventAttribute)
-                        ((ContextClickEventAttribute) attribute).apply(e, context);
-                    else
-                        attribute.apply(e);
-                }));
+        return buildGuiItem(context);
     }
 
     public GuiItem buildGuiItemComponent(ComponentReplacement... componentReplacements) {
-        var itemStack = buildComponent(componentReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
         var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> {
-                    if (attribute instanceof ContextClickEventAttribute)
-                        ((ContextClickEventAttribute) attribute).apply(e, context);
-                    else
-                        attribute.apply(e);
-                }));
+        return buildGuiItem(context);
     }
 
     public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
-        var itemStack = buildComponent(player, componentReplacements);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
-        return ItemBuilder.from(itemStack)
-                .asGuiItem(e -> actions.forEach(attribute -> {
-                    if (attribute instanceof ContextClickEventAttribute)
-                        ((ContextClickEventAttribute) attribute).apply(e, context);
-                    else
-                        attribute.apply(e);
-                }));
+        return buildGuiItem(context);
     }
 
     public GuiConfigurable ignore(ItemAttribute... ignore) {

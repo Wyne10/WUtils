@@ -79,9 +79,8 @@ public class ItemConfigurable implements CompositeConfigurable {
         attributeContainer.fromConfig(configObject);
     }
 
-    public ItemStack build(TextReplacement... textReplacements) {
+    public ItemStack build(ItemAttributeContext context) {
         var itemStack = new ItemStack(Material.STONE);
-        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
         attributeContainer.getSet(ItemStackAttribute.class)
                 .forEach(attribute -> {
                     if (attribute instanceof ContextItemStackAttribute)
@@ -90,45 +89,26 @@ public class ItemConfigurable implements CompositeConfigurable {
                         attribute.apply(itemStack);
                 });
         return itemStack;
+    }
+
+    public ItemStack build(TextReplacement... textReplacements) {
+        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
+        return build(context);
     }
 
     public ItemStack build(Player player, TextReplacement... textReplacements) {
-        var itemStack = new ItemStack(Material.STONE);
         var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
-        attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> {
-                    if (attribute instanceof ContextItemStackAttribute)
-                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
-                    else
-                        attribute.apply(itemStack);
-                });
-        return itemStack;
+        return build(context);
     }
 
     public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
-        var itemStack = new ItemStack(Material.STONE);
         var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
-        attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> {
-                    if (attribute instanceof ContextItemStackAttribute)
-                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
-                    else
-                        attribute.apply(itemStack);
-                });
-        return itemStack;
+        return build(context);
     }
 
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
-        var itemStack = new ItemStack(Material.STONE);
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
-        attributeContainer.getSet(ItemStackAttribute.class)
-                .forEach(attribute -> {
-                    if (attribute instanceof ContextItemStackAttribute)
-                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
-                    else
-                        attribute.apply(itemStack);
-                });
-        return itemStack;
+        return build(context);
     }
 
     public ItemConfigurable ignore(ItemAttribute... ignore) {
