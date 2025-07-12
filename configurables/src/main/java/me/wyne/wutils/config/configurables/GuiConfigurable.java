@@ -1,12 +1,23 @@
 package me.wyne.wutils.config.configurables;
 
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.GuiItem;
 import me.wyne.wutils.config.configurables.attribute.*;
+import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
+import me.wyne.wutils.config.configurables.gui.ContextClickEventAttribute;
 import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
 import me.wyne.wutils.config.configurables.gui.attribute.*;
+import me.wyne.wutils.config.configurables.item.ItemAttribute;
+import me.wyne.wutils.config.configurables.item.ItemAttributeContext;
+import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
+import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class GuiConfigurable extends ItemConfigurable {
 
@@ -39,23 +50,106 @@ public class GuiConfigurable extends ItemConfigurable {
         fromConfig(section);
     }
 
+    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
+        var itemStack = build(textReplacements);
+        var actions = attributeContainer.getSet(ClickEventAttribute.class);
+        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> {
+                    if (attribute instanceof ContextClickEventAttribute)
+                        ((ContextClickEventAttribute) attribute).apply(e, context);
+                    else
+                        attribute.apply(e);
+                }));
+    }
+
+    public GuiItem buildGuiItem(Player player, TextReplacement... textReplacements) {
+        var itemStack = build(player, textReplacements);
+        var actions = attributeContainer.getSet(ClickEventAttribute.class);
+        var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> {
+                    if (attribute instanceof ContextClickEventAttribute)
+                        ((ContextClickEventAttribute) attribute).apply(e, context);
+                    else
+                        attribute.apply(e);
+                }));
+    }
+
+    public GuiItem buildGuiItemComponent(ComponentReplacement... componentReplacements) {
+        var itemStack = buildComponent(componentReplacements);
+        var actions = attributeContainer.getSet(ClickEventAttribute.class);
+        var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> {
+                    if (attribute instanceof ContextClickEventAttribute)
+                        ((ContextClickEventAttribute) attribute).apply(e, context);
+                    else
+                        attribute.apply(e);
+                }));
+    }
+
+    public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
+        var itemStack = buildComponent(player, componentReplacements);
+        var actions = attributeContainer.getSet(ClickEventAttribute.class);
+        var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
+        return ItemBuilder.from(itemStack)
+                .asGuiItem(e -> actions.forEach(attribute -> {
+                    if (attribute instanceof ContextClickEventAttribute)
+                        ((ContextClickEventAttribute) attribute).apply(e, context);
+                    else
+                        attribute.apply(e);
+                }));
+    }
+
+    public GuiConfigurable ignore(ItemAttribute... ignore) {
+        return new GuiConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(ItemAttribute::getKey).toArray(String[]::new)));
+    }
+
     public GuiConfigurable ignore(GuiItemAttribute... ignore) {
-        for (GuiItemAttribute ignoreAttribute : ignore)
-            attributeContainer.ignore(ignoreAttribute.getKey());
-        return this;
+        return new GuiConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(GuiItemAttribute::getKey).toArray(String[]::new)));
+    }
+
+    public GuiConfigurable ignore(String... ignore) {
+        return new GuiConfigurable(attributeContainer.ignore(ignore));
+    }
+
+    public GuiConfigurable with(String key, AttributeFactory factory) {
+        return new GuiConfigurable(attributeContainer.with(key, factory));
+    }
+
+    public GuiConfigurable with(Map<String, AttributeFactory> keyMap) {
+        return new GuiConfigurable(attributeContainer.with(keyMap));
+    }
+
+    public GuiConfigurable with(Attribute<?> attribute) {
+        return new GuiConfigurable(attributeContainer.with(attribute));
+    }
+
+    public GuiConfigurable with(AttributeContainer container) {
+        return new GuiConfigurable(attributeContainer.with(container));
+    }
+
+    public GuiConfigurable with(ItemConfigurable itemConfigurable) {
+        return new GuiConfigurable(attributeContainer.with(itemConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable with(GuiConfigurable guiConfigurable) {
-        attributeContainer.with(guiConfigurable.getAttributeContainer());
-        return this;
+        return new GuiConfigurable(attributeContainer.with(guiConfigurable.getAttributeContainer()));
+    }
+
+    public GuiConfigurable copy(AttributeContainer container) {
+        return new GuiConfigurable(attributeContainer.copy(container));
+    }
+
+    public GuiConfigurable copy(ItemConfigurable itemConfigurable) {
+        return new GuiConfigurable(attributeContainer.copy(itemConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable copy(GuiConfigurable guiConfigurable) {
-        attributeContainer.copy(guiConfigurable.getAttributeContainer());
-        return this;
+        return new GuiConfigurable(attributeContainer.copy(guiConfigurable.getAttributeContainer()));
     }
 
-    @Override
     public GuiConfigurable copy() {
         return new GuiConfigurable(attributeContainer.copy());
     }
@@ -109,9 +203,50 @@ public class GuiConfigurable extends ItemConfigurable {
             super(guiConfigurable.getAttributeContainer());
         }
 
+        public Builder ignore(ItemAttribute... ignore) {
+            for (ItemAttribute ignoreAttribute : ignore)
+                attributeContainerBuilder.ignore(ignoreAttribute.getKey());
+            return this;
+        }
+
         public Builder ignore(GuiItemAttribute... ignore) {
             for (GuiItemAttribute ignoreAttribute : ignore)
                 attributeContainerBuilder.ignore(ignoreAttribute.getKey());
+            return this;
+        }
+
+        public Builder ignore(String... ignore) {
+            attributeContainerBuilder.ignore(ignore);
+            return this;
+        }
+
+        public Builder with(String key, AttributeFactory factory) {
+            attributeContainerBuilder.with(key, factory);
+            return this;
+        }
+
+        public Builder with(Map<String, AttributeFactory> keyMap) {
+            attributeContainerBuilder.with(keyMap);
+            return this;
+        }
+
+        public Builder with(Attribute<?> attribute) {
+            attributeContainerBuilder.with(attribute);
+            return this;
+        }
+
+        public Builder with(AttributeContainer container) {
+            attributeContainerBuilder.with(container);
+            return this;
+        }
+
+        public Builder copy(AttributeContainer container) {
+            attributeContainerBuilder.copy(container);
+            return this;
+        }
+
+        public Builder copy(ItemConfigurable itemConfigurable) {
+            attributeContainerBuilder.copy(itemConfigurable.getAttributeContainer());
             return this;
         }
 
@@ -121,7 +256,7 @@ public class GuiConfigurable extends ItemConfigurable {
         }
 
         public GuiConfigurable build() {
-            return new GuiConfigurable(attributeContainerBuilder.build());
+            return new GuiConfigurable(attributeContainerBuilder.buildImmutable());
         }
 
     }

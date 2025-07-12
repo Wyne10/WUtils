@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -131,49 +132,39 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     public ItemConfigurable ignore(ItemAttribute... ignore) {
-        for (ItemAttribute ignoreAttribute : ignore)
-            attributeContainer.ignore(ignoreAttribute.getKey());
-        return this;
+        return new ItemConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(ItemAttribute::getKey).toArray(String[]::new)));
     }
 
     public ItemConfigurable ignore(String... ignore) {
-        attributeContainer.ignore(ignore);
-        return this;
+        return new ItemConfigurable(attributeContainer.ignore(ignore));
     }
 
     public ItemConfigurable with(String key, AttributeFactory factory) {
-        attributeContainer.with(key, factory);
-        return this;
+        return new ItemConfigurable(attributeContainer.with(key, factory));
     }
 
     public ItemConfigurable with(Map<String, AttributeFactory> keyMap) {
-        attributeContainer.with(keyMap);
-        return this;
+        return new ItemConfigurable(attributeContainer.with(keyMap));
     }
 
     public ItemConfigurable with(Attribute<?> attribute) {
-        attributeContainer.with(attribute);
-        return this;
+        return new ItemConfigurable(attributeContainer.with(attribute));
     }
 
     public ItemConfigurable with(AttributeContainer container) {
-        attributeContainer.with(container);
-        return this;
+        return new ItemConfigurable(attributeContainer.with(container));
     }
 
     public ItemConfigurable with(ItemConfigurable itemConfigurable) {
-        attributeContainer.with(itemConfigurable.getAttributeContainer());
-        return this;
+        return new ItemConfigurable(attributeContainer.with(itemConfigurable.getAttributeContainer()));
     }
 
     public ItemConfigurable copy(AttributeContainer container) {
-        attributeContainer.copy(container);
-        return this;
+        return new ItemConfigurable(attributeContainer.copy(container));
     }
 
     public ItemConfigurable copy(ItemConfigurable itemConfigurable) {
-        attributeContainer.copy(itemConfigurable.getAttributeContainer());
-        return this;
+        return new ItemConfigurable(attributeContainer.copy(itemConfigurable.getAttributeContainer()));
     }
 
     public ItemConfigurable copy() {
@@ -324,7 +315,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         }
 
         public ItemConfigurable build() {
-            return new ItemConfigurable(attributeContainerBuilder.build());
+            return new ItemConfigurable(attributeContainerBuilder.buildImmutable());
         }
 
     }
