@@ -75,29 +75,53 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemStack build(TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{})));
+        var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
+        attributeContainer.getSet(ItemStackAttribute.class)
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack build(Player player, TextReplacement... textReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{})));
+        var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
+        attributeContainer.getSet(ItemStackAttribute.class)
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements)));
+        var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
+        attributeContainer.getSet(ItemStackAttribute.class)
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
         var itemStack = new ItemStack(Material.STONE);
-        attributeContainer.getSet(ContextItemStackAttribute.class)
-                .forEach(attribute -> attribute.apply(itemStack, new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements)));
+        var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
+        attributeContainer.getSet(ItemStackAttribute.class)
+                .forEach(attribute -> {
+                    if (attribute instanceof ContextItemStackAttribute)
+                        ((ContextItemStackAttribute) attribute).apply(itemStack, context);
+                    else
+                        attribute.apply(itemStack);
+                });
         return itemStack;
     }
 
