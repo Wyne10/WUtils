@@ -48,7 +48,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
     }
 
-    private final AttributeContainer attributeContainer;
+    protected final AttributeContainer attributeContainer;
 
     public ItemConfigurable() {
         attributeContainer = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
@@ -61,6 +61,11 @@ public class ItemConfigurable implements CompositeConfigurable {
 
     public ItemConfigurable(AttributeContainer attributeContainer) {
         this.attributeContainer = attributeContainer;
+    }
+
+    public ItemConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+        this(attributeContainer);
+        fromConfig(section);
     }
 
     @Override
@@ -261,12 +266,16 @@ public class ItemConfigurable implements CompositeConfigurable {
         return new Builder(this);
     }
 
-    public static final class Builder {
+    public static class Builder {
 
-        private final AttributeContainerBuilder attributeContainerBuilder;
+        protected final AttributeContainerBuilder attributeContainerBuilder;
 
         public Builder() {
             this.attributeContainerBuilder = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>()).toBuilder();
+        }
+
+        public Builder(AttributeContainer attributeContainer) {
+            this.attributeContainerBuilder = attributeContainer.toBuilder();
         }
 
         public Builder(ItemConfigurable itemConfigurable) {
@@ -299,12 +308,12 @@ public class ItemConfigurable implements CompositeConfigurable {
             return this;
         }
 
-        public Builder with(MutableAttributeContainer container) {
+        public Builder with(AttributeContainer container) {
             attributeContainerBuilder.with(container);
             return this;
         }
 
-        public Builder copy(MutableAttributeContainer container) {
+        public Builder copy(AttributeContainer container) {
             attributeContainerBuilder.copy(container);
             return this;
         }
