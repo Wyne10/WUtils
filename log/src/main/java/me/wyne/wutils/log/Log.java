@@ -210,9 +210,9 @@ public class Log {
     {
         if (isActive() && isLoggable(level))
         {
-            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
-            logger.log(level, parameterizedMessage.getFormattedMessage());
-            writeLog(level, parameterizedMessage.getFormattedMessage());
+            logger.log(level, message, t);
+            writeLog(level, message);
+            writeLog(level, t.getMessage());
             return true;
         }
         return false;
@@ -257,9 +257,9 @@ public class Log {
     {
         if (isActive() && isLoggable(checkLevel))
         {
-            ParameterizedMessage parameterizedMessage = new ParameterizedMessage(message, t);
-            logger.log(logLevel, parameterizedMessage.getFormattedMessage());
-            writeLog(writeLevel, parameterizedMessage.getFormattedMessage());
+            logger.log(logLevel, message, t);
+            writeLog(writeLevel, message);
+            writeLog(writeLevel, t.getMessage());
             return true;
         }
         return false;
