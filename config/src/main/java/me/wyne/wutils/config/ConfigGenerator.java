@@ -49,8 +49,6 @@ public class ConfigGenerator {
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps) {
         boolean generationRequested = YamlConfiguration.loadConfiguration(configFile).getBoolean("regenerate", false);
-        if (!generationRequested)
-            return;
 
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
@@ -60,6 +58,8 @@ public class ConfigGenerator {
             log.error("An exception occurred trying to write WUtils config", e);
         }
 
+        if (!generationRequested)
+            return;
         YamlUpdater.create(configFile, defaultConfigFile)
                 .backup(backup)
                 .backupDir(new File(configFile.getParentFile(), "backups"))
