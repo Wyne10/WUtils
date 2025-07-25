@@ -43,6 +43,10 @@ public class JsonRegistry {
         objectMap.put(path, new JsonObject(holder, field, type));
     }
 
+    public void clear() {
+        objectMap.clear();
+    }
+
     public void write() {
         if (directory == null)
             throw new NullPointerException("JsonRegistry directory is not specified");

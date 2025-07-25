@@ -1,6 +1,7 @@
 package me.wyne.wutils.jdbc;
 
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -8,7 +9,7 @@ import org.slf4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectionSource> {
+public class OrmLiteConnectionPool implements ConnectionPool<ConnectionSource> {
 
     private final Logger logger;
 
@@ -50,7 +51,7 @@ public class OrmLiteConnectionPool implements ConnectionPool<JdbcPooledConnectio
     }
 
     @Override
-    public @Nullable JdbcPooledConnectionSource getSource() {
+    public @Nullable ConnectionSource getSource() {
         return connectionSource;
     }
 
