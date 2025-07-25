@@ -138,7 +138,10 @@ public class ImmutableAttributeContainer implements AttributeContainer {
 
     @Override
     public @Nullable <V> V getValue(String key) {
-        return ((Attribute<V>) attributes.get(key)).getValue();
+        var attribute = (Attribute<V>) attributes.get(key);
+        if (attribute == null)
+            return null;
+        return attribute.getValue();
     }
 
     @Override

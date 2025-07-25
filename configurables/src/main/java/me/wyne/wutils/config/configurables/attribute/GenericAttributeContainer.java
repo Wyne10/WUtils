@@ -94,7 +94,10 @@ public class GenericAttributeContainer<T extends Attribute<?>> implements Compos
 
     @Nullable
     public <V> V getValue(String key) {
-        return ((Attribute<V>) attributes.get(key)).getValue();
+        var attribute = (Attribute<V>) attributes.get(key);
+        if (attribute == null)
+            return null;
+        return attribute.getValue();
     }
 
     public <V> V getValue(String key, V def) {

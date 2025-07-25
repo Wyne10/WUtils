@@ -133,7 +133,10 @@ public class MutableAttributeContainer implements AttributeContainer {
     @Override
     @Nullable
     public <V> V getValue(String key) {
-        return ((Attribute<V>) attributes.get(key)).getValue();
+        var attribute = (Attribute<V>) attributes.get(key);
+        if (attribute == null)
+            return null;
+        return attribute.getValue();
     }
 
     @Override
