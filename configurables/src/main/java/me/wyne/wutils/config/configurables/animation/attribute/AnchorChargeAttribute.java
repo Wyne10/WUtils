@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
-import me.wyne.wutils.animation.prefab.AnchorCharge;
+import me.wyne.wutils.animation.runnable.AnchorCharge;
 import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
 import me.wyne.wutils.config.configurables.animation.ContextAnimationAttribute;

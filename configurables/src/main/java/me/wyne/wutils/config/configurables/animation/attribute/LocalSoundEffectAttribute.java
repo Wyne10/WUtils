@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
-import me.wyne.wutils.animation.prefab.LocalSoundEffect;
+import me.wyne.wutils.animation.runnable.LocalSoundEffect;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;

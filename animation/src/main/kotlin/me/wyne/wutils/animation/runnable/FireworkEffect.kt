@@ -1,4 +1,4 @@
-package me.wyne.wutils.animation.prefab
+package me.wyne.wutils.animation.runnable
 
 import me.wyne.wutils.animation.AnimationRunnable
 import org.bukkit.Location

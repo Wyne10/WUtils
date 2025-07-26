@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
-import me.wyne.wutils.animation.prefab.WorldParticleEffect;
+import me.wyne.wutils.animation.runnable.WorldParticleEffect;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.ConfigUtils;
 import me.wyne.wutils.common.VectorUtils;
