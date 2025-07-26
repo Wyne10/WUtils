@@ -6,16 +6,16 @@ import org.bukkit.block.data.type.RespawnAnchor
 import kotlin.apply
 
 class AnchorCharge(
-    private val origin: Location,
+    private val location: Location,
     private val amount: Int
 ) : AnimationRunnable {
 
     override fun run() {
-        (origin.block.blockData as? RespawnAnchor)?.apply {
+        (location.block.blockData as? RespawnAnchor)?.apply {
             if (charges + amount > maximumCharges)
                 return@apply
             charges += amount
-            origin.block.blockData = this
+            location.block.blockData = this
         }
     }
 

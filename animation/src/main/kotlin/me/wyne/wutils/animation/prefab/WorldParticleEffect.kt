@@ -6,7 +6,7 @@ import org.bukkit.Particle
 import org.bukkit.util.Vector
 
 class WorldParticleEffect(
-    private val origin: Location,
+    private val location: Location,
     private val count: Int,
     private val offset: Vector,
     private val speed: Double,
@@ -14,7 +14,7 @@ class WorldParticleEffect(
 ) : AnimationRunnable {
 
     override fun run() {
-        origin.world.spawnParticle(particle, origin, count,
+        location.world.spawnParticle(particle, location, count,
             offset.x,
             offset.y,
             offset.z,

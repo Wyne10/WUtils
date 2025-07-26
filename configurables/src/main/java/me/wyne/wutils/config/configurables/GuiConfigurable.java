@@ -52,7 +52,7 @@ public class GuiConfigurable extends ItemConfigurable {
 
     public GuiItem buildGuiItem(ItemAttributeContext context) {
         var itemStack = build(context);
-        var actions = attributeContainer.getSet(ClickEventAttribute.class);
+        var actions = getAttributeContainer().getSet(ClickEventAttribute.class);
         return ItemBuilder.from(itemStack)
                 .asGuiItem(e -> actions.forEach(attribute -> {
                     if (attribute instanceof ContextClickEventAttribute)
@@ -83,82 +83,82 @@ public class GuiConfigurable extends ItemConfigurable {
     }
 
     public GuiConfigurable ignore(ItemAttribute... ignore) {
-        return new GuiConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(ItemAttribute::getKey).toArray(String[]::new)));
+        return new GuiConfigurable(getAttributeContainer().ignore(Arrays.stream(ignore).map(ItemAttribute::getKey).toArray(String[]::new)));
     }
 
     public GuiConfigurable ignore(GuiItemAttribute... ignore) {
-        return new GuiConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(GuiItemAttribute::getKey).toArray(String[]::new)));
+        return new GuiConfigurable(getAttributeContainer().ignore(Arrays.stream(ignore).map(GuiItemAttribute::getKey).toArray(String[]::new)));
     }
 
     public GuiConfigurable ignore(String... ignore) {
-        return new GuiConfigurable(attributeContainer.ignore(ignore));
+        return new GuiConfigurable(getAttributeContainer().ignore(ignore));
     }
 
     public GuiConfigurable with(String key, AttributeFactory factory) {
-        return new GuiConfigurable(attributeContainer.with(key, factory));
+        return new GuiConfigurable(getAttributeContainer().with(key, factory));
     }
 
     public GuiConfigurable with(Map<String, AttributeFactory> keyMap) {
-        return new GuiConfigurable(attributeContainer.with(keyMap));
+        return new GuiConfigurable(getAttributeContainer().with(keyMap));
     }
 
     public GuiConfigurable with(Attribute<?> attribute) {
-        return new GuiConfigurable(attributeContainer.with(attribute));
+        return new GuiConfigurable(getAttributeContainer().with(attribute));
     }
 
     public GuiConfigurable with(AttributeContainer container) {
-        return new GuiConfigurable(attributeContainer.with(container));
+        return new GuiConfigurable(getAttributeContainer().with(container));
     }
 
     public GuiConfigurable with(ItemConfigurable itemConfigurable) {
-        return new GuiConfigurable(attributeContainer.with(itemConfigurable.getAttributeContainer()));
+        return new GuiConfigurable(getAttributeContainer().with(itemConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable with(GuiConfigurable guiConfigurable) {
-        return new GuiConfigurable(attributeContainer.with(guiConfigurable.getAttributeContainer()));
+        return new GuiConfigurable(getAttributeContainer().with(guiConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable copy(AttributeContainer container) {
-        return new GuiConfigurable(attributeContainer.copy(container));
+        return new GuiConfigurable(getAttributeContainer().copy(container));
     }
 
     public GuiConfigurable copy(ItemConfigurable itemConfigurable) {
-        return new GuiConfigurable(attributeContainer.copy(itemConfigurable.getAttributeContainer()));
+        return new GuiConfigurable(getAttributeContainer().copy(itemConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable copy(GuiConfigurable guiConfigurable) {
-        return new GuiConfigurable(attributeContainer.copy(guiConfigurable.getAttributeContainer()));
+        return new GuiConfigurable(getAttributeContainer().copy(guiConfigurable.getAttributeContainer()));
     }
 
     public GuiConfigurable copy() {
-        return new GuiConfigurable(attributeContainer.copy());
+        return new GuiConfigurable(getAttributeContainer().copy());
     }
 
     @Nullable
     public <T> T get(GuiItemAttribute attribute) {
-        return attributeContainer.get(attribute.getKey());
+        return getAttributeContainer().get(attribute.getKey());
     }
 
     public <T> T get(GuiItemAttribute attribute, T def) {
-        return attributeContainer.get(attribute.getKey(), def);
+        return getAttributeContainer().get(attribute.getKey(), def);
     }
 
     @Nullable
     public <V> Attribute<V> getAttribute(GuiItemAttribute attribute) {
-        return attributeContainer.getAttribute(attribute.getKey());
+        return getAttributeContainer().getAttribute(attribute.getKey());
     }
 
     public <V> Attribute<V> getAttribute(GuiItemAttribute attribute, Attribute<V> def) {
-        return attributeContainer.getAttribute(attribute.getKey(), def);
+        return getAttributeContainer().getAttribute(attribute.getKey(), def);
     }
 
     @Nullable
     public <V> V getValue(GuiItemAttribute attribute) {
-        return attributeContainer.getValue(attribute.getKey());
+        return getAttributeContainer().getValue(attribute.getKey());
     }
 
     public <V> V getValue(GuiItemAttribute attribute, V def) {
-        return attributeContainer.getValue(attribute.getKey(), def);
+        return getAttributeContainer().getValue(attribute.getKey(), def);
     }
 
     public static Builder builder() {

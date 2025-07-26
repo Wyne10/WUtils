@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.FireworkMeta
 
 class FireworkEffect(
-    private val origin: Location,
+    private val location: Location,
     private val fireworkMeta: FireworkMeta
 ) : AnimationRunnable {
 
     override fun run() {
-        val firework = origin.world.spawnEntity(origin, EntityType.FIREWORK) as Firework
+        val firework = location.world.spawnEntity(location, EntityType.FIREWORK) as Firework
         firework.fireworkMeta = fireworkMeta
     }
 

@@ -49,7 +49,7 @@ public class ItemConfigurable implements CompositeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
     }
 
-    protected final AttributeContainer attributeContainer;
+    private final AttributeContainer attributeContainer;
 
     public ItemConfigurable() {
         attributeContainer = new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP, new LinkedHashMap<>());
