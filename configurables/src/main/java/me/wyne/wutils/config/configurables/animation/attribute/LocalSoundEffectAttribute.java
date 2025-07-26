@@ -26,7 +26,7 @@ public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> impl
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return () -> {};
+        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
         return new LocalSoundEffect(
                 context.getLocation(),
                 org.bukkit.Sound.valueOf(getValue().name().value()), // TODO Test

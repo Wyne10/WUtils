@@ -28,7 +28,7 @@ public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldPar
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return () -> {};
+        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
         return new WorldParticleEffect(
                 context.getLocation(),
                 getValue().particle(),
