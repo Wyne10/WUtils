@@ -1,8 +1,9 @@
 package me.wyne.wutils.config.configurables.gui.attribute;
 
+import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
-import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.gui.ClickEventAttribute;
 import me.wyne.wutils.config.configurables.gui.GuiItemAttribute;
@@ -26,27 +27,33 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
         event.getWhoClicked().playSound(getValue());
     }
 
-    // TODO Make string
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(depth, "sound", getValue().name().asString());
-        configBuilder.append(depth, "source", getValue().source());
-        configBuilder.append(depth, "volume", getValue().volume());
-        configBuilder.append(depth, "pitch", getValue().pitch());
-        return configBuilder.toString();
+        return new ConfigBuilder().append(depth, getKey(), getValue().name().asString() + " " + getValue().volume() + " " + getValue().pitch() + " " + getValue().source().name()).buildNoSpace();
     }
 
-    // TODO Make composite
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory {
         @Override
-        public SoundAttribute create(String key, ConfigurationSection config) {
+        public SoundAttribute fromSection(String key, ConfigurationSection section) {
             return new SoundAttribute(
                     key,
-                    Sound.sound(Key.key(config.getString("sound")),
-                            Sound.Source.valueOf(config.getString("source", "MASTER")),
-                            (float) config.getDouble("volume", 1.0),
-                            (float) config.getDouble("pitch", 1.0)
+                    Sound.sound(Key.key(section.getString("sound", org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
+                            Sound.Source.valueOf(section.getString("source", "MASTER")),
+                            (float) section.getDouble("volume", 1.0),
+                            (float) section.getDouble("pitch", 1.0)
+                    )
+            );
+        }
+
+        @Override
+        public SoundAttribute fromString(String key, String string) {
+            var args = new Args(string, " ");
+            return new SoundAttribute(
+                    key,
+                    Sound.sound(Key.key(args.get(0, org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
+                            Sound.Source.valueOf(args.get(3, "MASTER")),
+                            Float.parseFloat(args.get(1, "1.0")),
+                            Float.parseFloat(args.get(2, "1.0"))
                     )
             );
         }
