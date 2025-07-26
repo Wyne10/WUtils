@@ -56,7 +56,7 @@ public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldPar
             return new WorldParticleEffectAttribute(
                     key,
                     new ParticleData(
-                            Particle.valueOf(section.getString("particle", "FLAME").toUpperCase()),
+                            Particle.valueOf(section.getString("particle", "FLAME")),
                             section.getInt("count", 1),
                             section.getDouble("speed", 1.0),
                             ConfigUtils.getVectorOrZero(section, "offset")
@@ -70,7 +70,7 @@ public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldPar
             return new WorldParticleEffectAttribute(
                     key,
                     new ParticleData(
-                            Particle.valueOf(args.get(0, "FLAME").toUpperCase()),
+                            Particle.valueOf(args.get(0, "FLAME")),
                             Integer.parseInt(args.get(1, "1")),
                             Double.parseDouble(args.get(2, "1.0")),
                             VectorUtils.getVectorOrZero(args.get(3))

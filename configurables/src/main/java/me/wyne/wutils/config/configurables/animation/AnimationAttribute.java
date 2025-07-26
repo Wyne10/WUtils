@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.animation;
 
 public enum AnimationAttribute {
+    TYPE("type"),
     DELAY("delay"),
     PERIOD("period"),
     DURATION("duration"),

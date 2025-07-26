@@ -21,6 +21,7 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     public final static AttributeMap ANIMATION_STEP_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
 
     static {
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.TYPE.getKey(), new AnimationTypeAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DELAY.getKey(), new PrimitiveConfigurableAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PERIOD.getKey(), new PrimitiveConfigurableAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DURATION.getKey(), new PrimitiveConfigurableAttribute.Factory());
@@ -61,7 +62,7 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
         attributeContainer.fromConfig(configObject);
     }
 
-    public AnimationStep buildBlocking(AnimationContext context) {
+    public AnimationStep build(AnimationTypeAttribute.AnimationType type, AnimationContext context) {
         int delay = attributeContainer.getValue(AnimationAttribute.DELAY.getKey(), 0);
         int period = attributeContainer.getValue(AnimationAttribute.PERIOD.getKey(), 0);
         int duration = attributeContainer.getValue(AnimationAttribute.DURATION.getKey(), 0);
@@ -71,20 +72,20 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
             runnable = attributes.iterator().next().create(context);
         else
             runnable = new CompositeRunnable(attributes.stream().map(attribute -> attribute.create(context)).toList());
-        return new BlockingAnimationStep(runnable, delay, period, duration);
+        return type.create(runnable, delay, period, duration);
+    }
+
+    public AnimationStep build(AnimationContext context) {
+        var type = attributeContainer.getValue(AnimationAttribute.TYPE.getKey(), AnimationTypeAttribute.AnimationType.BLOCKING);
+        return build(type, context);
+    }
+
+    public AnimationStep buildBlocking(AnimationContext context) {
+        return build(AnimationTypeAttribute.AnimationType.BLOCKING, context);
     }
 
     public AnimationStep buildParallel(AnimationContext context) {
-        int delay = attributeContainer.getValue(AnimationAttribute.DELAY.getKey(), 0);
-        int period = attributeContainer.getValue(AnimationAttribute.PERIOD.getKey(), 0);
-        int duration = attributeContainer.getValue(AnimationAttribute.DURATION.getKey(), 0);
-        var attributes = attributeContainer.getSet(ContextAnimationAttribute.class);
-        AnimationRunnable runnable;
-        if (attributes.size() == 1)
-            runnable = attributes.iterator().next().create(context);
-        else
-            runnable = new CompositeRunnable(attributes.stream().map(attribute -> attribute.create(context)).toList());
-        return new ParallelAnimationStep(runnable, delay, period, duration);
+        return build(AnimationTypeAttribute.AnimationType.PARALLEL, context);
     }
 
     public AnimationStepConfigurable ignore(AnimationAttribute... ignore) {
