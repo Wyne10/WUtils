@@ -7,10 +7,10 @@ import org.bukkit.util.Vector
 
 class WorldParticleEffect(
     private val location: Location,
-    private val count: Int,
-    private val offset: Vector,
-    private val speed: Double,
     private val particle: Particle,
+    private val count: Int,
+    private val speed: Double,
+    private val offset: Vector,
 ) : AnimationRunnable {
 
     override fun run() {

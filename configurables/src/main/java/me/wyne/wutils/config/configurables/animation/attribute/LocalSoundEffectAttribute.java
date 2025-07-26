@@ -45,7 +45,7 @@ public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> impl
         public LocalSoundEffectAttribute fromSection(String key, ConfigurationSection section) {
             return new LocalSoundEffectAttribute(
                     key,
-                    Sound.sound(Key.key(section.getString("sound", "")),
+                    Sound.sound(Key.key(section.getString("sound", org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
                             Sound.Source.MASTER,
                             (float) section.getDouble("volume", 1.0),
                             (float) section.getDouble("pitch", 1.0)
@@ -58,7 +58,7 @@ public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> impl
             var args = new Args(string, " ");
             return new LocalSoundEffectAttribute(
                     key,
-                    Sound.sound(Key.key(args.get(0)),
+                    Sound.sound(Key.key(args.get(0, org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
                             Sound.Source.MASTER,
                             Float.parseFloat(args.get(1, "1.0")),
                             Float.parseFloat(args.get(2, "1.0"))

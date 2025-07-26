@@ -7,7 +7,8 @@ public enum AnimationAttribute {
     ANCHOR_CHARGE("anchorCharge"),
     FORCE_FIELD("forceField"),
     PLAYER_TITLE_EFFECT("playerTitle"),
-    LOCAL_SOUND_EFFECT("localSound");
+    LOCAL_SOUND_EFFECT("localSound"),
+    WORLD_PARTICLE_EFFECT("worldParticle");
 
     private final String key;
 

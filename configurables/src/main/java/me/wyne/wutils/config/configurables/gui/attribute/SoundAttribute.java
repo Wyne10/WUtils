@@ -26,6 +26,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
         event.getWhoClicked().playSound(getValue());
     }
 
+    // TODO Make string
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder configBuilder = new ConfigBuilder();
@@ -36,6 +37,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
         return configBuilder.toString();
     }
 
+    // TODO Make composite
     public static final class Factory implements AttributeFactory {
         @Override
         public SoundAttribute create(String key, ConfigurationSection config) {
