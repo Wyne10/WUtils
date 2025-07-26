@@ -4,6 +4,7 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.prefab.ForceField;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.ConfigUtils;
+import me.wyne.wutils.common.VectorUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
@@ -32,7 +33,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + ConfigUtils.toString(getValue().offset())).buildNoSpace();
+        return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + VectorUtils.toString(getValue().offset())).buildNoSpace();
     }
 
     public record ForceFieldData(Vector offset, double radius, double velocity) {}
@@ -56,7 +57,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
             return new ForceFieldAttribute(
                     key,
                     new ForceFieldData(
-                            ConfigUtils.getVectorOrZero(args.get(2)),
+                            VectorUtils.getVectorOrZero(args.get(2)),
                             Double.parseDouble(args.get(0, "1.0")),
                             Double.parseDouble(args.get(1, "1.0"))
                     )

@@ -7,6 +7,7 @@ import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
 import me.wyne.wutils.config.configurables.animation.ContextAnimationAttribute;
 import me.wyne.wutils.config.configurables.animation.attribute.AnchorChargeAttribute;
+import me.wyne.wutils.config.configurables.animation.attribute.ForceFieldAttribute;
 import me.wyne.wutils.config.configurables.attribute.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,7 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PERIOD.getKey(), new PrimitiveConfigurableAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DURATION.getKey(), new PrimitiveConfigurableAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.ANCHOR_CHARGE.getKey(), new AnchorChargeAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FORCE_FIELD.getKey(), new ForceFieldAttribute.Factory());
     }
 
     private final AttributeContainer attributeContainer;
