@@ -5,52 +5,28 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemAttributeContext {
+public record ItemAttributeContext(Player player, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
 
     public static final ItemAttributeContext EMPTY = new ItemAttributeContext();
 
-    private Player player;
-    private TextReplacement[] textReplacements = {};
-    private ComponentReplacement[] componentReplacements = {};
-
-    public ItemAttributeContext() {}
-
-    public ItemAttributeContext(Player player, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
-        this.player = player;
-        this.textReplacements = textReplacements;
-        this.componentReplacements = componentReplacements;
+    public ItemAttributeContext() {
+        this(null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public ItemAttributeContext(Player player) {
-        this.player = player;
+        this(player, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public ItemAttributeContext(TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
-        this.textReplacements = textReplacements;
-        this.componentReplacements = componentReplacements;
+        this(null, textReplacements, componentReplacements);
     }
 
     public ItemAttributeContext(TextReplacement... textReplacements) {
-        this.textReplacements = textReplacements;
+        this(null, textReplacements, new ComponentReplacement[0]);
     }
 
     public ItemAttributeContext(ComponentReplacement... componentReplacements) {
-        this.componentReplacements = componentReplacements;
-    }
-
-    public ItemAttributeContext setPlayer(Player player) {
-        this.player = player;
-        return this;
-    }
-
-    public ItemAttributeContext setTextReplacements(TextReplacement[] textReplacements) {
-        this.textReplacements = textReplacements;
-        return this;
-    }
-
-    public ItemAttributeContext setComponentReplacements(ComponentReplacement[] componentReplacements) {
-        this.componentReplacements = componentReplacements;
-        return this;
+        this(null, new TextReplacement[0], componentReplacements);
     }
 
     @Nullable

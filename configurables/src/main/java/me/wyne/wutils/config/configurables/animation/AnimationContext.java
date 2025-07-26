@@ -6,68 +6,36 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class AnimationContext {
+public record AnimationContext(Player player, Location location, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
 
     public static final AnimationContext EMPTY = new AnimationContext();
 
-    private Player player;
-    private Location location;
-    private TextReplacement[] textReplacements = {};
-    private ComponentReplacement[] componentReplacements = {};
-
-    public AnimationContext() {}
-
-    public AnimationContext(Player player, Location location, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
-        this.player = player;
-        this.location = location;
-        this.textReplacements = textReplacements;
-        this.componentReplacements = componentReplacements;
+    public AnimationContext() {
+        this(null, null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public AnimationContext(Player player) {
-        this.player = player;
+        this(player, null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public AnimationContext(Location location) {
-        this.location = location;
+        this(null, location, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public AnimationContext(Player player, Location location) {
-        this.player = player;
-        this.location = location;
+        this(player, location, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
     public AnimationContext(TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
-        this.textReplacements = textReplacements;
-        this.componentReplacements = componentReplacements;
+        this(null, null, textReplacements, componentReplacements);
     }
 
     public AnimationContext(TextReplacement... textReplacements) {
-        this.textReplacements = textReplacements;
+        this(null, null, textReplacements, new ComponentReplacement[0]);
     }
 
     public AnimationContext(ComponentReplacement... componentReplacements) {
-        this.componentReplacements = componentReplacements;
-    }
-
-    public AnimationContext setPlayer(Player player) {
-        this.player = player;
-        return this;
-    }
-
-    public AnimationContext setLocation(Location location) {
-        this.location = location;
-        return this;
-    }
-
-    public AnimationContext setTextReplacements(TextReplacement[] textReplacements) {
-        this.textReplacements = textReplacements;
-        return this;
-    }
-
-    public AnimationContext setComponentReplacements(ComponentReplacement[] componentReplacements) {
-        this.componentReplacements = componentReplacements;
-        return this;
+        this(null, null, new TextReplacement[0], componentReplacements);
     }
 
     @Nullable
