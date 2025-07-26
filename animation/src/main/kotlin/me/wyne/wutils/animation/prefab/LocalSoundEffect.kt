@@ -4,7 +4,7 @@ import me.wyne.wutils.animation.AnimationRunnable
 import org.bukkit.Location
 import org.bukkit.Sound
 
-class WorldSoundEffect(
+class LocalSoundEffect(
     private val location: Location,
     private val sound: Sound,
     private val volume: Float = 1.0f,

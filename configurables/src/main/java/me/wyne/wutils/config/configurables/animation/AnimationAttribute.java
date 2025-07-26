@@ -5,7 +5,9 @@ public enum AnimationAttribute {
     PERIOD("period"),
     DURATION("duration"),
     ANCHOR_CHARGE("anchorCharge"),
-    FORCE_FIELD("forceField");
+    FORCE_FIELD("forceField"),
+    PLAYER_TITLE_EFFECT("playerTitle"),
+    LOCAL_SOUND_EFFECT("localSound");
 
     private final String key;
 
