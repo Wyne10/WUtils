@@ -21,6 +21,7 @@ public class CompositeAttribute<V extends Attribute<?>> extends ConfigurableAttr
 
     public CompositeAttribute(String key, ConfigurationSection config, AttributeFactory factory) {
         super(key, new LinkedHashMap<>());
+        if (!config.contains(key)) return;
         config.getConfigurationSection(key).getKeys(false).forEach(
                 itemKey -> getValue().put(itemKey, (V) factory.create(itemKey, config.getConfigurationSection(key)))
         );
