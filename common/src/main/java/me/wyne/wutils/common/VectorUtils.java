@@ -8,9 +8,9 @@ public final class VectorUtils {
 
     public static Vector getVector(String string, Vector def) {
         var args = new Args(string, ",");
-        var x = args.size() < 0 ? def.getX() : Double.parseDouble(args.get(0));
-        var y = args.size() < 1 ? def.getY() : Double.parseDouble(args.get(1));
-        var z = args.size() < 2 ? def.getZ() : Double.parseDouble(args.get(2));
+        var x = args.size() < 1 ? def.getX() : Double.parseDouble(args.get(0));
+        var y = args.size() < 2 ? def.getY() : Double.parseDouble(args.get(1));
+        var z = args.size() < 3 ? def.getZ() : Double.parseDouble(args.get(2));
         return new Vector(x, y, z);
     }
 
