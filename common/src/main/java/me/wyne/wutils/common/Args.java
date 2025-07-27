@@ -1,5 +1,6 @@
 package me.wyne.wutils.common;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Args {
@@ -7,7 +8,11 @@ public class Args {
     private final List<String> args;
 
     public Args(String string, String regex) {
-        args = List.of(string.split(regex));
+        var split = string.split(regex);
+        if (split.length == 1)
+            args = Collections.emptyList();
+        else
+            args = List.of(split);
     }
 
     public String get(int index) {
