@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
-import me.wyne.wutils.animation.runnable.LocalSoundEffect;
+import me.wyne.wutils.animation.runnable.LocalSound;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
@@ -14,22 +14,22 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> implements ContextAnimationAttribute {
+public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements ContextAnimationAttribute {
 
-    public LocalSoundEffectAttribute(String key, Sound value) {
+    public LocalSoundAttribute(String key, Sound value) {
         super(key, value);
     }
 
-    public LocalSoundEffectAttribute(Sound value) {
-        super(AnimationAttribute.LOCAL_SOUND_EFFECT.getKey(), value);
+    public LocalSoundAttribute(Sound value) {
+        super(AnimationAttribute.LOCAL_SOUND.getKey(), value);
     }
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
         if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
-        return new LocalSoundEffect(
+        return new LocalSound(
                 context.getLocation(),
-                org.bukkit.Sound.valueOf(getValue().name().value()), // TODO Test
+                org.bukkit.Sound.valueOf(getValue().name().value()),
                 getValue().volume(),
                 getValue().pitch()
         );
@@ -42,8 +42,8 @@ public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> impl
 
     public static final class Factory implements CompositeAttributeFactory {
         @Override
-        public LocalSoundEffectAttribute fromSection(String key, ConfigurationSection section) {
-            return new LocalSoundEffectAttribute(
+        public LocalSoundAttribute fromSection(String key, ConfigurationSection section) {
+            return new LocalSoundAttribute(
                     key,
                     Sound.sound(Key.key(section.getString("sound", org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
                             Sound.Source.MASTER,
@@ -54,9 +54,9 @@ public class LocalSoundEffectAttribute extends ConfigurableAttribute<Sound> impl
         }
 
         @Override
-        public LocalSoundEffectAttribute fromString(String key, String string) {
+        public LocalSoundAttribute fromString(String key, String string) {
             var args = new Args(string, " ");
-            return new LocalSoundEffectAttribute(
+            return new LocalSoundAttribute(
                     key,
                     Sound.sound(Key.key(args.get(0, org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
                             Sound.Source.MASTER,

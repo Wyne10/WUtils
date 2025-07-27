@@ -17,7 +17,7 @@ dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
 }
 
-version = "1.0.1"
+version = "1.0.2"
 
 publishing {
     publications {

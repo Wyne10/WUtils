@@ -5,7 +5,7 @@ import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.util.Vector
 
-class WorldParticleEffect(
+class WorldParticle(
     private val location: Location,
     private val particle: Particle,
     private val count: Int,

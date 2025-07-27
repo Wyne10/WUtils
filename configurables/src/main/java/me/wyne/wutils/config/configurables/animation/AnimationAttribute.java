@@ -7,9 +7,10 @@ public enum AnimationAttribute {
     DURATION("duration"),
     ANCHOR_CHARGE("anchorCharge"),
     FORCE_FIELD("forceField"),
-    PLAYER_TITLE_EFFECT("playerTitle"),
-    LOCAL_SOUND_EFFECT("localSound"),
-    WORLD_PARTICLE_EFFECT("worldParticle");
+    PLAYER_TITLE("playerTitle"),
+    LOCAL_SOUND("localSound"),
+    WORLD_PARTICLE("worldParticle"),
+    FIREWORK("firework");
 
     private final String key;
 

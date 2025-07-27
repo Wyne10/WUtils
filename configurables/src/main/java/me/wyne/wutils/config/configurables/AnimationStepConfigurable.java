@@ -27,9 +27,10 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DURATION.getKey(), new AnimationDurationAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.ANCHOR_CHARGE.getKey(), new AnchorChargeAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FORCE_FIELD.getKey(), new ForceFieldAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_TITLE_EFFECT.getKey(), new PlayerTitleEffectAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.LOCAL_SOUND_EFFECT.getKey(), new LocalSoundEffectAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.WORLD_PARTICLE_EFFECT.getKey(), new WorldParticleEffectAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_TITLE.getKey(), new PlayerTitleAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.LOCAL_SOUND.getKey(), new LocalSoundAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.WORLD_PARTICLE.getKey(), new WorldParticleAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FIREWORK.getKey(), new FireworkAttribute.Factory());
     }
 
     private final AttributeContainer attributeContainer;

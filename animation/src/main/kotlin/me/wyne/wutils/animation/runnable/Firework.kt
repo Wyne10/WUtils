@@ -8,7 +8,7 @@ import org.bukkit.entity.Firework
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.FireworkMeta
 
-class FireworkEffect(
+class Firework(
     private val location: Location,
     private val fireworkMeta: FireworkMeta
 ) : AnimationRunnable {

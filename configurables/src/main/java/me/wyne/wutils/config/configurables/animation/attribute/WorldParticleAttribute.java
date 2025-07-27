@@ -1,7 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
-import me.wyne.wutils.animation.runnable.WorldParticleEffect;
+import me.wyne.wutils.animation.runnable.WorldParticle;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.ConfigUtils;
 import me.wyne.wutils.common.VectorUtils;
@@ -16,20 +16,20 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
-public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldParticleEffectAttribute.ParticleData> implements ContextAnimationAttribute {
+public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleAttribute.ParticleData> implements ContextAnimationAttribute {
 
-    public WorldParticleEffectAttribute(String key, ParticleData value) {
+    public WorldParticleAttribute(String key, ParticleData value) {
         super(key, value);
     }
 
-    public WorldParticleEffectAttribute(ParticleData value) {
-        super(AnimationAttribute.WORLD_PARTICLE_EFFECT.getKey(), value);
+    public WorldParticleAttribute(ParticleData value) {
+        super(AnimationAttribute.WORLD_PARTICLE.getKey(), value);
     }
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
         if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
-        return new WorldParticleEffect(
+        return new WorldParticle(
                 context.getLocation(),
                 getValue().particle(),
                 getValue().count(),
@@ -52,8 +52,8 @@ public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldPar
 
     public static final class Factory implements CompositeAttributeFactory {
         @Override
-        public WorldParticleEffectAttribute fromSection(String key, ConfigurationSection section) {
-            return new WorldParticleEffectAttribute(
+        public WorldParticleAttribute fromSection(String key, ConfigurationSection section) {
+            return new WorldParticleAttribute(
                     key,
                     new ParticleData(
                             Particle.valueOf(section.getString("particle", "FLAME")),
@@ -65,9 +65,9 @@ public class WorldParticleEffectAttribute extends ConfigurableAttribute<WorldPar
         }
 
         @Override
-        public WorldParticleEffectAttribute fromString(String key, String string) {
+        public WorldParticleAttribute fromString(String key, String string) {
             var args = new Args(string, " ");
-            return new WorldParticleEffectAttribute(
+            return new WorldParticleAttribute(
                     key,
                     new ParticleData(
                             Particle.valueOf(args.get(0, "FLAME")),

@@ -15,14 +15,14 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.title.Title;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class PlayerTitleEffectAttribute extends ConfigurableAttribute<PlayerTitleEffectAttribute.TitleData> implements ContextAnimationAttribute {
+public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttribute.TitleData> implements ContextAnimationAttribute {
 
-    public PlayerTitleEffectAttribute(String key, TitleData value) {
+    public PlayerTitleAttribute(String key, TitleData value) {
         super(key, value);
     }
 
-    public PlayerTitleEffectAttribute(TitleData value) {
-        super(AnimationAttribute.PLAYER_TITLE_EFFECT.getKey(), value);
+    public PlayerTitleAttribute(TitleData value) {
+        super(AnimationAttribute.PLAYER_TITLE.getKey(), value);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class PlayerTitleEffectAttribute extends ConfigurableAttribute<PlayerTitl
 
     public static final class Factory implements CompositeAttributeFactory {
         @Override
-        public PlayerTitleEffectAttribute fromSection(String key, ConfigurationSection section) {
-            return new PlayerTitleEffectAttribute(
+        public PlayerTitleAttribute fromSection(String key, ConfigurationSection section) {
+            return new PlayerTitleAttribute(
                     key,
                     new TitleData(
                             section.getString("title", ""),
@@ -66,9 +66,9 @@ public class PlayerTitleEffectAttribute extends ConfigurableAttribute<PlayerTitl
         }
 
         @Override
-        public PlayerTitleEffectAttribute fromString(String key, String string) {
+        public PlayerTitleAttribute fromString(String key, String string) {
             var args = new Args(string, " ");
-            return new PlayerTitleEffectAttribute(
+            return new PlayerTitleAttribute(
                     key,
                     new TitleData(
                             args.get(0),
