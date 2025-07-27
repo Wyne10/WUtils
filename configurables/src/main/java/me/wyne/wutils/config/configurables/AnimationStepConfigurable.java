@@ -22,9 +22,9 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
 
     static {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.TYPE.getKey(), new AnimationTypeAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DELAY.getKey(), new PrimitiveConfigurableAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PERIOD.getKey(), new PrimitiveConfigurableAttribute.Factory());
-        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DURATION.getKey(), new PrimitiveConfigurableAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DELAY.getKey(), new AnimationDelayAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PERIOD.getKey(), new AnimationPeriodAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.DURATION.getKey(), new AnimationDurationAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.ANCHOR_CHARGE.getKey(), new AnchorChargeAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FORCE_FIELD.getKey(), new ForceFieldAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_TITLE_EFFECT.getKey(), new PlayerTitleEffectAttribute.Factory());
@@ -63,9 +63,9 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     }
 
     public AnimationStep build(AnimationTypeAttribute.AnimationType type, AnimationContext context) {
-        int delay = attributeContainer.getValue(AnimationAttribute.DELAY.getKey(), 0);
-        int period = attributeContainer.getValue(AnimationAttribute.PERIOD.getKey(), 0);
-        int duration = attributeContainer.getValue(AnimationAttribute.DURATION.getKey(), 0);
+        int delay = attributeContainer.getValue(AnimationDelayAttribute.class, 0);
+        int period = attributeContainer.getValue(AnimationPeriodAttribute.class, 0);
+        int duration = attributeContainer.getValue(AnimationDurationAttribute.class, 0);
         var attributes = attributeContainer.getSet(ContextAnimationAttribute.class);
         AnimationRunnable runnable;
         if (attributes.size() == 1)
@@ -129,8 +129,18 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T> T get(Class<T> clazz) {
+        return attributeContainer.get(clazz);
+    }
+
+    @Nullable
     public <T> T get(String key) {
         return attributeContainer.get(key);
+    }
+
+    @Nullable
+    public <T> T get(Class<T> clazz, T def) {
+        return attributeContainer.get(clazz, def);
     }
 
     public <T> T get(String key, T def) {
@@ -151,8 +161,18 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T, V> Attribute<V> getAttribute(Class<T> clazz) {
+        return attributeContainer.getAttribute(clazz);
+    }
+
+    @Nullable
     public <V> Attribute<V> getAttribute(String key) {
         return attributeContainer.getAttribute(key);
+    }
+
+    @Nullable
+    public <T, V> Attribute<V> getAttribute(Class<T> clazz, Attribute<V> def) {
+        return attributeContainer.getAttribute(clazz, def);
     }
 
     public <V> Attribute<V> getAttribute(String key, Attribute<V> def) {
@@ -173,8 +193,18 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T, V> V getValue(Class<T> clazz) {
+        return attributeContainer.getValue(clazz);
+    }
+
+    @Nullable
     public <V> V getValue(String key) {
         return attributeContainer.getValue(key);
+    }
+
+    @Nullable
+    public <T, V> V getValue(Class<T> clazz, V def) {
+        return attributeContainer.getValue(clazz, def);
     }
 
     public <V> V getValue(String key, V def) {

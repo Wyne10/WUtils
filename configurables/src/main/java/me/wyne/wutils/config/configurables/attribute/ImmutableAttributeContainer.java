@@ -1,7 +1,6 @@
 package me.wyne.wutils.config.configurables.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,13 +94,26 @@ public class ImmutableAttributeContainer implements AttributeContainer {
     }
 
     @Override
+    public <T> @Nullable T get(Class<T> clazz) {
+        return get(clazz, null);
+    }
+
+    @Override
     public @Nullable <T> T get(String key) {
-        return (T) attributes.get(key);
+        return get(key, null);
+    }
+
+    @Override
+    public <T> T get(Class<T> clazz, T def) {
+        return attributes.values().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .findFirst().orElse(def);
     }
 
     @Override
     public <T> T get(String key, T def) {
-        T value = get(key);
+        T value = (T) attributes.get(key);
         if (value == null)
             return def;
         return value;
@@ -116,8 +128,21 @@ public class ImmutableAttributeContainer implements AttributeContainer {
     }
 
     @Override
+    public @Nullable <T, V> Attribute<V> getAttribute(Class<T> clazz) {
+        return getAttribute(clazz, null);
+    }
+
+    @Override
     public @Nullable <V> Attribute<V> getAttribute(String key) {
-        return (Attribute<V>) attributes.get(key);
+        return getAttribute(key, null);
+    }
+
+    @Override
+    public <T, V> Attribute<V> getAttribute(Class<T> clazz, Attribute<V> def) {
+        return attributes.values().stream()
+                .filter(clazz::isInstance)
+                .map(Attribute.class::cast)
+                .findFirst().orElse(def);
     }
 
     @Override
@@ -137,11 +162,21 @@ public class ImmutableAttributeContainer implements AttributeContainer {
     }
 
     @Override
+    public <T, V> @Nullable V getValue(Class<T> clazz) {
+        return getValue(clazz, null);
+    }
+
+    @Override
     public @Nullable <V> V getValue(String key) {
-        var attribute = (Attribute<V>) attributes.get(key);
-        if (attribute == null)
-            return null;
-        return attribute.getValue();
+        return getValue(key, null);
+    }
+
+    @Override
+    public <T, V> V getValue(Class<T> clazz, V def) {
+        return (V) attributes.values().stream()
+                .filter(clazz::isInstance)
+                .map(Attribute.class::cast)
+                .findFirst().map(Attribute::getValue).orElse(def);
     }
 
     @Override
