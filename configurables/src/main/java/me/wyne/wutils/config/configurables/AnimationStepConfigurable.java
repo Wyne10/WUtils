@@ -3,9 +3,7 @@ package me.wyne.wutils.config.configurables;
 import me.wyne.wutils.animation.*;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
-import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
-import me.wyne.wutils.config.configurables.animation.AnimationContext;
-import me.wyne.wutils.config.configurables.animation.ContextAnimationAttribute;
+import me.wyne.wutils.config.configurables.animation.*;
 import me.wyne.wutils.config.configurables.animation.attribute.*;
 import me.wyne.wutils.config.configurables.attribute.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -64,16 +62,16 @@ public class AnimationStepConfigurable implements CompositeConfigurable {
     }
 
     public AnimationStep build(AnimationTypeAttribute.AnimationType type, AnimationContext context) {
-        int delay = attributeContainer.getValue(AnimationDelayAttribute.class, 0);
-        int period = attributeContainer.getValue(AnimationPeriodAttribute.class, 0);
-        int duration = attributeContainer.getValue(AnimationDurationAttribute.class, 0);
+        var timing = new AnimationTimings(0, 0, 0);
+        attributeContainer.getSet(TimingsAnimationAttribute.class)
+                .forEach(attribute -> attribute.apply(timing));
         var attributes = attributeContainer.getSet(ContextAnimationAttribute.class);
         AnimationRunnable runnable;
         if (attributes.size() == 1)
             runnable = attributes.iterator().next().create(context);
         else
             runnable = new CompositeRunnable(attributes.stream().map(attribute -> attribute.create(context)).toList());
-        return type.create(runnable, delay, period, duration);
+        return type.create(runnable, timing.delay, timing.period, timing.duration);
     }
 
     public AnimationStep build(AnimationContext context) {
