@@ -13,6 +13,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,6 +42,7 @@ public class I18n {
     private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
     public boolean usePlayerLanguage = true;
+    public static final boolean IS_PLAIN_TEXT_UNAVAILABLE = Bukkit.getVersion().contains("1.16");
 
     static {
         try {
