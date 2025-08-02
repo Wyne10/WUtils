@@ -12,9 +12,9 @@ class BlockingAnimationStep(
         Bukkit.getScheduler().runTaskLater(
             animation.plugin,
             { task ->
-                animation.currentTask = task
+                animation.currentTask = this to task
                 runnable.run(delay, period, duration)
-                runnable.close()
+                close()
                 animation.pollStep()?.run(animation)
             },
             delay
@@ -26,9 +26,9 @@ class BlockingAnimationStep(
             animation.plugin,
             { task ->
                 if (ticksElapsed <= 0)
-                    animation.currentTask = task
+                    animation.currentTask = this to task
                 if (duration > 0 && ticksElapsed >= duration) {
-                    runnable.close()
+                    close()
                     task.cancel()
                     animation.pollStep()?.run(animation)
                     return@runTaskTimer

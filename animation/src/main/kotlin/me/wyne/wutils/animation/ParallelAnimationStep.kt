@@ -12,13 +12,13 @@ class ParallelAnimationStep(
         Bukkit.getScheduler().runTaskLater(
             animation.plugin,
             { task ->
-                animation.parallelTasks.add(task)
+                animation.parallelTasks.put(this, task)
                 Bukkit.getScheduler().runTask(animation.plugin, Runnable {
                     animation.pollStep()?.run(animation)
                 })
                 runnable.run(delay, period, duration)
-                runnable.close()
-                animation.parallelTasks.remove(task)
+                close()
+                animation.parallelTasks.remove(this)
             },
             delay
         )
@@ -29,15 +29,15 @@ class ParallelAnimationStep(
             animation.plugin,
             { task ->
                 if (ticksElapsed <= 0) {
-                    animation.parallelTasks.add(task)
+                    animation.parallelTasks.put(this, task)
                     Bukkit.getScheduler().runTask(animation.plugin, Runnable {
                         animation.pollStep()?.run(animation)
                     })
                 }
                 if (duration > 0 && ticksElapsed >= duration) {
-                    runnable.close()
+                    close()
                     task.cancel()
-                    animation.parallelTasks.remove(task)
+                    animation.parallelTasks.remove(this)
                     return@runTaskTimer
                 }
                 runnable.run(delay, period, duration)

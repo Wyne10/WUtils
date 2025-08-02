@@ -10,8 +10,8 @@ class Animation(val plugin: JavaPlugin) {
     private val steps: Queue<AnimationStep> = LinkedList()
 
     private val runSteps: Queue<AnimationStep> = LinkedList()
-    val parallelTasks: MutableList<BukkitTask> = LinkedList()
-    var currentTask: BukkitTask? = null
+    val parallelTasks: MutableMap<AnimationStep, BukkitTask> = LinkedHashMap()
+    var currentTask: Pair<AnimationStep, BukkitTask>? = null
 
     fun run() {
         runSteps.addAll(steps)
@@ -20,11 +20,11 @@ class Animation(val plugin: JavaPlugin) {
     }
 
     fun stop() {
-        currentTask?.cancel()
-        parallelTasks.forEach { it.cancel() }
+        currentTask?.second?.cancel() // Cancel current blocking task
+        currentTask?.first?.close() // Finalize blocking task, since it may not have been finished
+        parallelTasks.forEach { it.value.cancel(); it.key.close() } // Cancel and finalize parallel tasks
         parallelTasks.clear()
-        runSteps.forEach { it.close() }
-        runSteps.clear()
+        runSteps.clear() // Run steps are not finalized since they were not started
     }
 
     fun addStep(step: AnimationStep) =
