@@ -13,7 +13,7 @@ class BlockingAnimationStep(
             animation.plugin,
             { task ->
                 animation.currentTask = task
-                runnable.run()
+                runnable.run(delay, period, duration)
                 runnable.close()
                 animation.pollStep()?.run(animation)
             },
@@ -33,7 +33,7 @@ class BlockingAnimationStep(
                     animation.pollStep()?.run(animation)
                     return@runTaskTimer
                 }
-                runnable.run()
+                runnable.run(delay, period, duration)
                 ticksElapsed += period
             },
             delay,

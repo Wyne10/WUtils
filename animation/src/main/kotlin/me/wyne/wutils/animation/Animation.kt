@@ -15,7 +15,7 @@ class Animation(val plugin: JavaPlugin) {
 
     fun run() {
         runSteps.addAll(steps)
-        runSteps.add(BlockingAnimationStep({ stop() }))
+        runSteps.add(BlockingAnimationStep(AnimationRunnable.runnable { stop() }))
         pollStep()?.run(this)
     }
 
