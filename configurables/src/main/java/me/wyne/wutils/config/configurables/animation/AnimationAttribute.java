@@ -10,7 +10,9 @@ public enum AnimationAttribute {
     PLAYER_TITLE("playerTitle"),
     LOCAL_SOUND("localSound"),
     WORLD_PARTICLE("worldParticle"),
-    FIREWORK("firework");
+    FIREWORK("firework"),
+    PLAYER_MESSAGE("playerMessage"),
+    GLOBAL_MESSAGE("globalMessage");
 
     private final String key;
 

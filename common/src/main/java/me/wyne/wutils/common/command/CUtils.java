@@ -10,8 +10,9 @@ import java.util.Arrays;
 public final class CUtils {
 
     public static Argument<Player> onlinePlayer(String nodeName) {
-        return new PlayerArgument(nodeName)
-                .replaceSafeSuggestions(SafeSuggestions.suggest(Bukkit.getOnlinePlayers().toArray(Player[]::new)));
+        return new EntitySelectorArgument.OnePlayer(nodeName)
+                .replaceSuggestions(ArgumentSuggestions.stringCollection(info ->
+                        Bukkit.getOnlinePlayers().stream().map(Player::getName).toList()));
     }
 
     public static Argument<String> offlinePlayer(String nodeName) {

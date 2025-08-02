@@ -106,6 +106,12 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         return PlainTextComponentSerializer.plainText().serialize(component);
     }
 
+    public String plainValid() {
+        if (I18n.IS_PLAIN_TEXT_UNAVAILABLE)
+            return plain();
+        return plainText();
+    }
+
     public String miniMessage() {
         return MiniMessage.miniMessage().serialize(component);
     }
