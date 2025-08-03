@@ -33,6 +33,9 @@ class Animation(val plugin: JavaPlugin) {
     fun addSteps(vararg steps: AnimationStep) =
         this.steps.addAll(steps)
 
+    fun addAnimation(animation: Animation) =
+        animation.steps.forEach { this.addStep(it) }
+
     fun pollStep(): AnimationStep? =
         runSteps.poll()
 
