@@ -9,36 +9,27 @@ class ParallelAnimationStep(
     duration: Long = 0
 ) : BaseAnimationStep(runnable, delay, period, duration) {
     override fun runOnce(animation: Animation) {
-        Bukkit.getScheduler().runTaskLater(
+        val task = Bukkit.getScheduler().runTaskLater(
             animation.plugin,
-            { task ->
-                animation.parallelTasks.put(this, task)
-                Bukkit.getScheduler().runTask(animation.plugin, Runnable {
-                    animation.pollStep()?.run(animation)
-                })
+            Runnable {
                 runnable.run(delay, period, duration)
                 close()
                 animation.parallelTasks.remove(this)
             },
             delay
         )
+        animation.parallelTasks[this] = task
+        animation.pollStep()?.run(animation)
     }
 
     override fun runRepeating(animation: Animation) {
-        Bukkit.getScheduler().runTaskTimer(
+        val task = Bukkit.getScheduler().runTaskTimer(
             animation.plugin,
-            { task ->
-                if (ticksElapsed <= 0) {
-                    animation.parallelTasks.put(this, task)
-                    Bukkit.getScheduler().runTask(animation.plugin, Runnable {
-                        animation.pollStep()?.run(animation)
-                    })
-                }
+            Runnable {
                 if (duration > 0 && ticksElapsed >= duration) {
                     close()
-                    task.cancel()
-                    animation.parallelTasks.remove(this)
-                    return@runTaskTimer
+                    animation.parallelTasks.remove(this)?.cancel()
+                    return@Runnable
                 }
                 runnable.run(delay, period, duration)
                 ticksElapsed += period
@@ -46,5 +37,7 @@ class ParallelAnimationStep(
             delay,
             period
         )
+        animation.parallelTasks[this] = task
+        animation.pollStep()?.run(animation)
     }
 }

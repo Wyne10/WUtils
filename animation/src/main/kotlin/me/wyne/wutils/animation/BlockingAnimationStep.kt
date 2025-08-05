@@ -9,29 +9,27 @@ class BlockingAnimationStep(
     duration: Long = 0
 ) : BaseAnimationStep(runnable, delay, period, duration) {
     override fun runOnce(animation: Animation) {
-        Bukkit.getScheduler().runTaskLater(
+        val task = Bukkit.getScheduler().runTaskLater(
             animation.plugin,
-            { task ->
-                animation.currentTask = this to task
+            Runnable {
                 runnable.run(delay, period, duration)
                 close()
                 animation.pollStep()?.run(animation)
             },
             delay
         )
+        animation.currentTask = this to task
     }
 
     override fun runRepeating(animation: Animation) {
-        Bukkit.getScheduler().runTaskTimer(
+        val task = Bukkit.getScheduler().runTaskTimer(
             animation.plugin,
-            { task ->
-                if (ticksElapsed <= 0)
-                    animation.currentTask = this to task
+            Runnable {
                 if (duration > 0 && ticksElapsed >= duration) {
                     close()
-                    task.cancel()
+                    animation.currentTask?.second?.cancel()
                     animation.pollStep()?.run(animation)
-                    return@runTaskTimer
+                    return@Runnable
                 }
                 runnable.run(delay, period, duration)
                 ticksElapsed += period
@@ -39,5 +37,6 @@ class BlockingAnimationStep(
             delay,
             period
         )
+        animation.currentTask = this to task
     }
 }
