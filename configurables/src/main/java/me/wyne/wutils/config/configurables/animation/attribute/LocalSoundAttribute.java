@@ -14,6 +14,8 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Arrays;
+
 public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements ContextAnimationAttribute {
 
     public LocalSoundAttribute(String key, Sound value) {
@@ -29,7 +31,9 @@ public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements
         if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
         return new LocalSound(
                 context.getLocation(),
-                org.bukkit.Sound.valueOf(getValue().name().value()),
+                Arrays.stream(org.bukkit.Sound.values())
+                        .filter(sound -> getValue().name().value().equals(sound.getKey().value()))
+                        .findAny().orElse(null),
                 getValue().volume(),
                 getValue().pitch()
         );
