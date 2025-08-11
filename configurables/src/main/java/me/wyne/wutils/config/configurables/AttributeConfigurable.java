@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class AttributeConfigurable implements CompositeConfigurable {
 
-    private final AttributeContainer attributeContainer;
+    protected final AttributeContainer attributeContainer;
 
     public AttributeConfigurable(AttributeContainer attributeContainer) {
         this.attributeContainer = attributeContainer;

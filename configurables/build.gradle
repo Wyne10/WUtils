@@ -19,7 +19,7 @@ dependencies {
     api project(':WUtils-config')
 }
 
-version = '1.10.16'
+version = '1.10.17'
 
 publishing {
     publications {
