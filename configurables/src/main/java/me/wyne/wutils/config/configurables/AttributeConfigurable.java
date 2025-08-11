@@ -6,11 +6,9 @@ import me.wyne.wutils.config.configurables.attribute.Attribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.AttributeMap;
-import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,44 +35,40 @@ public class AttributeConfigurable implements CompositeConfigurable {
         attributeContainer.fromConfig(configObject);
     }
 
-    public ItemConfigurable ignore(ItemAttribute... ignore) {
-        return new ItemConfigurable(attributeContainer.ignore(Arrays.stream(ignore).map(ItemAttribute::getKey).toArray(String[]::new)));
+    public AttributeConfigurable ignore(String... ignore) {
+        return new AttributeConfigurable(attributeContainer.ignore(ignore));
     }
 
-    public ItemConfigurable ignore(String... ignore) {
-        return new ItemConfigurable(attributeContainer.ignore(ignore));
+    public AttributeConfigurable with(String key, AttributeFactory factory) {
+        return new AttributeConfigurable(attributeContainer.with(key, factory));
     }
 
-    public ItemConfigurable with(String key, AttributeFactory factory) {
-        return new ItemConfigurable(attributeContainer.with(key, factory));
+    public AttributeConfigurable with(Map<String, AttributeFactory> keyMap) {
+        return new AttributeConfigurable(attributeContainer.with(keyMap));
     }
 
-    public ItemConfigurable with(Map<String, AttributeFactory> keyMap) {
-        return new ItemConfigurable(attributeContainer.with(keyMap));
+    public AttributeConfigurable with(Attribute<?> attribute) {
+        return new AttributeConfigurable(attributeContainer.with(attribute));
     }
 
-    public ItemConfigurable with(Attribute<?> attribute) {
-        return new ItemConfigurable(attributeContainer.with(attribute));
+    public AttributeConfigurable with(AttributeContainer container) {
+        return new AttributeConfigurable(attributeContainer.with(container));
     }
 
-    public ItemConfigurable with(AttributeContainer container) {
-        return new ItemConfigurable(attributeContainer.with(container));
+    public AttributeConfigurable with(AttributeConfigurable attributeConfigurable) {
+        return new AttributeConfigurable(attributeContainer.with(attributeConfigurable.getAttributeContainer()));
     }
 
-    public ItemConfigurable with(ItemConfigurable itemConfigurable) {
-        return new ItemConfigurable(attributeContainer.with(itemConfigurable.getAttributeContainer()));
+    public AttributeConfigurable copy(AttributeContainer container) {
+        return new AttributeConfigurable(attributeContainer.copy(container));
     }
 
-    public ItemConfigurable copy(AttributeContainer container) {
-        return new ItemConfigurable(attributeContainer.copy(container));
+    public AttributeConfigurable copy(AttributeConfigurable attributeConfigurable) {
+        return new AttributeConfigurable(attributeContainer.copy(attributeConfigurable.getAttributeContainer()));
     }
 
-    public ItemConfigurable copy(ItemConfigurable itemConfigurable) {
-        return new ItemConfigurable(attributeContainer.copy(itemConfigurable.getAttributeContainer()));
-    }
-
-    public ItemConfigurable copy() {
-        return new ItemConfigurable(attributeContainer.copy());
+    public AttributeConfigurable copy() {
+        return new AttributeConfigurable(attributeContainer.copy());
     }
 
     @Nullable
