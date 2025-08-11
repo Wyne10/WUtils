@@ -152,8 +152,18 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T> T get(Class<T> clazz) {
+        return attributeContainer.get(clazz);
+    }
+
+    @Nullable
     public <T> T get(String key) {
         return attributeContainer.get(key);
+    }
+
+    @Nullable
+    public <T> T get(Class<T> clazz, T def) {
+        return attributeContainer.get(clazz, def);
     }
 
     public <T> T get(String key, T def) {
@@ -174,8 +184,18 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T, V> Attribute<V> getAttribute(Class<T> clazz) {
+        return attributeContainer.getAttribute(clazz);
+    }
+
+    @Nullable
     public <V> Attribute<V> getAttribute(String key) {
         return attributeContainer.getAttribute(key);
+    }
+
+    @Nullable
+    public <T, V> Attribute<V> getAttribute(Class<T> clazz, Attribute<V> def) {
+        return attributeContainer.getAttribute(clazz, def);
     }
 
     public <V> Attribute<V> getAttribute(String key, Attribute<V> def) {
@@ -196,8 +216,18 @@ public class ItemConfigurable implements CompositeConfigurable {
     }
 
     @Nullable
+    public <T, V> V getValue(Class<T> clazz) {
+        return attributeContainer.getValue(clazz);
+    }
+
+    @Nullable
     public <V> V getValue(String key) {
         return attributeContainer.getValue(key);
+    }
+
+    @Nullable
+    public <T, V> V getValue(Class<T> clazz, V def) {
+        return attributeContainer.getValue(clazz, def);
     }
 
     public <V> V getValue(String key, V def) {
