@@ -15,7 +15,7 @@ public class PotionEffectsAttribute extends CompositeAttribute<PotionEffectAttri
     }
 
     public PotionEffectsAttribute(String key, ConfigurationSection config) {
-        super(key, config, new GenericAttribute.Factory());
+        super(key, config, new PotionEffectAttribute.Factory());
     }
 
     public PotionEffectsAttribute(Set<PotionEffectAttribute> potionEffects) {
