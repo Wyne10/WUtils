@@ -1,16 +1,16 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.CompositeAttribute;
+import me.wyne.wutils.config.configurables.attribute.CompositeAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Map;
+import java.util.Set;
 
 public class PotionEffectsAttribute extends CompositeAttribute<PotionEffectAttribute> implements MetaAttribute {
 
-    public PotionEffectsAttribute(String key, Map<String, PotionEffectAttribute> potionEffects) {
+    public PotionEffectsAttribute(String key, Set<PotionEffectAttribute> potionEffects) {
         super(key, potionEffects);
     }
 
@@ -18,7 +18,7 @@ public class PotionEffectsAttribute extends CompositeAttribute<PotionEffectAttri
         super(key, config, new GenericAttribute.Factory());
     }
 
-    public PotionEffectsAttribute(Map<String, PotionEffectAttribute> potionEffects) {
+    public PotionEffectsAttribute(Set<PotionEffectAttribute> potionEffects) {
         super(ItemAttribute.POTION_EFFECTS.getKey(), potionEffects);
     }
 
@@ -28,7 +28,7 @@ public class PotionEffectsAttribute extends CompositeAttribute<PotionEffectAttri
 
     @Override
     public void apply(ItemMeta meta) {
-        getValue().values().forEach(attribute -> attribute.apply(meta));
+        getValue().forEach(attribute -> attribute.apply(meta));
     }
 
 }

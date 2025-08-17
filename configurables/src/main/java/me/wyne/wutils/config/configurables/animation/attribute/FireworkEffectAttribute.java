@@ -46,8 +46,8 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
                     FireworkEffect.builder()
                             .flicker(section.getBoolean("flicker", false))
                             .trail(section.getBoolean("trail", false))
-                            .withColor(new ColorsAttribute("colors", section).getValue().values().stream().map(AttributeBase::getValue).toList())
-                            .withFade(new ColorsAttribute("fadeColors", section).getValue().values().stream().map(AttributeBase::getValue).toList())
+                            .withColor(new ColorsAttribute("colors", section).getValue().stream().map(AttributeBase::getValue).toList())
+                            .withFade(new ColorsAttribute("fadeColors", section).getValue().stream().map(AttributeBase::getValue).toList())
                             .with(FireworkEffect.Type.valueOf(section.getString("type", "BALL")))
                             .build()
             );

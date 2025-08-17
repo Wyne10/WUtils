@@ -1,16 +1,16 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.configurables.item.CompositeAttribute;
+import me.wyne.wutils.config.configurables.attribute.CompositeAttribute;
 import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.MetaAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Map;
+import java.util.Set;
 
 public class EnchantmentsAttribute extends CompositeAttribute<EnchantmentAttribute> implements MetaAttribute {
 
-    public EnchantmentsAttribute(String key, Map<String, EnchantmentAttribute> enchantments) {
+    public EnchantmentsAttribute(String key, Set<EnchantmentAttribute> enchantments) {
         super(key, enchantments);
     }
 
@@ -18,7 +18,7 @@ public class EnchantmentsAttribute extends CompositeAttribute<EnchantmentAttribu
         super(key, config, new EnchantmentAttribute.Factory());
     }
 
-    public EnchantmentsAttribute(Map<String, EnchantmentAttribute> enchantments) {
+    public EnchantmentsAttribute(Set<EnchantmentAttribute> enchantments) {
         super(ItemAttribute.ENCHANTMENTS.getKey(), enchantments);
     }
 
@@ -28,7 +28,7 @@ public class EnchantmentsAttribute extends CompositeAttribute<EnchantmentAttribu
 
     @Override
     public void apply(ItemMeta meta) {
-        getValue().values().forEach(attribute -> attribute.apply(meta));
+        getValue().forEach(attribute -> attribute.apply(meta));
     }
 
 }
