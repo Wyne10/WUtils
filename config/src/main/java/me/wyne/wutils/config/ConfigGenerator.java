@@ -41,7 +41,6 @@ public class ConfigGenerator {
                 generatedText.append(s);
                 generatedText.append("\n");
             });
-            generatedText.append("\n");
         } catch (IOException e) {
             log.error("An exception occurred trying to read default config file data", e);
         }

@@ -53,7 +53,6 @@ public class ConfigSection {
 
         for (ConfigField configField : fields.get(subSection)) {
             stringBuilder.append(configField.generateConfigLine());
-            stringBuilder.append("\n");
         }
 
         return stringBuilder.toString();
