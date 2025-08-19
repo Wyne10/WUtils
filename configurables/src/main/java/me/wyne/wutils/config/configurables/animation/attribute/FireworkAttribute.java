@@ -66,7 +66,7 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
                     new FireworkData(
                             ConfigUtils.getVectorOrZero(section, "offset"),
                             section.getInt("power", 1),
-                            new FireworkEffectsAttribute("effects", section).getValue().values().stream().map(AttributeBase::getValue).toList()
+                            new FireworkEffectsAttribute("effects", section).getValue().stream().map(AttributeBase::getValue).toList()
                     )
             );
         }

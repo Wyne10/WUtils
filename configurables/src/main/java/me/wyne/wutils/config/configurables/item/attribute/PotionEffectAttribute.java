@@ -30,7 +30,7 @@ public class PotionEffectAttribute extends ConfigurableAttribute<PotionEffect> i
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().append(depth, getKey(), getValue().getType() + " " + getValue().getDuration() + " " + getValue().getAmplifier() + " " + getValue().isAmbient() + " " + getValue().hasParticles() + " " + getValue().hasIcon()).buildNoSpace();
+        return new ConfigBuilder().append(depth, getKey(), getValue().getType().getName() + " " + getValue().getDuration() + " " + getValue().getAmplifier() + " " + getValue().isAmbient() + " " + getValue().hasParticles() + " " + getValue().hasIcon()).buildNoSpace();
     }
 
     public static final class Factory implements CompositeAttributeFactory {
