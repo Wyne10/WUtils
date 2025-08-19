@@ -2,14 +2,15 @@ package me.wyne.wutils.config;
 
 import java.lang.reflect.Field;
 
-public record ConfigField(Object holder, Field field, String path, String value, String comment) {
+public record ConfigField(Object holder, Field field, String path, String value, String comment, boolean load) {
 
-    public ConfigField(Object holder, Field field, String path, String value, String comment) {
+    public ConfigField(Object holder, Field field, String path, String value, String comment, boolean load) {
         this.holder = holder;
         this.field = field;
         this.path = path;
         this.value = value;
         this.comment = comment;
+        this.load = load;
     }
 
     public String generateConfigLine() {

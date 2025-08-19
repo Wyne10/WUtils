@@ -31,7 +31,7 @@ public class ConfigFieldParser {
         return new ConfigField(holder, field,
                 configEntry.section().substring(0, configEntry.section().contains(".") ? configEntry.section().indexOf('.') : configEntry.section().length())
                         .replaceAll(" ", "").toLowerCase() + "." + path,
-                value, comment);
+                value, comment, configEntry.load());
     }
 
     private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable) {

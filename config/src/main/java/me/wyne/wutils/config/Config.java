@@ -74,6 +74,7 @@ public class Config {
         registeredConfigFields.values()
                 .stream()
                 .flatMap(Collection::stream)
+                .filter(ConfigField::load)
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);
                     try {
@@ -94,6 +95,7 @@ public class Config {
         registeredConfigFields.values()
                 .stream()
                 .flatMap(Collection::stream)
+                .filter(ConfigField::load)
                 .filter(configField -> configField.holder() == object)
                 .forEachOrdered(configField -> {
                     configField.field().setAccessible(true);

@@ -15,4 +15,6 @@ public @interface ConfigEntry {
 
     String comment() default "";
 
+    boolean load() default true;
+
 }
