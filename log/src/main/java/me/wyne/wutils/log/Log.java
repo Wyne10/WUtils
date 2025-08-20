@@ -363,8 +363,6 @@ public class Log {
 
         long durationMilliseconds = durationDays * DAY_DURATION_MILLISECONDS;
 
-        log(Level.INFO, "Searching for " + durationDays + "+ days old logs...");
-
         boolean foundOldLogs = false;
 
         for (File file : logDirectory.listFiles())
@@ -384,8 +382,6 @@ public class Log {
         }
 
         if (foundOldLogs)
-            log(Level.INFO, "Deleted old logs");
-        else
-            log(Level.INFO, "Old logs not found");
+            log(Level.INFO, "Deleted " + durationDays + "+ days old logs");
     }
 }

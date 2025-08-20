@@ -53,8 +53,7 @@ public class I18n {
 
     public I18n() {}
 
-    public I18n(File defaultLanguageFile)
-    {
+    public I18n(File defaultLanguageFile) {
         setDefaultLanguage(defaultLanguageFile);
     }
 
@@ -84,9 +83,10 @@ public class I18n {
     }
 
     public void loadLanguage(String languageResourcePath, JavaPlugin plugin) {
-        plugin.saveResource(languageResourcePath, false);
-        File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
+        if (!languageFile.exists())
+            plugin.saveResource(languageResourcePath, false);
+        File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResource);
         } catch (IOException e) {
@@ -210,6 +210,10 @@ public class I18n {
 
     public void clearLanguageMap() {
         languageMap.clear();
+    }
+
+    public Map<String, Language> getLanguageMap() {
+        return languageMap;
     }
 
     public Language getLanguage(@Nullable Locale locale) {

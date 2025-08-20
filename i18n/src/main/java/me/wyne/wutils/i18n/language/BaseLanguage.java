@@ -49,14 +49,11 @@ public class BaseLanguage implements Language {
     private void mergeDefaultStrings(Language defaultLanguage, File languageFile) {
         if (defaultLanguage.getLanguageFile().length() == 0)
             return;
-        log.info("Searching for missing strings in {}", languageFile.getName());
         UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.getLanguageFile())
                 .backup(false)
                 .update();
         if (report.isConfigChanged())
             log.info("Merged missing strings to {}", languageFile.getName());
-        else
-            log.info("{} is up to date", languageFile.getName());
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ConfigGenerator {
                 generatedText.append("\n");
             });
         } catch (IOException e) {
-            log.error("An exception occurred trying to read default config file data", e);
+            log.error("An exception occurred trying to read default config file", e);
         }
     }
 
@@ -52,7 +52,6 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
-            log.info("Generated WUtils config");
         } catch (IOException e) {
             log.error("An exception occurred trying to write WUtils config", e);
         }

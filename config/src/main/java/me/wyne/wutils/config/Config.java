@@ -85,10 +85,9 @@ public class Config {
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                     } catch (IllegalAccessException e) {
-                        log.error("An exception occurred trying to reload WUtils config", e);
+                        log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
                 });
-        log.info("Reloaded WUtils config");
     }
 
     public void loadConfig(ConfigurationSection config, Object object) {
