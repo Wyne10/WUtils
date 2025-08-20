@@ -102,6 +102,7 @@ public class I18n {
             langFolder.mkdirs();
 
         for (File file : langFolder.listFiles()) {
+            if (!file.isFile()) continue;
             loadLanguage(file);
         }
     }
@@ -111,6 +112,7 @@ public class I18n {
             langFolder.mkdirs();
 
         for (File file : langFolder.listFiles()) {
+            if (!file.isFile()) continue;
             loadLanguage(file);
         }
     }
