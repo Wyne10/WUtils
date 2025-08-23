@@ -13,6 +13,7 @@ public class CompositeAttribute<V extends Attribute<?>> extends ConfigurableAttr
         super(key, attributes);
     }
 
+    @SuppressWarnings({"unchecked", "DataFlowIssue"})
     public CompositeAttribute(String key, ConfigurationSection config, AttributeFactory factory) {
         super(key, new LinkedHashSet<>());
         if (!config.contains(key)) return;
@@ -21,7 +22,7 @@ public class CompositeAttribute<V extends Attribute<?>> extends ConfigurableAttr
         );
     }
 
-    protected <T> Set<T> getSet(Class<T> clazz) {
+    private <T> Set<T> getSet(Class<T> clazz) {
         return getValue().stream()
                 .filter(clazz::isInstance)
                 .map(clazz::cast)

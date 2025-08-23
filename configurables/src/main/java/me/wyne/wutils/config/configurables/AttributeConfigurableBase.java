@@ -4,7 +4,6 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurables.attribute.Attribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
-import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.AttributeMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -12,15 +11,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class AttributeConfigurable implements CompositeConfigurable {
+public abstract class AttributeConfigurableBase implements CompositeConfigurable {
 
-    protected final AttributeContainer attributeContainer;
+    private final AttributeContainer attributeContainer;
 
-    public AttributeConfigurable(AttributeContainer attributeContainer) {
+    public AttributeConfigurableBase(AttributeContainer attributeContainer) {
         this.attributeContainer = attributeContainer;
     }
 
-    public AttributeConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public AttributeConfigurableBase(AttributeContainer attributeContainer, ConfigurationSection section) {
         this(attributeContainer);
         fromConfig(section);
     }
@@ -33,42 +32,6 @@ public class AttributeConfigurable implements CompositeConfigurable {
     @Override
     public void fromConfig(@Nullable Object configObject) {
         attributeContainer.fromConfig(configObject);
-    }
-
-    public AttributeConfigurable ignore(String... ignore) {
-        return new AttributeConfigurable(attributeContainer.ignore(ignore));
-    }
-
-    public AttributeConfigurable with(String key, AttributeFactory factory) {
-        return new AttributeConfigurable(attributeContainer.with(key, factory));
-    }
-
-    public AttributeConfigurable with(Map<String, AttributeFactory> keyMap) {
-        return new AttributeConfigurable(attributeContainer.with(keyMap));
-    }
-
-    public AttributeConfigurable with(Attribute<?> attribute) {
-        return new AttributeConfigurable(attributeContainer.with(attribute));
-    }
-
-    public AttributeConfigurable with(AttributeContainer container) {
-        return new AttributeConfigurable(attributeContainer.with(container));
-    }
-
-    public AttributeConfigurable with(AttributeConfigurable attributeConfigurable) {
-        return new AttributeConfigurable(attributeContainer.with(attributeConfigurable.getAttributeContainer()));
-    }
-
-    public AttributeConfigurable copy(AttributeContainer container) {
-        return new AttributeConfigurable(attributeContainer.copy(container));
-    }
-
-    public AttributeConfigurable copy(AttributeConfigurable attributeConfigurable) {
-        return new AttributeConfigurable(attributeContainer.copy(attributeConfigurable.getAttributeContainer()));
-    }
-
-    public AttributeConfigurable copy() {
-        return new AttributeConfigurable(attributeContainer.copy());
     }
 
     @Nullable
