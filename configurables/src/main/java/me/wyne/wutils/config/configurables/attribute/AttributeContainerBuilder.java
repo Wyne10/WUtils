@@ -34,6 +34,11 @@ public class AttributeContainerBuilder {
         return this;
     }
 
+    public AttributeContainerBuilder with(AttributeMap attributeMap) {
+        attributeMap.putAll(attributeMap.getKeyMap());
+        return this;
+    }
+
     public AttributeContainerBuilder with(Attribute<?> attribute) {
         attributes.put(attribute.getKey(), attribute);
         return this;

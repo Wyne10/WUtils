@@ -11,15 +11,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class AttributeConfigurableBase implements CompositeConfigurable {
+public class AttributeConfigurable implements CompositeConfigurable {
 
     private final AttributeContainer attributeContainer;
 
-    public AttributeConfigurableBase(AttributeContainer attributeContainer) {
+    public AttributeConfigurable(AttributeContainer attributeContainer) {
         this.attributeContainer = attributeContainer;
     }
 
-    public AttributeConfigurableBase(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public AttributeConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
         this(attributeContainer);
         fromConfig(section);
     }

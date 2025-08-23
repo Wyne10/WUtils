@@ -5,11 +5,14 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
+import me.wyne.wutils.config.configurables.attribute.ImmutableAttributeContainer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static me.wyne.wutils.config.configurables.AnimationStepConfigurable.ANIMATION_STEP_ATTRIBUTE_MAP;
 
 public class AnimationConfigurable implements CompositeConfigurable {
 
@@ -38,7 +41,7 @@ public class AnimationConfigurable implements CompositeConfigurable {
         ConfigurationSection config = (ConfigurationSection) configObject;
         animationSteps.clear();
         config.getKeys(false).forEach(key ->
-                animationSteps.add(new AnimationStepConfigurable(config.getConfigurationSection(key))));
+                animationSteps.add(new AnimationStepConfigurable(new ImmutableAttributeContainer(ANIMATION_STEP_ATTRIBUTE_MAP), config.getConfigurationSection(key))));
     }
 
     public Animation build(JavaPlugin plugin, AnimationContext context) {

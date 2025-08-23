@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class ItemConfigurableBase extends AttributeConfigurableBase {
+public class ItemConfigurable extends AttributeConfigurable {
 
     public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
 
@@ -47,11 +46,11 @@ public class ItemConfigurableBase extends AttributeConfigurableBase {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
     }
 
-    public ItemConfigurableBase(AttributeContainer attributeContainer) {
+    public ItemConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public ItemConfigurableBase(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public ItemConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
@@ -85,14 +84,6 @@ public class ItemConfigurableBase extends AttributeConfigurableBase {
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         return build(context);
-    }
-
-    public ItemConfigurableBuilder toBuilder() {
-        return new ItemConfigurableBuilder(this);
-    }
-
-    public static ItemConfigurableBuilder builder() {
-        return new ItemConfigurableBuilder();
     }
 
 }

@@ -15,12 +15,12 @@ import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
 
-public class GuiConfigurableBase extends ItemConfigurableBase {
+public class GuiConfigurable extends ItemConfigurable {
 
     public final static AttributeMap GUI_ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
 
     static {
-        GUI_ITEM_ATTRIBUTE_MAP.putAll(ImmutableItemConfigurable.ITEM_ATTRIBUTE_MAP.getKeyMap());
+        GUI_ITEM_ATTRIBUTE_MAP.putAll(ItemConfigurable.ITEM_ATTRIBUTE_MAP.getKeyMap());
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.SLOT.getKey(), new SlotAttribute.Factory());
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
@@ -28,11 +28,11 @@ public class GuiConfigurableBase extends ItemConfigurableBase {
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.COMMANDS.getKey(), CommandsAttribute::new);
     }
 
-    public GuiConfigurableBase(AttributeContainer attributeContainer) {
+    public GuiConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public GuiConfigurableBase(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public GuiConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
@@ -66,14 +66,6 @@ public class GuiConfigurableBase extends ItemConfigurableBase {
     public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         return buildGuiItem(context);
-    }
-
-    public GuiConfigurableBuilder toGuiBuilder() {
-        return new GuiConfigurableBuilder(this);
-    }
-
-    public static GuiConfigurableBuilder guiBuilder() {
-        return new GuiConfigurableBuilder();
     }
 
 }
