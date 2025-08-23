@@ -20,4 +20,11 @@ public interface Loadable {
         return 0;
     }
 
+    default boolean isLate() {
+        if (getClass().isAnnotationPresent(LoadableMeta.class)) {
+            return getClass().getAnnotation(LoadableMeta.class).late();
+        }
+        return false;
+    }
+
 }

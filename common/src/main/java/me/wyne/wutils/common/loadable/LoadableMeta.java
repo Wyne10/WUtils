@@ -13,4 +13,6 @@ public @interface LoadableMeta {
 
     int priority() default 0;
 
+    boolean late() default false;
+
 }

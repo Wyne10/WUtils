@@ -1,6 +1,8 @@
 package me.wyne.wutils.common.loadable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,12 +26,16 @@ public class Loader {
         configMap.put(path, config);
     }
 
-    public void load() {
+    public void load(JavaPlugin plugin) {
         loadableMap.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getKey().getPriority()))
                 .forEachOrdered(entry -> {
-                    if (configMap.containsKey(entry.getValue()))
-                        entry.getKey().load(configMap.get(entry.getValue()));
+                    if (configMap.containsKey(entry.getValue())) {
+                        if (entry.getKey().isLate())
+                            Bukkit.getScheduler().runTask(plugin, () -> { entry.getKey().load(configMap.get(entry.getValue())); });
+                        else
+                            entry.getKey().load(configMap.get(entry.getValue()));
+                    }
                 });
     }
 
