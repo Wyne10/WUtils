@@ -14,7 +14,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 }
 
-version = '1.4.2'
+version = '1.4.3'
 
 publishing {
     publications {
