@@ -11,17 +11,23 @@ import java.util.*;
 
 public class EventRegistry implements Listener, AutoCloseable {
 
+    private final JavaPlugin plugin;
+
     private final Map<Class<? extends Event>, Set<RegisterableListener>> registry = new HashMap<>();
     private final Map<RegisterableListener, Map<Class<? extends Event>, Set<Method>>> handlers = new HashMap<>();
 
-    public void register(JavaPlugin plugin, RegisterableListener listener) {
+    public EventRegistry(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void register(RegisterableListener listener) {
         Arrays.stream(listener.getClass().getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(EventHandler.class))
                 .forEach(handler -> {
                     var event = handler.getParameterTypes()[0].asSubclass(Event.class);
                     if (!registry.containsKey(event)) {
                         registry.put(event, new HashSet<>());
-                        registerEvent(plugin, event, handler.getDeclaredAnnotation(EventHandler.class));
+                        registerEvent(event, handler.getDeclaredAnnotation(EventHandler.class));
                     }
                     registry.get(event).add(listener);
                     if (!handlers.containsKey(listener))
@@ -39,7 +45,7 @@ public class EventRegistry implements Listener, AutoCloseable {
         handlers.clear();
     }
 
-    private void registerEvent(JavaPlugin plugin, Class<? extends Event> event, EventHandler parameters) {
+    private void registerEvent(Class<? extends Event> event, EventHandler parameters) {
         Bukkit.getPluginManager().registerEvent(
                 event,
                 this,
