@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AttributeConfigurableBase implements CompositeConfigurable {
+public class AttributeConfigurableBase implements CompositeConfigurable {
 
     private final AttributeContainer attributeContainer;
 

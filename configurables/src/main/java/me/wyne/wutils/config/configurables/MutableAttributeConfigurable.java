@@ -3,11 +3,21 @@ package me.wyne.wutils.config.configurables;
 import me.wyne.wutils.config.configurables.attribute.Attribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.MutableAttributeContainer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Map;
 
 public class MutableAttributeConfigurable extends AttributeConfigurableBase {
+
+    public MutableAttributeConfigurable() {
+        super(new MutableAttributeContainer());
+    }
+
+    public MutableAttributeConfigurable(ConfigurationSection section) {
+        this();
+        fromConfig(section);
+    }
 
     public MutableAttributeConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
@@ -42,7 +52,7 @@ public class MutableAttributeConfigurable extends AttributeConfigurableBase {
         return this;
     }
 
-    public MutableAttributeConfigurable with(MutableAttributeConfigurable attributeConfigurable) {
+    public MutableAttributeConfigurable with(AttributeConfigurableBase attributeConfigurable) {
         getAttributeContainer().with(attributeConfigurable.getAttributeContainer());
         return this;
     }
@@ -52,7 +62,7 @@ public class MutableAttributeConfigurable extends AttributeConfigurableBase {
         return this;
     }
 
-    public MutableAttributeConfigurable copy(MutableAttributeConfigurable attributeConfigurable) {
+    public MutableAttributeConfigurable copy(AttributeConfigurableBase attributeConfigurable) {
         getAttributeContainer().copy(attributeConfigurable.getAttributeContainer());
         return this;
     }

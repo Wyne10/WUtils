@@ -51,11 +51,11 @@ public class AttributeContainerBuilder {
         return this;
     }
 
-    public AttributeContainer build() {
+    public MutableAttributeContainer build() {
         return new MutableAttributeContainer(attributeMap, attributes);
     }
 
-    public AttributeContainer buildImmutable() {
+    public ImmutableAttributeContainer buildImmutable() {
         return new ImmutableAttributeContainer(attributeMap, attributes);
     }
 
