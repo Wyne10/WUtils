@@ -42,6 +42,14 @@ public class AttributeConfigurable implements CompositeConfigurable {
         };
     }
 
+    public <T extends AttributeConfigurable> AttributeConfigurableAccessor<T> getImmutableAccessor() {
+        return getAccessor(AttributeConfigurableAccessors.IMMUTABLE);
+    }
+
+    public <T extends AttributeConfigurable> AttributeConfigurableAccessor<T> getMutableAccessor() {
+        return getAccessor(AttributeConfigurableAccessors.MUTABLE);
+    }
+
     @Nullable
     public <T> T get(Class<T> clazz) {
         return attributeContainer.get(clazz);
