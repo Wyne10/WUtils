@@ -28,6 +28,14 @@ public class GuiConfigurable extends ItemConfigurable {
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.COMMANDS.getKey(), CommandsAttribute::new);
     }
 
+    public GuiConfigurable() {
+        super(new ImmutableAttributeContainer(GUI_ITEM_ATTRIBUTE_MAP));
+    }
+
+    public GuiConfigurable(ConfigurationSection section) {
+        super(new ImmutableAttributeContainer(GUI_ITEM_ATTRIBUTE_MAP), section);
+    }
+
     public GuiConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
     }

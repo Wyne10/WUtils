@@ -27,6 +27,14 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.GLOBAL_MESSAGE.getKey(), new GlobalMessageAttribute.Factory());
     }
 
+    public AnimationStepConfigurable() {
+        super(new ImmutableAttributeContainer(ANIMATION_STEP_ATTRIBUTE_MAP));
+    }
+
+    public AnimationStepConfigurable(ConfigurationSection section) {
+        super(new ImmutableAttributeContainer(ANIMATION_STEP_ATTRIBUTE_MAP), section);
+    }
+
     public AnimationStepConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
     }

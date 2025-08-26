@@ -46,6 +46,14 @@ public class ItemConfigurable extends AttributeConfigurable {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.ARMOR_COLOR.getKey(), new ArmorColorAttribute.Factory());
     }
 
+    public ItemConfigurable() {
+        super(new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP));
+    }
+
+    public ItemConfigurable(ConfigurationSection section) {
+        super(new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP), section);
+    }
+
     public ItemConfigurable(AttributeContainer attributeContainer) {
         super(attributeContainer);
     }

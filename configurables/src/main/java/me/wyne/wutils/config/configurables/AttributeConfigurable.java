@@ -34,6 +34,14 @@ public class AttributeConfigurable implements CompositeConfigurable {
         attributeContainer.fromConfig(configObject);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends AttributeConfigurable> AttributeConfigurableAccessor<T> getAccessor(AttributeConfigurableAccessors type) {
+        return switch (type) {
+            case IMMUTABLE -> new ImmutableAttributeConfigurableAccessor<>((T) this);
+            case MUTABLE -> new MutableAttributeConfigurableAccessor<>((T) this);
+        };
+    }
+
     @Nullable
     public <T> T get(Class<T> clazz) {
         return attributeContainer.get(clazz);
