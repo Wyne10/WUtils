@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+@Deprecated
 public class GuiItemConfigurable extends ItemStackConfigurable {
 
     private String print;
@@ -153,7 +154,7 @@ public class GuiItemConfigurable extends ItemStackConfigurable {
     }
 
     public Optional<LocalizedComponent> getPrint(@Nullable Player player, TextReplacement... textReplacements) {
-        return getPrint().map(printString -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, printString, textReplacements));
+        return getPrint().map(printString -> I18n.global.accessor(player, printString).getPlaceholderComponent(player, textReplacements));
     }
 
     public Optional<Sound> getSound() {

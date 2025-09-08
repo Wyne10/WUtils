@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@Deprecated
 public class ItemStackConfigurable implements CompositeConfigurable {
 
     private String name;
@@ -138,7 +139,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     }
 
     public LocalizedComponent getName(@Nullable Player player, TextReplacement... textReplacements) {
-        return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name, textReplacements);
+        return I18n.global.accessor(player, name).getPlaceholderComponent(player, textReplacements);
     }
 
     public Component getNameWithLore(@Nullable Player player, TextReplacement... textReplacements) {
@@ -146,7 +147,7 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     }
 
     public LocalizedComponent getComponentName(@Nullable Player player, ComponentReplacement... componentReplacements) {
-        return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name).replace(componentReplacements);
+        return I18n.global.accessor(player, name).getPlaceholderComponent(player).replace(componentReplacements);
     }
 
     public Component getComponentNameWithLore(@Nullable Player player, ComponentReplacement... componentReplacements) {
@@ -170,11 +171,11 @@ public class ItemStackConfigurable implements CompositeConfigurable {
     }
 
     public List<LocalizedComponent> getLore(@Nullable Player player, TextReplacement... textReplacements) {
-        return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
+        return I18n.ofComponents(lore, s -> I18n.global.accessor(player, s).getPlaceholderComponent(player, textReplacements));
     }
 
     public List<LocalizedComponent> getComponentLore(@Nullable Player player, ComponentReplacement... componentReplacements) {
-        return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s).replace(componentReplacements));
+        return I18n.ofComponents(lore, s -> I18n.global.accessor(player, s).getPlaceholderComponent(player).replace(componentReplacements));
     }
 
     public Collection<ItemFlag> getFlags() {

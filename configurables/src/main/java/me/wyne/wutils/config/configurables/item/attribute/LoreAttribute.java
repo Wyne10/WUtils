@@ -23,7 +23,7 @@ public class LoreAttribute extends ConfigurableAttribute<List<String>> implement
 
     @Override
     public void apply(ItemMeta meta, ItemAttributeContext context) {
-        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.getPlaceholderComponent(I18n.toLocale(context.getPlayer()), context.getPlayer(), s, context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
+        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
     }
 
     @Override

@@ -23,12 +23,12 @@ public class CommandAttribute extends ConfigurableAttribute<String> implements C
 
     @Override
     public void apply(ItemAttributeContext context) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.getPlaceholderString(I18n.toLocale(context.getPlayer()), context.getPlayer(), getValue(), context.getTextReplacements()).get());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderString(context.getPlayer(), context.getTextReplacements()).get());
     }
 
     @Override
     public void apply(InventoryClickEvent event, ItemAttributeContext context) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.getPlaceholderString(I18n.toLocale(event.getWhoClicked()), I18n.toPlayer(event.getWhoClicked()), getValue(), context.getTextReplacements()).get());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderString(I18n.toPlayer(event.getWhoClicked()), context.getTextReplacements()).get());
     }
 
     public static final class Factory implements AttributeFactory {

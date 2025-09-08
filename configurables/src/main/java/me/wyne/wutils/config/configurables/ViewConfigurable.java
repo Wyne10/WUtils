@@ -54,7 +54,7 @@ public class ViewConfigurable implements CompositeConfigurable {
     }
 
     public LocalizedComponent getName(@Nullable Player player, TextReplacement... textReplacements) {
-        return I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, name, textReplacements);
+        return I18n.global.accessor(player, name).getPlaceholderComponent(player, textReplacements);
     }
 
     public List<String> getLore() {
@@ -62,7 +62,7 @@ public class ViewConfigurable implements CompositeConfigurable {
     }
 
     public List<LocalizedComponent> getLore(@Nullable Player player, TextReplacement... textReplacements) {
-        return I18n.ofComponents(lore, s -> I18n.global.getPlaceholderComponent(I18n.toLocale(player), player, s, textReplacements));
+        return I18n.ofComponents(lore, s -> I18n.global.accessor(player, s).getPlaceholderComponent(player, textReplacements));
     }
 
 }

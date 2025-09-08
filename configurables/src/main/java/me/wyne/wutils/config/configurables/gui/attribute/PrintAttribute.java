@@ -21,7 +21,7 @@ public class PrintAttribute extends ConfigurableAttribute<String> implements Con
 
     @Override
     public void apply(InventoryClickEvent event, ItemAttributeContext context) {
-        I18n.global.getPlaceholderComponent(I18n.toLocale(context.getPlayer()), context.getPlayer(), getValue(), context.getTextReplacements()).replace(context.getComponentReplacements()).sendMessage(event.getWhoClicked());
+        I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).sendMessage(event.getWhoClicked());
     }
 
     public static final class Factory implements AttributeFactory {

@@ -19,7 +19,7 @@ public class NameAttribute extends ConfigurableAttribute<String> implements Cont
 
     @Override
     public void apply(ItemMeta meta, ItemAttributeContext context) {
-        meta.setDisplayNameComponent(I18n.global.getPlaceholderComponent(I18n.toLocale(context.getPlayer()), context.getPlayer(), getValue(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee());
+        meta.setDisplayNameComponent(I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee());
     }
 
     public static final class Factory implements AttributeFactory {
