@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
-public class PluginI18nBuilder extends BaseI18nBuilder {
+public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
 
     private final JavaPlugin plugin;
 

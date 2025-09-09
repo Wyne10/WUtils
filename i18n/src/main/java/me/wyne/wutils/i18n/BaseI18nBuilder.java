@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaseI18nBuilder {
+public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
     private Logger log = LoggerFactory.getLogger(I18n.class);
 
@@ -32,28 +32,34 @@ public class BaseI18nBuilder {
 
     private boolean usePlayerLanguage = true;
 
-    public void setLog(Logger log) {
+    public T setLog(Logger log) {
         this.log = log;
+        return (T) this;
     }
 
-    public void setComponentAudience(ComponentAudiences componentAudiences) {
+    public T setComponentAudience(ComponentAudiences componentAudiences) {
         this.componentAudiences = componentAudiences;
+        return (T) this;
     }
 
-    public void setStringInterpreter(StringInterpreter stringInterpreter) {
+    public T setStringInterpreter(StringInterpreter stringInterpreter) {
         this.stringInterpreter = stringInterpreter;
+        return (T) this;
     }
 
-    public void setComponentInterpreter(ComponentInterpreter componentInterpreter) {
+    public T setComponentInterpreter(ComponentInterpreter componentInterpreter) {
         this.componentInterpreter = componentInterpreter;
+        return (T) this;
     }
 
-    public void setDefaultLanguageCode(String defaultLanguageCode) {
+    public T setDefaultLanguageCode(String defaultLanguageCode) {
         this.defaultLanguageCode = defaultLanguageCode;
+        return (T) this;
     }
 
-    public void setUsePlayerLanguage(boolean usePlayerLanguage) {
+    public T setUsePlayerLanguage(boolean usePlayerLanguage) {
         this.usePlayerLanguage = usePlayerLanguage;
+        return (T) this;
     }
 
     public Logger getLog() {
