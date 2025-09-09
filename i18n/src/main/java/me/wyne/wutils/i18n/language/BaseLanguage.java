@@ -1,7 +1,7 @@
 package me.wyne.wutils.i18n.language;
 
 import org.apache.commons.io.FilenameUtils;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class BaseLanguage implements Language {
     private final Locale locale;
 
     private final File languageFile;
-    private final FileConfiguration strings;
+    private final ConfigurationSection strings;
     private final Map<String, String> stringMap = new HashMap<>();
 
     public BaseLanguage(File languageFile, Logger log) {
@@ -75,7 +75,7 @@ public class BaseLanguage implements Language {
     }
 
     @Override
-    public FileConfiguration getStrings() {
+    public ConfigurationSection getStrings() {
         return strings;
     }
 

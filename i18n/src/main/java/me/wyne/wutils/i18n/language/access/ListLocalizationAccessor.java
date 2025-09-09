@@ -192,4 +192,9 @@ public class ListLocalizationAccessor implements LocalizationAccessor {
         return componentInterpreter.getPlaceholderComponentList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plc(language, path, component, audiences, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Override
+    public LocalizationAccessor withLanguage(Language language) {
+        return new ListLocalizationAccessor(path, language, stringInterpreter, componentInterpreter, audiences);
+    }
+
 }

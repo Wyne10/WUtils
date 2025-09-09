@@ -9,10 +9,12 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface LocalizationAccessor {
     String getPath();
@@ -82,6 +84,8 @@ public interface LocalizationAccessor {
     List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender);
 
     List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, TextReplacement... textReplacements);
+
+    LocalizationAccessor withLanguage(Language language);
 
     default LocalizedString ls(Language language, String path, String string) {
         return new LocalizedString(I18n.global.string(), language, path, string);

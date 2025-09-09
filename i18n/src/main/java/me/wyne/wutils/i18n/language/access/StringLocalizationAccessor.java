@@ -189,4 +189,9 @@ public class StringLocalizationAccessor implements LocalizationAccessor {
         return List.of(getPlaceholderComponent(sender, textReplacements));
     }
 
+    @Override
+    public LocalizationAccessor withLanguage(Language language) {
+        return new StringLocalizationAccessor(path, language, stringInterpreter, componentInterpreter, audiences);
+    }
+
 }
