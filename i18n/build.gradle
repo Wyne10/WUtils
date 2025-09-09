@@ -22,6 +22,10 @@ dependencies {
     implementation 'commons-io:commons-io:2.19.0'
 }
 
+tasks.named("publish") {
+    finalizedBy(":WUtils-i18n-kotlin:publish")
+}
+
 version = '5.1.2'
 
 publishing {
