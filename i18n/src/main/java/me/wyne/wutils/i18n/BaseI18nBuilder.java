@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
     private Logger log = LoggerFactory.getLogger(I18n.class);
@@ -90,7 +91,8 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return usePlayerLanguage;
     }
 
-    public void loadLanguages(File directory) {
+    @SuppressWarnings("DataFlowIssue")
+    public T loadLanguages(File directory) {
         if (!directory.exists())
             directory.mkdirs();
 
@@ -98,18 +100,21 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
             if (!file.isFile()) continue;
             loadLanguage(file);
         }
+        return (T) this;
     }
 
-    public void loadLanguage(File languageFile) {
+    public T loadLanguage(File languageFile) {
         loadLanguage(null, languageFile);
+        return (T) this;
     }
 
-    public void loadLanguage(@Nullable Language defaultLanguage, File languageFile) {
+    public T loadLanguage(@Nullable Language defaultLanguage, File languageFile) {
         String languageCode = getLanguageCode(languageFile);
         if (languageMap.containsKey(languageCode))
-            return;
+            return (T) this;
         languageMap.put(languageCode, new BaseLanguage(defaultLanguage, languageFile, log));
         log.info("Loaded {} language", languageCode);
+        return (T) this;
     }
 
     public String getLanguageCode(File languageFile) {

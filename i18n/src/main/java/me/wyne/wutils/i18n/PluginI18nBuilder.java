@@ -17,13 +17,14 @@ public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
         this.plugin = plugin;
     }
 
-    public void loadLanguage(String languageResourcePath) {
+    public PluginI18nBuilder loadLanguage(String languageResourcePath) {
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
         if (!languageFile.exists())
             plugin.saveResource(languageResourcePath, false);
         File languageResourceFile = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
         writeResource(languageResourcePath, languageResourceFile);
         loadLanguage(new BaseLanguage(languageResourceFile, getLog()), languageFile);
+        return this;
     }
 
     private void loadDefaultLanguage() {
