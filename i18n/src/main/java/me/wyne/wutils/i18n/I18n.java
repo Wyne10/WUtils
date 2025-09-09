@@ -1,5 +1,7 @@
 package me.wyne.wutils.i18n;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.access.ListLocalizationAccessor;
 import me.wyne.wutils.i18n.language.access.LocalizationAccessor;
@@ -29,6 +31,7 @@ public class I18n {
     private final ComponentAudiences audiences;
 
     private final Map<String, Language> languageMap = new HashMap<>();
+    private final Table<Language, String, LocalizationAccessor> accessorCache = HashBasedTable.create();
     private final Language defaultLanguage;
 
     private final StringInterpreter stringInterpreter;
@@ -83,18 +86,21 @@ public class I18n {
         return accessor(null, path);
     }
 
-    public LocalizationAccessor accessor(@Nullable Locale locale, String path) {
-        Language language = getLanguage(locale);
-        if (language.getStrings().isList(path))
-            return new ListLocalizationAccessor(path, language, string(), component(), audiences);
-        return new StringLocalizationAccessor(path, language, string(), component(), audiences);
+    public LocalizationAccessor accessor(@Nullable Object localeContainer, String path) {
+        return accessor(I18n.toLocale(localeContainer), path);
     }
 
-    public LocalizationAccessor accessor(@Nullable Object localeContainer, String path) {
-        Language language = getLanguage(I18n.toLocale(localeContainer));
+    public LocalizationAccessor accessor(@Nullable Locale locale, String path) {
+        Language language = getLanguage(locale);
+        if (accessorCache.contains(language, path))
+            return accessorCache.get(language, path);
+        LocalizationAccessor accessor;
         if (language.getStrings().isList(path))
-            return new ListLocalizationAccessor(path, language, string(), component(), audiences);
-        return new StringLocalizationAccessor(path, language, string(), component(), audiences);
+            accessor = new ListLocalizationAccessor(path, language, string(), component(), audiences);
+        else
+            accessor = new StringLocalizationAccessor(path, language, string(), component(), audiences);
+        accessorCache.put(language, path, accessor);
+        return accessor;
     }
 
     public static String reduceRawString(Collection<String> stringList) {
