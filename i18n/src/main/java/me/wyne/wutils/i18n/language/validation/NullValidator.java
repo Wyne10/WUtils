@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class NullValidator implements StringValidator {
     @Override
-    public String validateString(String languageCode, Map<String, String> strings, String path) {
+    public String validateString(Map<String, String> strings, String path) {
         return strings.get(path);
     }
 }

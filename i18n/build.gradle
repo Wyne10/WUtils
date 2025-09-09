@@ -22,7 +22,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.19.0'
 }
 
-version = '5.0.0'
+version = '5.0.1'
 
 publishing {
     publications {

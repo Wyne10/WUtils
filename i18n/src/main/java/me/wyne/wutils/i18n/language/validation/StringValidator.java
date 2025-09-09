@@ -5,6 +5,6 @@ import java.util.Map;
 @FunctionalInterface
 public interface StringValidator {
 
-    String validateString(String languageCode, Map<String, String> strings, String path);
+    String validateString(Map<String, String> strings, String path);
 
 }

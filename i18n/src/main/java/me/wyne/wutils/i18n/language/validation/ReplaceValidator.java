@@ -12,7 +12,7 @@ public class ReplaceValidator implements StringValidator {
     }
 
     @Override
-    public String validateString(String languageCode, Map<String, String> strings, String path) {
+    public String validateString(Map<String, String> strings, String path) {
         return strings.getOrDefault(path, replaceString);
     }
 

@@ -4,9 +4,9 @@ import java.util.Map;
 
 public class ExceptionValidator implements StringValidator {
     @Override
-    public String validateString(String languageCode, Map<String, String> strings, String path) {
+    public String validateString(Map<String, String> strings, String path) {
         if (!strings.containsKey(path))
-            throw new IllegalArgumentException("String " + path + " was not found in " + languageCode + " language");
+            throw new IllegalArgumentException("String " + path + " was not found");
         return strings.get(path);
     }
 }
