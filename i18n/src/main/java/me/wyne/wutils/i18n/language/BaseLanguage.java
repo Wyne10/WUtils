@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n.language;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
 import ru.vyarus.yaml.updater.report.UpdateReport;
@@ -34,7 +35,7 @@ public class BaseLanguage implements Language {
                 .forEach(path -> stringMap.put(path, strings.getString(path)));
     }
 
-    public BaseLanguage(Language defaultLanguage, File languageFile, Logger log) {
+    public BaseLanguage(@Nullable Language defaultLanguage, File languageFile, Logger log) {
         this.log = log;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
@@ -46,7 +47,9 @@ public class BaseLanguage implements Language {
                 .forEach(path -> stringMap.put(path, strings.getString(path)));
     }
 
-    private void mergeDefaultStrings(Language defaultLanguage, File languageFile) {
+    private void mergeDefaultStrings(@Nullable Language defaultLanguage, File languageFile) {
+        if (defaultLanguage == null)
+            return;
         if (defaultLanguage.getLanguageFile().length() == 0)
             return;
         UpdateReport report = YamlUpdater.create(languageFile, defaultLanguage.getLanguageFile())

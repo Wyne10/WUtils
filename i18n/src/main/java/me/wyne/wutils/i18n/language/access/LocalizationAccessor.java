@@ -2,10 +2,7 @@ package me.wyne.wutils.i18n.language.access;
 
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.Language;
-import me.wyne.wutils.i18n.language.component.LocalizedComponent;
-import me.wyne.wutils.i18n.language.component.LocalizedString;
-import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedComponent;
-import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedString;
+import me.wyne.wutils.i18n.language.component.*;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.StringInterpreter;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
@@ -94,11 +91,11 @@ public interface LocalizationAccessor {
         return new PlaceholderLocalizedString(I18n.global.string(), language, path, string, player);
     }
 
-    default LocalizedComponent lc(Language language, String path, Component component) {
-        return new LocalizedComponent(I18n.global.component(), language, path, component);
+    default LocalizedComponent lc(Language language, String path, Component component, ComponentAudiences audiences) {
+        return new LocalizedComponent(I18n.global.component(), language, path, component, audiences);
     }
 
-    default PlaceholderLocalizedComponent plc(Language language, String path, Component component, @Nullable OfflinePlayer player) {
-        return new PlaceholderLocalizedComponent(I18n.global.component(), language, path, component, player);
+    default PlaceholderLocalizedComponent plc(Language language, String path, Component component, ComponentAudiences audiences, @Nullable OfflinePlayer player) {
+        return new PlaceholderLocalizedComponent(I18n.global.component(), language, path, component, audiences, player);
     }
 }

@@ -12,8 +12,8 @@ public class PlaceholderLocalizedComponent extends LocalizedComponent implements
     @Nullable
     private final OfflinePlayer player;
 
-    public PlaceholderLocalizedComponent(ComponentInterpreter interpreter, Language language, String path, Component component, @Nullable OfflinePlayer player) {
-        super(interpreter, language, path, component);
+    public PlaceholderLocalizedComponent(ComponentInterpreter interpreter, Language language, String path, Component component, ComponentAudiences audiences, @Nullable OfflinePlayer player) {
+        super(interpreter, language, path, component, audiences);
         this.player = player;
     }
 

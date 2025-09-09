@@ -24,7 +24,7 @@ public class GlobalMessageAttribute extends ConfigurableAttribute<String> implem
     public AnimationRunnable create(AnimationContext context) {
         if (context.getPlayer() == null) return AnimationRunnable.Companion.getEMPTY();
         return new MessageEffect(
-                I18n.global.audiences.players(),
+                I18n.global.getAudiences().players(),
                 I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get()
         );
     }

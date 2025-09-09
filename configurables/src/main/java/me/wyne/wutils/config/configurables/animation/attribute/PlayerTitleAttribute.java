@@ -28,7 +28,7 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
     @Override
     public AnimationRunnable create(AnimationContext context) {
         if (context.getPlayer() == null) return AnimationRunnable.Companion.getEMPTY();
-        return new TitleEffect(I18n.global.audiences.player(context.getPlayer()), Title.title(
+        return new TitleEffect(I18n.global.getAudiences().player(context.getPlayer()), Title.title(
                 I18n.global.accessor(context.getPlayer(), getValue().title).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get(),
                 I18n.global.accessor(context.getPlayer(), getValue().subtitle).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get(),
                 getValue().times

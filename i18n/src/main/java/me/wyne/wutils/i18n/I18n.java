@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n;
 
-import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.access.ListLocalizationAccessor;
 import me.wyne.wutils.i18n.language.access.LocalizationAccessor;
@@ -9,20 +8,13 @@ import me.wyne.wutils.i18n.language.component.*;
 import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
-import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import net.kyori.adventure.text.Component;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -31,19 +23,26 @@ import java.util.stream.Collectors;
 
 public class I18n {
 
-    public static I18n global = new I18n();
-    public ComponentAudience audiences = new NativeComponentAudience();
-    public Logger log = LoggerFactory.getLogger(getClass());
+    public static I18n global;
+    public static final boolean IS_PLAIN_TEXT_UNAVAILABLE = Bukkit.getVersion().contains("1.16");
+
+    private final ComponentAudiences audiences;
 
     private final Map<String, Language> languageMap = new HashMap<>();
-    private Language defaultLanguage;
-    private Language defaultResourceLanguage;
+    private final Language defaultLanguage;
 
-    private StringInterpreter stringInterpreter = new BaseInterpreter(new EmptyValidator());
-    private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
+    private final StringInterpreter stringInterpreter;
+    private final ComponentInterpreter componentInterpreter;
 
-    public boolean usePlayerLanguage = true;
-    public static final boolean IS_PLAIN_TEXT_UNAVAILABLE = Bukkit.getVersion().contains("1.16");
+    private final boolean usePlayerLanguage;
+
+    public I18n(ComponentAudiences audiences, Language defaultLanguage, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter, boolean usePlayerLanguage) {
+        this.audiences = audiences;
+        this.defaultLanguage = defaultLanguage;
+        this.stringInterpreter = stringInterpreter;
+        this.componentInterpreter = componentInterpreter;
+        this.usePlayerLanguage = usePlayerLanguage;
+    }
 
     static {
         try {
@@ -52,167 +51,8 @@ public class I18n {
         } catch (NoSuchMethodError ignored) {}
     }
 
-    public I18n() {}
-
-    public I18n(File defaultLanguageFile) {
-        setDefaultLanguage(defaultLanguageFile);
-    }
-
-    public I18n(JavaPlugin plugin) {
-        loadDefaultResourceLanguage(plugin);
-        loadLanguages(plugin);
-        setDefaultLanguage(getDefaultLanguageCode(plugin));
-    }
-
-    public void loadLanguage(File languageFile) {
-        if (languageMap.containsKey(FilenameUtils.removeExtension(languageFile.getName())))
-            return;
-        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(defaultResourceLanguage, languageFile, log));
-        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
-    }
-
-    public void loadLanguage(String languageResourcePath, InputStream languageResourceStream, File dataFolder) {
-        File languageResource = new File(dataFolder, "defaults/" + languageResourcePath);
-        File languageFile = new File(dataFolder, languageResourcePath);
-        try {
-            FileUtils.copyInputStreamToFile(languageResourceStream, languageResource);
-        } catch (IOException e) {
-            log.error("An exception occurred trying to load {} language", languageResourcePath, e);
-        }
-        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(new BaseLanguage(languageResource, log), languageFile, log));
-        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
-    }
-
-    public void loadLanguage(String languageResourcePath, JavaPlugin plugin) {
-        File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
-        if (!languageFile.exists())
-            plugin.saveResource(languageResourcePath, false);
-        File languageResource = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
-        try {
-            FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResource);
-        } catch (IOException e) {
-            log.error("An exception occurred trying to load {} language", languageResourcePath, e);
-        }
-        languageMap.put(FilenameUtils.removeExtension(languageFile.getName()), new BaseLanguage(new BaseLanguage(languageResource, log), languageFile, log));
-        log.info("Loaded {} language", FilenameUtils.removeExtension(languageFile.getName()));
-    }
-
-    public void loadLanguages(JavaPlugin plugin) {
-        File langFolder = new File(plugin.getDataFolder(), "lang");
-        if (!langFolder.exists())
-            langFolder.mkdirs();
-
-        for (File file : langFolder.listFiles()) {
-            if (!file.isFile()) continue;
-            loadLanguage(file);
-        }
-    }
-
-    public void loadLanguages(File langFolder) {
-        if (!langFolder.exists())
-            langFolder.mkdirs();
-
-        for (File file : langFolder.listFiles()) {
-            if (!file.isFile()) continue;
-            loadLanguage(file);
-        }
-    }
-
-    public void loadDefaultResourceLanguage(JavaPlugin plugin) {
-        File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
-        try {
-            FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
-            YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(configResource);
-
-            if (!pluginConfig.contains("lang"))
-                return;
-
-            File languageResource = new File(plugin.getDataFolder(), "defaults/lang/" + pluginConfig.getString("lang"));
-            FileUtils.copyInputStreamToFile(plugin.getResource("lang/" + pluginConfig.getString("lang")), languageResource);
-            defaultResourceLanguage = new BaseLanguage(languageResource, log);
-        } catch (IOException e) {
-            log.error("An exception occurred trying to load default language from resources", e);
-        }
-    }
-
-    public void loadDefaultResourceLanguage(File dataFolder, JavaPlugin plugin, Function<String, InputStream> resourceProvider) {
-        File configResource = new File(plugin.getDataFolder(),  "defaults/config.yml");
-        try {
-            FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configResource);
-            YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(configResource);
-
-            if (!pluginConfig.contains("lang"))
-                return;
-
-            File languageResource = new File(dataFolder, "defaults/lang/" + pluginConfig.getString("lang"));
-            FileUtils.copyInputStreamToFile(resourceProvider.apply("lang/" + pluginConfig.getString("lang")), languageResource);
-            defaultResourceLanguage = new BaseLanguage(languageResource, log);
-        } catch (IOException e) {
-            log.error("An exception occurred trying to load default plugin language", e);
-        }
-    }
-
-    @Nullable
-    public String getDefaultLanguageCode(JavaPlugin plugin) {
-        if (!plugin.getConfig().contains("lang", true)) {
-            log.warn("Plugin config doesn't contain default language path");
-            log.warn("Absence of default language may and will cause issues");
-            return null;
-        }
-
-        return FilenameUtils.removeExtension(plugin.getConfig().getString("lang"));
-    }
-
-    public void setDefaultLanguage(@Nullable File languageFile) {
-        if (languageFile == null || !languageFile.exists()) {
-            log.error("Couldn't set default language to {}", languageFile != null ? languageFile.getName() : "null");
-            if (defaultLanguage == null) {
-                log.warn("Will try to get language file from plugins resources");
-                if (defaultResourceLanguage != null) {
-                    defaultLanguage = defaultResourceLanguage;
-                    log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
-                    return;
-                }
-                log.warn("Couldn't get language file from plugin's resources");
-            }
-            return;
-        }
-
-        defaultLanguage = defaultResourceLanguage != null
-                ? new BaseLanguage(defaultResourceLanguage, languageFile, log)
-                : new BaseLanguage(languageFile, log);
-        log.info("Default language is set to {}", defaultLanguage.getLanguageCode());
-    }
-
-    public void setDefaultLanguage(String languageCode) {
-        if (!languageMap.containsKey(languageCode)) {
-            log.error("Couldn't set default language to {}", languageCode);
-            if (defaultLanguage == null) {
-                log.warn("Will try to get language file from plugins resources");
-                if (defaultResourceLanguage != null) {
-                    defaultLanguage = defaultResourceLanguage;
-                    log.warn("Using {} as default language", defaultResourceLanguage.getLanguageCode());
-                    return;
-                }
-                log.warn("Couldn't get language file from plugin's resources");
-            }
-            return;
-        }
-
-        defaultLanguage = languageMap.get(languageCode);
-        log.info("Default language is set to {}", defaultLanguage.getLanguageCode());
-    }
-
-    public void setStringInterpreter(StringInterpreter stringInterpreter) {
-        this.stringInterpreter = stringInterpreter;
-    }
-
-    public void setComponentInterpreter(ComponentInterpreter componentInterpreter) {
-        this.componentInterpreter = componentInterpreter;
-    }
-
-    public void clearLanguageMap() {
-        languageMap.clear();
+    public ComponentAudiences getAudiences() {
+        return audiences;
     }
 
     public Map<String, Language> getLanguageMap() {
@@ -246,15 +86,15 @@ public class I18n {
     public LocalizationAccessor accessor(@Nullable Locale locale, String path) {
         Language language = getLanguage(locale);
         if (language.getStrings().isList(path))
-            return new ListLocalizationAccessor(path, language, string(), component());
-        return new StringLocalizationAccessor(path, language, string(), component());
+            return new ListLocalizationAccessor(path, language, string(), component(), audiences);
+        return new StringLocalizationAccessor(path, language, string(), component(), audiences);
     }
 
     public LocalizationAccessor accessor(@Nullable Object localeContainer, String path) {
         Language language = getLanguage(I18n.toLocale(localeContainer));
         if (language.getStrings().isList(path))
-            return new ListLocalizationAccessor(path, language, string(), component());
-        return new StringLocalizationAccessor(path, language, string(), component());
+            return new ListLocalizationAccessor(path, language, string(), component(), audiences);
+        return new StringLocalizationAccessor(path, language, string(), component(), audiences);
     }
 
     public static String reduceRawString(Collection<String> stringList) {

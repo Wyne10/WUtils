@@ -2,10 +2,7 @@ package me.wyne.wutils.i18n.language.access;
 
 import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.Language;
-import me.wyne.wutils.i18n.language.component.LocalizedComponent;
-import me.wyne.wutils.i18n.language.component.LocalizedString;
-import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedComponent;
-import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedString;
+import me.wyne.wutils.i18n.language.component.*;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.StringInterpreter;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
@@ -24,12 +21,14 @@ public class ListLocalizationAccessor implements LocalizationAccessor {
     private final Language language;
     private final StringInterpreter stringInterpreter;
     private final ComponentInterpreter componentInterpreter;
+    private final ComponentAudiences audiences;
 
-    public ListLocalizationAccessor(String path, Language language, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter) {
+    public ListLocalizationAccessor(String path, Language language, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter, ComponentAudiences audiences) {
         this.path = path;
         this.language = language;
         this.stringInterpreter = stringInterpreter;
         this.componentInterpreter = componentInterpreter;
+        this.audiences = audiences;
     }
 
     @Override
@@ -125,72 +124,72 @@ public class ListLocalizationAccessor implements LocalizationAccessor {
 
     @Override
     public LocalizedComponent getComponent(TextReplacement... textReplacements) {
-        return lc(language, path, I18n.reduceComponent(getComponentList(textReplacements)));
+        return lc(language, path, I18n.reduceComponent(getComponentList(textReplacements)), audiences);
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player)), player);
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player)), audiences, player);
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player, TextReplacement... textReplacements) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player,textReplacements)), player);
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player,textReplacements)), audiences, player);
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player)), player);
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player)), audiences, player);
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player, TextReplacement... textReplacements) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player, textReplacements)), player);
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(player, textReplacements)), audiences, player);
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(sender)), I18n.toPlayer(sender));
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(sender)), audiences, I18n.toPlayer(sender));
     }
 
     @Override
     public PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender, TextReplacement... textReplacements) {
-        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(sender, textReplacements)), I18n.toPlayer(sender));
+        return plc(language, path, I18n.reduceComponent(getPlaceholderComponentList(sender, textReplacements)), audiences, I18n.toPlayer(sender));
     }
 
     @Override
     public List<LocalizedComponent> getComponentList(TextReplacement... textReplacements) {
-        return componentInterpreter.getComponentList(language, path, textReplacements).stream().map(component -> lc(language, path, component)).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getComponentList(language, path, textReplacements).stream().map(component -> lc(language, path, component, audiences)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player) {
-        return componentInterpreter.getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, audiences, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, TextReplacement... textReplacements) {
-        return componentInterpreter.getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, audiences, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player) {
-        return componentInterpreter.getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, player, path).stream().map(component -> plc(language, path, component, audiences, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, TextReplacement... textReplacements) {
-        return componentInterpreter.getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, player)).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, player, path, textReplacements).stream().map(component -> plc(language, path, component, audiences, player)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender) {
-        return componentInterpreter.getPlaceholderComponentList(language, I18n.toPlayer(sender), path).stream().map(component -> plc(language, path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, I18n.toPlayer(sender), path).stream().map(component -> plc(language, path, component, audiences, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, TextReplacement... textReplacements) {
-        return componentInterpreter.getPlaceholderComponentList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plc(language, path, component, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
+        return componentInterpreter.getPlaceholderComponentList(language, I18n.toPlayer(sender), path, textReplacements).stream().map(component -> plc(language, path, component, audiences, I18n.toPlayer(sender))).collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

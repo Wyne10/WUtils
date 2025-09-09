@@ -26,10 +26,12 @@ import java.util.function.Predicate;
 public class LocalizedComponent extends BaseLocalized<Component, ComponentInterpreter> implements ComponentLike {
 
     private final Component component;
+    private final ComponentAudiences audiences;
 
-    public LocalizedComponent(ComponentInterpreter interpreter, Language language, String path, Component component) {
+    public LocalizedComponent(ComponentInterpreter interpreter, Language language, String path, Component component, ComponentAudiences audiences) {
         super(interpreter, language, path);
         this.component = component;
+        this.audiences = audiences;
     }
 
     public void sendMessage(Audience audience) {
@@ -37,51 +39,51 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     }
 
     public void sendMessage(Player player) {
-        I18n.global.audiences.player(player).sendMessage(component);
+        audiences.player(player).sendMessage(component);
     }
 
     public void sendMessage(CommandSender sender) {
-        I18n.global.audiences.sender(sender).sendMessage(component);
+        audiences.sender(sender).sendMessage(component);
     }
 
     public void sendMessage(UUID playerId) {
-        I18n.global.audiences.player(playerId).sendMessage(component);
+        audiences.player(playerId).sendMessage(component);
     }
 
     public void sendMessageAll() {
-        I18n.global.audiences.all().sendMessage(component);
+        audiences.all().sendMessage(component);
     }
 
     public void sendMessage(Predicate<CommandSender> filter) {
-        I18n.global.audiences.filter(filter).sendMessage(component);
+        audiences.filter(filter).sendMessage(component);
     }
 
     public void sendMessageConsole() {
-        I18n.global.audiences.console().sendMessage(component);
+        audiences.console().sendMessage(component);
     }
 
     public void sendMessage(Key permission) {
-        I18n.global.audiences.permission(permission).sendMessage(component);
+        audiences.permission(permission).sendMessage(component);
     }
 
     public void sendMessage(String permission) {
-        I18n.global.audiences.permission(permission).sendMessage(component);
+        audiences.permission(permission).sendMessage(component);
     }
 
     public void sendMessagePlayers() {
-        I18n.global.audiences.players().sendMessage(component);
+        audiences.players().sendMessage(component);
     }
 
     public void sendMessageServer(String serverName) {
-        I18n.global.audiences.server(serverName).sendMessage(component);
+        audiences.server(serverName).sendMessage(component);
     }
 
     public void sendMessageWorld(Key worldKey) {
-        I18n.global.audiences.world(worldKey).sendMessage(component);
+        audiences.world(worldKey).sendMessage(component);
     }
 
     public void sendActionBar(Player player) {
-        I18n.global.audiences.player(player).sendActionBar(component);
+        audiences.player(player).sendActionBar(component);
     }
 
     @Override
@@ -134,7 +136,7 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         Component result = component;
         for (ComponentReplacement replacement : componentReplacements)
             result = replacement.replace(result);
-        return new LocalizedComponent(getInterpreter(), getLanguage(), getPath(), result);
+        return new LocalizedComponent(getInterpreter(), getLanguage(), getPath(), result, audiences);
     }
 
     @Override

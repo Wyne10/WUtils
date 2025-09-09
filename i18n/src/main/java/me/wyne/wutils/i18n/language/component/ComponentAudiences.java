@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public interface ComponentAudience {
+public interface ComponentAudiences {
     Audience player(Player player);
 
     Audience sender(CommandSender sender);

@@ -2,74 +2,71 @@ package me.wyne.wutils.i18n.language.component;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class BukkitComponentAudience implements ComponentAudience {
-
-    private final BukkitAudiences audiences;
-
-    public BukkitComponentAudience(BukkitAudiences audiences) {
-        this.audiences = audiences;
-    }
+public class NativeComponentAudiences implements ComponentAudiences {
 
     @Override
     public Audience player(Player player) {
-        return audiences.player(player);
+        return player;
     }
 
     @Override
     public Audience sender(CommandSender sender) {
-        return audiences.sender(sender);
+        return sender;
     }
 
     @Override
     public Audience player(UUID playerId) {
-        return audiences.player(playerId);
+        Player player = Bukkit.getPlayer(playerId);
+        return player;
     }
 
     @Override
     public Audience all() {
-        return audiences.all();
+        return Bukkit.getServer();
     }
 
     @Override
     public Audience filter(Predicate<CommandSender> filter) {
-        return audiences.filter(filter);
+        return Audience.audience(Bukkit.getOnlinePlayers().stream()
+                .filter(filter)
+                .toList());
     }
 
     @Override
     public Audience console() {
-        return audiences.console();
+        return Bukkit.getConsoleSender();
     }
 
     @Override
     public Audience permission(Key permission) {
-        return audiences.permission(permission);
+        return permission(permission.namespace() + '.' + permission.value());
     }
 
     @Override
     public Audience permission(String permission) {
-        return audiences.permission(permission);
+        return filter(sender -> sender.hasPermission(permission));
     }
 
     @Override
     public Audience players() {
-        return audiences.players();
+        return Audience.audience(Bukkit.getOnlinePlayers());
     }
 
     @Override
     public Audience server(String serverName) {
-        return audiences.server(serverName);
+        return Bukkit.getServer();
     }
 
     @Override
     public Audience world(Key worldKey) {
-        return audiences.world(worldKey);
+        return Bukkit.getWorld(worldKey.value());
     }
 
 }
