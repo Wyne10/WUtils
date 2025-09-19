@@ -10,6 +10,9 @@ import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.StringInterpreter;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,13 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
     private ComponentInterpreter componentInterpreter = new LegacyInterpreter(new EmptyValidator());
 
     private boolean usePlayerLanguage = true;
+
+    static {
+        try {
+            Configurator.setLevel("ru.vyarus", Level.WARN);
+            Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
+        } catch (NoSuchMethodError ignored) {}
+    }
 
     public T setLog(Logger log) {
         this.log = log;
