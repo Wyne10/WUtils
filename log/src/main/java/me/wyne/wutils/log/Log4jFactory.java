@@ -69,7 +69,8 @@ public final class Log4jFactory {
             context.updateLoggers();
 
             existingLoggers.putIfAbsent(plugin.getClass(), new Log4jLogger(LoggerFactory.getLogger(plugin.getLogger().getName())));
-        } catch (NoSuchMethodError ignored) {
+        } catch (NoSuchMethodError e) {
+            log.debug("Failed to initialize Log4jLogger, using JulLogger", e);
             existingLoggers.putIfAbsent(plugin.getClass(), new JulLogger(fallback));
         }
 

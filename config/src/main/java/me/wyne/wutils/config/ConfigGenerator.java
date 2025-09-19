@@ -52,6 +52,7 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
+            log.debug("Generated default WUtils config");
         } catch (IOException e) {
             log.error("An exception occurred trying to write WUtils config", e);
         }
@@ -64,6 +65,7 @@ public class ConfigGenerator {
                 .vars(replaceVars)
                 .deleteProps(deleteProps)
                 .update();
+        log.debug("Merged WUtils config");
     }
 
 }

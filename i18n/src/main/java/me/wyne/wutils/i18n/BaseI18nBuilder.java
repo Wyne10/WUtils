@@ -123,7 +123,7 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         if (languageMap.containsKey(languageCode))
             return (T) this;
         languageMap.put(languageCode, new BaseLanguage(defaultLanguage, languageFile, log));
-        log.info("Loaded {} language", languageCode);
+        log.debug("Loaded {} language", languageCode);
         return (T) this;
     }
 

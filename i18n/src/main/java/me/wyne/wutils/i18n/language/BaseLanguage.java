@@ -56,7 +56,7 @@ public class BaseLanguage implements Language {
                 .backup(false)
                 .update();
         if (report.isConfigChanged())
-            log.info("Merged missing strings to {}", languageFile.getName());
+            log.debug("Merged missing strings to {}", languageFile.getName());
     }
 
     @Override

@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.javatuples:javatuples:1.2'
 }
 
-version = '2.9.4'
+version = '2.9.5'
 
 publishing {
     publications {
