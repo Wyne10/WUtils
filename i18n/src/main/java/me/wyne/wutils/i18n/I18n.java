@@ -11,9 +11,6 @@ import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -45,13 +42,6 @@ public class I18n {
         this.stringInterpreter = stringInterpreter;
         this.componentInterpreter = componentInterpreter;
         this.usePlayerLanguage = usePlayerLanguage;
-    }
-
-    static {
-        try {
-            Configurator.setLevel("ru.vyarus", Level.WARN);
-            Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
-        } catch (NoSuchMethodError ignored) {}
     }
 
     public ComponentAudiences getAudiences() {

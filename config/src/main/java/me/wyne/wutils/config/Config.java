@@ -84,6 +84,7 @@ public class Config {
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
+                        log.debug("Reloaded WUtils config");
                     } catch (IllegalAccessException e) {
                         log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
@@ -105,6 +106,7 @@ public class Config {
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
+                        log.debug("Reloaded WUtils config for object '{}'", object.getClass().getSimpleName());
                     } catch (IllegalAccessException e) {
                         log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
