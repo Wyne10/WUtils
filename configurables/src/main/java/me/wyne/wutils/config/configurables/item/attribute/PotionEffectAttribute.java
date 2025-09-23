@@ -42,7 +42,7 @@ public class PotionEffectAttribute extends ConfigurableAttribute<PotionEffect> i
                     new PotionEffect(
                             type != null ? type : PotionEffectType.SPEED,
                             section.getInt("duration", 20),
-                            section.getInt("amplifier", 1),
+                            section.getInt("amplifier", 0),
                             section.getBoolean("ambient", false),
                             section.getBoolean("particles", false),
                             section.getBoolean("icon", true)
@@ -59,7 +59,7 @@ public class PotionEffectAttribute extends ConfigurableAttribute<PotionEffect> i
                     new PotionEffect(
                             type != null ? type : PotionEffectType.SPEED,
                             Integer.parseInt(args.get(1, "20")),
-                            Integer.parseInt(args.get(2, "1")),
+                            Integer.parseInt(args.get(2, "0")),
                             Boolean.parseBoolean(args.get(3, "false")),
                             Boolean.parseBoolean(args.get(4, "false")),
                             Boolean.parseBoolean(args.get(5, "true"))

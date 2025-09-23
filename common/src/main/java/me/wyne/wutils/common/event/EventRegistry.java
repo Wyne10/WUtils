@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.event;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -59,7 +60,7 @@ public class EventRegistry implements Listener, AutoCloseable {
                                 try {
                                     method.invoke(listener, calledEvent);
                                 } catch (Exception e) {
-                                    plugin.getLogger().severe(e.getMessage());
+                                    plugin.getLogger().severe(ExceptionUtils.getStackTrace(e));
                                 }
                             });
                         });
