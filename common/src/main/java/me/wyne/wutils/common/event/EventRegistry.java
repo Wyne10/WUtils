@@ -39,7 +39,15 @@ public class EventRegistry implements Listener, AutoCloseable {
                         handlers.get(listener).put(registerableEvent, new HashSet<>());
                     method.setAccessible(true);
                     handlers.get(listener).get(registerableEvent).add(method);
+                    applyEventHandlerTimer(listener, registerableEvent, method);
                 });
+    }
+
+    private void applyEventHandlerTimer(RegisterableListener listener, RegisterableEvent event, Method method) {
+        if (!method.isAnnotationPresent(EventTimer.class)) return;
+        var ticks =  method.getDeclaredAnnotation(EventTimer.class).ticks();
+        if (ticks <= 0) return;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> handlers.get(listener).get(event).remove(method), ticks);
     }
 
     @Override
