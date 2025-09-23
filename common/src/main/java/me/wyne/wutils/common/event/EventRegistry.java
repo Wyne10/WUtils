@@ -13,8 +13,8 @@ public class EventRegistry implements Listener, AutoCloseable {
 
     private final JavaPlugin plugin;
 
-    private final Map<Class<? extends Event>, Set<RegisterableListener>> registry = new HashMap<>();
-    private final Map<RegisterableListener, Map<Class<? extends Event>, Set<Method>>> handlers = new HashMap<>();
+    private final Map<RegisterableEvent, Set<RegisterableListener>> registry = new HashMap<>();
+    private final Map<RegisterableListener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
 
     public EventRegistry(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -23,19 +23,21 @@ public class EventRegistry implements Listener, AutoCloseable {
     public void register(RegisterableListener listener) {
         Arrays.stream(listener.getClass().getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(EventHandler.class))
-                .forEach(handler -> {
-                    var event = handler.getParameterTypes()[0].asSubclass(Event.class);
-                    if (!registry.containsKey(event)) {
-                        registry.put(event, new HashSet<>());
-                        registerEvent(event, handler.getDeclaredAnnotation(EventHandler.class));
+                .forEach(method -> {
+                    var event = method.getParameterTypes()[0].asSubclass(Event.class);
+                    var handler = method.getDeclaredAnnotation(EventHandler.class);
+                    var registerableEvent = new RegisterableEvent(event, handler);
+                    if (!registry.containsKey(registerableEvent)) {
+                        registry.put(registerableEvent, new HashSet<>());
+                        registerEvent(registerableEvent);
                     }
-                    registry.get(event).add(listener);
+                    registry.get(registerableEvent).add(listener);
                     if (!handlers.containsKey(listener))
                         handlers.put(listener, new HashMap<>());
-                    if (!handlers.get(listener).containsKey(event))
-                        handlers.get(listener).put(event, new HashSet<>());
-                    handler.setAccessible(true);
-                    handlers.get(listener).get(event).add(handler);
+                    if (!handlers.get(listener).containsKey(registerableEvent))
+                        handlers.get(listener).put(registerableEvent, new HashSet<>());
+                    method.setAccessible(true);
+                    handlers.get(listener).get(registerableEvent).add(method);
                 });
     }
 
@@ -45,13 +47,13 @@ public class EventRegistry implements Listener, AutoCloseable {
         handlers.clear();
     }
 
-    private void registerEvent(Class<? extends Event> event, EventHandler parameters) {
+    private void registerEvent(RegisterableEvent event) {
         Bukkit.getPluginManager().registerEvent(
-                event,
+                event.event(),
                 this,
-                parameters.priority(),
+                event.handler().priority(),
                 (calledListener, calledEvent) -> {
-                    if (event.isInstance(calledEvent)) {
+                    if (event.event().isInstance(calledEvent)) {
                         registry.get(event).forEach(listener -> {
                             handlers.get(listener).get(event).forEach(method -> {
                                 try {
@@ -64,7 +66,7 @@ public class EventRegistry implements Listener, AutoCloseable {
                     }
                 },
                 plugin,
-                parameters.ignoreCancelled()
+                event.handler().ignoreCancelled()
         );
     }
 
