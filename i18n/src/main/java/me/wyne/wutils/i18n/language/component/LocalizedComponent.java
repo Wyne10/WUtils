@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n.language.component;
 
-import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
@@ -106,12 +105,6 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
 
     public String plainText() {
         return PlainTextComponentSerializer.plainText().serialize(component);
-    }
-
-    public String plainValid() {
-        if (I18n.IS_PLAIN_TEXT_UNAVAILABLE)
-            return plain();
-        return plainText();
     }
 
     public String miniMessage() {

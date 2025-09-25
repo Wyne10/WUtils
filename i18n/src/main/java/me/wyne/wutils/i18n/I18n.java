@@ -11,7 +11,6 @@ import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class I18n {
 
     public static I18n global;
-    public static final boolean IS_PLAIN_TEXT_UNAVAILABLE = Bukkit.getVersion().contains("1.16");
 
     private final ComponentAudiences audiences;
 
