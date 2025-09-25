@@ -5,7 +5,7 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public record ItemAttributeContext(Player player, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
+public record ItemAttributeContext(@Nullable Player player, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
 
     public static final ItemAttributeContext EMPTY = new ItemAttributeContext();
 
@@ -13,7 +13,7 @@ public record ItemAttributeContext(Player player, TextReplacement[] textReplacem
         this(null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
-    public ItemAttributeContext(Player player) {
+    public ItemAttributeContext(@Nullable Player player) {
         this(player, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
