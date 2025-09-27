@@ -34,8 +34,9 @@ public class I18n {
 
     private final boolean usePlayerLanguage;
 
-    public I18n(ComponentAudiences audiences, Language defaultLanguage, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter, boolean usePlayerLanguage) {
+    public I18n(ComponentAudiences audiences, Map<String, Language> languageMap, Language defaultLanguage, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter, boolean usePlayerLanguage) {
         this.audiences = audiences;
+        this.languageMap.putAll(languageMap);
         this.defaultLanguage = defaultLanguage;
         this.stringInterpreter = stringInterpreter;
         this.componentInterpreter = componentInterpreter;

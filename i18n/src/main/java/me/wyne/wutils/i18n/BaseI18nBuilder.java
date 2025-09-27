@@ -155,7 +155,7 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
     }
 
     public I18n build() {
-        return new I18n(componentAudiences, getDefaultLanguage(), stringInterpreter, componentInterpreter, usePlayerLanguage);
+        return new I18n(componentAudiences, languageMap, getDefaultLanguage(), stringInterpreter, componentInterpreter, usePlayerLanguage);
     }
 
 }
