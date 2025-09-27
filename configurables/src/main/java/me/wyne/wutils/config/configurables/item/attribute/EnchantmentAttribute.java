@@ -47,7 +47,7 @@ public class EnchantmentAttribute extends ConfigurableAttribute<EnchantmentAttri
 
         @Override
         public EnchantmentAttribute fromString(String key, String string) {
-            var args = new Args(string, ":");
+            var args = new Args(string, " ");
             return new EnchantmentAttribute(
                     key,
                     new EnchantmentData(
