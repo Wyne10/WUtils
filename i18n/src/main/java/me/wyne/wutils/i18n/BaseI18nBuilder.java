@@ -9,15 +9,18 @@ import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.StringInterpreter;
 import me.wyne.wutils.i18n.language.validation.EmptyValidator;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,6 +127,20 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
             return (T) this;
         languageMap.put(languageCode, new BaseLanguage(defaultLanguage, languageFile, log));
         log.debug("Loaded {} language", languageCode);
+        return (T) this;
+    }
+
+    public T loadLanguage(JavaPlugin plugin, String languageResourcePath) {
+        File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
+        if (!languageFile.exists())
+            plugin.saveResource(languageResourcePath, false);
+        File languageResourceFile = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
+        try {
+            FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResourceFile);
+        } catch (IOException e) {
+            getLog().error("An exception occurred trying to write resource {} to a file", languageResourcePath, e);
+        }
+        loadLanguage(new BaseLanguage(languageResourceFile, getLog()), languageFile);
         return (T) this;
     }
 

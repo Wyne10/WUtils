@@ -1,6 +1,5 @@
 package me.wyne.wutils.i18n;
 
-import me.wyne.wutils.i18n.language.BaseLanguage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,13 +17,7 @@ public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
     }
 
     public PluginI18nBuilder loadLanguage(String languageResourcePath) {
-        File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
-        if (!languageFile.exists())
-            plugin.saveResource(languageResourcePath, false);
-        File languageResourceFile = new File(plugin.getDataFolder(), "defaults/" + languageResourcePath);
-        writeResource(languageResourcePath, languageResourceFile);
-        loadLanguage(new BaseLanguage(languageResourceFile, getLog()), languageFile);
-        return this;
+        return loadLanguage(plugin, languageResourcePath);
     }
 
     private void loadDefaultLanguage() {
