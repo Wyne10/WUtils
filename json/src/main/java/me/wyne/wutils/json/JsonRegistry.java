@@ -27,6 +27,14 @@ public class JsonRegistry {
         }
     }
 
+    public void unregisterObject(Object object) {
+        for (Field field : object.getClass().getDeclaredFields()) {
+            if (!field.isAnnotationPresent(JSON.class))
+                continue;
+            objectMap.remove(field.getAnnotation(JSON.class).path());
+        }
+    }
+
     public void registerField(Object holder, Field field) {
         register(holder, field, field.getAnnotation(JSON.class).path());
     }
