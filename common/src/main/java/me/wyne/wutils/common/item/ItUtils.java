@@ -2,10 +2,12 @@ package me.wyne.wutils.common.item;
 
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,6 +31,13 @@ public final class ItUtils {
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
         }
         item.setItemMeta((ItemMeta) damageable);
+    }
+
+    public static ItemStack saveBlockState(ItemStack item, BlockState blockState) {
+        if (!(item.getItemMeta() instanceof BlockStateMeta blockStateMeta)) return item;
+        blockStateMeta.setBlockState(blockState);
+        item.setItemMeta(blockStateMeta);
+        return item;
     }
 
 }
