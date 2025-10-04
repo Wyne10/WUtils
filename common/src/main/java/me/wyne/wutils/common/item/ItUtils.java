@@ -4,13 +4,18 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class ItUtils {
@@ -33,11 +38,32 @@ public final class ItUtils {
         item.setItemMeta((ItemMeta) damageable);
     }
 
+    public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event) {
+        var originalItems = drops.stream().map(item -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), item)).toList();
+        var items = new ArrayList<>(originalItems);
+        var dropItemEvent = new BlockDropItemEvent(event.getBlock(), event.getBlock().getState(), event.getPlayer(), items);
+        dropItemEvent.callEvent();
+        if (dropItemEvent.isCancelled()) {
+            items.forEach(Entity::remove);
+            return;
+        }
+        if (!items.containsAll(originalItems)) {
+            originalItems.stream()
+                    .filter(item -> !items.contains(item))
+                    .forEach(Entity::remove);
+        }
+    }
+
     public static ItemStack saveBlockState(ItemStack item, BlockState blockState) {
         if (!(item.getItemMeta() instanceof BlockStateMeta blockStateMeta)) return item;
         blockStateMeta.setBlockState(blockState);
         item.setItemMeta(blockStateMeta);
         return item;
+    }
+
+    public static ItemStack saveBlockState(ItemStack item, BlockState blockState, BlockStateMetaExtension extension) {
+        saveBlockState(item, blockState);
+        return extension.extend(item, blockState);
     }
 
 }
