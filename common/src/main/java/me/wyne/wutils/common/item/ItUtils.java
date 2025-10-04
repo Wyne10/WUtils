@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.item;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class ItUtils {
@@ -65,5 +67,15 @@ public final class ItUtils {
         saveBlockState(item, blockState);
         return extension.extend(item, blockState);
     }
+
+    public static ItemStack saveBlockStateExtended(ItemStack item, BlockState blockState) {
+        var extension = BLOCK_STATE_META_EXTENSIONS.get(blockState.getType());
+        if (extension == null) return saveBlockState(item, blockState);
+        return saveBlockState(item, blockState, extension);
+    }
+
+    public static final Map<Material, BlockStateMetaExtension> BLOCK_STATE_META_EXTENSIONS = Map.of(
+            Material.SPAWNER, new SpawnerEntityNameExtension()
+    );
 
 }
