@@ -1,5 +1,6 @@
-package me.wyne.wutils.common;
+package me.wyne.wutils.common.vector;
 
+import me.wyne.wutils.common.Args;
 import org.bukkit.util.Vector;
 
 public final class VectorUtils {

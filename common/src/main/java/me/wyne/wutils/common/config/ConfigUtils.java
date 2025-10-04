@@ -1,5 +1,6 @@
-package me.wyne.wutils.common;
+package me.wyne.wutils.common.config;
 
+import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 

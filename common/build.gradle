@@ -4,12 +4,12 @@ plugins {
 
 repositories {
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
 }
 
 dependencies {
-    compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'dev.jorel:commandapi-bukkit-core:9.4.2'
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 }

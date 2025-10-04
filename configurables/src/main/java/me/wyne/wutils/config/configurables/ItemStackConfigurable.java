@@ -1,6 +1,6 @@
 package me.wyne.wutils.config.configurables;
 
-import me.wyne.wutils.common.ConfigUtils;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.MapUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
