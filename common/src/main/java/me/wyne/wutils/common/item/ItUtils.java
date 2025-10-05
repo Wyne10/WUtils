@@ -63,19 +63,30 @@ public final class ItUtils {
         return item;
     }
 
-    public static ItemStack saveBlockState(ItemStack item, BlockState blockState, BlockStateMetaExtension extension) {
+    public static ItemStack saveBlockState(ItemStack item, BlockState blockState, TileStateLoader loader) {
         saveBlockState(item, blockState);
-        return extension.extend(item, blockState);
+        return loader.save(item, blockState);
     }
 
     public static ItemStack saveBlockStateExtended(ItemStack item, BlockState blockState) {
-        var extension = BLOCK_STATE_META_EXTENSIONS.get(blockState.getType());
-        if (extension == null) return saveBlockState(item, blockState);
-        return saveBlockState(item, blockState, extension);
+        var loader = TILE_STATE_LOADERS.get(blockState.getType());
+        if (loader == null) return saveBlockState(item, blockState);
+        return saveBlockState(item, blockState, loader);
     }
 
-    public static final Map<Material, BlockStateMetaExtension> BLOCK_STATE_META_EXTENSIONS = Map.of(
-            Material.SPAWNER, new SpawnerEntityNameExtension()
+    public static BlockState loadBlockState(ItemStack item, BlockState blockState) {
+        if (!(item.getItemMeta() instanceof BlockStateMeta)) return blockState;
+        var loader = TILE_STATE_LOADERS.get(blockState.getType());
+        if (loader == null) return blockState;
+        return loadBlockState(item, blockState, loader);
+    }
+
+    public static BlockState loadBlockState(ItemStack item, BlockState blockState, TileStateLoader loader) {
+        return loader.load(item, blockState);
+    }
+
+    public static final Map<Material, TileStateLoader> TILE_STATE_LOADERS = Map.of(
+            Material.SPAWNER, new SpawnerLoader()
     );
 
 }
