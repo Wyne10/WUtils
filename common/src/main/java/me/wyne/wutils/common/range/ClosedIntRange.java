@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ClosedIntRange extends Range<Integer> {
 
     public ClosedIntRange(Integer min, Integer max) {
-        super(Math.min(min, max), Math.max(min, max), (min + max) / 2);
+        super(Math.min(min, max), Math.max(min, max), (min + max) / 2, max - min);
     }
 
     @Override
