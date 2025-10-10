@@ -11,12 +11,14 @@ public class VectorEdgeIterator implements Iterator<Vector> {
     private final Vector max;
 
     private int edgeIndex = 0;
-    private double x, y, z, step;
+    private double x, y, z;
+    private final double step;
 
     public VectorEdgeIterator(Vector min, Vector max, double step) {
         this.min = min;
         this.max = max;
         this.step = step;
+        resetEdge();
     }
 
     @SuppressWarnings("DuplicateBranchesInSwitch")
