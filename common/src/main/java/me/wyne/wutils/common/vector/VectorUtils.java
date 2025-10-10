@@ -23,4 +23,20 @@ public final class VectorUtils {
         return vector.getX() + "," + vector.getY() + "," + vector.getZ();
     }
 
+    public static Vector getMin(Vector vector1, Vector vector2) {
+        return new Vector(
+                Math.min(vector1.getX(), vector2.getX()),
+                Math.min(vector1.getY(), vector2.getY()),
+                Math.min(vector1.getZ(), vector2.getZ())
+        );
+    }
+
+    public static Vector getMax(Vector vector1, Vector vector2) {
+        return new Vector(
+                Math.max(vector1.getX(), vector2.getX()),
+                Math.max(vector1.getY(), vector2.getY()),
+                Math.max(vector1.getZ(), vector2.getZ())
+        );
+    }
+
 }

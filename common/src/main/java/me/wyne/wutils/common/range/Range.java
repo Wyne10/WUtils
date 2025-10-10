@@ -1,6 +1,6 @@
 package me.wyne.wutils.common.range;
 
-public abstract class Range<T> {
+public abstract class Range<T> implements Iterable<T> {
 
     private final T min;
     private final T max;
@@ -20,5 +20,7 @@ public abstract class Range<T> {
     }
 
     public abstract T getRandom();
+
+    public abstract boolean contains(T value);
 
 }
