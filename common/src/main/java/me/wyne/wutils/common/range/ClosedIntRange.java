@@ -8,12 +8,17 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ClosedIntRange extends Range<Integer> {
 
     public ClosedIntRange(Integer min, Integer max) {
-        super(Math.min(min, max), Math.max(min, max));
+        super(Math.min(min, max), Math.max(min, max), (min + max) / 2);
     }
 
     @Override
     public Integer getRandom() {
         return ThreadLocalRandom.current().nextInt(getMin(), getMax() + 1);
+    }
+
+    @Override
+    public Integer getCenter() {
+        return (getMin() + getMax()) / 2;
     }
 
     @Override

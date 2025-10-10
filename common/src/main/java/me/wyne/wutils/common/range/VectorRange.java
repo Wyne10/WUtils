@@ -10,13 +10,14 @@ import java.util.concurrent.ThreadLocalRandom;
 public class VectorRange extends Range<Vector> {
 
     public VectorRange(Vector min, Vector max) {
-        super(VectorUtils.getMin(min, max), VectorUtils.getMax(min, max));
+        super(VectorUtils.getMin(min, max), VectorUtils.getMax(min, max), min.getMidpoint(max));
     }
 
     public VectorRange(Vector center, double width, double height, double depth) {
         super(
                 center.clone().subtract(new Vector(width / 2, height / 2, depth / 2)),
-                center.clone().add(new Vector(width / 2, height / 2, depth / 2))
+                center.clone().add(new Vector(width / 2, height / 2, depth / 2)),
+                center
         );
     }
 
