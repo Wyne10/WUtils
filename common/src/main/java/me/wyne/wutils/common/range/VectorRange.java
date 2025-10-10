@@ -13,6 +13,17 @@ public class VectorRange extends Range<Vector> {
         super(VectorUtils.getMin(min, max), VectorUtils.getMax(min, max));
     }
 
+    public VectorRange(Vector center, double width, double height, double depth) {
+        super(
+                center.clone().subtract(new Vector(width / 2, height / 2, depth / 2)),
+                center.clone().add(new Vector(width / 2, height / 2, depth / 2))
+        );
+    }
+
+    public VectorRange(Vector center, double radius) {
+        this(center, radius, radius, radius);
+    }
+
     @Override
     public Vector getRandom() {
         return new Vector(

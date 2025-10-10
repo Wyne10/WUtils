@@ -16,6 +16,18 @@ public class LocationRange extends VectorRange {
         this.world = world;
     }
 
+    public LocationRange(Location center, double width, double height, double depth) {
+        super(
+                center.toVector().clone().subtract(new Vector(width / 2, height / 2, depth / 2)),
+                center.toVector().clone().add(new Vector(width / 2, height / 2, depth / 2))
+        );
+        this.world = center.getWorld();
+    }
+
+    public LocationRange(Location center, double radius) {
+        this(center, radius, radius, radius);
+    }
+
     public boolean contains(Location location) {
         if (location.getWorld() != world) return false;
         return contains(location.toVector());
