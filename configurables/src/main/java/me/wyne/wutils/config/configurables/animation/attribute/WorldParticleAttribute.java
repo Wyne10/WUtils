@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
+import me.wyne.wutils.animation.data.AnimationParticle;
 import me.wyne.wutils.animation.runnable.WorldParticle;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.config.ConfigUtils;
@@ -31,10 +32,13 @@ public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleA
         if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
         return new WorldParticle(
                 context.getLocation(),
-                getValue().particle(),
-                getValue().count(),
-                getValue().speed(),
-                getValue().offset()
+                new AnimationParticle(
+                        getValue().particle(),
+                        getValue().count(),
+                        getValue().speed(),
+                        getValue().offset(),
+                        null
+                )
         );
     }
 

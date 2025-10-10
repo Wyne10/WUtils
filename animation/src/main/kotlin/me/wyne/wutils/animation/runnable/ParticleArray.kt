@@ -2,15 +2,17 @@ package me.wyne.wutils.animation.runnable
 
 import me.wyne.wutils.animation.AnimationRunnable
 import me.wyne.wutils.animation.data.AnimationParticle
-import org.bukkit.Location
+import org.bukkit.World
+import org.bukkit.util.Vector
 
-class WorldParticle(
-    private val location: Location,
+class ParticleArray(
+    private val world: World,
+    private val points: Set<Vector>,
     private val particle: AnimationParticle,
 ) : AnimationRunnable {
 
     override fun run() {
-        particle.spawnParticle(location)
+        points.forEach { particle.spawnParticle(world, it) }
     }
 
 }
