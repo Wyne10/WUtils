@@ -1,6 +1,5 @@
 package me.wyne.wutils.common.range;
 
-import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -12,20 +11,21 @@ public class LocationRange extends VectorRange {
     private final World world;
 
     public LocationRange(World world, Vector min, Vector max) {
-        super(VectorUtils.getMin(min, max), VectorUtils.getMax(min, max));
+        super(min, max);
         this.world = world;
     }
 
     public LocationRange(Location center, double width, double height, double depth) {
-        super(
-                center.toVector().clone().subtract(new Vector(width / 2, height / 2, depth / 2)),
-                center.toVector().clone().add(new Vector(width / 2, height / 2, depth / 2))
-        );
+        super(center.toVector(), width, height, depth);
         this.world = center.getWorld();
     }
 
     public LocationRange(Location center, double radius) {
         this(center, radius, radius, radius);
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public boolean contains(Location location) {
