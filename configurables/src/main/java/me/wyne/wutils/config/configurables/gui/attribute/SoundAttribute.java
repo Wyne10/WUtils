@@ -37,7 +37,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
         public SoundAttribute fromSection(String key, ConfigurationSection section) {
             return new SoundAttribute(
                     key,
-                    Sound.sound(Key.key(section.getString("sound", org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
+                    Sound.sound(Key.key(section.getString("sound", "entity.item.pickup")),
                             Sound.Source.valueOf(section.getString("source", "MASTER")),
                             (float) section.getDouble("volume", 1.0),
                             (float) section.getDouble("pitch", 1.0)
@@ -50,7 +50,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> implements Clic
             var args = new Args(string, " ");
             return new SoundAttribute(
                     key,
-                    Sound.sound(Key.key(args.get(0, org.bukkit.Sound.ENTITY_ITEM_PICKUP.key().asString())),
+                    Sound.sound(Key.key(args.get(0, "entity.item.pickup")),
                             Sound.Source.valueOf(args.get(3, "MASTER")),
                             Float.parseFloat(args.get(1, "1.0")),
                             Float.parseFloat(args.get(2, "1.0"))
