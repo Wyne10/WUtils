@@ -8,9 +8,10 @@ import java.util.stream.Collectors;
 
 public final class AttributeUtils {
 
-    public static Set<Attribute<?>> createAll(ConfigurationSection config, AttributeFactory factory) {
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> createAll(ConfigurationSection config, AttributeFactory factory) {
         return config.getKeys(false).stream()
-                .map(key -> factory.create(key, config))
+                .map(key -> (T) factory.create(key, config))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
