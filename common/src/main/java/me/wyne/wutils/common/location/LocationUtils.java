@@ -47,8 +47,8 @@ public final class LocationUtils {
     public static Location addRelative(Location location, Vector relativeOffset, Vector forward) {
         if (VectorUtils.isEmpty(relativeOffset))
             return location.clone();
-        var right = forward.clone().crossProduct(VectorUtils.UP_DIRECTION).normalize();
-        var up = VectorUtils.UP_DIRECTION;
+        var up = BlockFace.UP.getDirection().clone();
+        var right = forward.clone().crossProduct(up).normalize();
         var worldOffset = right.multiply(relativeOffset.getX())
                 .add(up.multiply(relativeOffset.getY()))
                 .add(forward.multiply(relativeOffset.getZ()));

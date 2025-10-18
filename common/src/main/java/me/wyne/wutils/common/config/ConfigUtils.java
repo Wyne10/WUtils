@@ -36,7 +36,7 @@ public final class ConfigUtils {
     }
 
     public static Vector getVectorOrZero(ConfigurationSection config, String path) {
-        return getVector(config, path, VectorUtils.ZERO_VECTOR);
+        return getVector(config, path, VectorUtils.zero());
     }
 
 }

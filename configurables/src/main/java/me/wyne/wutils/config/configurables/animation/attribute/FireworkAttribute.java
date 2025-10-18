@@ -44,7 +44,7 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
     public String toConfig(int depth, ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
         builder.appendString(depth, getKey(), "");
-        builder.appendIfNotEqual(depth + 1, "offset", getValue().offset(), VectorUtils.ZERO_VECTOR);
+        builder.appendIfNotEqual(depth + 1, "offset", getValue().offset(), VectorUtils.zero());
         builder.appendIfNotEqual(depth + 1, "power", getValue().power(), 1);
         if (getValue().effects().isEmpty()) return builder.buildNoSpace();
         int i = 0;

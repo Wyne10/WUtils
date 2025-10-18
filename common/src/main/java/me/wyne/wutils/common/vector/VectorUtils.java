@@ -6,8 +6,9 @@ import org.bukkit.util.Vector;
 
 public final class VectorUtils {
 
-    public static final Vector ZERO_VECTOR = new Vector();
-    public static final Vector UP_DIRECTION = BlockFace.UP.getDirection();
+    public static Vector zero() {
+        return new Vector();
+    }
 
     public static Vector getVector(String string, Vector def) {
         var args = new Args(string, ",");
@@ -18,7 +19,7 @@ public final class VectorUtils {
     }
 
     public static Vector getVectorOrZero(String string) {
-        return getVector(string, ZERO_VECTOR);
+        return getVector(string, zero());
     }
 
     public static String toString(Vector vector) {
@@ -70,8 +71,8 @@ public final class VectorUtils {
     public static Vector addRelative(Vector vector, Vector relativeOffset, Vector forward) {
         if (isEmpty(relativeOffset))
             return vector.clone();
-        var right = forward.clone().crossProduct(UP_DIRECTION).normalize();
-        var up = UP_DIRECTION;
+        var up = BlockFace.UP.getDirection().clone();
+        var right = forward.clone().crossProduct(up).normalize();
         var worldOffset = right.multiply(relativeOffset.getX())
                 .add(up.multiply(relativeOffset.getY()))
                 .add(forward.multiply(relativeOffset.getZ()));
