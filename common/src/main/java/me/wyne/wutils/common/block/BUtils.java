@@ -4,6 +4,7 @@ import me.wyne.wutils.common.item.ItUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
@@ -38,6 +39,16 @@ public final class BUtils {
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE || event.getPlayer().getGameMode() == GameMode.ADVENTURE) return;
         if (!NaturalBlockBreakEvent.EXP_DROPS.containsKey(event.getBlock().getType())) return;
         event.setExpToDrop(NaturalBlockBreakEvent.EXP_DROPS.get(event.getBlock().getType()).getRandom());
+    }
+
+    public static float getYaw(BlockFace face) {
+        return switch (face) {
+            case SOUTH -> 0.0f;
+            case WEST -> 90.0f;
+            case NORTH -> 180.0f;
+            case EAST -> 270.0f;
+            default -> 0.0f;
+        };
     }
 
 }

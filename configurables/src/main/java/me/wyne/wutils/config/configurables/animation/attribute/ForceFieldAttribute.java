@@ -4,6 +4,7 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.runnable.ForceField;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.config.ConfigUtils;
+import me.wyne.wutils.common.location.LocationUtils;
 import me.wyne.wutils.common.vector.VectorUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
@@ -28,7 +29,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
     @Override
     public AnimationRunnable create(AnimationContext context) {
         if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
-        return new ForceField(context.getLocation().clone().add(getValue().offset()), getValue().radius(), getValue().velocity());
+        return new ForceField(LocationUtils.addRelative(context.getLocation(), getValue().offset()), getValue().radius(), getValue().velocity());
     }
 
     @Override

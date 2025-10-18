@@ -4,6 +4,7 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.runnable.Firework;
 import me.wyne.wutils.animation.runnable.FireworkKt;
 import me.wyne.wutils.common.config.ConfigUtils;
+import me.wyne.wutils.common.location.LocationUtils;
 import me.wyne.wutils.common.vector.VectorUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
@@ -35,7 +36,7 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
         var fireworkMeta = FireworkKt.createFireworkMeta();
         fireworkMeta.addEffects(getValue().effects());
         return new Firework(
-                context.getLocation().clone().add(getValue().offset()),
+                LocationUtils.addRelative(context.getLocation(), getValue().offset()),
                 fireworkMeta);
     }
 

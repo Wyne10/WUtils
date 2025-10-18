@@ -1,11 +1,13 @@
 package me.wyne.wutils.common.vector;
 
 import me.wyne.wutils.common.Args;
+import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
 public final class VectorUtils {
 
     public static final Vector ZERO_VECTOR = new Vector();
+    public static final Vector UP_DIRECTION = BlockFace.UP.getDirection();
 
     public static Vector getVector(String string, Vector def) {
         var args = new Args(string, ",");
@@ -37,6 +39,43 @@ public final class VectorUtils {
                 Math.max(vector1.getY(), vector2.getY()),
                 Math.max(vector1.getZ(), vector2.getZ())
         );
+    }
+
+    public static boolean isEmpty(Vector vector) {
+        return vector.getX() == 0.0 && vector.getY() == 0.0 && vector.getZ() == 0.0;
+    }
+
+    public static Vector addRelative(Vector vector, double horizontal, double vertical, BlockFace face) {
+        if (face.getModZ() != 0)
+            return vector.clone().add(new Vector(horizontal, vertical, 0.0));
+        else if (face.getModX() != 0)
+            return  vector.clone().add(new Vector(0.0, vertical, horizontal));
+        else
+            return vector.clone().add(new Vector(horizontal, vertical, 0.0));
+    }
+
+    public static Vector addRelative(Vector vector, double width, double height, double depth, BlockFace face) {
+        if (face.getModZ() != 0)
+            return vector.clone().add(new Vector(width, height, depth));
+        else if (face.getModX() != 0)
+            return  vector.clone().add(new Vector(depth, height, width));
+        else
+            return vector.clone().add(new Vector(width, height, depth));
+    }
+
+    public static Vector addRelative(Vector vector, Vector relativeOffset, BlockFace face) {
+        return addRelative(vector, relativeOffset, face.getDirection());
+    }
+
+    public static Vector addRelative(Vector vector, Vector relativeOffset, Vector forward) {
+        if (isEmpty(relativeOffset))
+            return vector.clone();
+        var right = forward.clone().crossProduct(UP_DIRECTION).normalize();
+        var up = UP_DIRECTION;
+        var worldOffset = right.multiply(relativeOffset.getX())
+                .add(up.multiply(relativeOffset.getY()))
+                .add(forward.multiply(relativeOffset.getZ()));
+        return vector.clone().add(worldOffset);
     }
 
 }
