@@ -48,7 +48,7 @@ public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleA
                 getValue().particle().name() + " " +
                         getValue().count() + " " +
                         getValue().speed() + " " +
-                        VectorUtils.toString(getValue().offset())
+                        getValue().offset()
         ).buildNoSpace();
     }
 

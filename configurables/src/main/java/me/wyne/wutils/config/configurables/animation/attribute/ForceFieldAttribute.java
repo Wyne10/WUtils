@@ -34,7 +34,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + VectorUtils.toString(getValue().offset())).buildNoSpace();
+        return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + getValue().offset()).buildNoSpace();
     }
 
     public record ForceFieldData(Vector offset, double radius, double velocity) {}

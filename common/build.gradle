@@ -14,7 +14,11 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 }
 
-version = '1.4.25'
+tasks.named("publish") {
+    finalizedBy(":WUtils-common-kotlin:publish")
+}
+
+version = '1.4.26'
 
 publishing {
     publications {

@@ -22,10 +22,6 @@ public final class VectorUtils {
         return getVector(string, zero());
     }
 
-    public static String toString(Vector vector) {
-        return vector.getX() + "," + vector.getY() + "," + vector.getZ();
-    }
-
     public static Vector getMin(Vector vector1, Vector vector2) {
         return new Vector(
                 Math.min(vector1.getX(), vector2.getX()),
