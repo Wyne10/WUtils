@@ -2,7 +2,6 @@ package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.runnable.Firework;
-import me.wyne.wutils.animation.runnable.FireworkKt;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.location.LocationUtils;
 import me.wyne.wutils.common.vector.VectorUtils;
@@ -15,7 +14,10 @@ import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -32,8 +34,8 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
-        var fireworkMeta = FireworkKt.createFireworkMeta();
+        if (context.getLocation() == null) return AnimationRunnable.EMPTY;
+        var fireworkMeta = (FireworkMeta) new ItemStack(Material.FIREWORK_ROCKET).getItemMeta();
         fireworkMeta.addEffects(getValue().effects());
         return new Firework(
                 LocationUtils.addRelative(context.getLocation(), getValue().offset()),

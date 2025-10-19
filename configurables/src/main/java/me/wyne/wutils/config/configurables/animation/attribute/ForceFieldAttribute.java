@@ -28,7 +28,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
+        if (context.getLocation() == null) return AnimationRunnable.EMPTY;
         return new ForceField(LocationUtils.addRelative(context.getLocation(), getValue().offset()), getValue().radius(), getValue().velocity());
     }
 

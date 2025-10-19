@@ -1,10 +1,5 @@
 plugins {
     id("wutils.java-library")
-    kotlin("jvm") version "2.1.20"
-}
-
-kotlin {
-    jvmToolchain(16)
 }
 
 repositories {
@@ -15,9 +10,10 @@ repositories {
 
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    implementation("org.javatuples:javatuples:1.2")
 }
 
-version = "1.1.1"
+version = "2.0.0"
 
 publishing {
     publications {

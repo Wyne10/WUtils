@@ -21,7 +21,7 @@ public class AnchorChargeAttribute extends ConfigurableAttribute<Integer> implem
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
+        if (context.getLocation() == null) return AnimationRunnable.EMPTY;
         return new AnchorCharge(context.getLocation(), getValue());
     }
 

@@ -29,7 +29,7 @@ public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleA
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getLocation() == null) return AnimationRunnable.Companion.getEMPTY();
+        if (context.getLocation() == null) return AnimationRunnable.EMPTY;
         return new WorldParticle(
                 context.getLocation(),
                 new AnimationParticle(

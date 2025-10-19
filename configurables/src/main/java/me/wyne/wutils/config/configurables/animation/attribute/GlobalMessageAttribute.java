@@ -22,7 +22,7 @@ public class GlobalMessageAttribute extends ConfigurableAttribute<String> implem
 
     @Override
     public AnimationRunnable create(AnimationContext context) {
-        if (context.getPlayer() == null) return AnimationRunnable.Companion.getEMPTY();
+        if (context.getPlayer() == null) return AnimationRunnable.EMPTY;
         return new MessageEffect(
                 I18n.global.getAudiences().players(),
                 I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get()
