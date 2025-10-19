@@ -1,5 +1,12 @@
 package me.wyne.wutils.common.config;
 
+import me.wyne.wutils.common.comparator.Comparators;
+import me.wyne.wutils.common.comparator.DoubleComparator;
+import me.wyne.wutils.common.comparator.IntComparator;
+import me.wyne.wutils.common.duration.Durations;
+import me.wyne.wutils.common.operation.DoubleOperation;
+import me.wyne.wutils.common.operation.IntOperation;
+import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
@@ -37,6 +44,30 @@ public final class ConfigUtils {
 
     public static Vector getVectorOrZero(ConfigurationSection config, String path) {
         return getVector(config, path, VectorUtils.zero());
+    }
+
+    public static IntComparator getIntComparator(ConfigurationSection config, String path) {
+        return Comparators.getIntComparator(config.getString(path));
+    }
+
+    public static DoubleComparator getDoubleComparator(ConfigurationSection config, String path) {
+        return Comparators.getDoubleComparator(config.getString(path));
+    }
+
+    public static IntOperation getIntOperation(ConfigurationSection config, String path) {
+        return Operations.getIntOperation(config.getString(path));
+    }
+
+    public static DoubleOperation getDoubleOperation(ConfigurationSection config, String path) {
+        return Operations.getDoubleOperation(config.getString(path));
+    }
+
+    public static Long getMillis(ConfigurationSection config, String path) {
+        return Durations.getMillis(config.getString(path));
+    }
+
+    public static Long getTicks(ConfigurationSection config, String path) {
+        return Durations.getTicks(config.getString(path));
     }
 
 }
