@@ -94,6 +94,10 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         return LegacyInterpreter.SERIALIZER.serialize(component);
     }
 
+    public String legacySection() {
+        return LegacyInterpreter.SECTION_SERIALIZER.serialize(component);
+    }
+
     public String gson() {
         return GsonComponentSerializer.gson().serialize(component);
     }

@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 
 public class LegacyInterpreter extends BaseInterpreter implements ComponentInterpreter {
 
-    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().character('&').hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().character(LegacyComponentSerializer.AMPERSAND_CHAR).hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+    public static final LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.builder().character(LegacyComponentSerializer.SECTION_CHAR).hexColors().useUnusualXRepeatedCharacterHexFormat().build();
 
     protected final BaseInterpreter baseInterpreter;
 
