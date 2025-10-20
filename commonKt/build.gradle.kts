@@ -1,6 +1,6 @@
 plugins {
     id("wutils.java-library")
-    kotlin("jvm") version "2.1.20"
+    kotlin("jvm") version "2.2.20"
 }
 
 kotlin {
