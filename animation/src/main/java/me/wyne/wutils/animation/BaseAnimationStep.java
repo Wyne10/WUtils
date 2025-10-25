@@ -18,6 +18,10 @@ public abstract class BaseAnimationStep implements AnimationStep {
         this.duration = duration;
     }
 
+    public BaseAnimationStep(AnimationRunnable runnable, long delay) {
+        this(runnable, delay, 0, 0);
+    }
+
     public BaseAnimationStep(AnimationRunnable runnable) {
         this(runnable, 0, 0, 0);
     }

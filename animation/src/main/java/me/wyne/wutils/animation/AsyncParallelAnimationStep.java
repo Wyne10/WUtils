@@ -10,6 +10,10 @@ public class AsyncParallelAnimationStep extends BaseAnimationStep {
         super(runnable, delay, period, duration);
     }
 
+    public AsyncParallelAnimationStep(AnimationRunnable runnable, long delay) {
+        super(runnable, delay);
+    }
+
     public AsyncParallelAnimationStep(AnimationRunnable runnable) {
         super(runnable);
     }

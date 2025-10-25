@@ -10,6 +10,10 @@ public class BlockingAnimationStep extends BaseAnimationStep {
         super(runnable, delay, period, duration);
     }
 
+    public BlockingAnimationStep(AnimationRunnable runnable, long delay) {
+        super(runnable, delay);
+    }
+
     public BlockingAnimationStep(AnimationRunnable runnable) {
         super(runnable);
     }

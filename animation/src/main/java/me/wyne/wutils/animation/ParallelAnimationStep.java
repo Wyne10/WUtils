@@ -10,6 +10,10 @@ public class ParallelAnimationStep extends BaseAnimationStep {
         super(runnable, delay, period, duration);
     }
 
+    public ParallelAnimationStep(AnimationRunnable runnable, long delay) {
+        super(runnable, delay);
+    }
+
     public ParallelAnimationStep(AnimationRunnable runnable) {
         super(runnable);
     }
