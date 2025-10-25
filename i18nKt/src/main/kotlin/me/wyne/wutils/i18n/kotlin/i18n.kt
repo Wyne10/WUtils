@@ -135,6 +135,9 @@ val CommandSender.locale
 val Component.legacy
     get() = LegacyInterpreter.SERIALIZER.serialize(this)
 
+val Component.legacySection
+    get() = LegacyInterpreter.SECTION_SERIALIZER.serialize(this)
+
 val Component.gson
     get() = GsonComponentSerializer.gson().serialize(this)
 
@@ -157,6 +160,9 @@ val Component.minecraft
 
 val String.legacy
     get() = LegacyInterpreter.SERIALIZER.deserialize(this)
+
+val String.legacySection
+    get() = LegacyInterpreter.SECTION_SERIALIZER.deserialize(this)
 
 val String.gson
     get() = GsonComponentSerializer.gson().deserialize(this)
