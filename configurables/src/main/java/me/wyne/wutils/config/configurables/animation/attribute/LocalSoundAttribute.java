@@ -41,7 +41,7 @@ public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().append(depth, getKey(), getValue().name().asString() + " " + getValue().volume() + " " + getValue().pitch()).buildNoSpace();
+        return new ConfigBuilder().append(depth, getKey(), getValue().name().asString() + " " + getValue().volume() + " " + getValue().pitch() + " " + getValue().source().name()).buildNoSpace();
     }
 
     public static final class Factory implements CompositeAttributeFactory {
@@ -50,7 +50,7 @@ public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements
             return new LocalSoundAttribute(
                     key,
                     Sound.sound(Key.key(section.getString("sound", "entity.item.pickup")),
-                            Sound.Source.MASTER,
+                            Sound.Source.valueOf(section.getString("source", "MASTER")),
                             (float) section.getDouble("volume", 1.0),
                             (float) section.getDouble("pitch", 1.0)
                     )
@@ -63,7 +63,7 @@ public class LocalSoundAttribute extends ConfigurableAttribute<Sound> implements
             return new LocalSoundAttribute(
                     key,
                     Sound.sound(Key.key(args.get(0, "entity.item.pickup")),
-                            Sound.Source.MASTER,
+                            Sound.Source.valueOf(args.get(3, "MASTER")),
                             Float.parseFloat(args.get(1, "1.0")),
                             Float.parseFloat(args.get(2, "1.0"))
                     )
