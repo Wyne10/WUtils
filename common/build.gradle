@@ -18,7 +18,7 @@ tasks.named("publish") {
     finalizedBy(":WUtils-common-kotlin:publish")
 }
 
-version = '1.4.27'
+version = '1.4.28'
 
 publishing {
     publications {
