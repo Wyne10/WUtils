@@ -30,8 +30,8 @@ public class AttributeMap {
                 .map(key -> {
                     var attributeKey = key;
                     var section = config.getConfigurationSection(key);
-                    if (section != null && section.getString("type") != null)
-                        attributeKey = section.getString("type");
+                    if (section != null && section.getString("attributeType") != null)
+                        attributeKey = section.getString("attributeType");
                     return new Pair<>(key, attributeKey);
                 })
                 .filter(pair -> keyMap.containsKey(pair.getValue1()))
