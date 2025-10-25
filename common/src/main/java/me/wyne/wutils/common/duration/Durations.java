@@ -25,14 +25,21 @@ public final class Durations {
         return DURATION_SYMBOLS.get(symbol);
     }
 
-    public static Long getMillis(String string) {
+    public static TimeSpan getTimeSpan(String string) {
+        Matcher matcher = DURATION_REGEX.matcher(string);
+        String duration = matcher.group(1);
+        String type = matcher.group(2);
+        return new TimeSpan(Long.parseLong(duration), getDuration(type));
+    }
+
+    public static long getMillis(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
         String duration = matcher.group(1);
         String type = matcher.group(2);
         return getDuration(type).getMillis(Long.parseLong(duration));
     }
 
-    public static Long getTicks(String string) {
+    public static long getTicks(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
         String duration = matcher.group(1);
         String type = matcher.group(2);

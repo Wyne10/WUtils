@@ -25,6 +25,9 @@ fun ConfigurationSection.getIntOperation(path: String) =
 fun ConfigurationSection.getDoubleOperation(path: String) =
     ConfigUtils.getDoubleOperation(this, path)
 
+fun ConfigurationSection.getTimeSpan(path: String) =
+    ConfigUtils.getTimeSpan(this, path)
+
 fun ConfigurationSection.getMillis(path: String) =
     ConfigUtils.getMillis(this, path)
 

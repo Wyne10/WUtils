@@ -4,6 +4,7 @@ import me.wyne.wutils.common.comparator.Comparators;
 import me.wyne.wutils.common.comparator.DoubleComparator;
 import me.wyne.wutils.common.comparator.IntComparator;
 import me.wyne.wutils.common.duration.Durations;
+import me.wyne.wutils.common.duration.TimeSpan;
 import me.wyne.wutils.common.operation.DoubleOperation;
 import me.wyne.wutils.common.operation.IntOperation;
 import me.wyne.wutils.common.operation.Operations;
@@ -62,11 +63,15 @@ public final class ConfigUtils {
         return Operations.getDoubleOperation(config.getString(path));
     }
 
-    public static Long getMillis(ConfigurationSection config, String path) {
+    public static TimeSpan getTimeSpan(ConfigurationSection config, String path) {
+        return Durations.getTimeSpan(config.getString(path));
+    }
+
+    public static long getMillis(ConfigurationSection config, String path) {
         return Durations.getMillis(config.getString(path));
     }
 
-    public static Long getTicks(ConfigurationSection config, String path) {
+    public static long getTicks(ConfigurationSection config, String path) {
         return Durations.getTicks(config.getString(path));
     }
 

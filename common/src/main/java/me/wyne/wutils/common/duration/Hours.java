@@ -4,12 +4,12 @@ import me.wyne.wutils.common.Ticks;
 
 public class Hours implements Duration {
     @Override
-    public Long getMillis(Long duration) {
+    public long getMillis(long duration) {
         return duration * 60 * 60 * 1000;
     }
 
     @Override
-    public Long getTicks(Long duration) {
+    public long getTicks(long duration) {
         return Ticks.ofSeconds(duration * 60 * 60);
     }
 }

@@ -4,12 +4,12 @@ import me.wyne.wutils.common.Ticks;
 
 public class Millis implements Duration {
     @Override
-    public Long getMillis(Long duration) {
+    public long getMillis(long duration) {
         return duration;
     }
 
     @Override
-    public Long getTicks(Long duration) {
+    public long getTicks(long duration) {
         return Ticks.ofMillis(duration);
     }
 }
