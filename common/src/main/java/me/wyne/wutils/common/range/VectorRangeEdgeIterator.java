@@ -5,7 +5,7 @@ import org.bukkit.util.Vector;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class VectorEdgeIterator implements Iterator<Vector> {
+public class VectorRangeEdgeIterator implements Iterator<Vector> {
 
     private final Vector min;
     private final Vector max;
@@ -14,7 +14,7 @@ public class VectorEdgeIterator implements Iterator<Vector> {
     private double x, y, z;
     private final double step;
 
-    public VectorEdgeIterator(Vector min, Vector max, double step) {
+    public VectorRangeEdgeIterator(Vector min, Vector max, double step) {
         this.min = min;
         this.max = max;
         this.step = step;

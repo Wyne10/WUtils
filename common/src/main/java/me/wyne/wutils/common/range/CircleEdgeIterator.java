@@ -74,38 +74,45 @@ public class CircleEdgeIterator implements Iterator<Vector> {
             this.radius = radius;
         }
 
-        public Builder(double radius, Vector center, int segments) {
-            this.radius = radius;
+        public Builder(Vector center, double radius, int segments) {
             this.center = center;
+            this.radius = radius;
             this.segments = segments;
         }
 
-        public void setCenter(Vector center) {
+        public Builder setCenter(Vector center) {
             this.center = center;
+            return this;
         }
 
-        public void setRadius(double radius) {
+        public Builder setRadius(double radius) {
             this.radius = radius;
+            return this;
         }
 
-        public void setStartAngle(double startAngle) {
+        public Builder setStartAngle(double startAngle) {
             this.startAngle = startAngle;
+            return this;
         }
 
-        public void setSegments(int segments) {
+        public Builder setSegments(int segments) {
             this.segments = segments;
+            return this;
         }
 
-        public void setYaw(double yaw) {
+        public Builder setYaw(double yaw) {
             this.yaw = yaw;
+            return this;
         }
 
-        public void setPitch(double pitch) {
+        public Builder setPitch(double pitch) {
             this.pitch = pitch;
+            return this;
         }
 
-        public void setRoll(double roll) {
+        public Builder setRoll(double roll) {
             this.roll = roll;
+            return this;
         }
 
         public CircleEdgeIterator build() {
