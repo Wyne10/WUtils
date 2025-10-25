@@ -1,12 +1,8 @@
 package me.wyne.wutils.config.configurables.attribute;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.javatuples.Pair;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AttributeMap {
@@ -26,32 +22,39 @@ public class AttributeMap {
     }
 
     public Set<Attribute<?>> createAll(ConfigurationSection config) {
+        var attributeKeyMap = getAttributeKeyMap(config);
         return keyMap.keySet().stream()
-                .map(key -> {
-                    var attributeKey = key;
-                    var section = config.getConfigurationSection(key);
-                    if (section != null && section.getString("attributeType") != null)
-                        attributeKey = section.getString("attributeType");
-                    return new Pair<>(key, attributeKey);
-                })
-                .filter(pair -> keyMap.containsKey(pair.getValue1()))
-                .map(pair -> keyMap.get(pair.getValue1()).create(pair.getValue0(), config))
+                .flatMap(key ->
+                    attributeKeyMap.get(key).stream()
+                            .map(configKey -> keyMap.get(key).create(configKey, config))
+                )
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Map<String, Attribute<?>> createAllMap(ConfigurationSection config) {
+        var attributeKeyMap = getAttributeKeyMap(config);
         Map<String, Attribute<?>> result = new LinkedHashMap<>();
         keyMap.keySet().stream()
-                .map(key -> {
-                    var attributeKey = key;
-                    var section = config.getConfigurationSection(key);
-                    if (section != null && section.getString("type") != null)
-                        attributeKey = section.getString("type");
-                    return new Pair<>(key, attributeKey);
-                })
-                .filter(pair -> keyMap.containsKey(pair.getValue1()))
-                .forEach(pair -> result.put(pair.getValue0(), keyMap.get(pair.getValue1()).create(pair.getValue0(), config)));
+                .forEach(key ->
+                        attributeKeyMap.get(key).stream()
+                                .forEach(configKey -> result.put(configKey, keyMap.get(key).create(configKey, config)))
+                );
         return result;
+    }
+
+    private Map<String, Set<String>> getAttributeKeyMap(ConfigurationSection config) {
+        Map<String, Set<String>> attributeKeyMap = new LinkedHashMap<>();
+        keyMap.keySet().forEach(key -> attributeKeyMap.put(key, new LinkedHashSet<>()));
+        config.getKeys(false).stream()
+                .map(config::getConfigurationSection)
+                .filter(Objects::nonNull)
+                .filter(section -> section.contains("attributeType") && section.isString("attributeType"))
+                .filter(section -> attributeKeyMap.containsKey(section.getString("attributeType")))
+                .forEach(section -> attributeKeyMap.get(section.getString("attributeType")).add(section.getName()));
+        keyMap.keySet().stream()
+                .filter(config::contains)
+                .forEach(key -> attributeKeyMap.get(key).add(key));
+        return attributeKeyMap;
     }
 
     public Map<String, AttributeFactory> getKeyMap() {
