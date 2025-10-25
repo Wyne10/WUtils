@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.attribute;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.javatuples.Pair;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -26,16 +27,30 @@ public class AttributeMap {
 
     public Set<Attribute<?>> createAll(ConfigurationSection config) {
         return keyMap.keySet().stream()
-                .filter(config::contains)
-                .map(key -> keyMap.get(key).create(key, config))
+                .map(key -> {
+                    var attributeKey = key;
+                    var section = config.getConfigurationSection(key);
+                    if (section != null && section.getString("type") != null)
+                        attributeKey = section.getString("type");
+                    return new Pair<>(key, attributeKey);
+                })
+                .filter(pair -> keyMap.containsKey(pair.getValue1()))
+                .map(pair -> keyMap.get(pair.getValue1()).create(pair.getValue0(), config))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Map<String, Attribute<?>> createAllMap(ConfigurationSection config) {
         Map<String, Attribute<?>> result = new LinkedHashMap<>();
         keyMap.keySet().stream()
-                .filter(config::contains)
-                .forEach(key -> result.put(key, keyMap.get(key).create(key, config)));
+                .map(key -> {
+                    var attributeKey = key;
+                    var section = config.getConfigurationSection(key);
+                    if (section != null && section.getString("type") != null)
+                        attributeKey = section.getString("type");
+                    return new Pair<>(key, attributeKey);
+                })
+                .filter(pair -> keyMap.containsKey(pair.getValue1()))
+                .forEach(pair -> result.put(pair.getValue0(), keyMap.get(pair.getValue1()).create(pair.getValue0(), config)));
         return result;
     }
 
