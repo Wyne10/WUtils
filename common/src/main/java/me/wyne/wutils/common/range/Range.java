@@ -33,5 +33,4 @@ public abstract class Range<T> implements Iterable<T> {
     public abstract T getRandom();
     public abstract boolean contains(T value);
 
-
 }
