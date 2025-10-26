@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class ExtendedScheduler implements RegisterableListener {
 
@@ -15,7 +17,7 @@ public class ExtendedScheduler implements RegisterableListener {
 
     private final EventRegistry eventRegistry = new EventRegistry(null);
 
-    private final Map<Class<? extends Event>, Set<PromisedTask>> promisedTasks = new HashMap<>();
+    private final Map<Class<? extends Event>, Set<PromisedTask<?>>> promisedTasks = new HashMap<>();
     private Method promiseMethod = null;
 
     public ExtendedScheduler() {
@@ -24,20 +26,32 @@ public class ExtendedScheduler implements RegisterableListener {
         } catch (NoSuchMethodException ignored) {}
     }
 
+    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Consumer<T> promise, Predicate<T> condition, long delay, Class<T> event) {
+        if (!promisedTasks.containsKey(event))
+            promisedTasks.put(event, new LinkedHashSet<>());
+        var task = new PromisedTask<>(plugin, runnable, promise, condition, delay);
+        promisedTasks.get(event).add(task);
+        eventRegistry.register(task.getPlugin(), this, event, promiseMethod);
+        task.start();
+    }
+
+    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Consumer<T> promise, long delay, Class<T> event) {
+        runTaskLaterPromised(plugin, runnable, promise, event1 -> true, delay, event);
+    }
+
+    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Predicate<T> condition, long delay, Class<T> event) {
+        runTaskLaterPromised(plugin, runnable, event1 -> runnable.run(), condition, delay, event);
+    }
+
     public void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, long delay, Class<? extends Event>... events) {
         for (Class<? extends Event> event : events) {
-            if (!promisedTasks.containsKey(event))
-                promisedTasks.put(event, new LinkedHashSet<>());
-            var task = new PromisedTask(plugin, runnable, delay);
-            promisedTasks.get(event).add(task);
-            eventRegistry.register(task.getPlugin(), this, event, promiseMethod);
-            task.start();
+            runTaskLaterPromised(plugin, runnable, event1 -> runnable.run(), event1 -> true, delay, event);
         }
     }
 
     @EventHandler
     private void onEvent(Event event) {
-        promisedTasks.remove(event.getClass()).forEach(PromisedTask::cancel);
+        promisedTasks.remove(event.getClass()).forEach(task -> task.cancel(event));
     }
 
 }
