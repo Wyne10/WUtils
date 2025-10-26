@@ -38,6 +38,7 @@ public abstract class CompositeJavaPlugin<T extends JavaPlugin> extends JavaPlug
     }
 
     public void reload() {
+        new PluginReloadEvent(this).callEvent();
         runSteps(StepScope.RELOAD);
     }
 
