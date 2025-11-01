@@ -29,6 +29,10 @@ public class InteractionConfigurable extends AttributeConfigurable {
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.AUDIENCE_WORLDS.getKey(), new WorldAudience.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.AUDIENCE_THAT_PLAYERS.getKey(), new ThatPlayersAudience.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.MESSAGE.getKey(), new MessageAttribute.Factory());
+        INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.ACTION_BAR.getKey(), new ActionBarAttribute.Factory());
+        INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.SOUND.getKey(), new SoundAttribute.Factory());
+        // TODO Title
+        // TODO Boss Bar
     }
 
     public InteractionConfigurable() {
