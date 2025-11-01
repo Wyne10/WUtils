@@ -11,6 +11,7 @@ import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -165,6 +166,12 @@ public class I18n {
 
     public static @Nullable <T> Player toPlayer(@Nullable T something) {
         if (something instanceof Player player)
+            return player;
+        return null;
+    }
+
+    public static @Nullable <T> OfflinePlayer toOfflinePlayer(@Nullable T something) {
+        if (something instanceof OfflinePlayer player)
             return player;
         return null;
     }

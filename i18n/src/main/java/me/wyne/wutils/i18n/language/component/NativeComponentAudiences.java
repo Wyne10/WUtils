@@ -23,8 +23,7 @@ public class NativeComponentAudiences implements ComponentAudiences {
 
     @Override
     public Audience player(UUID playerId) {
-        Player player = Bukkit.getPlayer(playerId);
-        return player;
+        return Bukkit.getPlayer(playerId);
     }
 
     @Override
