@@ -22,6 +22,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class ItUtils {
 
+    public static boolean isNullOrAir(ItemStack item) {
+        return item == null || item.getType() == Material.AIR;
+    }
+
+    public static boolean isNotNullOrAir(ItemStack item) {
+        return item != null && item.getType() != Material.AIR;
+    }
+
     public static void damageNaturally(ItemStack item, Player player) {
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (!(item.getItemMeta() instanceof Damageable damageable)) return;

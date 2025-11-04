@@ -7,6 +7,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
 
+fun ItemStack?.isNullOrAir() =
+    ItUtils.isNullOrAir(this)
+
+fun ItemStack?.isNotNullOrAir() =
+    ItUtils.isNotNullOrAir(this)
+
 fun ItemStack.damageNaturally(player: Player) =
     ItUtils.damageNaturally(this, player)
 
