@@ -9,24 +9,22 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Locale;
 
 public interface LocalizationAccessor {
-    String getPath();
+    String path();
 
-    Language getLanguage();
+    Language language();
 
-    StringInterpreter getStringInterpreter();
+    StringInterpreter stringInterpreter();
 
-    ComponentInterpreter getComponentInterpreter();
+    ComponentInterpreter componentInterpreter();
 
     default boolean contains() {
-        return getLanguage().contains(getPath());
+        return language().contains(path());
     }
 
     LocalizedString getString(TextReplacement... textReplacements);

@@ -90,6 +90,10 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         return component;
     }
 
+    public ComponentAudiences getAudiences() {
+        return audiences;
+    }
+
     public String legacy() {
         return LegacyInterpreter.SERIALIZER.serialize(component);
     }
@@ -130,7 +134,7 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     }
 
     public LocalizedComponent replace(ComponentReplacement... componentReplacements) {
-        Component result = component;
+        Component result = Component.empty().append(component);
         for (ComponentReplacement replacement : componentReplacements)
             result = replacement.replace(result);
         return new LocalizedComponent(getInterpreter(), getLanguage(), getPath(), result, audiences);

@@ -9,13 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class BukkitComponentAudiences implements ComponentAudiences {
-
-    private final BukkitAudiences audiences;
-
-    public BukkitComponentAudiences(BukkitAudiences audiences) {
-        this.audiences = audiences;
-    }
+public record BukkitComponentAudiences(BukkitAudiences audiences) implements ComponentAudiences {
 
     @Override
     public Audience player(Player player) {

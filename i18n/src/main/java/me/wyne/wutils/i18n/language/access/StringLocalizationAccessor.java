@@ -13,41 +13,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StringLocalizationAccessor implements LocalizationAccessor {
-
-    private final String path;
-    private final Language language;
-    private final StringInterpreter stringInterpreter;
-    private final ComponentInterpreter componentInterpreter;
-    private final ComponentAudiences audiences;
-
-    public StringLocalizationAccessor(String path, Language language, StringInterpreter stringInterpreter, ComponentInterpreter componentInterpreter, ComponentAudiences audiences) {
-        this.path = path;
-        this.language = language;
-        this.stringInterpreter = stringInterpreter;
-        this.componentInterpreter = componentInterpreter;
-        this.audiences = audiences;
-    }
-
-    @Override
-    public String getPath() {
-        return path;
-    }
-
-    @Override
-    public Language getLanguage() {
-        return language;
-    }
-
-    @Override
-    public StringInterpreter getStringInterpreter() {
-        return stringInterpreter;
-    }
-
-    @Override
-    public ComponentInterpreter getComponentInterpreter() {
-        return componentInterpreter;
-    }
+public record StringLocalizationAccessor(String path, Language language, StringInterpreter stringInterpreter,
+                                         ComponentInterpreter componentInterpreter,
+                                         ComponentAudiences audiences) implements LocalizationAccessor {
 
     @Override
     public LocalizedString getString(TextReplacement... textReplacements) {
