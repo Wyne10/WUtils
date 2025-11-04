@@ -27,6 +27,7 @@ public final class Durations {
 
     public static TimeSpan getTimeSpan(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
+        matcher.matches();
         String duration = matcher.group(1);
         String type = matcher.group(2);
         return new TimeSpan(Long.parseLong(duration), getDuration(type));
@@ -34,6 +35,7 @@ public final class Durations {
 
     public static long getMillis(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
+        matcher.matches();
         String duration = matcher.group(1);
         String type = matcher.group(2);
         return getDuration(type).getMillis(Long.parseLong(duration));
@@ -41,6 +43,7 @@ public final class Durations {
 
     public static long getTicks(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
+        matcher.matches();
         String duration = matcher.group(1);
         String type = matcher.group(2);
         return getDuration(type).getTicks(Long.parseLong(duration));

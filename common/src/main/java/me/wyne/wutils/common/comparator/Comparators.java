@@ -22,6 +22,7 @@ public final class Comparators {
 
     public static IntComparator getIntComparator(String string) {
         Matcher matcher = COMPARATOR_REGEX.matcher(string);
+        matcher.matches();
         String operator = matcher.group(1);
         String number = matcher.group(2);
         return new IntComparator(Integer.parseInt(number), getComparator(operator));
@@ -29,6 +30,7 @@ public final class Comparators {
 
     public static DoubleComparator getDoubleComparator(String string) {
         Matcher matcher = COMPARATOR_REGEX.matcher(string);
+        matcher.matches();
         String operator = matcher.group(1);
         String number = matcher.group(2);
         return new DoubleComparator(Double.parseDouble(number), getComparator(operator));

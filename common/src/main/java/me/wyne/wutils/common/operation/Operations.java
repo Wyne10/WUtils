@@ -34,6 +34,7 @@ public final class Operations {
 
     public static IntOperation getIntOperation(String string) {
         Matcher matcher = OPERATION_REGEX.matcher(string);
+        matcher.matches();
         String operator = matcher.group(1);
         String number = matcher.group(2);
         return new IntOperation(Integer.parseInt(number), getOperation(operator));
@@ -41,6 +42,7 @@ public final class Operations {
 
     public static DoubleOperation getDoubleOperation(String string) {
         Matcher matcher = OPERATION_REGEX.matcher(string);
+        matcher.matches();
         String operator = matcher.group(1);
         String number = matcher.group(2);
         return new DoubleOperation(Double.parseDouble(number), getOperation(operator));
