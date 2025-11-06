@@ -34,6 +34,9 @@ fun ConfigurationSection.getMillis(path: String) =
 fun ConfigurationSection.getTicks(path: String) =
     ConfigUtils.getTicks(this, path)
 
+fun ConfigurationSection.getTimeSpanRange(path: String) =
+    ConfigUtils.getTimeSpanRange(this, path)
+
 fun ConfigurationSection.getPotionTypeEnumSet(path: String): Set<PotionEffectType> =
     getStringList(path)
         .mapNotNull { runCatching { PotionEffectType.getByName(it) }.getOrNull() }

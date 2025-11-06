@@ -1,5 +1,7 @@
 package me.wyne.wutils.common.duration;
 
+import java.util.concurrent.TimeUnit;
+
 public record TimeSpan(long duration, Duration type) implements Duration {
     public long getMillis() {
         return type.getMillis(duration);
@@ -7,6 +9,10 @@ public record TimeSpan(long duration, Duration type) implements Duration {
 
     public long getTicks() {
         return type.getTicks(duration);
+    }
+
+    public long getUnit(TimeUnit unit) {
+        return unit.convert(getMillis(duration), TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -17,5 +23,10 @@ public record TimeSpan(long duration, Duration type) implements Duration {
     @Override
     public long getTicks(long duration) {
         return type.getTicks(duration);
+    }
+
+    @Override
+    public long getUnit(long duration, TimeUnit unit) {
+        return unit.convert(getMillis(duration), TimeUnit.MILLISECONDS);
     }
 }

@@ -17,11 +17,6 @@ public class ClosedIntRange extends Range<Integer> {
     }
 
     @Override
-    public Integer getCenter() {
-        return (getMin() + getMax()) / 2;
-    }
-
-    @Override
     public boolean contains(Integer value) {
         return value >= getMin() && value <= getMax();
     }

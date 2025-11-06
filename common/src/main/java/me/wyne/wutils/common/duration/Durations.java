@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.duration;
 
 import me.wyne.wutils.common.comparator.*;
+import me.wyne.wutils.common.range.TimeSpanRange;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -8,6 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Durations {
+
+    public static final Duration Millis = new Millis();
+    public static final Duration Seconds = new Seconds();
+    public static final Duration Minutes = new Minutes();
+    public static final Duration Hours = new Hours();
+    public static final Duration Days = new Days();
+    public static final Duration Ticks = new Ticks();
 
     public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])?");
     public static final Map<String, Duration> DURATION_SYMBOLS = Map.of(
@@ -47,6 +55,11 @@ public final class Durations {
         String duration = matcher.group(1);
         String type = matcher.group(2);
         return getDuration(type).getTicks(Long.parseLong(duration));
+    }
+
+    public static TimeSpanRange getTimeSpanRange(String string) {
+        var split = string.split("\\.\\.");
+        return new TimeSpanRange(getTimeSpan(split[0]), getTimeSpan(split[1]));
     }
 
 }

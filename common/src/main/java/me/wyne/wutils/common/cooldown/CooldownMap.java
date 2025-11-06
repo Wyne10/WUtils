@@ -1,5 +1,7 @@
 package me.wyne.wutils.common.cooldown;
 
+import me.wyne.wutils.common.duration.Durations;
+import me.wyne.wutils.common.duration.TimeSpan;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.HashMap;
@@ -35,6 +37,10 @@ public class CooldownMap<T> {
         cooldownMap.put(key, System.currentTimeMillis() + unit.toMillis(duration));
     }
 
+    public void put(T key, TimeSpan duration) {
+        put(key, duration.getMillis());
+    }
+
     public void remove(T key) {
         cooldownMap.remove(key);
     }
@@ -52,6 +58,10 @@ public class CooldownMap<T> {
 
     public long getRemaining(T key, TimeUnit unit) {
         return unit.convert(getRemaining(key), TimeUnit.MILLISECONDS);
+    }
+
+    public TimeSpan getRemainingDuration(T key) {
+        return new TimeSpan(getRemaining(key), Durations.Millis);
     }
 
     public String getRemainingStringFormat(T key) {

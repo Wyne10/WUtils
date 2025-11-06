@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.cooldown;
 
+import me.wyne.wutils.common.duration.TimeSpan;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -10,12 +11,16 @@ public class Period {
 
     public Period() {}
 
-    public Period(Long finishAt) {
+    public Period(long finishAt) {
         this.finishAt = finishAt;
     }
 
-    public Period(long duration, TimeUnit timeUnit) {
-        put(duration, timeUnit);
+    public Period(long duration, TimeUnit unit) {
+        put(duration, unit);
+    }
+
+    public Period(TimeSpan duration) {
+        put(duration.getMillis());
     }
 
     public boolean isExpired() {
@@ -28,6 +33,10 @@ public class Period {
 
     public void put(long duration, TimeUnit unit) {
         this.finishAt = System.currentTimeMillis() + unit.toMillis(duration);
+    }
+
+    public void put(TimeSpan duration) {
+        put(duration.getMillis());
     }
 
     public void stop() {
