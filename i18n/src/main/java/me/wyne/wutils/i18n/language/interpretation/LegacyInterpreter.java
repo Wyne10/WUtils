@@ -13,7 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +70,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return language.getStrings().getStringList(path).stream()
                 .map(s -> getStringValidator().validateString(language.getStringMap(), s))
                 .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -79,35 +79,35 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
                 .map(s -> getStringValidator().validateString(language.getStringMap(), s))
                 .map(s -> I18n.applyTextReplacements(s, textReplacements))
                 .map(s -> ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getStringList(language, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -153,7 +153,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getStringList(language, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -161,7 +161,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -169,7 +169,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -177,7 +177,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -185,7 +185,7 @@ public class LegacyInterpreter extends BaseInterpreter implements ComponentInter
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(SERIALIZER.deserialize(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override

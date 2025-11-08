@@ -9,7 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +65,7 @@ public class BaseInterpreter implements StringInterpreter {
     public List<String> getStringList(Language language, String path) {
         return language.getStrings().getStringList(path).stream()
                 .map(s -> stringValidator.validateString(language.getStringMap(), s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -73,35 +73,35 @@ public class BaseInterpreter implements StringInterpreter {
         return language.getStrings().getStringList(path).stream()
                 .map(s -> stringValidator.validateString(language.getStringMap(), s))
                 .map(s -> I18n.applyTextReplacements(s, textReplacements))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable Player player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path) {
         return getStringList(language, path).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public List<String> getPlaceholderStringList(Language language, @Nullable OfflinePlayer player, String path, TextReplacement... textReplacements) {
         return getStringList(language, path, textReplacements).stream()
                 .map(s -> PlaceholderAPIWrapper.setPlaceholders(player, s))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
 }

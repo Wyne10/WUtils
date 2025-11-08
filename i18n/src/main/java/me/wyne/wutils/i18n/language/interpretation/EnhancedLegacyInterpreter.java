@@ -10,7 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +55,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getStringList(language, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getStringList(language, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getPlaceholderStringList(language, player, path).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class EnhancedLegacyInterpreter extends LegacyInterpreter implements Comp
         return baseInterpreter.getPlaceholderStringList(language, player, path, textReplacements).stream()
                 .map(s -> Component.empty().decoration(TextDecoration.ITALIC, false).append(EnhancedLegacyText.get().parse(s)))
                 .map(Component::asComponent)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override

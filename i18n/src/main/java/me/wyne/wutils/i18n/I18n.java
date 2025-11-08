@@ -150,11 +150,11 @@ public class I18n {
     }
 
     public static List<Component> asComponents(Collection<LocalizedComponent> localizedComponents) {
-        return localizedComponents.stream().map(LocalizedComponent::asComponent).collect(Collectors.toCollection(ArrayList::new));
+        return localizedComponents.stream().map(LocalizedComponent::asComponent).collect(Collectors.toCollection(LinkedList::new));
     }
 
     public static List<LocalizedComponent> applyComponentReplacements(Collection<LocalizedComponent> localizedComponents, ComponentReplacement... replacements) {
-        return localizedComponents.stream().map(lc -> lc.replace(replacements)).collect(Collectors.toCollection(ArrayList::new));
+        return localizedComponents.stream().map(lc -> lc.replace(replacements)).collect(Collectors.toCollection(LinkedList::new));
     }
 
     public static String applyTextReplacements(String string, TextReplacement ...textReplacements) {

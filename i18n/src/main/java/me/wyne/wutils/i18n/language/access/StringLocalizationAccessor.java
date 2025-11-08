@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public record StringLocalizationAccessor(String path, Language language, StringInterpreter stringInterpreter,
@@ -54,37 +56,37 @@ public record StringLocalizationAccessor(String path, Language language, StringI
 
     @Override
     public List<LocalizedString> getStringList(TextReplacement... textReplacements) {
-        return List.of(getString(textReplacements));
+        return linkedListOf(getString(textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player) {
-        return List.of(getPlaceholderString(player));
+        return linkedListOf(getPlaceholderString(player));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderString(player, textReplacements));
+        return linkedListOf(getPlaceholderString(player, textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player) {
-        return List.of(getPlaceholderString(player));
+        return linkedListOf(getPlaceholderString(player));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderString(player, textReplacements));
+        return linkedListOf(getPlaceholderString(player, textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender) {
-        return List.of(getPlaceholderString(sender));
+        return linkedListOf(getPlaceholderString(sender));
     }
 
     @Override
     public List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderString(sender, textReplacements));
+        return linkedListOf(getPlaceholderString(sender, textReplacements));
     }
 
     @Override
@@ -124,42 +126,46 @@ public record StringLocalizationAccessor(String path, Language language, StringI
 
     @Override
     public List<LocalizedComponent> getComponentList(TextReplacement... textReplacements) {
-        return List.of(getComponent(textReplacements));
+        return linkedListOf(getComponent(textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player) {
-        return List.of(getPlaceholderComponent(player));
+        return linkedListOf(getPlaceholderComponent(player));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderComponent(player, textReplacements));
+        return linkedListOf(getPlaceholderComponent(player, textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player) {
-        return List.of(getPlaceholderComponent(player));
+        return linkedListOf(getPlaceholderComponent(player));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderComponent(player, textReplacements));
+        return linkedListOf(getPlaceholderComponent(player, textReplacements));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender) {
-        return List.of(getPlaceholderComponent(sender));
+        return linkedListOf(getPlaceholderComponent(sender));
     }
 
     @Override
     public List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, TextReplacement... textReplacements) {
-        return List.of(getPlaceholderComponent(sender, textReplacements));
+        return linkedListOf(getPlaceholderComponent(sender, textReplacements));
     }
 
     @Override
     public LocalizationAccessor withLanguage(Language language) {
         return new StringLocalizationAccessor(path, language, stringInterpreter, componentInterpreter, audiences);
+    }
+
+    private <T> List<T> linkedListOf(T element) {
+        return new LinkedList<>(Collections.singletonList(element));
     }
 
 }
