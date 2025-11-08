@@ -4,6 +4,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -59,6 +60,20 @@ public class EventRegistry implements Listener, AutoCloseable {
 
     @Override
     public void close() {
+        clear();
+        registry.keySet().forEach(event -> {
+            try {
+                Method method = event.event().getMethod("getHandlerList");
+                method.setAccessible(true);
+                HandlerList handlerList = (HandlerList) method.invoke(null);
+                handlerList.unregister(this);
+            } catch (Exception e) {
+                throw new RuntimeException("An exception occurred trying to close event registry", e);
+            }
+        });
+    }
+
+    public void clear() {
         registry.values().forEach(Set::clear);
         handlers.clear();
     }
