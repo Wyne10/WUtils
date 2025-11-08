@@ -3,16 +3,16 @@ package me.wyne.wutils.i18n;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
-    public PluginI18nBuilder(JavaPlugin plugin) {
+    public PluginI18nBuilder(Plugin plugin) {
         this.plugin = plugin;
     }
 

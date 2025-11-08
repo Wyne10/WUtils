@@ -1,9 +1,9 @@
 package me.wyne.wutils.common.plugin;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 @FunctionalInterface
-public interface PluginStep<T extends JavaPlugin> {
+public interface PluginStep<T extends Plugin> {
     void run(T plugin);
 
     default StepScope getScope() {

@@ -2,7 +2,7 @@ package me.wyne.wutils.common.loadable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class Loader {
         configMap.put(path, config);
     }
 
-    public void load(JavaPlugin plugin) {
+    public void load(Plugin plugin) {
         loadableMap.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getKey().getPriority()))
                 .forEachOrdered(entry -> {

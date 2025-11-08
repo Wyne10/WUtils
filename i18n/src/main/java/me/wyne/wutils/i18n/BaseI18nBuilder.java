@@ -14,7 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +130,7 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return (T) this;
     }
 
-    public T loadLanguage(JavaPlugin plugin, String languageResourcePath) {
+    public T loadLanguage(Plugin plugin, String languageResourcePath) {
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
         if (!languageFile.exists())
             plugin.saveResource(languageResourcePath, false);

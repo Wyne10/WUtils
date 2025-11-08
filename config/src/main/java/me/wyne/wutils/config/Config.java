@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class Config {
         configGenerator = new ConfigGenerator(configFile, defaultConfigFile, log);
     }
 
-    public void setConfigGenerator(JavaPlugin plugin, String configPath) {
+    public void setConfigGenerator(Plugin plugin, String configPath) {
         Path defaultConfigPath = Path.of(plugin.getDataFolder().getAbsolutePath(), "defaults/", configPath);
         File defaultConfig = new File(plugin.getDataFolder(), "defaults/" + configPath);
         try {

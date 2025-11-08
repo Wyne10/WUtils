@@ -1,8 +1,8 @@
 package me.wyne.wutils.common.plugin;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
-public class ModifiedStep<T extends JavaPlugin> implements PluginStep<T> {
+public class ModifiedStep<T extends Plugin> implements PluginStep<T> {
 
     private final PluginStep<T> step;
     private final StepScope scope;

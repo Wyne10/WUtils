@@ -6,19 +6,18 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class EventRegistry implements Listener, AutoCloseable {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
     private final Map<RegisterableEvent, Set<RegisterableListener>> registry = new HashMap<>();
     private final Map<RegisterableListener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
 
-    public EventRegistry(JavaPlugin plugin) {
+    public EventRegistry(Plugin plugin) {
         this.plugin = plugin;
     }
 

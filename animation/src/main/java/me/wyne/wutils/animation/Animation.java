@@ -1,6 +1,6 @@
 package me.wyne.wutils.animation;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import java.util.Queue;
 
 public class Animation {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
     private final Queue<AnimationStep> steps = new LinkedList<>();
 
@@ -20,7 +20,7 @@ public class Animation {
     private final Map<AnimationStep, BukkitTask> parallelTasks = new LinkedHashMap<>();
     private Pair<AnimationStep, BukkitTask> currentTask = null;
 
-    public Animation(JavaPlugin plugin) {
+    public Animation(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -63,7 +63,7 @@ public class Animation {
         return runSteps.poll();
     }
 
-    public JavaPlugin getPlugin() {
+    public Plugin getPlugin() {
         return plugin;
     }
 

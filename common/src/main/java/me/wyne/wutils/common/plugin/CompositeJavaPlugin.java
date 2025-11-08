@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.plugin;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
@@ -7,7 +8,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public abstract class CompositeJavaPlugin<T extends JavaPlugin> extends JavaPlugin {
+public abstract class CompositeJavaPlugin<T extends Plugin> extends JavaPlugin {
 
     private final Set<PluginStep<T>> steps = new LinkedHashSet<>();
 

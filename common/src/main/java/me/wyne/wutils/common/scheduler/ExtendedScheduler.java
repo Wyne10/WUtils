@@ -4,7 +4,7 @@ import me.wyne.wutils.common.event.EventRegistry;
 import me.wyne.wutils.common.event.RegisterableListener;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -26,7 +26,7 @@ public class ExtendedScheduler implements RegisterableListener {
         } catch (NoSuchMethodException ignored) {}
     }
 
-    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Consumer<T> promise, Predicate<T> condition, long delay, Class<T> event) {
+    public <T extends Event> void runTaskLaterPromised(Plugin plugin, Runnable runnable, Consumer<T> promise, Predicate<T> condition, long delay, Class<T> event) {
         if (!promisedTasks.containsKey(event))
             promisedTasks.put(event, new LinkedHashSet<>());
         var task = new PromisedTask<>(plugin, runnable, promise, condition, delay);
@@ -35,15 +35,15 @@ public class ExtendedScheduler implements RegisterableListener {
         task.start();
     }
 
-    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Consumer<T> promise, long delay, Class<T> event) {
+    public <T extends Event> void runTaskLaterPromised(Plugin plugin, Runnable runnable, Consumer<T> promise, long delay, Class<T> event) {
         runTaskLaterPromised(plugin, runnable, promise, event1 -> true, delay, event);
     }
 
-    public <T extends Event> void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, Predicate<T> condition, long delay, Class<T> event) {
+    public <T extends Event> void runTaskLaterPromised(Plugin plugin, Runnable runnable, Predicate<T> condition, long delay, Class<T> event) {
         runTaskLaterPromised(plugin, runnable, event1 -> runnable.run(), condition, delay, event);
     }
 
-    public void runTaskLaterPromised(JavaPlugin plugin, Runnable runnable, long delay, Class<? extends Event>... events) {
+    public void runTaskLaterPromised(Plugin plugin, Runnable runnable, long delay, Class<? extends Event>... events) {
         for (Class<? extends Event> event : events) {
             runTaskLaterPromised(plugin, runnable, event1 -> runnable.run(), event1 -> true, delay, event);
         }

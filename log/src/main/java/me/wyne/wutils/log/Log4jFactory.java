@@ -9,7 +9,7 @@ import org.apache.logging.log4j.core.appender.rolling.TriggeringPolicy;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public final class Log4jFactory {
     private static final Map<Class<?>, Logger> existingLoggers = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(Log4jFactory.class);
 
-    public static Logger createLogger(JavaPlugin plugin, String filePattern, Level logLevel, String logDirectory, Log fallback) {
+    public static Logger createLogger(Plugin plugin, String filePattern, Level logLevel, String logDirectory, Log fallback) {
         if (existingLoggers.containsKey(plugin.getClass()))
             return existingLoggers.get(plugin.getClass());
 

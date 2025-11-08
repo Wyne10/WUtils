@@ -1,13 +1,13 @@
 package me.wyne.wutils.common.plugin;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CompositeStep<T extends JavaPlugin> implements PluginStep<T> {
+public class CompositeStep<T extends Plugin> implements PluginStep<T> {
 
     private final Set<PluginStep<T>> steps = new LinkedHashSet<>();
     private final StepScope scope;

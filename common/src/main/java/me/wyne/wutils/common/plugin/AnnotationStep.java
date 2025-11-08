@@ -1,11 +1,11 @@
 package me.wyne.wutils.common.plugin;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class AnnotationStep<T extends JavaPlugin> implements PluginStep<T> {
+public class AnnotationStep<T extends Plugin> implements PluginStep<T> {
 
     private final Method method;
     private final Step annotation;

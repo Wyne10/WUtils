@@ -6,7 +6,7 @@ import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -41,7 +41,7 @@ public class AnimationConfigurable implements CompositeConfigurable {
                 animationSteps.add(new AnimationStepConfigurable(config.getConfigurationSection(key))));
     }
 
-    public Animation build(JavaPlugin plugin, AnimationContext context) {
+    public Animation build(Plugin plugin, AnimationContext context) {
         Animation animation = new Animation(plugin);
         for (AnimationStepConfigurable step : animationSteps) {
             animation.addStep(step.build(context));
