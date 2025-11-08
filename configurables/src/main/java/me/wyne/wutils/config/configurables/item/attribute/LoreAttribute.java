@@ -6,6 +6,7 @@ import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
 import me.wyne.wutils.i18n.I18n;
+import me.wyne.wutils.i18n.language.component.BukkitComponentAudiences;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,9 +22,13 @@ public class LoreAttribute extends ConfigurableAttribute<List<String>> implement
         super(ItemAttribute.LORE.getKey(), value);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void apply(ItemMeta meta, ItemAttributeContext context) {
-        meta.setLoreComponents(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
+        if (I18n.global.getAudiences() instanceof BukkitComponentAudiences)
+            meta.setLoreComponents(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
+        else
+            meta.lore(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get()).toList());
     }
 
     @Override
