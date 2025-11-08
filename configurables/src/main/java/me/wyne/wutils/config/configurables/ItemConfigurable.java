@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ItemConfigurable extends AttributeConfigurable {
 
@@ -92,6 +94,18 @@ public class ItemConfigurable extends AttributeConfigurable {
     public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         return build(context);
+    }
+
+    public String getName() {
+        return getValue(ItemAttribute.NAME.getKey(), "");
+    }
+
+    public List<String> getLore() {
+        return getValue(ItemAttribute.LORE.getKey(), new LinkedList<>());
+    }
+
+    public int getAmount() {
+        return getValue(ItemAttribute.AMOUNT.getKey(), 0);
     }
 
     public static AttributeContainerBuilder builder() {

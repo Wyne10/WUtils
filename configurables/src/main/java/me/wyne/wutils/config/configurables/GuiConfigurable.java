@@ -76,6 +76,10 @@ public class GuiConfigurable extends ItemConfigurable {
         return buildGuiItem(context);
     }
 
+    public int getSlot() {
+        return getValue(GuiItemAttribute.SLOT.getKey(), 0);
+    }
+
     public static AttributeContainerBuilder builder() {
         return new GuiConfigurable().getAttributeContainer().toBuilder();
     }
