@@ -69,4 +69,8 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         return build(AnimationTypeAttribute.AnimationType.PARALLEL, context);
     }
 
+    public static AttributeContainerBuilder builder() {
+        return new AnimationStepConfigurable().getAttributeContainer().toBuilder();
+    }
+
 }

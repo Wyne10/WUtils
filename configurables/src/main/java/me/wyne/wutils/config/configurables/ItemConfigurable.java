@@ -94,4 +94,8 @@ public class ItemConfigurable extends AttributeConfigurable {
         return build(context);
     }
 
+    public static AttributeContainerBuilder builder() {
+        return new ItemConfigurable().getAttributeContainer().toBuilder();
+    }
+
 }

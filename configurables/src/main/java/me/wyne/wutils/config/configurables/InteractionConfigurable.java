@@ -78,4 +78,8 @@ public class InteractionConfigurable extends AttributeConfigurable {
         sendComponent(sender, I18n.toOfflinePlayer(sender), componentReplacements);
     }
 
+    public static AttributeContainerBuilder builder() {
+        return new InteractionConfigurable().getAttributeContainer().toBuilder();
+    }
+
 }

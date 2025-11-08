@@ -76,4 +76,8 @@ public class GuiConfigurable extends ItemConfigurable {
         return buildGuiItem(context);
     }
 
+    public static AttributeContainerBuilder builder() {
+        return new GuiConfigurable().getAttributeContainer().toBuilder();
+    }
+
 }
