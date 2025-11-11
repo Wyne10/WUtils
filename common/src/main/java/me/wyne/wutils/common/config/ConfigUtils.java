@@ -9,6 +9,7 @@ import me.wyne.wutils.common.operation.DoubleOperation;
 import me.wyne.wutils.common.operation.IntOperation;
 import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.range.TimeSpanRange;
+import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
@@ -78,6 +79,10 @@ public final class ConfigUtils {
 
     public static TimeSpanRange getTimeSpanRange(ConfigurationSection config, String path) {
         return Durations.getTimeSpanRange(config.getString(path));
+    }
+
+    public static VectorRange getVectorRange(ConfigurationSection config, String path) {
+        return VectorRange.getVectorRange(config.getString(path));
     }
 
 }

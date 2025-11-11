@@ -37,6 +37,9 @@ fun ConfigurationSection.getTicks(path: String) =
 fun ConfigurationSection.getTimeSpanRange(path: String) =
     ConfigUtils.getTimeSpanRange(this, path)
 
+fun ConfigurationSection.getVectorRange(path: String) =
+    ConfigUtils.getVectorRange(this, path)
+
 fun ConfigurationSection.getPotionTypeEnumSet(path: String): Set<PotionEffectType> =
     getStringList(path)
         .mapNotNull { runCatching { PotionEffectType.getByName(it) }.getOrNull() }

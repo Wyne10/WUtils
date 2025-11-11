@@ -47,4 +47,9 @@ public class VectorRange extends Range<Vector> {
         return new VectorRangeIterator(getMin(), getMax(), 1.0);
     }
 
+    public static VectorRange getVectorRange(String string) {
+        var split = string.split("\\.\\.");
+        return new VectorRange(VectorUtils.getVectorOrZero(split[0]), VectorUtils.getVectorOrZero(split[1]));
+    }
+
 }
