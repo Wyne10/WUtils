@@ -16,6 +16,11 @@ public class LocationRange extends VectorRange {
         this.world = world;
     }
 
+    public LocationRange(World world, VectorRange range) {
+        super(range.getMin(), range.getMax());
+        this.world = world;
+    }
+
     public LocationRange(Location center, double width, double height, double depth) {
         super(center.toVector(), width, height, depth);
         this.world = center.getWorld();
