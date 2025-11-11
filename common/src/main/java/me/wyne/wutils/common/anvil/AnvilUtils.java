@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static me.wyne.wutils.common.item.ItUtils.isNotNullOrAir;
-import static me.wyne.wutils.common.item.ItUtils.isNullOrAir;
+import static me.wyne.wutils.common.item.ItemUtils.isNotNullOrAir;
+import static me.wyne.wutils.common.item.ItemUtils.isNullOrAir;
 
 public final class AnvilUtils {
 

@@ -1,7 +1,7 @@
 package me.wyne.wutils.common.kotlin.item
 
 import com.destroystokyo.paper.MaterialTags
-import me.wyne.wutils.common.item.ItUtils
+import me.wyne.wutils.common.item.ItemUtils
 import me.wyne.wutils.common.item.TileStateLoader
 import org.bukkit.Material
 import org.bukkit.Tag
@@ -11,31 +11,31 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
 
 fun ItemStack?.isNullOrAir() =
-    ItUtils.isNullOrAir(this)
+    ItemUtils.isNullOrAir(this)
 
 fun ItemStack?.isNotNullOrAir() =
-    ItUtils.isNotNullOrAir(this)
+    ItemUtils.isNotNullOrAir(this)
 
 fun ItemStack.damageNaturally(player: Player) =
-    ItUtils.damageNaturally(this, player)
+    ItemUtils.damageNaturally(this, player)
 
 fun Collection<ItemStack>.dropActuallyNaturally(event: BlockBreakEvent) =
-    ItUtils.dropActuallyNaturally(this, event)
+    ItemUtils.dropActuallyNaturally(this, event)
 
 fun ItemStack.saveBlockState(blockState: BlockState) =
-    ItUtils.saveBlockState(this, blockState)
+    ItemUtils.saveBlockState(this, blockState)
 
 fun ItemStack.saveBlockState(blockState: BlockState, loader: TileStateLoader) =
-    ItUtils.saveBlockState(this, blockState, loader)
+    ItemUtils.saveBlockState(this, blockState, loader)
 
 fun ItemStack.saveBlockStateExtended(blockState: BlockState) =
-    ItUtils.saveBlockStateExtended(this, blockState)
+    ItemUtils.saveBlockStateExtended(this, blockState)
 
 fun ItemStack.loadBlockState(blockState: BlockState) =
-    ItUtils.loadBlockState(this, blockState)
+    ItemUtils.loadBlockState(this, blockState)
 
 fun ItemStack.loadBlockState(blockState: BlockState, loader: TileStateLoader) =
-    ItUtils.loadBlockState(this, blockState, loader)
+    ItemUtils.loadBlockState(this, blockState, loader)
 
 val ItemStack.fuelTicks: Short
     get() = this.type.fuelTicks

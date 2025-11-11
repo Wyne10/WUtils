@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.range;
 
+import me.wyne.wutils.common.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -26,6 +27,10 @@ public class LocationRange extends VectorRange {
 
     public World getWorld() {
         return world;
+    }
+
+    public Location getRandomLocation() {
+        return LocationUtils.of(getWorld(), getRandom());
     }
 
     public boolean contains(Location location) {

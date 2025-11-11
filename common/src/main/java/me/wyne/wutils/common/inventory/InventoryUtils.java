@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public final class IUtils {
+public final class InventoryUtils {
 
     public static boolean addItem(Inventory inventory, ItemStack... items) {
         return inventory.addItem(items).isEmpty();

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class ItUtils {
+public final class ItemUtils {
 
     public static boolean isNullOrAir(ItemStack item) {
         return item == null || item.getType() == Material.AIR;

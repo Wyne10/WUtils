@@ -1,6 +1,6 @@
 package me.wyne.wutils.common.block;
 
-import me.wyne.wutils.common.item.ItUtils;
+import me.wyne.wutils.common.item.ItemUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class BUtils {
+public final class BlockUtils {
 
     public static void breakActuallyNaturally(Block block, ItemStack tool, Player player) {
         var drops = block.getDrops(tool, player);
@@ -25,13 +25,13 @@ public final class BUtils {
         if (naturalBreakEvent.isCancelled()) return;
         block.setType(Material.AIR);
         if (naturalBreakEvent.damageTool())
-            ItUtils.damageNaturally(tool, player);
+            ItemUtils.damageNaturally(tool, player);
         if (naturalBreakEvent.getExpToDrop() > 0) {
             var exp = (ExperienceOrb) block.getWorld().spawnEntity(block.getLocation().toCenterLocation(), EntityType.EXPERIENCE_ORB);
             exp.setExperience(naturalBreakEvent.getExpToDrop());
         }
         if (naturalBreakEvent.isDropItems() && player.getGameMode() != GameMode.CREATIVE) {
-            ItUtils.dropActuallyNaturally(drops, naturalBreakEvent);
+            ItemUtils.dropActuallyNaturally(drops, naturalBreakEvent);
         }
     }
 

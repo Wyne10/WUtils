@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-public final class CUtils {
+public final class CommandUtils {
 
     public static Argument<Player> onlinePlayer(String nodeName) {
         return new EntitySelectorArgument.OnePlayer(nodeName)
