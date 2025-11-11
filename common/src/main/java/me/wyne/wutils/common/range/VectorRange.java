@@ -44,7 +44,7 @@ public class VectorRange extends Range<Vector> {
 
     @Override
     public @NotNull Iterator<Vector> iterator() {
-        return new VectorRangeEdgeIterator(getMin(), getMax(), 0.25);
+        return new VectorRangeIterator(getMin(), getMax(), 1.0);
     }
 
 }

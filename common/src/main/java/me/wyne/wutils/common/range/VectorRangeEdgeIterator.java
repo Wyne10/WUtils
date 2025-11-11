@@ -9,10 +9,10 @@ public class VectorRangeEdgeIterator implements Iterator<Vector> {
 
     private final Vector min;
     private final Vector max;
+    private final double step;
 
     private int edgeIndex = 0;
     private double x, y, z;
-    private final double step;
 
     public VectorRangeEdgeIterator(Vector min, Vector max, double step) {
         this.min = min;
