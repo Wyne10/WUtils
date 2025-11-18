@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ObservableTask {
+public class ObservableTask implements Runnable {
 
     private final Plugin plugin;
     private final List<Runnable> subscribers = new LinkedList<>();
@@ -29,24 +29,25 @@ public class ObservableTask {
 
     public void runTaskLater(long delay) {
         cancel();
-        task = Bukkit.getScheduler().runTaskLater(plugin, this::run, delay);
+        task = Bukkit.getScheduler().runTaskLater(plugin, this, delay);
     }
 
     public void runTaskLaterAsynchronously(long delay) {
         cancel();
-        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this::run, delay);
+        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay);
     }
 
     public void runTaskTimer(long delay, long period) {
         cancel();
-        task = Bukkit.getScheduler().runTaskTimer(plugin, this::run, delay, period);
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this, delay, period);
     }
 
     public void runTaskTimerAsynchronously(long delay, long period) {
         cancel();
-        task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::run, delay, period);
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period);
     }
 
+    @Override
     public void run() {
         subscribers.forEach(Runnable::run);
     }
