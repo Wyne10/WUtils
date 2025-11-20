@@ -304,7 +304,7 @@ public class Log {
             else if (level.intValue() <= 500)
                 levelMessage = "DEBUG";
 
-            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: [" + logger.getName() + "] " + log;
+            String writeLog = "[" + dateTimeFormatter.format(Instant.now()) + " " + levelMessage + "]: " + log;
 
             String logFileName = LocalDate.now() + ".log";
             File logFile = cachedFiles.getOrDefault(logFileName, new File(logDirectory, logFileName));

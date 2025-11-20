@@ -20,7 +20,7 @@ import java.util.Map;
 public final class Log4jFactory {
 
     public static final String DEFAULT_CONSOLE_MESSAGE_PATTERN = "[%c{1}] %msg%n";
-    public static final String DEFAULT_FILE_MESSAGE_PATTERN = "[%d{HH:mm:ss} %level]: [%c{1}] %msg%n";
+    public static final String DEFAULT_FILE_MESSAGE_PATTERN = "[%d{HH:mm:ss} %level]: %msg%n";
 
     private static final Map<Class<?>, Logger> existingLoggers = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(Log4jFactory.class);
