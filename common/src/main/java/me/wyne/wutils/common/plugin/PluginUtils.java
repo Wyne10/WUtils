@@ -18,4 +18,8 @@ public final class PluginUtils {
         return plugin;
     }
 
+    public static void setPlugin(JavaPlugin plugin) {
+        PluginUtils.plugin = plugin;
+    }
+
 }
