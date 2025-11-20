@@ -52,7 +52,7 @@ public final class Log4jFactory {
                     .build();
 
             RollingFileAppender rollingFileAppender = RollingFileAppender.newBuilder()
-                    .setName("RollingFile-" + plugin.getClass().getName())
+                    .setName("RollingFile-" + plugin.getClass().getSimpleName())
                     .withFileName(logFileName)
                     .withFilePattern(logFilePattern)
                     .withPolicy(triggeringPolicy)
@@ -63,12 +63,12 @@ public final class Log4jFactory {
             rollingFileAppender.start();
             config.addAppender(rollingFileAppender);
 
-            LoggerConfig loggerConfig = new LoggerConfig(plugin.getLogger().getName(), logLevel.getLevel(), true);
+            LoggerConfig loggerConfig = new LoggerConfig(plugin.getClass().getSimpleName(), logLevel.getLevel(), true);
             loggerConfig.addAppender(rollingFileAppender, logLevel.getLevel(), null);
-            config.addLogger(plugin.getLogger().getName(), loggerConfig);
+            config.addLogger(plugin.getClass().getSimpleName(), loggerConfig);
             context.updateLoggers();
 
-            existingLoggers.putIfAbsent(plugin.getClass(), new Log4jLogger(LoggerFactory.getLogger(plugin.getLogger().getName())));
+            existingLoggers.putIfAbsent(plugin.getClass(), new Log4jLogger(LoggerFactory.getLogger(plugin.getClass().getSimpleName())));
         } catch (NoSuchMethodError e) {
             log.debug("Failed to initialize Log4jLogger, using JulLogger", e);
             existingLoggers.putIfAbsent(plugin.getClass(), new JulLogger(fallback));
