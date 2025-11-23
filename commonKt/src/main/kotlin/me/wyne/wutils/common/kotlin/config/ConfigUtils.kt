@@ -4,6 +4,7 @@ import me.wyne.wutils.common.config.ConfigUtils
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.potion.PotionEffectType
+import kotlin.random.Random
 
 const val RANGE_DELIMITER = ".."
 const val COMMA_DELIMITER = ","
@@ -79,3 +80,6 @@ fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.
     }
     return def
 }
+
+fun DoubleRange.random() =
+    Random.nextDouble(start, endInclusive)
