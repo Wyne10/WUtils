@@ -36,12 +36,12 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener 
 
     public void runTaskLater(long delay) {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); eventRegistry.close(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
     }
 
     public void runTaskLaterAsynchronously(long delay) {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); eventRegistry.close(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
     }
 
     public void runTaskTimer(long delay, long period) {
@@ -55,14 +55,14 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener 
     }
 
     public void cancel(Event event) {
-        eventRegistry.close();
+        eventRegistry.closeAndReportException();
         if (task == null || task.isCancelled()) return;
         task.cancel();
         promise.accept((T) event);
     }
 
     public void cancel() {
-        eventRegistry.close();
+        eventRegistry.closeAndReportException();
         if (task == null || task.isCancelled()) return;
         task.cancel();
         promise.accept(null);
