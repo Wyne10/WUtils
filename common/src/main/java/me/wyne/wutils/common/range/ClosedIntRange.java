@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.range;
 
+import me.wyne.wutils.common.range.iterator.ClosedIntRangeIterator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -24,6 +25,11 @@ public class ClosedIntRange extends Range<Integer> {
     @Override
     public @NotNull Iterator<Integer> iterator() {
         return new ClosedIntRangeIterator(getMin(), getMax(), 1);
+    }
+
+    public static ClosedIntRange getIntRange(String string) {
+        var split = string.split("\\.\\.");
+        return new ClosedIntRange(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
     }
 
 }

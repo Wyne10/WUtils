@@ -69,3 +69,13 @@ fun ConfigurationSection.getIntRange(path: String, def: IntRange = 0..0): IntRan
     }
     return def
 }
+
+typealias DoubleRange = ClosedFloatingPointRange<Double>
+
+fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.0): DoubleRange {
+    val args = getString(path)?.split(RANGE_DELIMITER)
+    args?.let {
+        return it.first().toDouble()..it.last().toDouble()
+    }
+    return def
+}

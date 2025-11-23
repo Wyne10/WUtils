@@ -1,4 +1,4 @@
-package me.wyne.wutils.common.range;
+package me.wyne.wutils.common.range.iterator;
 
 import me.wyne.wutils.common.duration.Durations;
 import me.wyne.wutils.common.duration.TimeSpan;

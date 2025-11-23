@@ -2,6 +2,7 @@ package me.wyne.wutils.common.range;
 
 import me.wyne.wutils.common.duration.Durations;
 import me.wyne.wutils.common.duration.TimeSpan;
+import me.wyne.wutils.common.range.iterator.TimeSpanIterator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;

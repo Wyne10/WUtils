@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.range;
 
+import me.wyne.wutils.common.range.iterator.VectorRangeIterator;
 import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;

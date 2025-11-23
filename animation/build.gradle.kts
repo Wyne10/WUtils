@@ -13,7 +13,7 @@ dependencies {
     implementation("org.javatuples:javatuples:1.2")
 }
 
-version = "2.0.4"
+version = "2.0.5"
 
 publishing {
     publications {
