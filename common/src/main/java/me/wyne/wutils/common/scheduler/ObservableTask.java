@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.scheduler;
 
+import me.wyne.wutils.common.terminable.Terminable;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ObservableTask implements Runnable {
+public class ObservableTask implements Runnable, Terminable {
 
     private final Plugin plugin;
     private final List<Runnable> subscribers = new LinkedList<>();
@@ -55,6 +56,11 @@ public class ObservableTask implements Runnable {
     public void cancel() {
         if (task == null || task.isCancelled()) return;
         task.cancel();
+    }
+
+    @Override
+    public void close() {
+        cancel();
     }
 
     @Nullable
