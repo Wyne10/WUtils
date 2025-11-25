@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class Animation {
+public class Animation implements AutoCloseable{
 
     private final Plugin plugin;
 
@@ -40,6 +40,11 @@ public class Animation {
         parallelTasks.entrySet().forEach(entry -> { entry.getValue().cancel(); entry.getKey().close(); }); // Cancel and finalize parallel tasks
         parallelTasks.clear();
         runSteps.clear(); // Run steps are not finalized since they were not started
+    }
+
+    @Override
+    public void close() {
+        stop();
     }
 
     public void addStep(AnimationStep step) {

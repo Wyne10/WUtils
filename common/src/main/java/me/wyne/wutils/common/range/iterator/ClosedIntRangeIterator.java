@@ -1,4 +1,4 @@
-package me.wyne.wutils.common.range;
+package me.wyne.wutils.common.range.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

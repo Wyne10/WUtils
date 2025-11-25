@@ -2,6 +2,7 @@ package me.wyne.wutils.common.scheduler;
 
 import me.wyne.wutils.common.event.EventRegistry;
 import me.wyne.wutils.common.event.RegisterableListener;
+import me.wyne.wutils.common.terminable.Terminable;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class EventPromisedTask<T extends Event> implements RegisterableListener {
+public class EventPromisedTask<T extends Event> implements RegisterableListener, Terminable {
 
     private final Plugin plugin;
     private final Runnable runnable;
@@ -36,12 +37,12 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener 
 
     public void runTaskLater(long delay) {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); eventRegistry.close(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
     }
 
     public void runTaskLaterAsynchronously(long delay) {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); eventRegistry.close(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
     }
 
     public void runTaskTimer(long delay, long period) {
@@ -55,17 +56,27 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener 
     }
 
     public void cancel(Event event) {
-        eventRegistry.close();
+        eventRegistry.closeAndReportException();
         if (task == null || task.isCancelled()) return;
         task.cancel();
         promise.accept((T) event);
     }
 
-    public void cancel() {
+    public void cancel() throws Exception {
         eventRegistry.close();
         if (task == null || task.isCancelled()) return;
         task.cancel();
         promise.accept(null);
+    }
+
+    @Override
+    public void close() throws Exception {
+        cancel();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return task != null && task.isCancelled();
     }
 
     @Nullable

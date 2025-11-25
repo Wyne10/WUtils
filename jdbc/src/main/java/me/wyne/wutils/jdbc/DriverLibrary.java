@@ -56,7 +56,7 @@ public enum DriverLibrary {
             "org.sqlite.JDBC"
     );
 
-    public static Logger logger = LoggerFactory.getLogger(DriverLibrary.class);
+    public static Logger logger = PluginUtils.getLogger();
 
     private final Path filenamePath;
     private URL mavenRepoURL;
@@ -81,7 +81,7 @@ public enum DriverLibrary {
         try {
             this.mavenRepoURL = new URL("https://repo1.maven.org/maven2/" + mavenPath);
         } catch (MalformedURLException e) {
-            LoggerFactory.getLogger(getClass()).error("An exception occurred trying to format maven path to URL", e);
+            PluginUtils.getLogger().error("An exception occurred trying to format maven path to URL", e);
         }
     }
 

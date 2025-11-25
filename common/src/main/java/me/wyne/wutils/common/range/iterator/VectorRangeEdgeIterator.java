@@ -1,4 +1,4 @@
-package me.wyne.wutils.common.range;
+package me.wyne.wutils.common.range.iterator;
 
 import org.bukkit.util.Vector;
 

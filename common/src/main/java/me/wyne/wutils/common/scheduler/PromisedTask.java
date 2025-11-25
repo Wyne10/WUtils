@@ -1,11 +1,12 @@
 package me.wyne.wutils.common.scheduler;
 
+import me.wyne.wutils.common.terminable.Terminable;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
-public class PromisedTask {
+public class PromisedTask implements Terminable {
 
     private final Plugin plugin;
     private final Runnable runnable;
@@ -47,6 +48,11 @@ public class PromisedTask {
         if (task == null || task.isCancelled()) return;
         task.cancel();
         promise.run();
+    }
+
+    @Override
+    public void close() {
+        cancel();
     }
 
     @Nullable

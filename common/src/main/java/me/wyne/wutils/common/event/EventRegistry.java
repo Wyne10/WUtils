@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.event;
 
+import me.wyne.wutils.common.terminable.Terminable;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -11,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class EventRegistry implements Listener, AutoCloseable {
+public class EventRegistry implements Listener, Terminable {
 
     private final Plugin plugin;
 
@@ -49,18 +50,14 @@ public class EventRegistry implements Listener, AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         clear();
-        registry.keySet().forEach(event -> {
-            try {
-                Method method = event.event().getMethod("getHandlerList");
-                method.setAccessible(true);
-                HandlerList handlerList = (HandlerList) method.invoke(null);
-                handlerList.unregister(this);
-            } catch (Exception e) {
-                throw new RuntimeException("An exception occurred trying to close event registry", e);
-            }
-        });
+        for (RegisterableEvent event : registry.keySet()) {
+            Method method = event.event().getMethod("getHandlerList");
+            method.setAccessible(true);
+            HandlerList handlerList = (HandlerList) method.invoke(null);
+            handlerList.unregister(this);
+        }
     }
 
     public void clear() {
