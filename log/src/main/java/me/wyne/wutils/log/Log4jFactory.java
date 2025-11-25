@@ -23,7 +23,7 @@ public final class Log4jFactory {
     public static final String DEFAULT_FILE_MESSAGE_PATTERN = "[%d{HH:mm:ss} %level]: %msg%n";
 
     private static final Map<Class<?>, Logger> existingLoggers = new HashMap<>();
-    private static final Logger log = LoggerFactory.getLogger(Log4jFactory.class);
+    private static final Logger log = PluginUtils.getLogger();
 
     public static Logger createLogger(Plugin plugin, String filePattern, Level logLevel, String logDirectory, Log fallback) {
         if (existingLoggers.containsKey(plugin.getClass()))

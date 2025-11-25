@@ -8,7 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.*;
 public class Config {
 
     public static final Config global = new Config();
-    public Logger log = LoggerFactory.getLogger(getClass());
+    public Logger log = PluginUtils.getLogger();
 
     private ConfigGenerator configGenerator;
     /**

@@ -17,7 +17,6 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
-    private Logger log = LoggerFactory.getLogger(I18n.class);
+    private Logger log = PluginUtils.getLogger();
 
     private ComponentAudiences componentAudiences = new NativeComponentAudiences();
 
@@ -123,10 +122,10 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
     public T loadLanguage(@Nullable Language defaultLanguage, File languageFile) {
         String languageCode = getLanguageCode(languageFile);
-        if (languageMap.containsKey(languageCode))
+        if (getLanguageMap().containsKey(languageCode))
             return (T) this;
-        languageMap.put(languageCode, new BaseLanguage(defaultLanguage, languageFile, log));
-        log.debug("Loaded {} language", languageCode);
+        getLanguageMap().put(languageCode, new BaseLanguage(defaultLanguage, languageFile, getLog()));
+        getLog().debug("Loaded {} language", languageCode);
         return (T) this;
     }
 
@@ -149,13 +148,13 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
     }
 
     public Language getDefaultLanguage() {
-        if (!languageMap.containsKey(defaultLanguageCode))
+        if (!getLanguageMap().containsKey(getDefaultLanguageCode()))
             throw new NullPointerException("Default language is null or not loaded");
-        return languageMap.get(defaultLanguageCode);
+        return languageMap.get(getDefaultLanguageCode());
     }
 
     public I18n build() {
-        return new I18n(componentAudiences, languageMap, getDefaultLanguage(), stringInterpreter, componentInterpreter, usePlayerLanguage);
+        return new I18n(getComponentAudience(), getLanguageMap(), getDefaultLanguage(), getStringInterpreter(), getComponentInterpreter(), isUsePlayerLanguage());
     }
 
 }

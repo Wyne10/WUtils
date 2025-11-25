@@ -1,28 +1,40 @@
-package me.wyne.wutils.common.plugin;
+package me.wyne.wutils.log;
 
 import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class PluginUtils {
+final class PluginUtils {
 
     public static final Pattern VERSION_REGEX = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?");
 
     private static int currentServerVersion = 0;
     private static Plugin plugin = null;
+    private static Logger logger = null;
 
-    @Nonnull
+    @NotNull
     public static synchronized Plugin getPlugin() {
         if (plugin == null) {
             plugin = JavaPlugin.getProvidingPlugin(PluginUtils.class);
         }
 
         return plugin;
+    }
+
+    @NotNull
+    public static Logger getLogger() {
+        if (logger == null) {
+            logger = getPlugin().getSLF4JLogger();
+        }
+
+        return logger;
     }
 
     public static int getServerVersion() {
