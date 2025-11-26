@@ -19,6 +19,8 @@ public class EventRegistry implements Listener, Terminable {
     private final Map<RegisterableEvent, Set<RegisterableListener>> registry = new HashMap<>();
     private final Map<RegisterableListener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
 
+    private final Object lock = new Object();
+
     public EventRegistry(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -52,17 +54,21 @@ public class EventRegistry implements Listener, Terminable {
     @Override
     public void close() throws Exception {
         clear();
-        for (RegisterableEvent event : registry.keySet()) {
-            Method method = event.event().getMethod("getHandlerList");
-            method.setAccessible(true);
-            HandlerList handlerList = (HandlerList) method.invoke(null);
-            handlerList.unregister(this);
+        synchronized (lock) {
+            for (RegisterableEvent event : registry.keySet()) {
+                Method method = event.event().getMethod("getHandlerList");
+                method.setAccessible(true);
+                HandlerList handlerList = (HandlerList) method.invoke(null);
+                handlerList.unregister(this);
+            }
         }
     }
 
     public void clear() {
-        registry.values().forEach(Set::clear);
-        handlers.clear();
+        synchronized (lock) {
+            registry.values().forEach(Set::clear);
+            handlers.clear();
+        }
     }
 
     private void registerEvent(Plugin plugin, RegisterableEvent event) {

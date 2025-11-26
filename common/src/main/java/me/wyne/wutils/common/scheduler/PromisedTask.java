@@ -24,29 +24,41 @@ public class PromisedTask implements Terminable {
         this(plugin, runnable, runnable);
     }
 
-    public void runTaskLater(long delay) {
+    public synchronized void runTask() {
+        cancel();
+        task = Bukkit.getScheduler().runTask(plugin, runnable);
+    }
+
+    public synchronized void runTaskAsynchronously() {
+        cancel();
+        task = Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+    }
+
+    public synchronized void runTaskLater(long delay) {
         cancel();
         task = Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
     }
 
-    public void runTaskLaterAsynchronously(long delay) {
+    public synchronized void runTaskLaterAsynchronously(long delay) {
         cancel();
         task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
     }
 
-    public void runTaskTimer(long delay, long period) {
+    public synchronized void runTaskTimer(long delay, long period) {
         cancel();
         task = Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period);
     }
 
-    public void runTaskTimerAsynchronously(long delay, long period) {
+    public synchronized void runTaskTimerAsynchronously(long delay, long period) {
         cancel();
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
     }
 
     public void cancel() {
-        if (task == null || task.isCancelled()) return;
-        task.cancel();
+        synchronized (this) {
+            if (task == null || task.isCancelled()) return;
+            task.cancel();
+        }
         promise.run();
     }
 
@@ -56,7 +68,7 @@ public class PromisedTask implements Terminable {
     }
 
     @Nullable
-    public BukkitTask getTask() {
+    public synchronized BukkitTask getTask() {
         return task;
     }
 

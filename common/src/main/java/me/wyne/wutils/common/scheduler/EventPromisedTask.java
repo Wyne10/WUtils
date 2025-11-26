@@ -35,37 +35,51 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener,
         this(plugin, runnable, calledEvent -> runnable.run(), event);
     }
 
-    public void runTaskLater(long delay) {
+    public synchronized void runTask() {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTask(plugin, () -> { runnable.run(); task.cancel(); eventRegistry.closeAndReportException(); });
     }
 
-    public void runTaskLaterAsynchronously(long delay) {
+    public synchronized void runTaskAsynchronously() {
         if (task != null) return;
-        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); eventRegistry.closeAndReportException(); task.cancel(); }, delay);
+        task = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> { runnable.run(); task.cancel(); eventRegistry.closeAndReportException(); });
     }
 
-    public void runTaskTimer(long delay, long period) {
+    public synchronized void runTaskLater(long delay) {
+        if (task != null) return;
+        task = Bukkit.getScheduler().runTaskLater(plugin, () -> { runnable.run(); task.cancel(); eventRegistry.closeAndReportException(); }, delay);
+    }
+
+    public synchronized void runTaskLaterAsynchronously(long delay) {
+        if (task != null) return;
+        task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> { runnable.run(); task.cancel(); eventRegistry.closeAndReportException(); }, delay);
+    }
+
+    public synchronized void runTaskTimer(long delay, long period) {
         if (task != null) return;
         task = Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period);
     }
 
-    public void runTaskTimerAsynchronously(long delay, long period) {
+    public synchronized void runTaskTimerAsynchronously(long delay, long period) {
         if (task != null) return;
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
     }
 
-    public void cancel(Event event) {
-        eventRegistry.closeAndReportException();
-        if (task == null || task.isCancelled()) return;
-        task.cancel();
+    private void cancel(Event event) {
+        synchronized (this) {
+            if (task == null || task.isCancelled()) return;
+            eventRegistry.closeAndReportException();
+            task.cancel();
+        }
         promise.accept((T) event);
     }
 
     public void cancel() throws Exception {
-        eventRegistry.close();
-        if (task == null || task.isCancelled()) return;
-        task.cancel();
+        synchronized (this) {
+            if (task == null || task.isCancelled()) return;
+            eventRegistry.close();
+            task.cancel();
+        }
         promise.accept(null);
     }
 
@@ -75,12 +89,12 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener,
     }
 
     @Override
-    public boolean isClosed() {
+    public synchronized boolean isClosed() {
         return task != null && task.isCancelled();
     }
 
     @Nullable
-    public BukkitTask getTask() {
+    public synchronized BukkitTask getTask() {
         return task;
     }
 
