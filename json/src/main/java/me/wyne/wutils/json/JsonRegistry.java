@@ -12,7 +12,7 @@ import java.util.Map;
 public class JsonRegistry {
 
     public static final JsonRegistry global = new JsonRegistry();
-    public Logger log = PluginUtils.getLogger();
+    public Logger log = PluginUtils.getLogger(getClass());
 
     private Gson gson = new Gson();
     private File directory;

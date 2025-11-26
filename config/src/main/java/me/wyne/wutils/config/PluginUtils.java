@@ -19,19 +19,26 @@ final class PluginUtils {
     private static Plugin plugin = null;
     private static Logger logger = null;
 
-    @NotNull
     public static synchronized Plugin getPlugin() {
         if (plugin == null) {
-            plugin = JavaPlugin.getProvidingPlugin(PluginUtils.class);
+            try {
+                plugin = JavaPlugin.getProvidingPlugin(PluginUtils.class);
+            } catch (IllegalArgumentException ignored) {
+                return null;
+            }
         }
 
         return plugin;
     }
 
     @NotNull
-    public static Logger getLogger() {
+    public static Logger getLogger(Class<?> fallback) {
         if (logger == null) {
-            logger = LoggerFactory.getLogger(getPlugin().getLogger().getName());
+            var plugin = getPlugin();
+            if (plugin != null)
+                logger = LoggerFactory.getLogger(getPlugin().getLogger().getName());
+            else
+                logger = LoggerFactory.getLogger(fallback.getSimpleName());
         }
 
         return logger;

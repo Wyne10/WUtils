@@ -20,7 +20,7 @@ import java.util.*;
 public class Config {
 
     public static final Config global = new Config();
-    public Logger log = PluginUtils.getLogger();
+    public Logger log = PluginUtils.getLogger(getClass());
 
     private ConfigGenerator configGenerator;
     /**

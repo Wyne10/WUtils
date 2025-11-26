@@ -26,7 +26,7 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
-    private Logger log = PluginUtils.getLogger();
+    private Logger log = PluginUtils.getLogger(getClass());
 
     private ComponentAudiences componentAudiences = new NativeComponentAudiences();
 
