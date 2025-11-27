@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public final class CommandUtils {
 
