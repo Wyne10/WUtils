@@ -19,6 +19,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -143,6 +145,22 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     @Override
     public @NotNull Component asComponent() {
         return component;
+    }
+
+    public Map<String, String> styleMap(String key) {
+        var result = new LinkedHashMap<String, String>();
+        result.put(key, toString());
+        result.put(key + "-legacy", legacy());
+        result.put(key + "-parsed", legacySection());
+        result.put(key + "-mm", miniMessage());
+        result.put(key + "-plain", plain());
+        result.put(key + "-plainText", plainText());
+        result.put(key + "-gson", gson());
+        return result;
+    }
+
+    public String style(String key, String value) {
+        return styleMap(key).get(value);
     }
 
 }

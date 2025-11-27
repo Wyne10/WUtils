@@ -3,7 +3,7 @@ package me.wyne.wutils.i18n;
 import me.wyne.wutils.i18n.language.BaseLanguage;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.component.ComponentAudiences;
-import me.wyne.wutils.i18n.language.component.NativeComponentAudiences;
+import me.wyne.wutils.i18n.language.component.PaperComponentAudiences;
 import me.wyne.wutils.i18n.language.interpretation.BaseInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
 import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
@@ -28,7 +28,7 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
     private Logger log = PluginUtils.getLogger(getClass());
 
-    private ComponentAudiences componentAudiences = new NativeComponentAudiences();
+    private ComponentAudiences componentAudiences = new PaperComponentAudiences();
 
     private final Map<String, Language> languageMap = new HashMap<>();
     private String defaultLanguageCode;

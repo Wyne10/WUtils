@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class NativeComponentAudiences implements ComponentAudiences {
+public class PaperComponentAudiences implements ComponentAudiences {
 
     @Override
     public Audience player(Player player) {
