@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.range.iterator;
 
+import me.wyne.wutils.common.range.VectorRange;
 import org.bukkit.util.Vector;
 
 import java.util.Iterator;
@@ -22,6 +23,10 @@ public class VectorRangeIterator implements Iterator<Vector> {
         this.x = min.getX();
         this.y = min.getY();
         this.z = min.getZ();
+    }
+
+    public VectorRangeIterator(VectorRange range, double step) {
+        this(range.getMin(), range.getMax(), step);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.range.iterator;
 
+import me.wyne.wutils.common.range.VectorRange;
 import org.bukkit.util.Vector;
 
 import java.util.Iterator;
@@ -19,6 +20,10 @@ public class VectorRangeEdgeIterator implements Iterator<Vector> {
         this.max = max;
         this.step = step;
         resetEdge();
+    }
+
+    public VectorRangeEdgeIterator(VectorRange range, double step) {
+        this(range.getMin(), range.getMax(), step);
     }
 
     @SuppressWarnings("DuplicateBranchesInSwitch")
