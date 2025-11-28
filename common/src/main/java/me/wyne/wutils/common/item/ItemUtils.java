@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,8 @@ public final class ItemUtils {
         return item != null && item.getType() != Material.AIR;
     }
 
-    public static void damageNaturally(ItemStack item, Player player) {
+    public static void damageNaturally(@Nullable ItemStack item, Player player) {
+        if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (item.getType().getMaxDurability() <= 0) return;
         if (item.getItemMeta().isUnbreakable()) return;

@@ -11,10 +11,15 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public final class BlockUtils {
 
-    public static void breakActuallyNaturally(Block block, ItemStack tool, Player player) {
+    private static final ItemStack EMPTY_TOOL = new ItemStack(Material.AIR);
+
+    public static void breakActuallyNaturally(Block block, @Nullable ItemStack tool, Player player) {
+        if (tool == null)
+            tool = EMPTY_TOOL;
         var drops = block.getDrops(tool, player);
         var naturalBreakEvent = new NaturalBlockBreakEvent(block, player);
         naturalBreakEvent.setDropItems(!drops.isEmpty());
