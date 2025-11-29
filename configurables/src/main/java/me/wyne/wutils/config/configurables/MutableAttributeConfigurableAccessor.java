@@ -21,13 +21,13 @@ public class MutableAttributeConfigurableAccessor<T extends AttributeConfigurabl
     }
 
     @Override
-    public T with(String key, AttributeFactory factory) {
+    public T with(String key, AttributeFactory<?> factory) {
         attributeConfigurable.getAttributeContainer().with(key, factory);
         return attributeConfigurable;
     }
 
     @Override
-    public T with(Map<String, AttributeFactory> keyMap) {
+    public T with(Map<String, AttributeFactory<?>> keyMap) {
         attributeConfigurable.getAttributeContainer().with(keyMap);
         return attributeConfigurable;
     }

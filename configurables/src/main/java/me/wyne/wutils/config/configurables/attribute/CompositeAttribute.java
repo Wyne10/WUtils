@@ -13,8 +13,8 @@ public class CompositeAttribute<V extends Attribute<?>> extends ConfigurableAttr
         super(key, attributes);
     }
 
-    @SuppressWarnings({"unchecked", "DataFlowIssue"})
-    public CompositeAttribute(String key, ConfigurationSection config, AttributeFactory factory) {
+    @SuppressWarnings({"DataFlowIssue"})
+    public CompositeAttribute(String key, ConfigurationSection config, AttributeFactory<V> factory) {
         super(key, new LinkedHashSet<>());
         if (!config.contains(key)) return;
         config.getConfigurationSection(key).getKeys(false).forEach(

@@ -38,13 +38,13 @@ public class MutableAttributeContainer extends AttributeContainerBase {
     }
 
     @Override
-    public AttributeContainer with(String key, AttributeFactory factory) {
+    public AttributeContainer with(String key, AttributeFactory<?> factory) {
         getAttributeMap().put(key, factory);
         return this;
     }
 
     @Override
-    public AttributeContainer with(Map<String, AttributeFactory> keyMap) {
+    public AttributeContainer with(Map<String, AttributeFactory<?>> keyMap) {
         getAttributeMap().putAll(keyMap);
         return this;
     }

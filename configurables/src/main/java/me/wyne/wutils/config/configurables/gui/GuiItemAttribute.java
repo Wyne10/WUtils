@@ -5,7 +5,6 @@ public enum GuiItemAttribute {
     SOUND("sound"),
     SLOT("slot"),
     COMMAND("command"),
-    COMMANDS("commands"),
     CLICK("click");
 
     private final String key;

@@ -29,10 +29,10 @@ public class Skull64Attribute extends ConfigurableAttribute<String> implements M
         ((SkullMeta)meta).setPlayerProfile(profile);
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<Skull64Attribute> {
         @Override
         public Skull64Attribute create(String key, ConfigurationSection config) {
-            return new Skull64Attribute(key, config.getString(key));
+            return new Skull64Attribute(key, config.getString(key, ""));
         }
     }
 

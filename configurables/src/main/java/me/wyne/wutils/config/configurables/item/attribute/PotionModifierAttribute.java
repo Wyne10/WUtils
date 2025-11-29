@@ -19,6 +19,7 @@ public class PotionModifierAttribute extends ConfigurableAttribute<PotionModifie
         super(ItemAttribute.POTION_MODIFIER.getKey(), value);
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
     public void apply(ItemMeta meta) {
         if (!(meta instanceof PotionMeta pmeta)) return;
@@ -36,7 +37,7 @@ public class PotionModifierAttribute extends ConfigurableAttribute<PotionModifie
         UPGRADED
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<PotionModifierAttribute> {
         @Override
         public PotionModifierAttribute create(String key, ConfigurationSection config) {
             try {

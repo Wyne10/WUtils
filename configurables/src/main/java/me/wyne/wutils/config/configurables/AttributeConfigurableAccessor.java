@@ -9,9 +9,9 @@ import java.util.Map;
 public interface AttributeConfigurableAccessor<T extends AttributeConfigurable> {
     T ignore(String... ignore);
 
-    T with(String key, AttributeFactory factory);
+    T with(String key, AttributeFactory<?> factory);
 
-    T with(Map<String, AttributeFactory> keyMap);
+    T with(Map<String, AttributeFactory<?>> keyMap);
 
     T with(Attribute<?> attribute);
 

@@ -24,7 +24,7 @@ public class ConsoleAudience extends ConfigurableAttribute<Boolean> implements I
         return I18n.global.getAudiences().console();
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<ConsoleAudience> {
         @Override
         public ConsoleAudience create(String key, ConfigurationSection config) {
             return new ConsoleAudience(key);

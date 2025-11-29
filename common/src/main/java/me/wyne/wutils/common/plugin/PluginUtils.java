@@ -4,6 +4,8 @@ import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.regex.Matcher;
@@ -15,6 +17,7 @@ public final class PluginUtils {
 
     private static int currentServerVersion = 0;
     private static Plugin plugin = null;
+    private static Logger logger = null;
 
     @Nonnull
     public static synchronized Plugin getPlugin() {
@@ -23,6 +26,15 @@ public final class PluginUtils {
         }
 
         return plugin;
+    }
+
+    @NotNull
+    public static Logger getLogger() {
+        if (logger == null) {
+            logger = getPlugin().getSLF4JLogger();
+        }
+
+        return logger;
     }
 
     public static int getServerVersion() {

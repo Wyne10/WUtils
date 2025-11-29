@@ -24,12 +24,12 @@ public class AttributeContainerBuilder {
         return this;
     }
 
-    public AttributeContainerBuilder with(String key, AttributeFactory factory) {
+    public AttributeContainerBuilder with(String key, AttributeFactory<?> factory) {
         attributeMap.put(key, factory);
         return this;
     }
 
-    public AttributeContainerBuilder with(Map<String, AttributeFactory> keyMap) {
+    public AttributeContainerBuilder with(Map<String, AttributeFactory<?>> keyMap) {
         attributeMap.putAll(keyMap);
         return this;
     }

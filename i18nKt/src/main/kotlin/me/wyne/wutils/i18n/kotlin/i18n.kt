@@ -105,18 +105,6 @@ fun <T : LocalizedString> Collection<T>.reduce() =
 fun <T : LocalizedComponent> Collection<T>.reduce() =
     map { it.get() }.reduceOrNull(I18n::reduceRawComponent)
 
-inline fun Collection<String>.of(op: (String) -> String) =
-    map(op)
-
-inline fun Collection<String>.ofComponents(op: (String) -> Component) =
-    map(op)
-
-inline fun <T : LocalizedString> Collection<String>.ofLocalized(op: (String) -> T) =
-    map(op)
-
-inline fun <T : LocalizedComponent> Collection<String>.ofLocalizedComponents(op: (String) -> T) =
-    map(op)
-
 fun <T : ComponentLike> Collection<T>.asComponents() =
     map(ComponentLike::asComponent)
 

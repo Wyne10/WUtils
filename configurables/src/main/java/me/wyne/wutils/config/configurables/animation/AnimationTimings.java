@@ -1,11 +1,11 @@
 package me.wyne.wutils.config.configurables.animation;
 
 public class AnimationTimings {
-    public int delay;
-    public int period;
-    public int duration;
+    public long delay;
+    public long period;
+    public long duration;
 
-    public AnimationTimings(int delay, int period, int duration) {
+    public AnimationTimings(long delay, long period, long duration) {
         this.delay = delay;
         this.period = period;
         this.duration = duration;

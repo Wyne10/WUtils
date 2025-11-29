@@ -1,4 +1,4 @@
-package me.wyne.wutils.config.configurables.animation.attribute;
+package me.wyne.wutils.config.configurables.attribute.common;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
@@ -18,7 +18,7 @@ public class ColorAttribute extends ConfigurableAttribute<Color> {
         return new ConfigBuilder().append(depth, getKey(), getValue().asRGB()).buildNoSpace();
     }
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<ColorAttribute> {
         @Override
         public ColorAttribute fromSection(String key, ConfigurationSection section) {
             return new ColorAttribute(
@@ -32,7 +32,7 @@ public class ColorAttribute extends ConfigurableAttribute<Color> {
         }
 
         @Override
-        public ColorAttribute fromString(String key, String string) {
+        public ColorAttribute fromString(String key, String string, ConfigurationSection config) {
             return new ColorAttribute(
                     key,
                     Color.fromRGB(Integer.parseUnsignedInt(string.replace("#", ""), 16))

@@ -9,9 +9,9 @@ import java.util.Set;
 public interface AttributeContainer extends CompositeConfigurable {
     AttributeContainer ignore(String... ignore);
 
-    AttributeContainer with(String key, AttributeFactory factory);
+    AttributeContainer with(String key, AttributeFactory<?> factory);
 
-    AttributeContainer with(Map<String, AttributeFactory> keyMap);
+    AttributeContainer with(Map<String, AttributeFactory<?>> keyMap);
 
     AttributeContainer with(Attribute<?> attribute);
 

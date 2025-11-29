@@ -20,13 +20,13 @@ public class GlowAttribute extends ConfigurableAttribute<Boolean> implements Met
 
     @Override
     public void apply(ItemMeta meta) {
-        if (meta.hasEnchants()) return;
         if (!getValue()) return;
+        if (meta.hasEnchants()) return;
         meta.addEnchant(Enchantment.LURE, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<GlowAttribute> {
         @Override
         public GlowAttribute create(String key, ConfigurationSection config) {
             return new GlowAttribute(key, config.getBoolean(key, false));

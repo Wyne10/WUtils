@@ -21,7 +21,7 @@ public class CustomModelDataAttribute extends ConfigurableAttribute<Integer> imp
         meta.setCustomModelData(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<CustomModelDataAttribute> {
         @Override
         public CustomModelDataAttribute create(String key, ConfigurationSection config) {
             return new CustomModelDataAttribute(key, config.contains(key) ? config.getInt(key) : null);

@@ -25,10 +25,10 @@ public class AnchorChargeAttribute extends ConfigurableAttribute<Integer> implem
         return new AnchorCharge(context.getLocation(), getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<AnchorChargeAttribute> {
         @Override
         public AnchorChargeAttribute create(String key, ConfigurationSection config) {
-            return new AnchorChargeAttribute(key, config.getInt(key, 1));
+            return new AnchorChargeAttribute(key, config.getInt(key));
         }
     }
 

@@ -54,7 +54,7 @@ public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleA
 
     public record ParticleData(Particle particle, int count, double speed, Vector offset) {}
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<WorldParticleAttribute> {
         @Override
         public WorldParticleAttribute fromSection(String key, ConfigurationSection section) {
             return new WorldParticleAttribute(
@@ -69,7 +69,7 @@ public class WorldParticleAttribute extends ConfigurableAttribute<WorldParticleA
         }
 
         @Override
-        public WorldParticleAttribute fromString(String key, String string) {
+        public WorldParticleAttribute fromString(String key, String string, ConfigurationSection config) {
             var args = new Args(string, " ");
             return new WorldParticleAttribute(
                     key,

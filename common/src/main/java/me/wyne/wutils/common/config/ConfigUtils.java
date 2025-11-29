@@ -8,6 +8,7 @@ import me.wyne.wutils.common.duration.TimeSpan;
 import me.wyne.wutils.common.operation.DoubleOperation;
 import me.wyne.wutils.common.operation.IntOperation;
 import me.wyne.wutils.common.operation.Operations;
+import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.range.TimeSpanRange;
 import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
@@ -15,11 +16,19 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class ConfigUtils {
+
+    public static String getPath(@Nullable ConfigurationSection section, String path) {
+        if (section == null)
+            return path;
+        if (section.getCurrentPath() == null)
+            return path;
+        return section.getCurrentPath() + "." + path;
+    }
 
     @SuppressWarnings("DataFlowIssue")
     public static List<String> getStringList(ConfigurationSection config, String path) {
@@ -98,14 +107,16 @@ public final class ConfigUtils {
 
         for (String value : values) {
             try {
-                result.add(Enum.valueOf(enumClass, value.toUpperCase()));
-            } catch (IllegalArgumentException ignored) {}
+                result.add(Enum.valueOf(enumClass, value.toUpperCase(Locale.ENGLISH)));
+            } catch (IllegalArgumentException e) {
+                PluginUtils.getLogger().warn("Skipping illegal enum '{}' at '{}'", value, key);
+            }
         }
 
         return result;
     }
 
-    public static <E extends Enum<E>> EnumSet<E> getByKeyOrName(ConfigurationSection section, String key, Class<E> enumClass) {
+    public static <E extends Enum<E>> EnumSet<E> getKeyedEnumSet(ConfigurationSection section, String key, Class<E> enumClass) {
         if (!Keyed.class.isAssignableFrom(enumClass))
             return getEnumSet(section, key, enumClass);
         if (section.isBoolean(key)) {
@@ -115,25 +126,74 @@ public final class ConfigUtils {
         }
 
         Map<String, E> keyMap = new HashMap<>();
-        Arrays.stream(enumClass.getEnumConstants())
-                .forEach(e -> keyMap.put(((Keyed) e).getKey().toString(), e));
+        for (E e : enumClass.getEnumConstants()) {
+            keyMap.put(((Keyed) e).getKey().toString(), e);
+        }
         List<String> values = section.getStringList(key);
         EnumSet<E> result = EnumSet.noneOf(enumClass);
 
         for (String value : values) {
             try {
-                result.add(Enum.valueOf(enumClass, value.toUpperCase()));
+                result.add(Enum.valueOf(enumClass, value.toUpperCase(Locale.ENGLISH)));
                 continue;
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException e) {
+                PluginUtils.getLogger().warn("Skipping illegal enum '{}' at '{}'", value, key);
+            }
 
             NamespacedKey valueKey = NamespacedKey.fromString(value);
-            if (valueKey == null) continue;
+            if (valueKey == null) {
+                PluginUtils.getLogger().warn("Skipping illegal key '{}' at '{}'", value, key);
+                continue;
+            }
             E enumValue = keyMap.get(valueKey.toString());
-            if (enumValue == null) continue;
+            if (enumValue == null) {
+                PluginUtils.getLogger().warn("Skipping illegal key '{}' at '{}'", value, key);
+                continue;
+            }
             result.add(enumValue);
         }
 
         return result;
+    }
+
+    @Nullable
+    public static <E extends Enum<E>> E getByName(@Nullable String name, Class<E> enumClass) {
+        if (name == null) return null;
+
+        try {
+            return Enum.valueOf(enumClass, name.toUpperCase(Locale.ENGLISH));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static <E extends Enum<E>> E getByKeyOrName(@Nullable String key, Class<E> enumClass) {
+        if (key == null) return null;
+
+        try {
+            return Enum.valueOf(enumClass, key.toUpperCase(Locale.ENGLISH));
+        } catch (IllegalArgumentException ignored) {}
+
+        if (!Keyed.class.isAssignableFrom(enumClass))
+            return null;
+
+        Map<String, E> keyMap = new HashMap<>();
+        for (E e : enumClass.getEnumConstants()) {
+            keyMap.put(((Keyed) e).getKey().toString(), e);
+        }
+
+        NamespacedKey valueKey = NamespacedKey.fromString(key);
+        if (valueKey == null) return null;
+
+        return keyMap.get(valueKey.toString());
+    }
+
+    @Nullable
+    public static <E extends Enum<E>> E getByKeyOrName(ConfigurationSection section, String key, Class<E> enumClass) {
+        String value = section.getString(key);
+        if (value == null) return null;
+        return getByKeyOrName(value, enumClass);
     }
 
 }

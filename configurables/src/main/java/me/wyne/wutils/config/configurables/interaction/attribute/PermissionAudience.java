@@ -28,7 +28,7 @@ public class PermissionAudience extends ConfigurableAttribute<List<String>> impl
                 .map(permission -> I18n.global.getAudiences().permission(permission)).toList());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<PermissionAudience> {
         @Override
         public PermissionAudience create(String key, ConfigurationSection config) {
             return new PermissionAudience(key, ConfigUtils.getStringList(config, key));

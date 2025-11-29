@@ -4,6 +4,7 @@ import me.wyne.wutils.common.config.ConfigUtils
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.potion.PotionEffectType
+import java.util.Locale
 import kotlin.random.Random
 
 const val RANGE_DELIMITER = ".."
@@ -53,7 +54,7 @@ inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): S
         emptySet()
     } else {
         getStringList(key)
-            .mapNotNull { runCatching { enumValueOf<E>(it.uppercase()) }.getOrNull() }
+            .mapNotNull { runCatching { enumValueOf<E>(it.uppercase(Locale.ENGLISH)) }.getOrNull() }
             .toSet()
     }
 }

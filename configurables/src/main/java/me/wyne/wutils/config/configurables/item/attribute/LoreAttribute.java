@@ -1,7 +1,6 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.ConfigBuilder;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -31,15 +30,10 @@ public class LoreAttribute extends ConfigurableAttribute<List<String>> implement
             meta.lore(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get()).toList());
     }
 
-    @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().appendCollection(depth, getKey(), getValue()).buildNoSpace();
-    }
-
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<LoreAttribute> {
         @Override
         public LoreAttribute create(String key, ConfigurationSection config) {
-            return new LoreAttribute(key, config.getStringList(key));
+            return new LoreAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }
 

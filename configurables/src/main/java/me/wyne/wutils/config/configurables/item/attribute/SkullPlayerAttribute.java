@@ -24,7 +24,7 @@ public class SkullPlayerAttribute extends ConfigurableAttribute<Boolean> impleme
         ((SkullMeta)meta).setOwningPlayer(context.getPlayer());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<SkullPlayerAttribute> {
         @Override
         public SkullPlayerAttribute create(String key, ConfigurationSection config) {
             return new SkullPlayerAttribute(key, config.getBoolean(key, false));

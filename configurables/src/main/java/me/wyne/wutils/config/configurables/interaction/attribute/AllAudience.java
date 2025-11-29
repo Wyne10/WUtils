@@ -24,7 +24,7 @@ public class AllAudience extends ConfigurableAttribute<Boolean> implements Inter
         return I18n.global.getAudiences().all();
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<AllAudience> {
         @Override
         public AllAudience create(String key, ConfigurationSection config) {
             return new AllAudience(key);

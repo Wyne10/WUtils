@@ -12,13 +12,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 public class InteractionConfigurable extends AttributeConfigurable {
 
-    public final static AttributeMap INTERACTION_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
+    public final static AttributeMap INTERACTION_ATTRIBUTE_MAP = new AttributeMap();
 
     static {
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.AUDIENCE_PLAYER.getKey(), new PlayerAudience.Factory());
@@ -31,6 +30,7 @@ public class InteractionConfigurable extends AttributeConfigurable {
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.MESSAGE.getKey(), new MessageAttribute.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.ACTION_BAR.getKey(), new ActionBarAttribute.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.SOUND.getKey(), new SoundAttribute.Factory());
+        // TODO Command
         // TODO Title
         // TODO Boss Bar
     }

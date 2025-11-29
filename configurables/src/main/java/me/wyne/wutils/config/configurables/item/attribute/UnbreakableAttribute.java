@@ -21,7 +21,7 @@ public class UnbreakableAttribute extends ConfigurableAttribute<Boolean> impleme
         meta.setUnbreakable(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<UnbreakableAttribute> {
         @Override
         public UnbreakableAttribute create(String key, ConfigurationSection config) {
             return new UnbreakableAttribute(key, config.getBoolean(key, false));

@@ -18,6 +18,7 @@ public class NameAttribute extends ConfigurableAttribute<String> implements Cont
         super(ItemAttribute.NAME.getKey(), value);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void apply(ItemMeta meta, ItemAttributeContext context) {
         if (I18n.global.getAudiences() instanceof BukkitComponentAudiences)
@@ -26,10 +27,10 @@ public class NameAttribute extends ConfigurableAttribute<String> implements Cont
             meta.displayName(I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<NameAttribute> {
         @Override
         public NameAttribute create(String key, ConfigurationSection config) {
-            return new NameAttribute(key, config.getString(key));
+            return new NameAttribute(key, config.getString(key, ""));
         }
     }
 

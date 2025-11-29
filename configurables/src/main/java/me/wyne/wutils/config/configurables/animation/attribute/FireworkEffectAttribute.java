@@ -6,6 +6,8 @@ import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeBase;
 import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
+import me.wyne.wutils.config.configurables.attribute.common.ColorAttribute;
+import me.wyne.wutils.config.configurables.attribute.common.ColorsAttribute;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,7 +40,7 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
         return builder.buildNoSpace();
     }
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<FireworkEffectAttribute> {
         @Override
         public FireworkEffectAttribute fromSection(String key, ConfigurationSection section) {
             return new FireworkEffectAttribute(
@@ -54,16 +56,16 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
         }
 
         @Override
-        public FireworkEffectAttribute fromString(String key, String string) {
-            var args = new Args(string, " ");
+        public FireworkEffectAttribute fromString(String key, String string, ConfigurationSection config) {
+            var args = new Args(string);
             return new FireworkEffectAttribute(
                     key,
                     FireworkEffect.builder()
                             .with(FireworkEffect.Type.valueOf(args.get(0, "BALL")))
                             .flicker(Boolean.parseBoolean(args.get(1, "false")))
                             .trail(Boolean.parseBoolean(args.get(2, "false")))
-                            .withColor(new ColorAttribute.Factory().fromString("color", args.get(3, "000000")).getValue())
-                            .withFade(new ColorAttribute.Factory().fromString("fade", args.get(4, "000000")).getValue())
+                            .withColor(new ColorAttribute.Factory().fromString("color", args.get(3, "000000"), config).getValue())
+                            .withFade(new ColorAttribute.Factory().fromString("fade", args.get(4, "000000"), config).getValue())
                             .build()
             );
         }

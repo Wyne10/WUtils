@@ -1,19 +1,20 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import com.google.common.base.Preconditions;
 import me.wyne.wutils.common.Args;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
-import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.AttributeData> implements MetaAttribute {
@@ -36,19 +37,21 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
         return new ConfigBuilder().append(depth, getKey(), getValue().attribute().getKey() + " " + getValue().modifier().getAmount() + " " + getValue().modifier().getOperation() + " " + getValue().modifier().getSlot()).buildNoSpace();
     }
 
-    public record AttributeData(Attribute attribute, AttributeModifier modifier) {}
+    public record AttributeData(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) {}
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<GenericAttribute> {
         @Override
         public GenericAttribute fromSection(String key, ConfigurationSection section) {
-            var attribute = getByKey(NamespacedKey.fromString(section.getString("attribute", "generic.armor")));
+            var attributeKey = Preconditions.checkNotNull(section.getString("attribute"), "No attribute provided for " + section.getCurrentPath());
+            var attribute = ConfigUtils.getByKeyOrName(attributeKey,  Attribute.class);
+            Preconditions.checkNotNull(attribute, "Invalid attribute at " + section.getCurrentPath());
             return new GenericAttribute(
                     key,
                     new AttributeData(
-                            attribute != null ? attribute : org.bukkit.attribute.Attribute.GENERIC_ARMOR,
+                            attribute,
                             new AttributeModifier(
                                     UUID.fromString(section.getString("uuid", UUID.randomUUID().toString())),
-                                    section.getString("name", "Attribute"),
+                                    section.getString("name", attributeKey),
                                     section.getDouble("amount", 1.0),
                                     AttributeModifier.Operation.valueOf(section.getString("operation", "ADD_NUMBER")),
                                     section.contains("slot") ? EquipmentSlot.valueOf(section.getString("slot", "HAND")) : null
@@ -58,26 +61,24 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
         }
 
         @Override
-        public GenericAttribute fromString(String key, String string) {
-            var args = new Args(string, " ");
-            var attribute = getByKey(NamespacedKey.fromString(args.get(0, "generic.armor")));
+        public GenericAttribute fromString(String key, String string, ConfigurationSection config) {
+            var args = new Args(string);
+            var attributeKey = Preconditions.checkNotNull(args.getNullable(0), "No attribute provided for " + ConfigUtils.getPath(config, key));
+            var attribute = ConfigUtils.getByKeyOrName(attributeKey,  Attribute.class);
+            Preconditions.checkNotNull(attribute, "Invalid attribute at " + ConfigUtils.getPath(config, key));
             return new GenericAttribute(
                     key,
                     new AttributeData(
-                            attribute != null ? attribute : org.bukkit.attribute.Attribute.GENERIC_ARMOR,
+                            attribute,
                             new AttributeModifier(
                                     UUID.randomUUID(),
-                                    "Attribute",
+                                    attributeKey,
                                     Double.parseDouble(args.get(1, "1.0")),
                                     AttributeModifier.Operation.valueOf(args.get(2, "ADD_NUMBER")),
                                     args.size() == 4 ? EquipmentSlot.valueOf(args.get(3, "HAND")) : null
                             )
                     )
             );
-        }
-
-        private Attribute getByKey(NamespacedKey key) {
-            return Arrays.stream(Attribute.values()).filter(it -> it.getKey().equals(key)).findFirst().orElse(null);
         }
     }
 

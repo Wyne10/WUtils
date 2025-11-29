@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class I18n {
@@ -123,30 +122,6 @@ public class I18n {
 
     public static <T extends LocalizedComponent> Component reduceComponent(T c1, T c2) {
         return c1.get().append(Component.newline()).append(c2.get());
-    }
-
-    public static List<String> ofRawStrings(Collection<String> paths, Function<String, String> operation) {
-        return paths.stream()
-                .map(operation)
-                .toList();
-    }
-
-    public static List<Component> ofRawComponents(Collection<String> paths, Function<String, Component> operation) {
-        return paths.stream()
-                .map(operation)
-                .toList();
-    }
-
-    public static List<LocalizedString> ofStrings(Collection<String> paths, Function<String, LocalizedString> operation) {
-        return paths.stream()
-                .map(operation)
-                .toList();
-    }
-
-    public static List<LocalizedComponent> ofComponents(Collection<String> paths, Function<String, LocalizedComponent> operation) {
-        return paths.stream()
-                .map(operation)
-                .toList();
     }
 
     public static List<Component> asComponents(Collection<LocalizedComponent> localizedComponents) {

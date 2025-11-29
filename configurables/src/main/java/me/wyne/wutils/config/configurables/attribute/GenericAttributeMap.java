@@ -9,6 +9,8 @@ public class GenericAttributeMap<T> {
 
     private final Map<String, GenericFactory<T>> keyMap = new LinkedHashMap<>();
 
+    public GenericAttributeMap() {}
+
     public GenericAttributeMap(Map<String, GenericFactory<T>> keyMap) {
         this.keyMap.putAll(keyMap);
     }

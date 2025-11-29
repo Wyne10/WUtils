@@ -6,11 +6,9 @@ import me.wyne.wutils.config.configurables.animation.attribute.*;
 import me.wyne.wutils.config.configurables.attribute.*;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.LinkedHashMap;
-
 public class AnimationStepConfigurable extends AttributeConfigurable {
 
-    public final static AttributeMap ANIMATION_STEP_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
+    public final static AttributeMap ANIMATION_STEP_ATTRIBUTE_MAP = new AttributeMap();
 
     static {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.TYPE.getKey(), new AnimationTypeAttribute.Factory());

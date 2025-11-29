@@ -13,13 +13,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ItemConfigurable extends AttributeConfigurable {
 
-    public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
+    public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap();
 
     static {
         ITEM_ATTRIBUTE_MAP.put(ItemAttribute.MATERIAL.getKey(), new MaterialAttribute.Factory());

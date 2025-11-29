@@ -26,7 +26,7 @@ tasks.named("publish") {
     finalizedBy(":WUtils-i18n-kotlin:publish")
 }
 
-version = '5.2.3'
+version = '5.2.4'
 
 publishing {
     publications {

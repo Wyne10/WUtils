@@ -29,7 +29,7 @@ public class WorldAudience extends ConfigurableAttribute<List<String>> implement
                 .map(world -> I18n.global.getAudiences().world(Key.key(world))).toList());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<WorldAudience> {
         @Override
         public WorldAudience create(String key, ConfigurationSection config) {
             return new WorldAudience(key, ConfigUtils.getStringList(config, key));

@@ -1,4 +1,4 @@
-package me.wyne.wutils.config.configurables.animation.attribute;
+package me.wyne.wutils.config.configurables.attribute.common;
 
 import me.wyne.wutils.config.configurables.attribute.CompositeAttribute;
 import org.bukkit.configuration.ConfigurationSection;

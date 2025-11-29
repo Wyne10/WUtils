@@ -19,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -58,9 +59,9 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
         return builder.buildNoSpace();
     }
 
-    public record FireworkData(Vector offset, int power, List<FireworkEffect> effects) {}
+    public record FireworkData(@NotNull Vector offset, int power, @NotNull List<FireworkEffect> effects) {}
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<FireworkAttribute> {
         @Override
         public FireworkAttribute create(String key, ConfigurationSection config) {
             ConfigurationSection section = config.getConfigurationSection(key);

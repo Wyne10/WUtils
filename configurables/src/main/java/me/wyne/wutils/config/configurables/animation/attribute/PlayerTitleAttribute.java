@@ -48,7 +48,7 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
 
     public record TitleData(String title, String subtitle, Title.Times times) {}
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<PlayerTitleAttribute> {
         @Override
         public PlayerTitleAttribute fromSection(String key, ConfigurationSection section) {
             return new PlayerTitleAttribute(
@@ -66,8 +66,8 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
         }
 
         @Override
-        public PlayerTitleAttribute fromString(String key, String string) {
-            var args = new Args(string, " ");
+        public PlayerTitleAttribute fromString(String key, String string, ConfigurationSection config) {
+            var args = new Args(string);
             return new PlayerTitleAttribute(
                     key,
                     new TitleData(

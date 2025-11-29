@@ -22,7 +22,7 @@ public class MaterialAttribute extends ConfigurableAttribute<Material> implement
         item.setType(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<MaterialAttribute> {
         @Override
         public MaterialAttribute create(String key, ConfigurationSection config) {
             return new MaterialAttribute(key, Material.matchMaterial(config.getString(key, "STONE")));

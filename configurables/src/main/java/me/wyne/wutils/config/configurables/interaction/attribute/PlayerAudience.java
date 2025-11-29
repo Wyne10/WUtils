@@ -24,7 +24,7 @@ public class PlayerAudience extends ConfigurableAttribute<Boolean> implements In
         return I18n.global.getAudiences().sender(sender);
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<PlayerAudience> {
         @Override
         public PlayerAudience create(String key, ConfigurationSection config) {
             return new PlayerAudience(key);

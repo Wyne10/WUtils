@@ -23,10 +23,10 @@ public class RepairCostAttribute extends ConfigurableAttribute<Integer> implemen
         ((Repairable)meta).setRepairCost(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<RepairCostAttribute> {
         @Override
         public RepairCostAttribute create(String key, ConfigurationSection config) {
-            return new RepairCostAttribute(key, config.getInt(key, 1));
+            return new RepairCostAttribute(key, config.getInt(key, 0));
         }
     }
 

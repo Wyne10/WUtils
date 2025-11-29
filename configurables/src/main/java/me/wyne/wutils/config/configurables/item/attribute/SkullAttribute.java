@@ -1,5 +1,7 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import com.google.common.base.Preconditions;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
@@ -34,10 +36,11 @@ public class SkullAttribute extends ConfigurableAttribute<OfflinePlayer> impleme
         return new ConfigBuilder().append(depth, getKey(), getValue().getName()).buildNoSpace();
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<SkullAttribute> {
         @Override
         public SkullAttribute create(String key, ConfigurationSection config) {
-            UUID uuid = Bukkit.getPlayerUniqueId(config.getString(key));
+            UUID uuid = Bukkit.getPlayerUniqueId(config.getString(key, ""));
+            Preconditions.checkNotNull(uuid, "Invalid UUID at " + ConfigUtils.getPath(config, key));
             return new SkullAttribute(key, Bukkit.getOfflinePlayer(uuid));
         }
     }

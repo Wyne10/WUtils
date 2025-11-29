@@ -7,17 +7,19 @@ import java.util.stream.Collectors;
 
 public class AttributeMap {
 
-    private final Map<String, AttributeFactory> keyMap = new LinkedHashMap<>();
+    private final Map<String, AttributeFactory<?>> keyMap = new LinkedHashMap<>();
 
-    public AttributeMap(Map<String, AttributeFactory> keyMap) {
+    public AttributeMap() {}
+
+    public AttributeMap(Map<String, AttributeFactory<?>> keyMap) {
         this.keyMap.putAll(keyMap);
     }
 
-    public void put(String key, AttributeFactory factory) {
+    public void put(String key, AttributeFactory<?> factory) {
         keyMap.put(key, factory);
     }
 
-    public void putAll(Map<String, AttributeFactory> keyMap) {
+    public void putAll(Map<String, AttributeFactory<?>> keyMap) {
         this.keyMap.putAll(keyMap);
     }
 
@@ -57,7 +59,7 @@ public class AttributeMap {
         return attributeKeyMap;
     }
 
-    public Map<String, AttributeFactory> getKeyMap() {
+    public Map<String, AttributeFactory<?>> getKeyMap() {
         return keyMap;
     }
 

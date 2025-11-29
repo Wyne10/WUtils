@@ -26,7 +26,7 @@ public class AnimationTypeAttribute extends ConfigurableAttribute<AnimationTypeA
         return new ConfigBuilder().append(depth, getKey(), getValue().name()).buildNoSpace();
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<AnimationTypeAttribute> {
         @Override
         public AnimationTypeAttribute create(String key, ConfigurationSection config) {
             return new AnimationTypeAttribute(key, AnimationType.valueOf(config.getString(key, "BLOCKING")));
@@ -35,7 +35,7 @@ public class AnimationTypeAttribute extends ConfigurableAttribute<AnimationTypeA
 
     @FunctionalInterface
     public interface AnimationStepFactory {
-        AnimationStep create(AnimationRunnable runnable, int delay, int period, int duration);
+        AnimationStep create(AnimationRunnable runnable, long delay, long period, long duration);
     }
 
     public enum AnimationType {
@@ -48,7 +48,7 @@ public class AnimationTypeAttribute extends ConfigurableAttribute<AnimationTypeA
             this.factory = factory;
         }
 
-        public AnimationStep create(AnimationRunnable runnable, int delay, int period, int duration) {
+        public AnimationStep create(AnimationRunnable runnable, long delay, long period, long duration) {
             return factory.create(runnable, delay, period, duration);
         }
     }

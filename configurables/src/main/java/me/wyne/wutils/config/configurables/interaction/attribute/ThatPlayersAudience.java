@@ -27,7 +27,7 @@ public class ThatPlayersAudience extends ConfigurableAttribute<List<String>> imp
         return I18n.global.getAudiences().filter(player -> getValue().contains(player.getName()));
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<ThatPlayersAudience> {
         @Override
         public ThatPlayersAudience create(String key, ConfigurationSection config) {
             return new ThatPlayersAudience(key, ConfigUtils.getStringList(config, key));

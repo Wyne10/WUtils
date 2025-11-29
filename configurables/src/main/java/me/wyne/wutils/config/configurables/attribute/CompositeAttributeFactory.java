@@ -2,16 +2,16 @@ package me.wyne.wutils.config.configurables.attribute;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface CompositeAttributeFactory extends AttributeFactory {
+public interface CompositeAttributeFactory<T extends Attribute<?>> extends AttributeFactory<T> {
     @Override
-    default Attribute<?> create(String key, ConfigurationSection config) {
+    default T create(String key, ConfigurationSection config) {
         if (config.isConfigurationSection(key))
             return fromSection(key, config.getConfigurationSection(key));
         else
-            return fromString(key, config.getString(key));
+            return fromString(key, config.getString(key), config);
     }
 
-    Attribute<?> fromSection(String key, ConfigurationSection section);
+    T fromSection(String key, ConfigurationSection section);
 
-    Attribute<?> fromString(String key, String string);
+    T fromString(String key, String string, ConfigurationSection config);
 }

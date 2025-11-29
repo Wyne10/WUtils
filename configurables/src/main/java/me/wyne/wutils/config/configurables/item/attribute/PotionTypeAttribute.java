@@ -27,7 +27,7 @@ public class PotionTypeAttribute extends ConfigurableAttribute<PotionType> imple
         pmeta.setBasePotionData(new PotionData(getValue(), baseData.isExtended(), baseData.isUpgraded()));
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<PotionTypeAttribute> {
         @Override
         public PotionTypeAttribute create(String key, ConfigurationSection config) {
             try {

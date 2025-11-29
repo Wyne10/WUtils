@@ -22,7 +22,7 @@ public class AmountAttribute extends ConfigurableAttribute<Integer> implements I
         item.setAmount(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<AmountAttribute> {
         @Override
         public AmountAttribute create(String key, ConfigurationSection config) {
             return new AmountAttribute(key, config.getInt(key, 1));

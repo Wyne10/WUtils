@@ -15,7 +15,7 @@ public class SlotAttribute extends ConfigurableAttribute<Integer> {
         super(GuiItemAttribute.SLOT.getKey(), value);
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<SlotAttribute> {
         @Override
         public SlotAttribute create(String key, ConfigurationSection config) {
             return new SlotAttribute(key, config.getInt(key, 0));

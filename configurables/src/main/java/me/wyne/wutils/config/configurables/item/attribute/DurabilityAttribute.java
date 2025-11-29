@@ -6,11 +6,8 @@ import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class DurabilityAttribute extends ConfigurableAttribute<Integer> implements MetaAttribute {
-
-    private ItemStack itemStack;
+public class DurabilityAttribute extends ConfigurableAttribute<Integer> implements ItemStackAttribute {
 
     public DurabilityAttribute(String key, Integer value) {
         super(key, value);
@@ -22,18 +19,14 @@ public class DurabilityAttribute extends ConfigurableAttribute<Integer> implemen
 
     @Override
     public void apply(ItemStack item) {
-        this.itemStack = item;
-        MetaAttribute.super.apply(item);
+        item.editMeta(meta -> {
+            if (!(meta instanceof Damageable)) return;
+            var maxDurability = item.getType().getMaxDurability();
+            ((Damageable)meta).setDamage(maxDurability - getValue());
+        });
     }
 
-    @Override
-    public void apply(ItemMeta meta) {
-        if (!(meta instanceof Damageable)) return;
-        var maxDurability = itemStack.getType().getMaxDurability();
-        ((Damageable)meta).setDamage(maxDurability - getValue());
-    }
-
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<DurabilityAttribute> {
         @Override
         public DurabilityAttribute create(String key, ConfigurationSection config) {
             return new DurabilityAttribute(key, config.getInt(key, 1));

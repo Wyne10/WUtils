@@ -15,6 +15,7 @@ import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribute.ForceFieldData> implements ContextAnimationAttribute {
 
@@ -37,9 +38,9 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
         return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + getValue().offset()).buildNoSpace();
     }
 
-    public record ForceFieldData(Vector offset, double radius, double velocity) {}
+    public record ForceFieldData(@NotNull Vector offset, double radius, double velocity) {}
 
-    public static final class Factory implements CompositeAttributeFactory {
+    public static final class Factory implements CompositeAttributeFactory<ForceFieldAttribute> {
         @Override
         public ForceFieldAttribute fromSection(String key, ConfigurationSection section) {
             return new ForceFieldAttribute(
@@ -53,8 +54,8 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
         }
 
         @Override
-        public ForceFieldAttribute fromString(String key, String string) {
-            var args = new Args(string, " ");
+        public ForceFieldAttribute fromString(String key, String string, ConfigurationSection config) {
+            var args = new Args(string);
             return new ForceFieldAttribute(
                     key,
                     new ForceFieldData(

@@ -1,16 +1,14 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
-import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
-import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
+import me.wyne.wutils.config.configurables.attribute.common.ColorAttribute;
 import me.wyne.wutils.config.configurables.item.*;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
-public class PotionColorAttribute extends ConfigurableAttribute<Color> implements MetaAttribute {
+public class PotionColorAttribute extends ColorAttribute implements MetaAttribute {
 
     public PotionColorAttribute(String key, Color value) {
         super(key, value);
@@ -26,15 +24,10 @@ public class PotionColorAttribute extends ConfigurableAttribute<Color> implement
         ((PotionMeta)meta).setColor(getValue());
     }
 
-    @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().append(depth, getKey(), getValue().asRGB()).buildNoSpace();
-    }
-
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<PotionColorAttribute> {
         @Override
         public PotionColorAttribute create(String key, ConfigurationSection config) {
-            return new PotionColorAttribute(key, Color.fromRGB(config.getInt(key, 0)));
+            return new PotionColorAttribute(key, new ColorAttribute.Factory().create(key, config).getValue());
         }
     }
 

@@ -1,5 +1,8 @@
 package me.wyne.wutils.common;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class Args {
@@ -20,12 +23,17 @@ public class Args {
         args = List.of(split);
     }
 
-    public String get(int index) {
-        if (index >= args.size())
-            return "";
-        return args.get(index).trim();
+    @Nullable
+    public String getNullable(int index) {
+        return args.size() <= index ? null : args.get(index);
     }
 
+    @NotNull
+    public String get(int index) {
+        return get(index, "");
+    }
+
+    @NotNull
     public String get(int index, String def) {
         if (index >= args.size())
             return def;

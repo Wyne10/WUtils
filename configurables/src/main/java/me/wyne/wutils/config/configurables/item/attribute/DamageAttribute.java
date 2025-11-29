@@ -23,7 +23,7 @@ public class DamageAttribute extends ConfigurableAttribute<Integer> implements M
         ((Damageable)meta).setDamage(getValue());
     }
 
-    public static final class Factory implements AttributeFactory {
+    public static final class Factory implements AttributeFactory<DamageAttribute> {
         @Override
         public DamageAttribute create(String key, ConfigurationSection config) {
             return new DamageAttribute(key, config.getInt(key, 0));

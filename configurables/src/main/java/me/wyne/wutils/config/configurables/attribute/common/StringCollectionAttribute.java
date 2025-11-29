@@ -1,7 +1,10 @@
-package me.wyne.wutils.config.configurables.attribute;
+package me.wyne.wutils.config.configurables.attribute.common;
 
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
+import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
@@ -13,22 +16,17 @@ public class StringCollectionAttribute extends ConfigurableAttribute<Collection<
         super(key, value);
     }
 
-    @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
-        return new ConfigBuilder().appendCollection(depth, getKey(), getValue()).buildNoSpace();
-    }
-
-    public static final class ListFactory implements AttributeFactory {
+    public static final class ListFactory implements AttributeFactory<StringCollectionAttribute> {
         @Override
         public StringCollectionAttribute create(String key, ConfigurationSection config) {
-            return new StringCollectionAttribute(key, config.getStringList(key));
+            return new StringCollectionAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }
 
-    public static final class SetFactory implements AttributeFactory {
+    public static final class SetFactory implements AttributeFactory<StringCollectionAttribute> {
         @Override
         public StringCollectionAttribute create(String key, ConfigurationSection config) {
-            return new StringCollectionAttribute(key, new LinkedHashSet<>(config.getStringList(key)));
+            return new StringCollectionAttribute(key, new LinkedHashSet<>(ConfigUtils.getStringList(config, key)));
         }
     }
 

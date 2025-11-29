@@ -29,12 +29,12 @@ public class ImmutableAttributeConfigurableAccessor<T extends AttributeConfigura
     }
 
     @Override
-    public T with(String key, AttributeFactory factory) {
+    public T with(String key, AttributeFactory<?> factory) {
         return create(attributeConfigurable.getAttributeContainer().with(key, factory));
     }
 
     @Override
-    public T with(Map<String, AttributeFactory> keyMap) {
+    public T with(Map<String, AttributeFactory<?>> keyMap) {
         return create(attributeConfigurable.getAttributeContainer().with(keyMap));
     }
 

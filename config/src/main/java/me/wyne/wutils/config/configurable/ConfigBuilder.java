@@ -33,6 +33,8 @@ public class ConfigBuilder {
     public <T> ConfigBuilder append(int depth, String path, @Nullable T value) {
         if (value == null)
             return this;
+        if (value instanceof Collection<?>)
+            return appendCollection(depth, path, (Collection<?>) value);
         if (value instanceof String stringValue)
             valueTable.put(depth, path, "'" + stringValue + "'");
         else
@@ -77,6 +79,8 @@ public class ConfigBuilder {
     public ConfigBuilder appendCollection(int depth, String path, Collection<?> value) {
         if (value.isEmpty())
             return this;
+        if (value.size() == 1)
+            return append(depth, path, "[" + value.iterator().next() + "]");
         if (value.stream().findAny().get() instanceof String)
             valueTable.put(depth, path, value.stream()
                     .map(val -> "'" + val.toString() + "'")

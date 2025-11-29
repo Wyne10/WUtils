@@ -13,11 +13,9 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.LinkedHashMap;
-
 public class GuiConfigurable extends ItemConfigurable {
 
-    public final static AttributeMap GUI_ITEM_ATTRIBUTE_MAP = new AttributeMap(new LinkedHashMap<>());
+    public final static AttributeMap GUI_ITEM_ATTRIBUTE_MAP = new AttributeMap();
 
     static {
         GUI_ITEM_ATTRIBUTE_MAP.putAll(ItemConfigurable.ITEM_ATTRIBUTE_MAP.getKeyMap());
@@ -25,7 +23,6 @@ public class GuiConfigurable extends ItemConfigurable {
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.PRINT.getKey(), new PrintAttribute.Factory());
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.SOUND.getKey(), new SoundAttribute.Factory());
         GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.COMMAND.getKey(), new CommandAttribute.Factory());
-        GUI_ITEM_ATTRIBUTE_MAP.put(GuiItemAttribute.COMMANDS.getKey(), CommandsAttribute::new);
     }
 
     public GuiConfigurable() {

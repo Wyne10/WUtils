@@ -39,14 +39,14 @@ public class ImmutableAttributeContainer extends AttributeContainerBase {
     }
 
     @Override
-    public AttributeContainer with(String key, AttributeFactory factory) {
+    public AttributeContainer with(String key, AttributeFactory<?> factory) {
         ImmutableAttributeContainer container = new ImmutableAttributeContainer(this);
         container.getAttributeMap().put(key, factory);
         return container;
     }
 
     @Override
-    public AttributeContainer with(Map<String, AttributeFactory> keyMap) {
+    public AttributeContainer with(Map<String, AttributeFactory<?>> keyMap) {
         ImmutableAttributeContainer container = new ImmutableAttributeContainer(this);
         container.getAttributeMap().putAll(keyMap);
         return container;
