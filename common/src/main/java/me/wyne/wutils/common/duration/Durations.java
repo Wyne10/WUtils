@@ -19,7 +19,7 @@ public final class Durations {
 
     public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])?");
     public static final Map<String, Duration> DURATION_SYMBOLS = Map.of(
-            "", new Millis(),
+            "", new Ticks(),
             "ms", new Millis(),
             "s", new Seconds(),
             "m", new Minutes(),
@@ -29,7 +29,7 @@ public final class Durations {
     );
 
     public static Duration getDuration(@Nullable String symbol) {
-        if (symbol == null) DURATION_SYMBOLS.get("ms");
+        if (symbol == null) return Ticks;
         return DURATION_SYMBOLS.get(symbol);
     }
 

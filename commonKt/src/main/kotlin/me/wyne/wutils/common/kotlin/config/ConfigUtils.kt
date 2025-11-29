@@ -49,6 +49,8 @@ fun ConfigurationSection.getPotionTypeEnumSet(path: String): Set<PotionEffectTyp
 inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): Set<E> {
     return if (isBoolean(key) && getBoolean(key)) {
         enumValues<E>().toSet()
+    } else if (isBoolean(key) && !getBoolean(key)) {
+        emptySet()
     } else {
         getStringList(key)
             .mapNotNull { runCatching { enumValueOf<E>(it) }.getOrNull() }

@@ -14,9 +14,7 @@ import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class ConfigUtils {
 
@@ -83,6 +81,27 @@ public final class ConfigUtils {
 
     public static VectorRange getVectorRange(ConfigurationSection config, String path) {
         return VectorRange.getVectorRange(config.getString(path));
+    }
+
+    public static <E extends Enum<E>> EnumSet<E> getEnumSet(ConfigurationSection section, String key, Class<E> enumClass) {
+        if (section.isBoolean(key) && section.getBoolean(key)) {
+            return EnumSet.allOf(enumClass);
+        }
+
+        if (section.isBoolean(key) && !section.getBoolean(key)) {
+            return EnumSet.noneOf(enumClass);
+        }
+
+        List<String> values = section.getStringList(key);
+        EnumSet<E> result = EnumSet.noneOf(enumClass);
+
+        for (String value : values) {
+            try {
+                result.add(Enum.valueOf(enumClass, value));
+            } catch (IllegalArgumentException ignored) {}
+        }
+
+        return result;
     }
 
 }
