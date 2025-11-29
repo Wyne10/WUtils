@@ -53,7 +53,7 @@ inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): S
         emptySet()
     } else {
         getStringList(key)
-            .mapNotNull { runCatching { enumValueOf<E>(it) }.getOrNull() }
+            .mapNotNull { runCatching { enumValueOf<E>(it.uppercase()) }.getOrNull() }
             .toSet()
     }
 }

@@ -11,10 +11,13 @@ import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.range.TimeSpanRange;
 import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class ConfigUtils {
 
@@ -84,12 +87,10 @@ public final class ConfigUtils {
     }
 
     public static <E extends Enum<E>> EnumSet<E> getEnumSet(ConfigurationSection section, String key, Class<E> enumClass) {
-        if (section.isBoolean(key) && section.getBoolean(key)) {
-            return EnumSet.allOf(enumClass);
-        }
-
-        if (section.isBoolean(key) && !section.getBoolean(key)) {
-            return EnumSet.noneOf(enumClass);
+        if (section.isBoolean(key)) {
+            return section.getBoolean(key)
+                    ? EnumSet.allOf(enumClass)
+                    : EnumSet.noneOf(enumClass);
         }
 
         List<String> values = section.getStringList(key);
@@ -97,8 +98,39 @@ public final class ConfigUtils {
 
         for (String value : values) {
             try {
-                result.add(Enum.valueOf(enumClass, value));
+                result.add(Enum.valueOf(enumClass, value.toUpperCase()));
             } catch (IllegalArgumentException ignored) {}
+        }
+
+        return result;
+    }
+
+    public static <E extends Enum<E>> EnumSet<E> getByKeyOrName(ConfigurationSection section, String key, Class<E> enumClass) {
+        if (!Keyed.class.isAssignableFrom(enumClass))
+            return getEnumSet(section, key, enumClass);
+        if (section.isBoolean(key)) {
+            return section.getBoolean(key)
+                    ? EnumSet.allOf(enumClass)
+                    : EnumSet.noneOf(enumClass);
+        }
+
+        Map<String, E> keyMap = new HashMap<>();
+        Arrays.stream(enumClass.getEnumConstants())
+                .forEach(e -> keyMap.put(((Keyed) e).getKey().toString(), e));
+        List<String> values = section.getStringList(key);
+        EnumSet<E> result = EnumSet.noneOf(enumClass);
+
+        for (String value : values) {
+            try {
+                result.add(Enum.valueOf(enumClass, value.toUpperCase()));
+                continue;
+            } catch (IllegalArgumentException ignored) {}
+
+            NamespacedKey valueKey = NamespacedKey.fromString(value);
+            if (valueKey == null) continue;
+            E enumValue = keyMap.get(valueKey.toString());
+            if (enumValue == null) continue;
+            result.add(enumValue);
         }
 
         return result;
