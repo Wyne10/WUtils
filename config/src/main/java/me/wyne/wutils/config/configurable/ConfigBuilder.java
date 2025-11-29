@@ -80,7 +80,7 @@ public class ConfigBuilder {
         if (value.isEmpty())
             return this;
         if (value.size() == 1)
-            return append(depth, path, "[" + value.iterator().next() + "]");
+            return appendString(depth, path, "[" + value.iterator().next() + "]");
         if (value.stream().findAny().get() instanceof String)
             valueTable.put(depth, path, value.stream()
                     .map(val -> "'" + val.toString() + "'")
