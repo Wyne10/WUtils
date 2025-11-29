@@ -23,4 +23,9 @@ public class BlockDataParser implements StringDataParser<BlockData> {
         return Material.matchMaterial(string).createBlockData();
     }
 
+    @Override
+    public String toString(Object data) {
+        return ((BlockData)data).getMaterial().name();
+    }
+
 }

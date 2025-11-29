@@ -19,4 +19,9 @@ public class MaterialParser implements StringDataParser<Material> {
         return Material.matchMaterial(string);
     }
 
+    @Override
+    public String toString(Object data) {
+        return ((Material)data).name();
+    }
+
 }

@@ -21,4 +21,9 @@ public class ItemStackParser implements StringDataParser<ItemStack> {
         return new ItemStack(Material.matchMaterial(string));
     }
 
+    @Override
+    public String toString(Object data) {
+        return ((ItemStack)data).getType().name();
+    }
+
 }

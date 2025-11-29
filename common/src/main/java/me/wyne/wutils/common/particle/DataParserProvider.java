@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class DataParserProvider {
+public final class DataParserProvider {
 
     private final static Map<Class<?>, StringDataParser<?>> parserMap = new HashMap<>()
     {

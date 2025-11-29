@@ -6,16 +6,22 @@ import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.particle.DataParserProvider;
 import me.wyne.wutils.common.vector.VectorUtils;
-import me.wyne.wutils.config.configurables.attribute.AttributeBase;
+import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.CompositeAttributeFactory;
+import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 
-// TODO Probably gonna need to be configurable some time later
-public class AnimationParticleAttribute extends AttributeBase<AnimationParticle> {
+public class AnimationParticleAttribute extends ConfigurableAttribute<AnimationParticle> {
 
     public AnimationParticleAttribute(String key, AnimationParticle value) {
         super(key, value);
+    }
+
+    @Override
+    public String toConfig(int depth, ConfigEntry configEntry) {
+        return new ConfigBuilder().append(depth, getKey(), getValue().particle().name() + " " + getValue().count() + " " + getValue().extra() + " " + getValue().offset() + " " + DataParserProvider.getDataParser(getValue().particle().getDataType()).toString(getValue().data())).buildNoSpace();
     }
 
     public static final class Factory implements CompositeAttributeFactory<AnimationParticleAttribute> {

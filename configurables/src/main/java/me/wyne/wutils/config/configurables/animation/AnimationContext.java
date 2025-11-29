@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public record AnimationContext(Player player, Location location, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
+public record AnimationContext(@Nullable Player player, @Nullable Location location, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
 
     public static final AnimationContext EMPTY = new AnimationContext();
 
@@ -14,15 +14,15 @@ public record AnimationContext(Player player, Location location, TextReplacement
         this(null, null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
-    public AnimationContext(Player player) {
+    public AnimationContext(@Nullable Player player) {
         this(player, null, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
-    public AnimationContext(Location location) {
+    public AnimationContext(@Nullable Location location) {
         this(null, location, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
-    public AnimationContext(Player player, Location location) {
+    public AnimationContext(@Nullable Player player, @Nullable Location location) {
         this(player, location, new TextReplacement[0], new ComponentReplacement[0]);
     }
 

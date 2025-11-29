@@ -87,6 +87,18 @@ public final class ConfigUtils {
         return Durations.getTicks(config.getString(path));
     }
 
+    public static long getMillis(ConfigurationSection config, String path, long def) {
+        if (config.getString(path, "").isEmpty())
+            return def;
+        return Durations.getMillis(config.getString(path));
+    }
+
+    public static long getTicks(ConfigurationSection config, String path, long def) {
+        if (config.getString(path, "").isEmpty())
+            return def;
+        return Durations.getTicks(config.getString(path));
+    }
+
     public static TimeSpanRange getTimeSpanRange(ConfigurationSection config, String path) {
         return Durations.getTimeSpanRange(config.getString(path));
     }
@@ -102,7 +114,7 @@ public final class ConfigUtils {
                     : EnumSet.noneOf(enumClass);
         }
 
-        List<String> values = section.getStringList(key);
+        List<String> values = getStringList(section, key);
         EnumSet<E> result = EnumSet.noneOf(enumClass);
 
         for (String value : values) {
@@ -129,7 +141,7 @@ public final class ConfigUtils {
         for (E e : enumClass.getEnumConstants()) {
             keyMap.put(((Keyed) e).getKey().toString(), e);
         }
-        List<String> values = section.getStringList(key);
+        List<String> values = getStringList(section, key);
         EnumSet<E> result = EnumSet.noneOf(enumClass);
 
         for (String value : values) {

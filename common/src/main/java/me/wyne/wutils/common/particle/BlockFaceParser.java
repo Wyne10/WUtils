@@ -19,4 +19,9 @@ public class BlockFaceParser implements StringDataParser<BlockFace> {
         return BlockFace.valueOf(string);
     }
 
+    @Override
+    public String toString(Object data) {
+        return ((BlockFace)data).name();
+    }
+
 }

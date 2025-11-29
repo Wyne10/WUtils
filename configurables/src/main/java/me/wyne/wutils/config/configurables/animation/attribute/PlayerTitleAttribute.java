@@ -4,6 +4,8 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.runnable.TitleEffect;
 import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.Ticks;
+import me.wyne.wutils.common.config.ConfigUtils;
+import me.wyne.wutils.common.duration.Durations;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
@@ -14,6 +16,7 @@ import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.title.Title;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttribute.TitleData> implements ContextAnimationAttribute {
 
@@ -46,7 +49,7 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
         ).buildNoSpace();
     }
 
-    public record TitleData(String title, String subtitle, Title.Times times) {}
+    public record TitleData(@NotNull String title, @NotNull String subtitle, @NotNull Title.Times times) {}
 
     public static final class Factory implements CompositeAttributeFactory<PlayerTitleAttribute> {
         @Override
@@ -57,9 +60,9 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
                             section.getString("title", ""),
                             section.getString("subtitle", ""),
                             Title.Times.of(
-                                    Ticks.duration(section.getInt("fadeIn", 20)),
-                                    Ticks.duration(section.getInt("stay", 60)),
-                                    Ticks.duration(section.getInt("fadeOut", 20))
+                                    Ticks.duration(ConfigUtils.getTicks(section, "fadeIn", 20)),
+                                    Ticks.duration(ConfigUtils.getTicks(section, "stay", 60)),
+                                    Ticks.duration(ConfigUtils.getTicks(section, "fadeOut", 20))
                             )
                     )
             );
@@ -74,9 +77,9 @@ public class PlayerTitleAttribute extends ConfigurableAttribute<PlayerTitleAttri
                             args.get(0),
                             args.get(1),
                             Title.Times.of(
-                                    Ticks.duration(Integer.parseInt(args.get(2, "20"))),
-                                    Ticks.duration(Integer.parseInt(args.get(3, "60"))),
-                                    Ticks.duration(Integer.parseInt(args.get(4, "20")))
+                                    Ticks.duration(Durations.getTicks(args.get(2, "20"))),
+                                    Ticks.duration(Durations.getTicks(args.get(3, "60"))),
+                                    Ticks.duration(Durations.getTicks(args.get(4, "20")))
                             )
                     )
             );

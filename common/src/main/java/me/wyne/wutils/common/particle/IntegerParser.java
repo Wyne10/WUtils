@@ -17,4 +17,9 @@ public class IntegerParser implements StringDataParser<Integer> {
         return Integer.valueOf(string);
     }
 
+    @Override
+    public String toString(Object data) {
+        return String.valueOf((int)data);
+    }
+
 }

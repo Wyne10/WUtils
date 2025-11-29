@@ -25,11 +25,16 @@ public class ColorParser implements StringDataParser<Color> {
             try {
                 return (Color) Color.class.getField(string).get(null);
             } catch (IllegalAccessException | NoSuchFieldException e) {
-                return Color.fromRGB(Integer.parseInt(string));
+                return Color.fromRGB(Integer.parseUnsignedInt(string.replace("#", ""), 16));
             }
         }
         else
-            return Color.fromRGB(Integer.parseInt(string));
+            return Color.fromRGB(Integer.parseUnsignedInt(string.replace("#", ""), 16));
+    }
+
+    @Override
+    public String toString(Object data) {
+        return String.valueOf(((Color)data).asRGB());
     }
 
 }

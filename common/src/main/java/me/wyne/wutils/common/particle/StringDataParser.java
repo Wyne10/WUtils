@@ -8,5 +8,6 @@ public interface StringDataParser<T> {
 
      Collection<String> getSuggestions();
      @Nullable T getData(String string);
+     String toString(@Nullable Object data);
 
 }

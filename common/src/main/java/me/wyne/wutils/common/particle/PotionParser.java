@@ -21,4 +21,9 @@ public class PotionParser implements StringDataParser<Potion> {
         return new Potion(PotionType.valueOf(string));
     }
 
+    @Override
+    public String toString(Object data) {
+        return ((Potion)data).getType().name();
+    }
+
 }

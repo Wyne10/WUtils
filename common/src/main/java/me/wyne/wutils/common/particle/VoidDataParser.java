@@ -18,4 +18,9 @@ public class VoidDataParser implements StringDataParser<Void> {
         return null;
     }
 
+    @Override
+    public String toString(@Nullable Object data) {
+        return "";
+    }
+
 }

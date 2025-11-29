@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.particle;
 
+import me.wyne.wutils.common.Args;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 
@@ -17,10 +18,16 @@ public class DustOptionsParser implements StringDataParser<Particle.DustOptions>
 
     @Override
     public Particle.DustOptions getData(String string) {
-        String[] args = string.split(":");
-        Color color = Color.fromRGB(Integer.parseInt(args[0]));
-        float size = Float.parseFloat(args[1]);
+        Args args = new Args(string);
+        Color color = Color.fromRGB(Integer.parseUnsignedInt(args.get(0, "0").replace("#", ""), 16));
+        float size = Float.parseFloat(args.get(1, "1.0"));
         return new Particle.DustOptions(color, size);
+    }
+
+    @Override
+    public String toString(Object data) {
+        var dustOptions = (Particle.DustOptions)data;
+        return dustOptions.getColor().asRGB() + ":" + dustOptions.getSize();
     }
 
 }
