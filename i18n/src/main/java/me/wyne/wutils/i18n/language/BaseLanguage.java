@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class BaseLanguage implements Language {
 
-    private final Logger log;
+    private final Logger logger;
 
     private final String languageCode;
     private final Locale locale;
@@ -24,8 +24,8 @@ public class BaseLanguage implements Language {
     private final ConfigurationSection strings;
     private final Map<String, String> stringMap = new HashMap<>();
 
-    public BaseLanguage(File languageFile, Logger log) {
-        this.log = log;
+    public BaseLanguage(File languageFile, Logger logger) {
+        this.logger = logger;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
@@ -35,8 +35,8 @@ public class BaseLanguage implements Language {
                 .forEach(path -> stringMap.put(path, strings.getString(path)));
     }
 
-    public BaseLanguage(@Nullable Language defaultLanguage, File languageFile, Logger log) {
-        this.log = log;
+    public BaseLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
+        this.logger = logger;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
@@ -56,7 +56,7 @@ public class BaseLanguage implements Language {
                 .backup(false)
                 .update();
         if (report.isConfigChanged())
-            log.debug("Merged missing strings to {}", languageFile.getName());
+            logger.debug("Merged missing strings to {}", languageFile.getName());
     }
 
     @Override

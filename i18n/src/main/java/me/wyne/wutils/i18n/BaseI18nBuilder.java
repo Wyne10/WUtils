@@ -26,7 +26,7 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
-    private Logger log = PluginUtils.getLogger(getClass());
+    private Logger logger = PluginUtils.getLogger(getClass());
 
     private ComponentAudiences componentAudiences = new PaperComponentAudiences();
 
@@ -45,8 +45,8 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         } catch (NoSuchMethodError ignored) {}
     }
 
-    public T setLog(Logger log) {
-        this.log = log;
+    public T setLogger(Logger logger) {
+        this.logger = logger;
         return (T) this;
     }
 
@@ -75,8 +75,8 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return (T) this;
     }
 
-    public Logger getLog() {
-        return log;
+    public Logger getLogger() {
+        return logger;
     }
 
     public ComponentAudiences getComponentAudience() {
@@ -124,8 +124,8 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         String languageCode = getLanguageCode(languageFile);
         if (getLanguageMap().containsKey(languageCode))
             return (T) this;
-        getLanguageMap().put(languageCode, new BaseLanguage(defaultLanguage, languageFile, getLog()));
-        getLog().debug("Loaded {} language", languageCode);
+        getLanguageMap().put(languageCode, new BaseLanguage(defaultLanguage, languageFile, getLogger()));
+        getLogger().debug("Loaded {} language", languageCode);
         return (T) this;
     }
 
@@ -137,9 +137,9 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(languageResourcePath), languageResourceFile);
         } catch (IOException e) {
-            getLog().error("An exception occurred trying to write resource {} to a file", languageResourcePath, e);
+            getLogger().error("An exception occurred trying to write resource {} to a file", languageResourcePath, e);
         }
-        loadLanguage(new BaseLanguage(languageResourceFile, getLog()), languageFile);
+        loadLanguage(new BaseLanguage(languageResourceFile, getLogger()), languageFile);
         return (T) this;
     }
 

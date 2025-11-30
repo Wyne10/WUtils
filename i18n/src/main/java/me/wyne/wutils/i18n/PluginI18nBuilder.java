@@ -66,7 +66,7 @@ public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
         try {
             FileUtils.copyInputStreamToFile(plugin.getResource(resourcePath), file);
         } catch (IOException e) {
-            getLog().error("An exception occurred trying to write resource {} to a file", resourcePath, e);
+            getLogger().error("An exception occurred trying to write resource {} to a file", resourcePath, e);
         }
     }
 
