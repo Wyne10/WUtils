@@ -12,7 +12,10 @@
   "packageRules": [
     {
       "matchDepNames": ["org.gradle.toolchains.foojay-resolver-convention"],
-      "matchPackageNames": ["dev.jorel:commandapi-bukkit-core"],
+      "enabled": false
+    },
+    {
+      "matchDepNames": ["dev.jorel:commandapi-bukkit-core"],
       "enabled": false
     }
   ]
