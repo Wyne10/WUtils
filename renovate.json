@@ -11,10 +11,8 @@
   },
   "packageRules": [
     {
-      "matchPackageNames": [
-        "dev.jorel:commandapi-bukkit-core",
-        "org.gradle.toolchains.foojay-resolver-convention"
-      ],
+      "matchDepNames": ["org.gradle.toolchains.foojay-resolver-convention"],
+      "matchPackageNames": ["dev.jorel:commandapi-bukkit-core"],
       "enabled": false
     }
   ]
