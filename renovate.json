@@ -5,7 +5,7 @@
   ],
   "constraints": {
     "java": "16"
-  }
+  },
   "gradle-wrapper": {
     "enabled": false
   },
