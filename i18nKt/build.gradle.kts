@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.2.20")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.2.21")
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")

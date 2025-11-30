@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.2.20")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.2.21")
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("dev.jorel:commandapi-bukkit-core:9.4.2")
     api(project(":WUtils-common"))
