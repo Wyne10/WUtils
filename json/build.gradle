@@ -3,11 +3,10 @@ plugins {
 }
 
 dependencies {
-    compileOnly("org.slf4j:slf4j-api:2.0.17")
     compileOnly("com.google.code.gson:gson:2.13.2")
 }
 
-version = '1.1.7'
+version = '1.2.0'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-json", version.toString())

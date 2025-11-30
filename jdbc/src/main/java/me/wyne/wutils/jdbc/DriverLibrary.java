@@ -1,9 +1,5 @@
 package me.wyne.wutils.jdbc;
 
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -56,10 +52,8 @@ public enum DriverLibrary {
             "org.sqlite.JDBC"
     );
 
-    public static Logger logger = PluginUtils.getLogger(DriverLibrary.class);
-
     private final Path filenamePath;
-    private URL mavenRepoURL;
+    private final URL mavenRepoURL;
     private final String driverClass;
     private boolean isRegistered;
 
@@ -81,44 +75,28 @@ public enum DriverLibrary {
         try {
             this.mavenRepoURL = new URL("https://repo1.maven.org/maven2/" + mavenPath);
         } catch (MalformedURLException e) {
-            PluginUtils.getLogger(DriverLibrary.class).error("An exception occurred trying to format maven path to URL", e);
+            throw new RuntimeException("An exception occurred trying to format maven path to URL", e);
         }
     }
 
-    @Nullable
-    private URL getClassLoaderURL() {
+    private URL getClassLoaderURL() throws IOException {
         if (!Files.exists(this.filenamePath)) {
-            try {
-                try (InputStream in = this.mavenRepoURL.openStream()) {
-                    Files.createDirectories(this.filenamePath.getParent());
-                    Files.copy(in, Files.createFile(this.filenamePath), StandardCopyOption.REPLACE_EXISTING);
-                }
-                logger.info("Loaded '{}' JDBC driver", mavenRepoURL.toString());
-            } catch (IOException e) {
-                logger.error("An exception occurred trying to load '{}' driver", mavenRepoURL.toString(), e);
+            try (InputStream in = this.mavenRepoURL.openStream()) {
+                Files.createDirectories(this.filenamePath.getParent());
+                Files.copy(in, Files.createFile(this.filenamePath), StandardCopyOption.REPLACE_EXISTING);
             }
         }
 
-        try {
-            return this.filenamePath.toUri().toURL();
-        } catch (MalformedURLException e) {
-            logger.error("An exception occurred trying to format path to URL", e);
-        }
-        return null;
+        return this.filenamePath.toUri().toURL();
     }
 
-    public void registerDriver() {
+    public void registerDriver() throws IOException, ClassNotFoundException, SQLException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         if (isRegistered)
             return;
 
-        try {
-            URLClassLoader loader = new URLClassLoader(new URL[]{getClassLoaderURL()}, DriverLibrary.class.getClassLoader());
+        try (URLClassLoader loader = new URLClassLoader(new URL[]{getClassLoaderURL()}, DriverLibrary.class.getClassLoader())) {
             DriverManager.registerDriver(new DriverShim((Driver) loader.loadClass(driverClass).getConstructor().newInstance()));
             isRegistered = true;
-            logger.info("Registered '{}' JDBC driver", driverClass);
-        } catch (SQLException | InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException | ClassNotFoundException e) {
-            logger.error("An exception occurred trying to register driver '{}'", driverClass, e);
         }
     }
 

@@ -4,14 +4,11 @@ import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class HikariOrmLiteConnectionPool implements ConnectionPool<ConnectionSource> {
-
-    private final Logger logger;
 
     private final String url;
     private final String username;
@@ -20,23 +17,18 @@ public class HikariOrmLiteConnectionPool implements ConnectionPool<ConnectionSou
     private final HikariDataSource dataSource = new HikariDataSource();
     private ConnectionSource connectionSource;
 
-    public HikariOrmLiteConnectionPool(String url, String username, String password, Logger logger) {
+    public HikariOrmLiteConnectionPool(String url, String username, String password) throws SQLException {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.logger = logger;
         initializeDataSource();
     }
 
-    private void initializeDataSource() {
+    private void initializeDataSource() throws SQLException {
         dataSource.setJdbcUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-        try {
-            connectionSource = new DataSourceConnectionSource(dataSource, url);
-        } catch (SQLException e) {
-            logger.error("An exception occurred trying to establish data source connection with {}", url, e);
-        }
+        connectionSource = new DataSourceConnectionSource(dataSource, url);
     }
 
     @Override
@@ -45,13 +37,8 @@ public class HikariOrmLiteConnectionPool implements ConnectionPool<ConnectionSou
     }
 
     @Override
-    public @Nullable Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            logger.error("An exception occurred trying to establish connection with {}", url, e);
-        }
-        return null;
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     @Override
@@ -60,7 +47,8 @@ public class HikariOrmLiteConnectionPool implements ConnectionPool<ConnectionSou
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
+        connectionSource.close();
         dataSource.close();
     }
 

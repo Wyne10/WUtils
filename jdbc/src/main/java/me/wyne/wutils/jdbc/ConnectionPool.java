@@ -3,12 +3,13 @@ package me.wyne.wutils.jdbc;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public interface ConnectionPool<T> extends AutoCloseable {
 
     boolean isActive();
 
-    @Nullable Connection getConnection();
+    Connection getConnection() throws SQLException;
 
     @Nullable T getSource();
 
