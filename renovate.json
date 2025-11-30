@@ -6,4 +6,16 @@
   "constraints": {
     "java": "16"
   }
+  "gradle-wrapper": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "dev.jorel:commandapi-bukkit-core",
+        "org.gradle.toolchains.foojay-resolver-convention"
+      ],
+      "enabled": false
+    }
+  ]
 }
