@@ -28,7 +28,7 @@ package me.wyne.wutils.common.exception;
 import me.wyne.wutils.common.exception.types.EventHandlerException;
 import me.wyne.wutils.common.exception.types.PromiseChainException;
 import me.wyne.wutils.common.exception.types.SchedulerTaskException;
-import me.wyne.wutils.common.plugin.PluginLog;
+import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.promise.Delegate;
 
 /**
@@ -39,7 +39,7 @@ public final class HelperExceptions {
     private HelperExceptions() {}
 
     private static void log(InternalException exception) {
-        PluginLog.severe(exception.getMessage(), exception);
+        PluginUtils.getLogger().error(exception.getMessage(), exception);
     }
 
     public static void reportScheduler(Throwable throwable) {
