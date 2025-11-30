@@ -13,7 +13,7 @@
     },
     {
       "matchDepNames": ["org.gradle.toolchains.foojay-resolver-convention"],
-      "allowedVersions": "<1.0.0",
+      "allowedVersions": "<1.0.0"
     },
     {
       "matchDepNames": ["dev.jorel:commandapi-bukkit-core"],
