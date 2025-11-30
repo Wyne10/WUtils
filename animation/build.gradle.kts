@@ -15,14 +15,12 @@ dependencies {
 
 version = "2.0.5"
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = findProperty("group").toString()
-            artifactId = "WUtils-animation"
-            version = findProperty("version").toString()
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-animation", version.toString())
 
-            from(components["java"])
-        }
+    pom {
+        name = "WUtils Animation"
+        description = "A lightweight API for creating and orchestrating sequential or parallel animations in Bukkit/Paper plugins."
+        inceptionYear = "2025"
     }
 }

@@ -19,16 +19,14 @@ dependencies {
     api project(':WUtils-config')
 }
 
-version = '1.16.0'
+version = '1.16.0-SNAPSHOT'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'WUtils-configurables'
-            version = version
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-configurables", version.toString())
 
-            from components.java
-        }
+    pom {
+        name = "WUtils Configurables"
+        description = "A companion module to the WUtils Config that offers a set of predefined, annotation-friendly serializers, simplifying config handling in Bukkit/Paper plugins."
+        inceptionYear = "2024"
     }
 }

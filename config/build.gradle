@@ -17,14 +17,12 @@ dependencies {
 
 version = '2.9.9'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'WUtils-config'
-            version = version
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-config", version.toString())
 
-            from components.java
-        }
+    pom {
+        name = "WUtils Config"
+        description = "Annotation-based utilities for generating, updating, and reading YAML configuration files in Bukkit/Paper plugins."
+        inceptionYear = "2023"
     }
 }

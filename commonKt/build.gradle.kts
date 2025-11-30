@@ -1,6 +1,6 @@
 plugins {
     id("wutils.java-library")
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm")
 }
 
 kotlin {
@@ -22,14 +22,12 @@ dependencies {
 
 version = project(":WUtils-common").version
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = findProperty("group").toString()
-            artifactId = "WUtils-common-kotlin"
-            version = findProperty("version").toString()
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-common-kotlin", version.toString())
 
-            from(components["java"])
-        }
+    pom {
+        name = "WUtils Common Kotlin"
+        description = "Kotlin extensions and wrappers for the WUtils Common"
+        inceptionYear = "2025"
     }
 }

@@ -11,7 +11,7 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'dev.jorel:commandapi-bukkit-core:9.4.2'
-    implementation 'org.apache.commons:commons-lang3:3.19.0'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
 }
 
 tasks.named("publish") {
@@ -20,14 +20,12 @@ tasks.named("publish") {
 
 version = '1.6.18'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'WUtils-common'
-            version = version
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-common", version.toString())
 
-            from components.java
-        }
+    pom {
+        name = "WUtils Common"
+        description = "A shared utility toolkit for Bukkit/Paper plugins, featuring helpers for configuration, commands, events, scheduling, and other common plugin tasks."
+        inceptionYear = "2025"
     }
 }

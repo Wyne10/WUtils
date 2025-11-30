@@ -1,6 +1,6 @@
 plugins {
     id("wutils.java-library")
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm")
 }
 
 kotlin {
@@ -23,14 +23,12 @@ dependencies {
 
 version = project(":WUtils-i18n").version
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = findProperty("group").toString()
-            artifactId = "WUtils-i18n-kotlin"
-            version = findProperty("version").toString()
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-i18n-kotlin", version.toString())
 
-            from(components["java"])
-        }
+    pom {
+        name = "WUtils Internationalization Kotlin"
+        description = "Kotlin extensions and wrappers for the WUtils Internationalization"
+        inceptionYear = "2025"
     }
 }

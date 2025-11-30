@@ -16,14 +16,12 @@ dependencies {
 
 version = '1.2.3'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'WUtils-jdbc'
-            version = version
+mavenPublishing {
+    coordinates(findProperty("centralGroup").toString(), "wutils-jdbc", version.toString())
 
-            from components.java
-        }
+    pom {
+        name = "WUtils JDBC"
+        description = "JDBC utilities for Bukkit/Paper plugins, providing a unified abstraction over multiple connection pool providers (HikariCP, ORMLite, and more) and support for configuring and downloading JDBC drivers at runtime."
+        inceptionYear = "2024"
     }
 }

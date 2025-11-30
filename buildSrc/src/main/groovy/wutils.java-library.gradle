@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
+    id 'com.vanniktech.maven.publish'
 }
 
 repositories {
@@ -17,19 +17,36 @@ java {
     withSourcesJar()
 }
 
-tasks.withType(PublishToMavenRepository).configureEach {
-    it.dependsOn("publishToMavenLocal")
+tasks.named("publish") {
+    dependsOn("publishToMavenLocal")
 }
 
-publishing {
-    repositories {
-        maven {
-            url myMavenRepoWriteUrl
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 
-            credentials {
-                username myMavenRepoWriteUsername
-                password myMavenRepoWritePassword
+    pom {
+        url = "https://github.com/Wyne10/WUtils"
+        licenses {
+            license {
+                name = "GNU General Public License, Version 3.0"
+                url = "https://www.gnu.org/licenses/gpl-3.0.txt"
+                distribution = "https://www.gnu.org/licenses/gpl-3.0.txt"
             }
+        }
+        developers {
+            developer {
+                id = "Wyne10"
+                name = "Wyne"
+                email = "izmodenov1997@gmail.com"
+                organization = "BigTeam"
+                organizationUrl = "https://github.com/NeverMined-Entertainment"
+            }
+        }
+        scm {
+            url = "https://github.com/Wyne10/WUtils"
+            connection = "scm:git:git://github.com/Wyne10/WUtils.git"
+            developerConnection = "scm:git:ssh://git@github.com/Wyne10/WUtils.git"
         }
     }
 }
