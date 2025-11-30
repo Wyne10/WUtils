@@ -1,7 +1,6 @@
 package me.wyne.wutils.json;
 
 import com.google.gson.Gson;
-import org.slf4j.Logger;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -11,12 +10,18 @@ import java.util.Map;
 
 public class JsonRegistry {
 
-    public static final JsonRegistry global = new JsonRegistry();
-    public Logger log = PluginUtils.getLogger(getClass());
+    public static JsonRegistry global = new JsonRegistry();
 
     private Gson gson = new Gson();
     private File directory;
     private final Map<String, JsonObject> objectMap = new HashMap<>();
+
+    public JsonRegistry() {}
+
+    public JsonRegistry(Gson gson, File directory) {
+        this.gson = gson;
+        this.directory = directory;
+    }
 
     public void registerObject(Object object) {
         for (Field field : object.getClass().getDeclaredFields()) {
@@ -54,40 +59,39 @@ public class JsonRegistry {
         objectMap.clear();
     }
 
-    public void write() {
+    public void write() throws NullPointerException, IOException, IllegalAccessException {
         if (directory == null)
             throw new NullPointerException("JsonRegistry directory is not specified");
 
-        objectMap.forEach((path, object) -> {
-            File file = new File(directory, path);
+        for (Map.Entry<String, JsonObject> entry : objectMap.entrySet()) {
+            File file = new File(directory, entry.getKey());
             File parent = file.getParentFile();
             if (parent != null && !parent.exists())
                 parent.mkdirs();
-
-            try {
-                if (!file.exists())
-                    file.createNewFile();
-                Writer writer = new FileWriter(file);
-                object.field().setAccessible(true);
-                gson.toJson(object.field().get(object.holder()), writer);
-                writer.close();
-            } catch (IOException | IllegalAccessException e) {
-                log.error("An exception occurred trying to write json to file", e);
+            if (!file.exists())
+                file.createNewFile();
+            try (Writer writer = new FileWriter(file)) {
+                entry.getValue().field().setAccessible(true);
+                gson.toJson(entry.getValue().field().get(entry.getValue().holder()), writer);
             }
-        });
+        }
     }
 
-    public void load() {
-        objectMap.forEach(this::load);
+    public void load() throws NullPointerException, IOException, IllegalAccessException {
+        for (Map.Entry<String, JsonObject> entry : objectMap.entrySet()) {
+            load(entry.getKey(), entry.getValue());
+        }
     }
 
-    public void load(Object holder) {
-        objectMap.entrySet().stream()
-                .filter((entry) -> entry.getValue().holder().equals(holder))
-                .forEach((entry) -> load(entry.getKey(), entry.getValue()));
+    public void load(Object holder) throws NullPointerException, IOException, IllegalAccessException {
+        for (Map.Entry<String, JsonObject> entry : objectMap.entrySet()) {
+            if (!entry.getValue().holder().equals(holder))
+                continue;
+            load(entry.getKey(), entry.getValue());
+        }
     }
 
-    public void load(String path, JsonObject object) {
+    public void load(String path, JsonObject object) throws NullPointerException, IOException, IllegalAccessException {
         if (directory == null)
             throw new NullPointerException("JsonRegistry directory is not specified");
 
@@ -98,8 +102,6 @@ public class JsonRegistry {
         try (Reader reader = new FileReader(file)) {
             object.field().setAccessible(true);
             object.field().set(object.holder(), gson.fromJson(reader, object.type()));
-        } catch (IOException | IllegalAccessException e) {
-            log.error("An exception occurred trying to read json file", e);
         }
     }
 
