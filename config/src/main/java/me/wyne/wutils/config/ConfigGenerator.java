@@ -11,15 +11,15 @@ import java.util.Set;
 
 public class ConfigGenerator {
 
-    private final Logger log;
+    private final Logger logger;
 
     private final File configFile;
     private final File defaultConfigFile;
 
     private final StringBuilder generatedText = new StringBuilder();
 
-    public ConfigGenerator(File configFile, File defaultConfigFile, Logger log) {
-        this.log = log;
+    public ConfigGenerator(File configFile, File defaultConfigFile, Logger logger) {
+        this.logger = logger;
         this.configFile = configFile;
         this.defaultConfigFile = defaultConfigFile;
     }
@@ -42,7 +42,7 @@ public class ConfigGenerator {
                 generatedText.append("\n");
             });
         } catch (IOException e) {
-            log.error("An exception occurred trying to read default config file", e);
+            logger.error("An exception occurred trying to read default config file", e);
         }
     }
 
@@ -52,9 +52,9 @@ public class ConfigGenerator {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(defaultConfigFile))) {
             writer.write(generatedText.toString());
             writer.flush();
-            log.debug("Generated default WUtils config");
+            logger.debug("Generated default WUtils config");
         } catch (IOException e) {
-            log.error("An exception occurred trying to write WUtils config", e);
+            logger.error("An exception occurred trying to write WUtils config", e);
         }
 
         if (!generationRequested)
@@ -65,7 +65,7 @@ public class ConfigGenerator {
                 .vars(replaceVars)
                 .deleteProps(deleteProps)
                 .update();
-        log.debug("Merged WUtils config");
+        logger.debug("Merged WUtils config");
     }
 
 }

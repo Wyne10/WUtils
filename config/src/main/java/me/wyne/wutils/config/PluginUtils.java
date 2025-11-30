@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ final class PluginUtils {
     private static Plugin plugin = null;
     private static Logger logger = null;
 
+    @Nullable
     public static synchronized Plugin getPlugin() {
         if (plugin == null) {
             try {
@@ -38,7 +40,7 @@ final class PluginUtils {
             if (plugin != null)
                 logger = LoggerFactory.getLogger(getPlugin().getLogger().getName());
             else
-                logger = LoggerFactory.getLogger(fallback.getSimpleName());
+                logger = LoggerFactory.getLogger(fallback);
         }
 
         return logger;

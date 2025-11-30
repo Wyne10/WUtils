@@ -7,6 +7,8 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 import org.javatuples.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -20,7 +22,7 @@ import java.util.*;
 public class Config {
 
     public static final Config global = new Config();
-    public Logger log = PluginUtils.getLogger(getClass());
+    public @NotNull Logger logger = PluginUtils.getLogger(getClass());
 
     private ConfigGenerator configGenerator;
     /**
@@ -36,7 +38,7 @@ public class Config {
     }
 
     public void setConfigGenerator(File configFile, File defaultConfigFile) {
-        configGenerator = new ConfigGenerator(configFile, defaultConfigFile, log);
+        configGenerator = new ConfigGenerator(configFile, defaultConfigFile, logger);
     }
 
     public void setConfigGenerator(Plugin plugin, String configPath) {
@@ -48,7 +50,7 @@ public class Config {
                 defaultConfig.createNewFile();
             Files.copy(plugin.getResource(configPath), defaultConfigPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.error("An exception occurred trying to load default config for WUtils config", e);
+            logger.error("An exception occurred trying to load default config for WUtils config", e);
         }
         setConfigGenerator(new File(plugin.getDataFolder(), configPath), defaultConfig);
     }
@@ -57,7 +59,7 @@ public class Config {
         for(Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(ConfigEntry.class))
                 continue;
-            Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field, log);
+            Pair<String, ConfigField> sectionedConfigField = ConfigFieldParser.getSectionedConfigField(object, field, logger);
             registerConfigField(sectionedConfigField.getValue0(), sectionedConfigField.getValue1());
         }
     }
@@ -83,9 +85,9 @@ public class Config {
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
-                        log.debug("Reloaded WUtils config");
+                        logger.debug("Reloaded WUtils config");
                     } catch (IllegalAccessException e) {
-                        log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
+                        logger.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
                 });
     }
@@ -105,16 +107,16 @@ public class Config {
                             ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
-                        log.debug("Reloaded WUtils config for object '{}'", object.getClass().getSimpleName());
+                        logger.debug("Reloaded WUtils config for object '{}'", object.getClass().getSimpleName());
                     } catch (IllegalAccessException e) {
-                        log.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
+                        logger.error("An exception occurred trying to load config field '{}'", configField.field().getName(), e);
                     }
                 });
     }
 
     public void generateConfig(boolean backup, Map<String, String> replaceVars, List<String> deleteProps) {
         if (configGenerator == null) {
-            log.error("Trying to generate config, but configGenerator is null");
+            logger.error("Trying to generate config, but configGenerator is null");
             return;
         }
 
