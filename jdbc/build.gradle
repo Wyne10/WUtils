@@ -14,7 +14,7 @@ mavenPublishing {
 
     pom {
         name = "WUtils JDBC"
-        description = "JDBC utilities for Bukkit/Paper plugins, providing a unified abstraction over multiple connection pool providers (HikariCP, ORMLite, and more) and support for configuring and downloading JDBC drivers at runtime."
+        description = "JDBC utilities providing a unified abstraction over multiple connection pool providers (HikariCP, ORMLite, and more) and support for configuring and downloading JDBC drivers at runtime."
         inceptionYear = "2024"
     }
 }
