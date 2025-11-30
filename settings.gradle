@@ -14,7 +14,7 @@ rootProject.name = 'WUtils'
 include(':WUtils-config')
 include(':WUtils-i18n')
 include(':WUtils-i18n-kotlin')
-include(':WUtils-log')
+//include(':WUtils-log') Deprecated
 include(':WUtils-configurables')
 include(':WUtils-common')
 include(':WUtils-common-kotlin')
@@ -24,7 +24,7 @@ include(':WUtils-animation')
 project(":WUtils-config").projectDir = file('config')
 project(":WUtils-i18n").projectDir = file('i18n')
 project(":WUtils-i18n-kotlin").projectDir = file('i18nKt')
-project(":WUtils-log").projectDir = file('log')
+//project(":WUtils-log").projectDir = file('log') Deprecated
 project(":WUtils-configurables").projectDir = file('configurables')
 project(":WUtils-common").projectDir = file('common')
 project(":WUtils-common-kotlin").projectDir = file('commonKt')
