@@ -30,8 +30,9 @@ public class InteractionConfigurable extends AttributeConfigurable {
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.MESSAGE.getKey(), new MessageAttribute.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.ACTION_BAR.getKey(), new ActionBarAttribute.Factory());
         INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.SOUND.getKey(), new SoundAttribute.Factory());
-        // TODO Command
-        // TODO Title
+        INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.CONSOLE_COMMAND.getKey(), new ConsoleCommandAttribute.Factory());
+        INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.PLAYER_COMMAND.getKey(), new PlayerCommandAttribute.Factory());
+        INTERACTION_ATTRIBUTE_MAP.put(InteractionAttribute.TITLE.getKey(), new TitleAttribute.Factory());
         // TODO Boss Bar
     }
 
@@ -52,12 +53,7 @@ public class InteractionConfigurable extends AttributeConfigurable {
     }
 
     public void send(CommandSender sender, InteractionAttributeContext context) {
-        var audiences = getAttributeContainer().getSet(InteractionAudienceAttribute.class)
-                .stream().map(attribute -> attribute.get(sender))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-        if (audiences.isEmpty())
-            audiences.add(new PlayerAudience().get(sender));
-        var audience = Audience.audience(audiences);
+        var audience = getAudience(sender);
         getAttributeContainer().getSet(ContextInteractionAttribute.class)
                 .forEach(attribute -> attribute.send(audience, sender, context));
     }
@@ -74,8 +70,18 @@ public class InteractionConfigurable extends AttributeConfigurable {
         var context = new InteractionAttributeContext(placeholderTarget, new TextReplacement[]{}, componentReplacements);
         send(sender, context);
     }
+
     public void sendComponent(CommandSender sender, ComponentReplacement... componentReplacements) {
         sendComponent(sender, I18n.toOfflinePlayer(sender), componentReplacements);
+    }
+
+    public Audience getAudience(CommandSender sender) {
+        var audiences = getAttributeContainer().getSet(InteractionAudienceAttribute.class)
+                .stream().map(attribute -> attribute.get(sender))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        if (audiences.isEmpty())
+            audiences.add(new PlayerAudience().get(sender));
+        return Audience.audience(audiences);
     }
 
     public static AttributeContainerBuilder builder() {

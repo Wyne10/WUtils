@@ -9,8 +9,11 @@ public enum InteractionAttribute {
     AUDIENCE_WORLDS("toWorlds"),
     AUDIENCE_THAT_PLAYERS("toThatPlayers"),
     MESSAGE("message"),
-    ACTION_BAR("actionBar"),
-    SOUND("sound");
+    CONSOLE_COMMAND("console"),
+    PLAYER_COMMAND("command"),
+    ACTION_BAR("action"),
+    SOUND("sound"),
+    TITLE("title");
 
     private final String key;
 

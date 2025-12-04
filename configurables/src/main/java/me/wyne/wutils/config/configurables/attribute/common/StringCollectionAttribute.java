@@ -1,8 +1,6 @@
 package me.wyne.wutils.config.configurables.attribute.common;
 
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
