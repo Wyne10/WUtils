@@ -20,7 +20,7 @@ public class LoggerWrapper implements Logger {
     }
 
     public boolean isEnabled(LevelWrapper level) {
-        return this.level.isMoreSpecificThan(level.getLevel());
+        return level.getLevel().isMoreSpecificThan(this.level);
     }
 
     @Override
