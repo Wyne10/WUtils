@@ -17,7 +17,7 @@ public final class Durations {
     public static final Duration Days = new Days();
     public static final Duration Ticks = new Ticks();
 
-    public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])?");
+    public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])", Pattern.CASE_INSENSITIVE);
     public static final Map<String, Duration> DURATION_SYMBOLS = Map.of(
             "", new Ticks(),
             "ms", new Millis(),
@@ -30,31 +30,34 @@ public final class Durations {
 
     public static Duration getDuration(@Nullable String symbol) {
         if (symbol == null) return Ticks;
-        return DURATION_SYMBOLS.get(symbol);
+        return DURATION_SYMBOLS.get(symbol.toLowerCase());
     }
 
     public static TimeSpan getTimeSpan(String string) {
-        Matcher matcher = DURATION_REGEX.matcher(string);
-        matcher.matches();
-        String duration = matcher.group(1);
-        String type = matcher.group(2);
-        return new TimeSpan(Long.parseLong(duration), getDuration(type));
+        return new TimeSpan(getMillis(string), Millis);
     }
 
     public static long getMillis(String string) {
         Matcher matcher = DURATION_REGEX.matcher(string);
-        matcher.matches();
-        String duration = matcher.group(1);
-        String type = matcher.group(2);
-        return getDuration(type).getMillis(Long.parseLong(duration));
+        long totalMillis = 0;
+
+        boolean found = false;
+        while (matcher.find()) {
+            found = true;
+            long amount = Long.parseLong(matcher.group(1));
+            Duration duration = getDuration(matcher.group(2));
+            totalMillis += duration.getMillis(amount);
+        }
+
+        if (!found) {
+            throw new IllegalArgumentException("Invalid duration: " + string);
+        }
+
+        return totalMillis;
     }
 
     public static long getTicks(String string) {
-        Matcher matcher = DURATION_REGEX.matcher(string);
-        matcher.matches();
-        String duration = matcher.group(1);
-        String type = matcher.group(2);
-        return getDuration(type).getTicks(Long.parseLong(duration));
+        return getTimeSpan(string).getTicks();
     }
 
     public static TimeSpanRange getTimeSpanRange(String string) {
