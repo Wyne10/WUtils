@@ -23,7 +23,9 @@
  *  SOFTWARE.
  */
 
-package me.wyne.wutils.common.promise;
+package me.wyne.wutils.common;
+
+import me.wyne.wutils.common.interfaces.Delegate;
 
 import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;

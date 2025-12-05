@@ -28,7 +28,7 @@ package me.wyne.wutils.common.scheduler;
 import me.wyne.wutils.common.Ticks;
 import me.wyne.wutils.common.exception.HelperExceptions;
 import me.wyne.wutils.common.plugin.PluginUtils;
-import me.wyne.wutils.common.promise.Delegate;
+import me.wyne.wutils.common.interfaces.Delegate;
 import me.wyne.wutils.common.promise.ThreadContext;
 import me.wyne.wutils.common.scheduler.builder.TaskBuilder;
 import org.bukkit.Bukkit;

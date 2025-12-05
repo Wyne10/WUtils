@@ -31,6 +31,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import me.wyne.wutils.common.Ticks;
 import me.wyne.wutils.common.exception.HelperExceptions;
+import me.wyne.wutils.common.interfaces.Delegate;
 import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.scheduler.HelperExecutors;
 import org.bukkit.Bukkit;

@@ -1,6 +1,6 @@
 package me.wyne.wutils.common.scheduler;
 
-import me.wyne.wutils.common.promise.Delegates;
+import me.wyne.wutils.common.Delegates;
 import me.wyne.wutils.common.promise.Promise;
 import me.wyne.wutils.common.promise.ThreadContext;
 

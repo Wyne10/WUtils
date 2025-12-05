@@ -29,7 +29,7 @@ import me.wyne.wutils.common.exception.types.EventHandlerException;
 import me.wyne.wutils.common.exception.types.PromiseChainException;
 import me.wyne.wutils.common.exception.types.SchedulerTaskException;
 import me.wyne.wutils.common.plugin.PluginUtils;
-import me.wyne.wutils.common.promise.Delegate;
+import me.wyne.wutils.common.interfaces.Delegate;
 
 /**
  * Central handler for exceptions that occur within user-written

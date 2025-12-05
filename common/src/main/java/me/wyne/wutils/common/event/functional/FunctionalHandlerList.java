@@ -23,28 +23,46 @@
  *  SOFTWARE.
  */
 
-package me.wyne.wutils.common.promise;
+package me.wyne.wutils.common.event.functional;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
 
 /**
- * Represents a class which delegates calls to a different object.
+ * A functional builder which accumulates event handlers
  *
- * @param <T> the delegate type
+ * @param <T> the handled type
+ * @param <R> the resultant subscription type
  */
-public interface Delegate<T> {
-
-    static Object resolve(Object obj) {
-        while (obj instanceof Delegate<?>) {
-            Delegate<?> delegate = (Delegate<?>) obj;
-            obj = delegate.getDelegate();
-        }
-        return obj;
-    }
+public interface FunctionalHandlerList<T, R> {
 
     /**
-     * Gets the delegate object
+     * Add a {@link Consumer} handler.
      *
-     * @return the delegate object
+     * @param handler the handler
+     * @return this handler list
      */
-    T getDelegate();
+    @Nonnull
+    FunctionalHandlerList<T, R> consumer(@Nonnull Consumer<? super T> handler);
+
+    /**
+     * Add a {@link BiConsumer} handler.
+     *
+     * @param handler the handler
+     * @return this handler list
+     */
+    @Nonnull
+    FunctionalHandlerList<T, R> biConsumer(@Nonnull BiConsumer<R, ? super T> handler);
+
+    /**
+     * Builds and registers the Handler.
+     *
+     * @return a registered {@link R} instance.
+     * @throws IllegalStateException if no handlers have been registered
+     */
+    @Nonnull
+    R register();
 
 }

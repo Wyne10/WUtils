@@ -25,6 +25,7 @@
 
 package me.wyne.wutils.common.promise;
 
+import me.wyne.wutils.common.Delegates;
 import me.wyne.wutils.common.terminable.Terminable;
 
 import java.util.concurrent.Callable;
