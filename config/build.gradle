@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.javatuples:javatuples:1.2'
 }
 
-version = '2.9.13'
+version = '2.9.14'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-config", version.toString())
