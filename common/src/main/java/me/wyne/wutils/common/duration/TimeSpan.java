@@ -1,5 +1,7 @@
 package me.wyne.wutils.common.duration;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 
 public record TimeSpan(long duration, Duration type) implements Duration {
@@ -28,5 +30,10 @@ public record TimeSpan(long duration, Duration type) implements Duration {
     @Override
     public long getUnit(long duration, TimeUnit unit) {
         return unit.convert(getMillis(duration), TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return duration + Durations.getSymbol(type);
     }
 }

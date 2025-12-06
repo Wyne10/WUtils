@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class Durations {
 
@@ -18,19 +19,28 @@ public final class Durations {
     public static final Duration Ticks = new Ticks();
 
     public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])", Pattern.CASE_INSENSITIVE);
-    public static final Map<String, Duration> DURATION_SYMBOLS = Map.of(
-            "", new Ticks(),
-            "ms", new Millis(),
-            "s", new Seconds(),
-            "m", new Minutes(),
-            "h", new Hours(),
-            "d", new Days(),
-            "t", new Ticks()
+    public static final Map<String, Duration> SYMBOL_TO_DURATION = Map.of(
+            "", Ticks,
+            "ms", Millis,
+            "s", Seconds,
+            "m", Minutes,
+            "h", Hours,
+            "d", Days,
+            "t", Ticks
     );
+    public static final Map<Duration, String> DURATION_TO_SYMBOL = SYMBOL_TO_DURATION
+            .entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     public static Duration getDuration(@Nullable String symbol) {
         if (symbol == null) return Ticks;
-        return DURATION_SYMBOLS.get(symbol.toLowerCase());
+        return SYMBOL_TO_DURATION.get(symbol.toLowerCase());
+    }
+
+    public static String getSymbol(@Nullable Duration duration) {
+        if (duration == null) return "";
+        return DURATION_TO_SYMBOL.get(duration);
     }
 
     public static TimeSpan getTimeSpan(String string) {

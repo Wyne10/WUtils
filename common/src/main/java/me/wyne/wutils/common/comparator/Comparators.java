@@ -20,6 +20,15 @@ public final class Comparators {
         };
     }
 
+    public static <T> String getOperator(@Nullable Comparator<T> comparator) {
+        if (comparator == null) return "";
+        if (comparator instanceof LessThan<T>) return "<";
+        else if (comparator instanceof GreaterThan<T>) return ">";
+        else if (comparator instanceof LessOrEqual<T>) return "<=";
+        else if (comparator instanceof GreaterOrEqual<T>) return ">=";
+        else return "";
+    }
+
     public static IntComparator getIntComparator(String string) {
         Matcher matcher = COMPARATOR_REGEX.matcher(string);
         matcher.matches();

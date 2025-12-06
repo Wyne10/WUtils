@@ -32,6 +32,16 @@ public final class Operations {
         };
     }
 
+    public static <T extends Number> String getOperator(Operation<T> operation) {
+        if (operation == null) return "";
+        if (operation instanceof Plus) return "+";
+        else if (operation instanceof Minus) return "-";
+        else if (operation instanceof Multiply) return "*";
+        else if (operation instanceof Divide) return "/";
+        else if (operation instanceof Power) return "**";
+        else return "";
+    }
+
     public static IntOperation getIntOperation(String string) {
         Matcher matcher = OPERATION_REGEX.matcher(string);
         matcher.matches();
