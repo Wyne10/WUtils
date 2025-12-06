@@ -19,6 +19,11 @@ public class AnimationConfigurable implements CompositeConfigurable {
         animationSteps = new LinkedList<>();
     }
 
+    public AnimationConfigurable(AnimationStepConfigurable... steps) {
+        this();
+        addSteps(steps);
+    }
+
     public AnimationConfigurable(ConfigurationSection section) {
         this();
         fromConfig(section);

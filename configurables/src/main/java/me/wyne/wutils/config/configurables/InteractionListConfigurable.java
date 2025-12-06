@@ -26,6 +26,11 @@ public class InteractionListConfigurable implements CompositeConfigurable {
         interactions = new LinkedList<>();
     }
 
+    public InteractionListConfigurable(InteractionConfigurable... interactions) {
+        this();
+        addInteractions(interactions);
+    }
+
     public InteractionListConfigurable(ConfigurationSection section) {
         this();
         fromConfig(section);
@@ -82,8 +87,22 @@ public class InteractionListConfigurable implements CompositeConfigurable {
         var context = new InteractionAttributeContext(placeholderTarget, new TextReplacement[]{}, componentReplacements);
         send(sender, context);
     }
+
     public void sendComponent(CommandSender sender, ComponentReplacement... componentReplacements) {
         sendComponent(sender, I18n.toOfflinePlayer(sender), componentReplacements);
     }
 
+    public InteractionListConfigurable addInteraction(InteractionConfigurable interaction) {
+        interactions.add(interaction);
+        return this;
+    }
+
+    public InteractionListConfigurable addInteractions(InteractionConfigurable... interactions) {
+        this.interactions.addAll(Arrays.asList(interactions));
+        return this;
+    }
+
+    public List<InteractionConfigurable> getInteractions() {
+        return interactions;
+    }
 }
