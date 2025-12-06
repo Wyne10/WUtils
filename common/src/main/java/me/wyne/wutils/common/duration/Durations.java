@@ -53,7 +53,7 @@ public final class Durations {
         boolean found = false;
         while (matcher.find()) {
             found = true;
-            long amount = Long.parseLong(matcher.group(1));
+            long amount = Math.abs(Long.parseLong(matcher.group(1)));
             Duration duration = getDuration(matcher.group(2));
             totalMillis += duration.getMillis(amount);
         }

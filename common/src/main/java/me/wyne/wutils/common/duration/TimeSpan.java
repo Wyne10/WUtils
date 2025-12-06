@@ -34,6 +34,32 @@ public record TimeSpan(long duration, Duration type) implements Duration {
 
     @Override
     public @NotNull String toString() {
-        return duration + Durations.getSymbol(type);
+        long millis = getMillis();
+
+        if (millis == 0) {
+            return "0t";
+        }
+
+        long days = millis / (24 * 60 * 60 * 1000);
+        millis %=       24 * 60 * 60 * 1000;
+
+        long hours = millis / (60 * 60 * 1000);
+        millis %=       60 * 60 * 1000;
+
+        long minutes = millis / (60 * 1000);
+        millis %=       60 * 1000;
+
+        long seconds = millis / 1000;
+        millis %=       1000;
+
+        StringBuilder sb = new StringBuilder();
+
+        if (days    != 0) sb.append(days).append('d');
+        if (hours   != 0) sb.append(hours).append('h');
+        if (minutes != 0) sb.append(minutes).append('m');
+        if (seconds != 0) sb.append(seconds).append('s');
+        if (millis  != 0) sb.append(millis).append("ms");
+
+        return sb.toString();
     }
 }
