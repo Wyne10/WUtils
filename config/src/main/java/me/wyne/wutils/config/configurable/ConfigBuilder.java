@@ -124,7 +124,7 @@ public class ConfigBuilder {
         int i = 0;
         for (Pair<Integer, String> entry : valueSequence) {
             stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1()));
-            if (i < valueSequence.size() - 1 && !skipTrailing)
+            if (i >= valueSequence.size() - 1 && !skipTrailing)
                 stringBuilder.append("\n");
             i++;
         }
