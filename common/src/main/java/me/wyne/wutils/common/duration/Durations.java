@@ -20,7 +20,6 @@ public final class Durations {
 
     public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])", Pattern.CASE_INSENSITIVE);
     public static final Map<String, Duration> SYMBOL_TO_DURATION = Map.of(
-            "", Ticks,
             "ms", Millis,
             "s", Seconds,
             "m", Minutes,
@@ -34,12 +33,12 @@ public final class Durations {
             .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     public static Duration getDuration(@Nullable String symbol) {
-        if (symbol == null) return Ticks;
+        if (symbol == null || symbol.isBlank()) return Ticks;
         return SYMBOL_TO_DURATION.get(symbol.toLowerCase());
     }
 
     public static String getSymbol(@Nullable Duration duration) {
-        if (duration == null) return "";
+        if (duration == null) return "t";
         return DURATION_TO_SYMBOL.get(duration);
     }
 
