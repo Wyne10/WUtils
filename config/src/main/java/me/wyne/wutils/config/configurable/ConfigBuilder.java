@@ -104,22 +104,29 @@ public class ConfigBuilder {
     }
 
     public String build() {
-        if (valueSequence.isEmpty())
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n");
-        for (Pair<Integer, String> entry : valueSequence) {
-            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
-        }
-        return stringBuilder.toString();
+        return build(false, false);
     }
 
     public String buildNoSpace() {
+        return build(true, false);
+    }
+
+    public String buildNoTrail() {
+        return build(false, true);
+    }
+
+    public String build(boolean skipSpace, boolean skipTrailing) {
         if (valueSequence.isEmpty())
             return "";
         StringBuilder stringBuilder = new StringBuilder();
+        if (!skipSpace)
+            stringBuilder.append("\n");
+        int i = 0;
         for (Pair<Integer, String> entry : valueSequence) {
-            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1())).append("\n");
+            stringBuilder.append(" ".repeat(entry.getValue0() * 2)).append(entry.getValue1()).append(": ").append(valueTable.get(entry.getValue0(), entry.getValue1()));
+            if (i < valueSequence.size() - 1 && !skipTrailing)
+                stringBuilder.append("\n");
+            i++;
         }
         return stringBuilder.toString();
     }

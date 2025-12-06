@@ -31,9 +31,12 @@ public class ConfigSection {
         stringBuilder.append("\n");
         stringBuilder.append(section.replaceAll(" ", "").toLowerCase()).append(":").append("\n");
 
+        int i = 0;
         for (String subSection : fields.keySet()) {
             stringBuilder.append(generateSubSection(subSection));
-            stringBuilder.append("\n");
+            if (i < fields.size() - 1)
+                stringBuilder.append("\n");
+            i++;
         }
 
         return stringBuilder.toString();
@@ -47,7 +50,9 @@ public class ConfigSection {
         }
 
         for (ConfigField configField : fields.get(subSection)) {
-            stringBuilder.append(configField.generateConfigLine()).append("\n");
+            stringBuilder.append(configField.generateConfigLine());
+            if (stringBuilder.charAt(stringBuilder.length() - 1) != '\n')
+                stringBuilder.append("\n");
         }
 
         return stringBuilder.toString();

@@ -169,6 +169,8 @@ public abstract class AttributeContainerBase implements AttributeContainer {
         builder.append("\n");
         getConfigurableAttributes()
                 .forEach(attribute -> builder.append(attribute.toConfig(depth, configEntry)));
+        if (builder.charAt(builder.length() - 1) == '\n')
+            builder.deleteCharAt(builder.length() - 1);
         return builder.toString();
     }
 
