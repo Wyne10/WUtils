@@ -4,10 +4,6 @@ import java.util.*;
 
 public class ConfigSection {
 
-    private static final String HEADER_FORMAT = "#####\n" +
-                                              "# %s\n" +
-                                              "#####\n";
-
     private final String section;
     /**
      * Key - Sub section
@@ -33,7 +29,6 @@ public class ConfigSection {
     public String generateConfigSection() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
-        stringBuilder.append(generateSectionHeader());
         stringBuilder.append(section.replaceAll(" ", "").toLowerCase()).append(":").append("\n");
 
         for (String subSection : fields.keySet()) {
@@ -52,15 +47,10 @@ public class ConfigSection {
         }
 
         for (ConfigField configField : fields.get(subSection)) {
-            stringBuilder.append(configField.generateConfigLine());
+            stringBuilder.append(configField.generateConfigLine()).append("\n");
         }
 
         return stringBuilder.toString();
-    }
-
-    private String generateSectionHeader()
-    {
-        return String.format(HEADER_FORMAT, section);
     }
 
 }
