@@ -32,7 +32,7 @@ public class TitleAttribute extends me.wyne.wutils.config.configurables.attribut
     public static final class Factory implements AttributeFactory<me.wyne.wutils.config.configurables.attribute.common.TitleAttribute> {
         @Override
         public TitleAttribute create(String key, ConfigurationSection config) {
-            return new TitleAttribute(key, new TitleAttribute.Factory().create(key, config).getValue());
+            return new TitleAttribute(key, new me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.Factory().create(key, config).getValue());
         }
     }
 

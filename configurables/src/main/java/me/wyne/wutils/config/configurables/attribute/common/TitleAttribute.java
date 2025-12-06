@@ -29,7 +29,19 @@ public class TitleAttribute extends ConfigurableAttribute<TitleAttribute.TitleDa
         ).buildNoSpace();
     }
 
-    public record TitleData(@NotNull String title, @NotNull String subtitle, @NotNull Title.Times times) {}
+    public record TitleData(@NotNull String title, @NotNull String subtitle, @NotNull Title.Times times) {
+        public static TitleData of(@NotNull String title) {
+            return new TitleData(title, "", Title.Times.of(Ticks.duration(20), Ticks.duration(60), Ticks.duration(20)));
+        }
+
+        public static TitleData of(@NotNull String title, @NotNull String subtitle) {
+            return new TitleData(title, subtitle, Title.Times.of(Ticks.duration(20), Ticks.duration(60), Ticks.duration(20)));
+        }
+
+        public static TitleData of(@NotNull String title, @NotNull String subtitle, long fadeIn, long stay, long fadeOut) {
+            return new TitleData(title, subtitle, Title.Times.of(Ticks.duration(fadeIn), Ticks.duration(stay), Ticks.duration(fadeOut)));
+        }
+    }
 
     public static final class Factory implements CompositeAttributeFactory<TitleAttribute> {
         @Override
