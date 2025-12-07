@@ -18,7 +18,7 @@ public final class Durations {
     public static final Duration Days = new Days();
     public static final Duration Ticks = new Ticks();
 
-    public static final Pattern DURATION_REGEX = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(ms|[smhdt])", Pattern.CASE_INSENSITIVE);
+    public static final Pattern DURATION_REGEX = Pattern.compile("(\\d+)(ms|[smhdt])?", Pattern.CASE_INSENSITIVE);
     public static final Map<String, Duration> SYMBOL_TO_DURATION = Map.of(
             "ms", Millis,
             "s", Seconds,

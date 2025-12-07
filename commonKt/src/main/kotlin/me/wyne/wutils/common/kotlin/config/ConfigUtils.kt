@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.kotlin.config
 
 import me.wyne.wutils.common.config.ConfigUtils
+import me.wyne.wutils.common.duration.TimeSpan
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.potion.PotionEffectType
@@ -30,11 +31,20 @@ fun ConfigurationSection.getDoubleOperation(path: String) =
 fun ConfigurationSection.getTimeSpan(path: String) =
     ConfigUtils.getTimeSpan(this, path)
 
+fun ConfigurationSection.getTimeSpan(path: String, def: TimeSpan) =
+    ConfigUtils.getTimeSpan(this, path, def)
+
 fun ConfigurationSection.getMillis(path: String) =
     ConfigUtils.getMillis(this, path)
 
 fun ConfigurationSection.getTicks(path: String) =
     ConfigUtils.getTicks(this, path)
+
+fun ConfigurationSection.getMillis(path: String, def: Long) =
+    ConfigUtils.getMillis(this, path, def)
+
+fun ConfigurationSection.getTicks(path: String, def: Long) =
+    ConfigUtils.getTicks(this, path, def)
 
 fun ConfigurationSection.getTimeSpanRange(path: String) =
     ConfigUtils.getTimeSpanRange(this, path)

@@ -1,4 +1,4 @@
-package me.wyne.wutils.common.kotlin.double
+package me.wyne.wutils.common.kotlin.doubles
 
 import kotlin.random.Random
 

@@ -33,7 +33,7 @@ public final class ConfigUtils {
     @SuppressWarnings("DataFlowIssue")
     public static List<String> getStringList(ConfigurationSection config, String path) {
         if (!config.isList(path))
-            return config.getString(path, "").isEmpty() ? Collections.emptyList() : List.of(config.getString(path));
+            return config.getString(path, "").isBlank() ? Collections.emptyList() : List.of(config.getString(path));
         return config.getStringList(path);
     }
 
@@ -79,6 +79,12 @@ public final class ConfigUtils {
         return Durations.getTimeSpan(config.getString(path));
     }
 
+    public static TimeSpan getTimeSpan(ConfigurationSection config, String path, TimeSpan def) {
+        if (config.getString(path, "").isBlank())
+            return def;
+        return Durations.getTimeSpan(config.getString(path));
+    }
+
     public static long getMillis(ConfigurationSection config, String path) {
         return Durations.getMillis(config.getString(path));
     }
@@ -88,13 +94,13 @@ public final class ConfigUtils {
     }
 
     public static long getMillis(ConfigurationSection config, String path, long def) {
-        if (config.getString(path, "").isEmpty())
+        if (config.getString(path, "").isBlank())
             return def;
         return Durations.getMillis(config.getString(path));
     }
 
     public static long getTicks(ConfigurationSection config, String path, long def) {
-        if (config.getString(path, "").isEmpty())
+        if (config.getString(path, "").isBlank())
             return def;
         return Durations.getTicks(config.getString(path));
     }
