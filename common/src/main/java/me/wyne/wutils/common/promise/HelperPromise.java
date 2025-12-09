@@ -123,9 +123,10 @@ final class HelperPromise<V> implements Promise<V> {
     private final AtomicBoolean supplied = new AtomicBoolean(false);
 
     /**
-     * If the execution of the promise is cancelled
+     * If the execution of the promise is cancelled.
+     * Shared across all promises in a chain to allow cancellation propagation.
      */
-    private final AtomicBoolean cancelled = new AtomicBoolean(false);
+    private final AtomicBoolean cancelled;
 
     /**
      * The completable future backing this promise
@@ -134,23 +135,35 @@ final class HelperPromise<V> implements Promise<V> {
     private final CompletableFuture<V> fut;
 
     private HelperPromise() {
+        this.cancelled = new AtomicBoolean(false);
         this.fut = new CompletableFuture<>();
     }
 
     private HelperPromise(@Nullable V v) {
+        this.cancelled = new AtomicBoolean(false);
         this.fut = CompletableFuture.completedFuture(v);
         this.supplied.set(true);
     }
 
     private HelperPromise(@Nonnull Throwable t) {
+        this.cancelled = new AtomicBoolean(false);
         (this.fut = new CompletableFuture<>()).completeExceptionally(t);
         this.supplied.set(true);
     }
 
     private HelperPromise(@Nonnull CompletableFuture<V> fut) {
+        this.cancelled = new AtomicBoolean(fut.isCancelled());
         this.fut = Objects.requireNonNull(fut, "future");
         this.supplied.set(true);
-        this.cancelled.set(fut.isCancelled());
+    }
+
+    /**
+     * Creates a new promise that shares the cancellation token with a parent promise.
+     * Used internally for promise chaining.
+     */
+    private HelperPromise(@Nonnull AtomicBoolean sharedCancelled) {
+        this.cancelled = sharedCancelled;
+        this.fut = new CompletableFuture<>();
     }
 
     /* utility methods */
@@ -383,7 +396,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplySync(@Nonnull Function<? super V, ? extends U> fn) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -397,7 +410,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplyAsync(@Nonnull Function<? super V, ? extends U> fn) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -411,7 +424,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplyDelayedSync(@Nonnull Function<? super V, ? extends U> fn, long delayTicks) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -425,7 +438,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplyDelayedSync(@Nonnull Function<? super V, ? extends U> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -439,7 +452,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplyDelayedAsync(@Nonnull Function<? super V, ? extends U> fn, long delayTicks) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -453,7 +466,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenApplyDelayedAsync(@Nonnull Function<? super V, ? extends U> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -467,7 +480,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeSync(@Nonnull Function<? super V, ? extends Promise<U>> fn) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -481,7 +494,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeAsync(@Nonnull Function<? super V, ? extends Promise<U>> fn) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -495,7 +508,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeDelayedSync(@Nonnull Function<? super V, ? extends Promise<U>> fn, long delayTicks) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -509,7 +522,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeDelayedSync(@Nonnull Function<? super V, ? extends Promise<U>> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -523,7 +536,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeDelayedAsync(@Nonnull Function<? super V, ? extends Promise<U>> fn, long delayTicks) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -537,7 +550,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public <U> Promise<U> thenComposeDelayedAsync(@Nonnull Function<? super V, ? extends Promise<U>> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<U> promise = empty();
+        HelperPromise<U> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t != null) {
                 promise.completeExceptionally(t);
@@ -551,7 +564,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallySync(@Nonnull Function<Throwable, ? extends V> fn) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
@@ -565,7 +578,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallyAsync(@Nonnull Function<Throwable, ? extends V> fn) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
@@ -579,7 +592,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallyDelayedSync(@Nonnull Function<Throwable, ? extends V> fn, long delayTicks) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
@@ -593,7 +606,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallyDelayedSync(@Nonnull Function<Throwable, ? extends V> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
@@ -607,7 +620,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallyDelayedAsync(@Nonnull Function<Throwable, ? extends V> fn, long delayTicks) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
@@ -621,7 +634,7 @@ final class HelperPromise<V> implements Promise<V> {
     @Nonnull
     @Override
     public Promise<V> exceptionallyDelayedAsync(@Nonnull Function<Throwable, ? extends V> fn, long delay, @Nonnull TimeUnit unit) {
-        HelperPromise<V> promise = empty();
+        HelperPromise<V> promise = new HelperPromise<>(this.cancelled);
         this.fut.whenComplete((value, t) -> {
             if (t == null) {
                 promise.complete(value);
