@@ -82,4 +82,20 @@ public class AbstractCompositeTerminable implements CompositeTerminable {
             return ((Terminable) ac).isClosed();
         });
     }
+
+    @Override
+    public void clear() throws CompositeClosingException {
+        List<Exception> caught = new ArrayList<>();
+        for (AutoCloseable ac; (ac = this.closeables.poll()) != null; ) {
+            try {
+                ac.close();
+            } catch (Exception e) {
+                caught.add(e);
+            }
+        }
+
+        if (!caught.isEmpty()) {
+            throw new CompositeClosingException(caught);
+        }
+    }
 }

@@ -83,4 +83,25 @@ public class AbstractWeakCompositeTerminable implements CompositeTerminable {
             return ac == null || (ac instanceof Terminable && ((Terminable) ac).isClosed());
         });
     }
+
+    @Override
+    public void clear() throws CompositeClosingException {
+        List<Exception> caught = new ArrayList<>();
+        for (WeakReference<AutoCloseable> ref; (ref = this.closeables.poll()) != null; ) {
+            AutoCloseable ac = ref.get();
+            if (ac == null) {
+                continue;
+            }
+
+            try {
+                ac.close();
+            } catch (Exception e) {
+                caught.add(e);
+            }
+        }
+
+        if (!caught.isEmpty()) {
+            throw new CompositeClosingException(caught);
+        }
+    }
 }

@@ -162,4 +162,29 @@ public interface CompositeTerminable extends Terminable, TerminableConsumer {
      */
     void cleanup();
 
+    /**
+     * Closes all instances, but not the composite itself.
+     */
+    void clear() throws CompositeClosingException;
+
+    @Nullable
+    default CompositeClosingException clearSilently() {
+        try {
+            clear();
+            return null;
+        } catch (CompositeClosingException e) {
+            return e;
+        }
+    }
+
+    default void clearAndReportException() {
+        try {
+            clear();
+        } catch (CompositeClosingException e) {
+            e.printAllStackTraces();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
