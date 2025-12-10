@@ -13,17 +13,28 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 public final class BlockUtils {
 
     private static final ItemStack EMPTY_TOOL = new ItemStack(Material.AIR);
+    public static final Set<Material> UNBREAKABLE_BLOCKS = Set.of(
+            Material.BARRIER, Material.BEDROCK, Material.JIGSAW, Material.STRUCTURE_BLOCK,
+            Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK,
+            Material.END_GATEWAY, Material.END_PORTAL, Material.END_PORTAL_FRAME, Material.NETHER_PORTAL,
+            Material.MOVING_PISTON, Material.WATER, Material.LAVA,
+            Material.BUBBLE_COLUMN, Material.AIR, Material.CAVE_AIR, Material.VOID_AIR,
+            Material.STRUCTURE_VOID
+    );
 
     public static void breakActuallyNaturally(Block block, @Nullable ItemStack tool, Player player) {
         if (tool == null)
             tool = EMPTY_TOOL;
+        if (UNBREAKABLE_BLOCKS.contains(block.getType())) return;
         var drops = block.getDrops(tool, player);
         var naturalBreakEvent = new NaturalBlockBreakEvent(block, player);
         naturalBreakEvent.setDropItems(!drops.isEmpty());
-        if (!tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH) &&
+        if (tool.getItemMeta() != null && !tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH) &&
                 (block.getType() == Material.SPAWNER || !drops.isEmpty()))
             setExpDrop(naturalBreakEvent);
         naturalBreakEvent.callEvent();

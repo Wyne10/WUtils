@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.item;
 
+import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,9 +20,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class ItemUtils {
+
+    public static final Set<Material> ARMOR = Stream
+            .of(MaterialTags.HELMETS.getValues(), MaterialTags.CHESTPLATES.getValues(),
+                    MaterialTags.LEGGINGS.getValues(), MaterialTags.BOOTS.getValues())
+            .flatMap(Set::stream)
+            .collect(Collectors.toUnmodifiableSet());
 
     public static boolean isNullOrAir(ItemStack item) {
         return item == null || item.getType() == Material.AIR;
@@ -35,6 +45,7 @@ public final class ItemUtils {
         if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (item.getType().getMaxDurability() <= 0) return;
+        if (ARMOR.contains(item.getType())) return;
         if (item.getItemMeta().isUnbreakable()) return;
         if (item.getItemMeta().hasEnchant(Enchantment.DURABILITY)) {
             if (ThreadLocalRandom.current().nextDouble() >= (1.0 / item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY) + 1))

@@ -30,7 +30,7 @@ public final class Durations {
     public static final Map<Duration, String> DURATION_TO_SYMBOL = SYMBOL_TO_DURATION
             .entrySet()
             .stream()
-            .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+            .collect(Collectors.toUnmodifiableMap(Map.Entry::getValue, Map.Entry::getKey));
 
     public static Duration getDuration(@Nullable String symbol) {
         if (symbol == null || symbol.isBlank()) return Ticks;
