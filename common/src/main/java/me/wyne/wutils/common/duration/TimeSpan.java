@@ -34,23 +34,25 @@ public record TimeSpan(long duration, Duration type) implements Duration {
 
     @Override
     public @NotNull String toString() {
+        if (type instanceof Ticks)
+            return duration + "t";
+
         long millis = getMillis();
 
-        if (millis == 0) {
+        if (millis == 0)
             return "0t";
-        }
 
         long days = millis / (24 * 60 * 60 * 1000);
-        millis %=       24 * 60 * 60 * 1000;
+        millis %= 24 * 60 * 60 * 1000;
 
         long hours = millis / (60 * 60 * 1000);
-        millis %=       60 * 60 * 1000;
+        millis %= 60 * 60 * 1000;
 
         long minutes = millis / (60 * 1000);
-        millis %=       60 * 1000;
+        millis %= 60 * 1000;
 
         long seconds = millis / 1000;
-        millis %=       1000;
+        millis %= 1000;
 
         StringBuilder sb = new StringBuilder();
 
