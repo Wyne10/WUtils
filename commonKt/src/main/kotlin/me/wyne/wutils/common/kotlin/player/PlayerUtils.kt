@@ -8,3 +8,11 @@ val Player.expToLevelUp: Int
 
 val Player.currentExp: Int
     get() = PlayerUtils.currentExp(this)
+
+fun Player.setCurrentExp(exp: Int) {
+    PlayerUtils.setExp(this, exp)
+}
+
+fun Player.addExp(exp: Int) {
+    PlayerUtils.addExp(this, exp)
+}

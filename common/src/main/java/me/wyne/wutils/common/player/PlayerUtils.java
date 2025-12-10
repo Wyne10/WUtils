@@ -81,4 +81,14 @@ public final class PlayerUtils {
         return currentExp;
     }
 
+    public static void setExp(Player player, int exp) {
+        player.setExp(0);
+        player.setLevel(0);
+        player.giveExp(exp);
+    }
+
+    public static void addExp(Player player, int exp) {
+        setExp(player, currentExp(player) + exp);
+    }
+
 }
