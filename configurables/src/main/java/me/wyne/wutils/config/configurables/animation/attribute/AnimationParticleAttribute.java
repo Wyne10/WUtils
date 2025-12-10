@@ -30,7 +30,7 @@ public class AnimationParticleAttribute extends ConfigurableAttribute<AnimationP
             var particleKey = Preconditions.checkNotNull(section.getString("particle"), "No particle provided for " + section.getCurrentPath());
             var particle = ConfigUtils.getByName(particleKey, Particle.class);
             Preconditions.checkNotNull(particle, "Invalid particle at " + section.getCurrentPath());
-            Preconditions.checkArgument(particle.getDataType() != Void.class && !section.contains("data"), "Particle of type '" + particle.name() + "' requires extra data of type '" + particle.getDataType().getSimpleName() + "'");
+            Preconditions.checkArgument(particle.getDataType() == Void.class || section.contains("data"), "Particle of type '" + particle.name() + "' requires extra data of type '" + particle.getDataType().getSimpleName() + "'");
             return new AnimationParticleAttribute(
                     key,
                     new AnimationParticle(
@@ -49,7 +49,7 @@ public class AnimationParticleAttribute extends ConfigurableAttribute<AnimationP
             var particleKey = Preconditions.checkNotNull(args.getNullable(0), "No particle provided for " + ConfigUtils.getPath(config, key));
             var particle = ConfigUtils.getByName(particleKey, Particle.class);
             Preconditions.checkNotNull(particle, "Invalid particle at " + ConfigUtils.getPath(config, key));
-            Preconditions.checkArgument(particle.getDataType() != Void.class && args.size() < 5, "Particle of type '" + particle.name() + "' requires extra data of type '" + particle.getDataType().getSimpleName() + "'");
+            Preconditions.checkArgument(particle.getDataType() == Void.class || args.size() == 5, "Particle of type '" + particle.name() + "' requires extra data of type '" + particle.getDataType().getSimpleName() + "'");
             return new AnimationParticleAttribute(
                     key,
                     new AnimationParticle(

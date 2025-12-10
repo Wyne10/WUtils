@@ -27,6 +27,8 @@ public final class ConfigUtils {
             return path;
         if (section.getCurrentPath() == null)
             return path;
+        if (section.getCurrentPath().isBlank())
+            return path;
         return section.getCurrentPath() + "." + path;
     }
 
