@@ -208,8 +208,8 @@ public final class ConfigUtils {
     }
 
     @Nullable
-    public static <E extends Enum<E>> E getByKeyOrName(ConfigurationSection section, String key, Class<E> enumClass) {
-        String value = section.getString(key);
+    public static <E extends Enum<E>> E getByKeyOrName(ConfigurationSection section, String path, Class<E> enumClass) {
+        String value = section.getString(path);
         if (value == null) return null;
         return getByKeyOrName(value, enumClass);
     }

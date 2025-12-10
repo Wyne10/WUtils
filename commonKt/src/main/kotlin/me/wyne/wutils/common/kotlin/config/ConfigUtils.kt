@@ -5,7 +5,7 @@ import me.wyne.wutils.common.duration.TimeSpan
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.potion.PotionEffectType
-import java.util.Locale
+import java.util.EnumSet
 import kotlin.random.Random
 
 const val RANGE_DELIMITER = ".."
@@ -37,11 +37,11 @@ fun ConfigurationSection.getTimeSpan(path: String, def: TimeSpan) =
 fun ConfigurationSection.getMillis(path: String) =
     ConfigUtils.getMillis(this, path)
 
-fun ConfigurationSection.getTicks(path: String) =
-    ConfigUtils.getTicks(this, path)
-
 fun ConfigurationSection.getMillis(path: String, def: Long) =
     ConfigUtils.getMillis(this, path, def)
+
+fun ConfigurationSection.getTicks(path: String) =
+    ConfigUtils.getTicks(this, path)
 
 fun ConfigurationSection.getTicks(path: String, def: Long) =
     ConfigUtils.getTicks(this, path, def)
@@ -57,17 +57,20 @@ fun ConfigurationSection.getPotionTypeEnumSet(path: String): Set<PotionEffectTyp
         .mapNotNull { runCatching { PotionEffectType.getByName(it) }.getOrNull() }
         .toSet()
 
-inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): Set<E> {
-    return if (isBoolean(key) && getBoolean(key)) {
-        enumValues<E>().toSet()
-    } else if (isBoolean(key) && !getBoolean(key)) {
-        emptySet()
-    } else {
-        getStringList(key)
-            .mapNotNull { runCatching { enumValueOf<E>(it.uppercase(Locale.ENGLISH)) }.getOrNull() }
-            .toSet()
-    }
-}
+inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): EnumSet<E> =
+    ConfigUtils.getEnumSet(this, key, E::class.java)
+
+inline fun <reified E : Enum<E>> ConfigurationSection.getKeyedEnumSet(key: String): EnumSet<E> =
+    ConfigUtils.getKeyedEnumSet(this, key, E::class.java)
+
+inline fun <reified E : Enum<E>> getByName(name: String?): E? =
+    ConfigUtils.getByName(name, E::class.java)
+
+inline fun <reified E : Enum<E>> getByKeyOrName(key: String?): E? =
+    ConfigUtils.getByKeyOrName(key, E::class.java)
+
+inline fun <reified E : Enum<E>> ConfigurationSection.getByKeyOrName(path: String?): E? =
+    ConfigUtils.getByKeyOrName(this, path, E::class.java)
 
 fun ConfigurationSection.getMaterial(path: String, def: Material = Material.STONE): Material =
     getString(path)?.let { Material.matchMaterial(it) } ?: def
