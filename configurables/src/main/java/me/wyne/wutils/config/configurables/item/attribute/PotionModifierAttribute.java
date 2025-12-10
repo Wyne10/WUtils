@@ -1,5 +1,6 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -40,11 +41,7 @@ public class PotionModifierAttribute extends ConfigurableAttribute<PotionModifie
     public static final class Factory implements AttributeFactory<PotionModifierAttribute> {
         @Override
         public PotionModifierAttribute create(String key, ConfigurationSection config) {
-            try {
-                return new PotionModifierAttribute(key, PotionModifierAttribute.PotionModifier.valueOf(config.getString(key, "NONE")));
-            } catch (IllegalArgumentException e) {
-                return new PotionModifierAttribute(key, PotionModifierAttribute.PotionModifier.NONE);
-            }
+            return new PotionModifierAttribute(key, ConfigUtils.getByName(config.getString(key, "NONE"), PotionModifierAttribute.PotionModifier.class));
         }
     }
 

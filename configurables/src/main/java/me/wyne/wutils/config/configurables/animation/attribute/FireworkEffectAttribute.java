@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.animation.attribute;
 
 import me.wyne.wutils.common.Args;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeBase;
@@ -50,7 +51,7 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
                             .trail(section.getBoolean("trail", false))
                             .withColor(new ColorsAttribute("colors", section).getValue().stream().map(AttributeBase::getValue).toList())
                             .withFade(new ColorsAttribute("fadeColors", section).getValue().stream().map(AttributeBase::getValue).toList())
-                            .with(FireworkEffect.Type.valueOf(section.getString("type", "BALL")))
+                            .with(ConfigUtils.getByName(section.getString("type", "BALL"), FireworkEffect.Type.class))
                             .build()
             );
         }
@@ -61,7 +62,7 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
             return new FireworkEffectAttribute(
                     key,
                     FireworkEffect.builder()
-                            .with(FireworkEffect.Type.valueOf(args.get(0, "BALL")))
+                            .with(ConfigUtils.getByName(args.get(0, "BALL"), FireworkEffect.Type.class))
                             .flicker(Boolean.parseBoolean(args.get(1, "false")))
                             .trail(Boolean.parseBoolean(args.get(2, "false")))
                             .withColor(new ColorAttribute.Factory().fromString("color", args.get(3, "000000"), config).getValue())

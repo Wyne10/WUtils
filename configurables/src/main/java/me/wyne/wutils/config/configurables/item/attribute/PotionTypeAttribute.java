@@ -1,5 +1,6 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.item.*;
@@ -30,11 +31,7 @@ public class PotionTypeAttribute extends ConfigurableAttribute<PotionType> imple
     public static final class Factory implements AttributeFactory<PotionTypeAttribute> {
         @Override
         public PotionTypeAttribute create(String key, ConfigurationSection config) {
-            try {
-                return new PotionTypeAttribute(key, PotionType.valueOf(config.getString(key, "WATER")));
-            } catch (IllegalArgumentException e) {
-                return new PotionTypeAttribute(key, PotionType.WATER);
-            }
+            return new PotionTypeAttribute(key, ConfigUtils.getByName(config.getString(key, "WATER"), PotionType.class));
         }
     }
 

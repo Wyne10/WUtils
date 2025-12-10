@@ -53,8 +53,8 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
                                     UUID.fromString(section.getString("uuid", UUID.randomUUID().toString())),
                                     section.getString("name", attributeKey),
                                     section.getDouble("amount", 1.0),
-                                    AttributeModifier.Operation.valueOf(section.getString("operation", "ADD_NUMBER")),
-                                    section.contains("slot") ? EquipmentSlot.valueOf(section.getString("slot", "HAND")) : null
+                                    ConfigUtils.getByName(section.getString("operation", "ADD_NUMBER"), AttributeModifier.Operation.class),
+                                    ConfigUtils.getByName(section.getString("slot"), EquipmentSlot.class)
                             )
                     )
             );
@@ -74,8 +74,8 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
                                     UUID.randomUUID(),
                                     attributeKey,
                                     Double.parseDouble(args.get(1, "1.0")),
-                                    AttributeModifier.Operation.valueOf(args.get(2, "ADD_NUMBER")),
-                                    args.size() == 4 ? EquipmentSlot.valueOf(args.get(3, "HAND")) : null
+                                    ConfigUtils.getByName(args.get(2, "ADD_NUMBER"), AttributeModifier.Operation.class),
+                                    ConfigUtils.getByName(args.getNullable(3), EquipmentSlot.class)
                             )
                     )
             );

@@ -33,7 +33,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> {
             return new SoundAttribute(
                     key,
                     Sound.sound(Key.key(sound.getKey().toString()),
-                            Sound.Source.valueOf(section.getString("source", "MASTER").toUpperCase(Locale.ENGLISH)),
+                            ConfigUtils.getByName(section.getString("source", "MASTER"), Sound.Source.class),
                             (float) section.getDouble("volume", 1.0),
                             (float) section.getDouble("pitch", 1.0)
                     )
@@ -49,7 +49,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> {
             return new SoundAttribute(
                     key,
                     Sound.sound(Key.key(sound.getKey().toString()),
-                            Sound.Source.valueOf(args.get(3, "MASTER").toUpperCase(Locale.ENGLISH)),
+                            ConfigUtils.getByName(args.get(3, "MASTER"), Sound.Source.class),
                             Float.parseFloat(args.get(1, "1.0")),
                             Float.parseFloat(args.get(2, "1.0"))
                     )

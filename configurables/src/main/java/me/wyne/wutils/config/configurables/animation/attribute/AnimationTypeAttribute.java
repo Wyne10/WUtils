@@ -4,6 +4,7 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.AnimationStep;
 import me.wyne.wutils.animation.BlockingAnimationStep;
 import me.wyne.wutils.animation.ParallelAnimationStep;
+import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationAttribute;
@@ -29,7 +30,7 @@ public class AnimationTypeAttribute extends ConfigurableAttribute<AnimationTypeA
     public static final class Factory implements AttributeFactory<AnimationTypeAttribute> {
         @Override
         public AnimationTypeAttribute create(String key, ConfigurationSection config) {
-            return new AnimationTypeAttribute(key, AnimationType.valueOf(config.getString(key, "BLOCKING")));
+            return new AnimationTypeAttribute(key, ConfigUtils.getByName(config.getString(key, "BLOCKING"), AnimationType.class));
         }
     }
 
