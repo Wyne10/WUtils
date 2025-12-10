@@ -53,7 +53,7 @@ public class EnchantmentAttribute extends ConfigurableAttribute<EnchantmentAttri
 
         @Override
         public EnchantmentAttribute fromString(String key, String string, ConfigurationSection config) {
-            var args = new Args(string);
+            var args = new Args(string, Args.SPACE_DELIMITER);
             var enchantmentKey = NamespacedKey.fromString(Preconditions.checkNotNull(args.getNullable(0), "No enchantment provided for " + ConfigUtils.getPath(config, key)));
             var enchantment = Enchantment.getByKey(enchantmentKey);
             Preconditions.checkNotNull(enchantment, "Invalid enchantment at " + ConfigUtils.getPath(config, key));
