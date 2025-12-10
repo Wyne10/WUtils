@@ -1,5 +1,6 @@
 package me.wyne.wutils.config.configurables.item.attribute;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
@@ -9,9 +10,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Skull64Attribute extends ConfigurableAttribute<String> implements MetaAttribute {
+
+    private static final Map<String, PlayerProfile> CACHED_PROFILES = new HashMap<>();
 
     public Skull64Attribute(String key, String value) {
         super(key, value);
@@ -24,8 +29,13 @@ public class Skull64Attribute extends ConfigurableAttribute<String> implements M
     @Override
     public void apply(ItemMeta meta) {
         if (!(meta instanceof SkullMeta)) return;
+        if (CACHED_PROFILES.containsKey(getValue())) {
+            ((SkullMeta)meta).setPlayerProfile(CACHED_PROFILES.get(getValue()));
+            return;
+        }
         var profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", getValue()));
+        CACHED_PROFILES.put(getValue(), profile);
         ((SkullMeta)meta).setPlayerProfile(profile);
     }
 
