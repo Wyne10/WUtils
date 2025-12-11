@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class Skull64Attribute extends ConfigurableAttribute<String> implements M
             ((SkullMeta)meta).setPlayerProfile(CACHED_PROFILES.get(getValue()));
             return;
         }
-        var profile = Bukkit.createProfile(UUID.randomUUID());
+        var profile = Bukkit.createProfile(UUID.nameUUIDFromBytes(getValue().getBytes(StandardCharsets.UTF_8)));
         profile.setProperty(new ProfileProperty("textures", getValue()));
         CACHED_PROFILES.put(getValue(), profile);
         ((SkullMeta)meta).setPlayerProfile(profile);
