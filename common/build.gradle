@@ -19,7 +19,7 @@ tasks.named("publish") {
     finalizedBy(":WUtils-common-kotlin:publish")
 }
 
-version = '1.11.4'
+version = '1.12.0'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-common", version.toString())

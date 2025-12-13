@@ -27,6 +27,11 @@ public class ClosedIntRange extends Range<Integer> {
         return new ClosedIntRangeIterator(getMin(), getMax(), 1);
     }
 
+    @Override
+    public String toString() {
+        return getMin() + ".." + getMax();
+    }
+
     public static ClosedIntRange getIntRange(String string) {
         var split = string.split("\\.\\.");
         return new ClosedIntRange(Integer.parseInt(split[0]), Integer.parseInt(split[1]));

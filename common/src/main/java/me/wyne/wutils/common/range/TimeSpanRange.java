@@ -32,4 +32,14 @@ public class TimeSpanRange extends Range<TimeSpan> {
         return new TimeSpanIterator(getMin(), getMax(), new TimeSpan(1, Durations.Seconds));
     }
 
+    @Override
+    public String toString() {
+        return getMin() + ".." + getMax();
+    }
+
+    public static TimeSpanRange getTimeSpanRange(String string) {
+        var split = string.split("\\.\\.");
+        return new TimeSpanRange(Durations.getTimeSpan(split[0]), Durations.getTimeSpan(split[1]));
+    }
+
 }

@@ -70,8 +70,7 @@ public final class Durations {
     }
 
     public static TimeSpanRange getTimeSpanRange(String string) {
-        var split = string.split("\\.\\.");
-        return new TimeSpanRange(getTimeSpan(split[0]), getTimeSpan(split[1]));
+        return TimeSpanRange.getTimeSpanRange(string);
     }
 
 }
