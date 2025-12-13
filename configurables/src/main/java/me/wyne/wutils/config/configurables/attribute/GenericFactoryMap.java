@@ -5,13 +5,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GenericAttributeMap<T> {
+public class GenericFactoryMap<T> {
 
     private final Map<String, GenericFactory<T>> keyMap = new LinkedHashMap<>();
 
-    public GenericAttributeMap() {}
+    public GenericFactoryMap() {}
 
-    public GenericAttributeMap(Map<String, GenericFactory<T>> keyMap) {
+    public GenericFactoryMap(Map<String, GenericFactory<T>> keyMap) {
         this.keyMap.putAll(keyMap);
     }
 
