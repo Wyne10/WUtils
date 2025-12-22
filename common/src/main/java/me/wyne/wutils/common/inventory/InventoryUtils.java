@@ -29,12 +29,12 @@ public final class InventoryUtils {
     public static List<ItemStack> getAffectedItems(InventoryClickEvent event) {
         var result = new ArrayList<ItemStack>();
         addNonEmpty(result, event.getCurrentItem());
-        if (event.getClick().isKeyboardClick()) {
+        if (event.getClick() == ClickType.NUMBER_KEY) {
             addNonEmpty(result, event.getWhoClicked().getInventory().getItem(event.getHotbarButton()));
         } else if (event.getClick() == ClickType.SWAP_OFFHAND) {
             addNonEmpty(result, event.getWhoClicked().getInventory().getItemInOffHand());
         }
-        return result;
+        return List.copyOf(result);
     }
 
     private static void addNonEmpty(List<ItemStack> list, ItemStack item) {
