@@ -18,6 +18,10 @@
     {
       "matchDepNames": ["dev.jorel:commandapi-bukkit-core"],
       "enabled": false
+    },
+    {
+      "matchDepNames": ["com.vanniktech:gradle-maven-publish-plugin"],
+      "allowedVersions": "<0.36.0"
     }
   ]
 }
