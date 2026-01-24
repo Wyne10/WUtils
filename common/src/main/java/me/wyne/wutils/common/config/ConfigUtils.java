@@ -13,12 +13,14 @@ import me.wyne.wutils.common.range.TimeSpanRange;
 import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class ConfigUtils {
 
@@ -214,6 +216,13 @@ public final class ConfigUtils {
         String value = section.getString(path);
         if (value == null) return null;
         return getByKeyOrName(value, enumClass);
+    }
+
+    public static Set<Material> getMaterialEnumSet(ConfigurationSection section, String path) {
+        return section.getStringList(path).stream()
+                .map(Material::matchMaterial)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 }

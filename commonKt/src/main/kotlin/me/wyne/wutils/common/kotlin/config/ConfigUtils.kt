@@ -57,6 +57,9 @@ fun ConfigurationSection.getPotionTypeEnumSet(path: String): Set<PotionEffectTyp
         .mapNotNull { runCatching { PotionEffectType.getByName(it) }.getOrNull() }
         .toSet()
 
+fun ConfigurationSection.getMaterialEnumSet(path: String): Set<Material> =
+    ConfigUtils.getMaterialEnumSet(this, path)
+
 inline fun <reified E : Enum<E>> ConfigurationSection.getEnumSet(key: String): EnumSet<E> =
     ConfigUtils.getEnumSet(this, key, E::class.java)
 
