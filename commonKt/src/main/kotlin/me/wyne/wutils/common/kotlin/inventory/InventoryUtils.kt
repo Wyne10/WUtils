@@ -2,6 +2,7 @@ package me.wyne.wutils.common.kotlin.inventory
 
 import me.wyne.wutils.common.inventory.InventoryUtils
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -13,3 +14,6 @@ fun Player.addItem(vararg items: ItemStack) =
 
 fun Player.addOrDrop(vararg items: ItemStack) =
     InventoryUtils.addOrDrop(this, *items)
+
+fun InventoryClickEvent.getAffectedItems() =
+    InventoryUtils.getAffectedItems(this)
