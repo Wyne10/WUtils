@@ -2,7 +2,7 @@ package me.wyne.wutils.animation;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseAnimationStep implements AnimationStep {
+public abstract class BaseAnimationStep implements AnimationStep, Finalizable {
 
     private final AnimationRunnable runnable;
     private final long delay;
@@ -34,7 +34,19 @@ public abstract class BaseAnimationStep implements AnimationStep {
 
     @Override
     public void close() {
-        runnable.close();
+        if (runnable instanceof AutoCloseable) {
+            try {
+                ((AutoCloseable)runnable).close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void _finalize() {
+        if (runnable instanceof Finalizable)
+            ((Finalizable)runnable)._finalize();
     }
 
     private void createTask(Animation animation) {

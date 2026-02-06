@@ -26,7 +26,7 @@ public class Animation implements AutoCloseable{
 
     public void run() {
         runSteps.addAll(steps);
-        runSteps.add(new BlockingAnimationStep(AnimationRunnable.runnable(this::stop)));
+        runSteps.add(new BlockingAnimationStep(this::stop));
         var step = pollStep();
         if (step != null)
             step.run(this);
@@ -35,11 +35,15 @@ public class Animation implements AutoCloseable{
     public void stop() {
         if (currentTask != null) {
             currentTask.getValue1().cancel(); // Cancel current blocking task
-            currentTask.getValue0().close(); // Finalize blocking task, since it may not have been finished
+            currentTask.getValue0().close(); // Close blocking task, since it may not have been finished
         }
-        parallelTasks.entrySet().forEach(entry -> { entry.getValue().cancel(); entry.getKey().close(); }); // Cancel and finalize parallel tasks
+        parallelTasks.forEach((key, value) -> {
+            value.cancel();
+            key.close();
+        }); // Cancel and close parallel tasks
         parallelTasks.clear();
-        runSteps.clear(); // Run steps are not finalized since they were not started
+        runSteps.forEach(AnimationStep::_finalize);
+        runSteps.clear(); // Run steps are not closed since they were not started
     }
 
     @Override

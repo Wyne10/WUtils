@@ -1,22 +1,15 @@
 package me.wyne.wutils.animation;
 
-public interface AnimationRunnable extends Runnable, AutoCloseable {
+@FunctionalInterface
+public interface AnimationRunnable extends Runnable {
     default void run(long delay, long period, long duration) {
         run();
     }
-    @Override
-    default void run() {}
-    @Override
-    default void close() {}
 
-    AnimationRunnable EMPTY = new AnimationRunnable() {};
+    AnimationRunnable EMPTY = () -> {};
 
+    @Deprecated
     static AnimationRunnable runnable(Runnable runnable) {
-        return new AnimationRunnable() {
-            @Override
-            public void run(long delay, long period, long duration) {
-                runnable.run();
-            }
-        };
+        return runnable::run;
     }
 }
