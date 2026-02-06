@@ -1,12 +1,15 @@
 package me.wyne.wutils.config.configurables.attribute;
 
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
 
 public interface AttributeContainer extends CompositeConfigurable {
+    @Nullable ConfigurationSection getRoot();
+
     AttributeContainer ignore(String... ignore);
 
     AttributeContainer with(String key, AttributeFactory<?> factory);
@@ -20,6 +23,10 @@ public interface AttributeContainer extends CompositeConfigurable {
     AttributeContainer copy(AttributeContainer container);
 
     AttributeContainer copy();
+
+    boolean contains(Class<?> clazz);
+
+    boolean contains(String key);
 
     @Nullable <T> T get(Class<T> clazz);
 

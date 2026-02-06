@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurables.attribute;
 
 import me.wyne.wutils.config.ConfigEntry;
+import me.wyne.wutils.config.configurables.attribute.common.RootAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +45,23 @@ public abstract class AttributeContainerBase implements AttributeContainer {
     public AttributeContainerBase(AttributeContainer container) {
         this.attributeMap = new AttributeMap(container.getAttributeMap().getKeyMap());
         this.attributes = new LinkedHashMap<>(container.getAttributes());
+    }
+
+    @Override
+    public @Nullable ConfigurationSection getRoot() {
+        return get("root");
+    }
+
+    @Override
+    public boolean contains(Class<?> clazz) {
+        return attributes.values()
+                .stream()
+                .anyMatch(clazz::isInstance);
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return attributes.containsKey(key);
     }
 
     @Override
@@ -179,6 +197,7 @@ public abstract class AttributeContainerBase implements AttributeContainer {
         attributes.clear();
         if (configObject == null)
             return;
+        attributes.put("root", new RootAttribute.Factory().create("root", (ConfigurationSection) configObject));
         attributes.putAll(attributeMap.createAllMap((ConfigurationSection) configObject));
     }
 
