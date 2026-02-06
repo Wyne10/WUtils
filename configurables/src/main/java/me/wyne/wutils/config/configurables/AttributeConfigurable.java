@@ -50,6 +50,18 @@ public class AttributeConfigurable implements CompositeConfigurable {
         return getAccessor(AttributeConfigurableAccessors.MUTABLE);
     }
 
+    public @Nullable ConfigurationSection getRoot() {
+        return attributeContainer.getRoot();
+    }
+
+    public boolean contains(Class<?> clazz) {
+        return attributeContainer.contains(clazz);
+    }
+
+    public boolean contains(String key) {
+        return attributeContainer.contains(key);
+    }
+
     @Nullable
     public <T> T get(Class<T> clazz) {
         return attributeContainer.get(clazz);
