@@ -24,6 +24,12 @@ import java.util.stream.Collectors;
 
 public final class ConfigUtils {
 
+    public static ConfigurationSection getConfigurationSection(ConfigurationSection section, String path) {
+        if (section.isConfigurationSection(path))
+            return section.getConfigurationSection(path);
+        return section;
+    }
+
     public static String getPath(@Nullable ConfigurationSection section, String path) {
         if (section == null)
             return path;

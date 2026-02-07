@@ -13,6 +13,9 @@ const val COMMA_DELIMITER = ","
 const val COLON_DELIMITER = ":"
 const val SPACE_DELIMITER = " "
 
+fun ConfigurationSection.deep(path: String) =
+    ConfigUtils.getConfigurationSection(this, path)
+
 fun ConfigurationSection.getVectorOrZero(path: String) =
     ConfigUtils.getVectorOrZero(this, path)
 
