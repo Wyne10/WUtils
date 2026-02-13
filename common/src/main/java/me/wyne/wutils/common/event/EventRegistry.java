@@ -16,8 +16,8 @@ public class EventRegistry implements Listener, Terminable {
 
     private final Plugin plugin;
 
-    private final Map<RegisterableEvent, Set<RegisterableListener>> registry = new HashMap<>();
-    private final Map<RegisterableListener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
+    private final Map<RegisterableEvent, Set<Listener>> registry = new HashMap<>();
+    private final Map<Listener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
 
     private final Object lock = new Object();
 
@@ -25,7 +25,7 @@ public class EventRegistry implements Listener, Terminable {
         this.plugin = plugin;
     }
 
-    public void register(RegisterableListener listener) {
+    public void register(Listener listener) {
         Arrays.stream(listener.getClass().getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(EventHandler.class))
                 .forEach(method -> {
@@ -34,7 +34,7 @@ public class EventRegistry implements Listener, Terminable {
                 });
     }
 
-    public void register(Plugin plugin, RegisterableListener listener, Class<? extends Event> event, Method method) {
+    public void register(Plugin plugin, Listener listener, Class<? extends Event> event, Method method) {
         if (!method.isAnnotationPresent(EventHandler.class)) return;
         var handler = method.getDeclaredAnnotation(EventHandler.class);
         var registerableEvent = new RegisterableEvent(event, handler);
