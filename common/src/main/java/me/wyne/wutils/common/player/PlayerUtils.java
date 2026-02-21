@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.player;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public final class PlayerUtils {
@@ -89,6 +90,10 @@ public final class PlayerUtils {
 
     public static void addExp(Player player, int exp) {
         setExp(player, currentExp(player) + exp);
+    }
+
+    public static boolean exists(OfflinePlayer player) {
+        return player.isOnline() || player.hasPlayedBefore();
     }
 
 }

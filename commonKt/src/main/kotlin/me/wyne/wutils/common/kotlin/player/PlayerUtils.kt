@@ -16,3 +16,6 @@ fun Player.setCurrentExp(exp: Int) {
 fun Player.addExp(exp: Int) {
     PlayerUtils.addExp(this, exp)
 }
+
+val Player.exists: Boolean
+    get() = PlayerUtils.exists(this)
