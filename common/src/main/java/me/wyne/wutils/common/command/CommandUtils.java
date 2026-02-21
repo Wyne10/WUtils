@@ -26,7 +26,7 @@ public final class CommandUtils {
     }
 
     @Nullable
-    public static OfflinePlayer getOfflinePlayer(CommandArguments args, String nodeName, CommandSender sender) {
+    public static OfflinePlayer getOfflinePlayer(CommandArguments args, String nodeName) {
         var playerName = args.getOptionalByClass(nodeName, String.class);
         if (playerName.isEmpty()) return null;
         var playerUuid = Bukkit.getPlayerUniqueId(playerName.get());

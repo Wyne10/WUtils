@@ -19,5 +19,5 @@ fun <T : Argument<*>> T.tooltip(vararg tooltips: IStringTooltip): T =
 fun <T : Argument<*>> T.tooltip(tooltips: Collection<IStringTooltip>): T =
     replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(tooltips)) as T
 
-fun CommandArguments.getOfflinePlayer(nodeName: String, sender: CommandSender) =
-    CommandUtils.getOfflinePlayer(this, nodeName, sender)
+fun CommandArguments.getOfflinePlayer(nodeName: String) =
+    CommandUtils.getOfflinePlayer(this, nodeName)
