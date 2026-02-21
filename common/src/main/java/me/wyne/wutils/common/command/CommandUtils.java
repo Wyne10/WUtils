@@ -32,6 +32,7 @@ public final class CommandUtils {
         var playerUuid = Bukkit.getPlayerUniqueId(playerName.get());
         if (playerUuid == null) return null;
         var player = Bukkit.getOfflinePlayer(playerUuid);
+        if (player.isOnline()) return player;
         if (!player.hasPlayedBefore()) return null;
         return player;
     }
