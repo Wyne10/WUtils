@@ -11,11 +11,16 @@ import me.wyne.wutils.i18n.language.interpretation.*;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -155,6 +160,88 @@ public class I18n {
         if (localeContainer instanceof Player player)
             return player.locale();
         return null;
+    }
+
+    public static String serializeLegacy(Component component) {
+        return LegacyInterpreter.SERIALIZER.serialize(component);
+    }
+
+    public static String serializeLegacySection(Component component) {
+        return LegacyInterpreter.SECTION_SERIALIZER.serialize(component);
+    }
+
+    public static String serializeGson(Component component) {
+        return GsonComponentSerializer.gson().serialize(component);
+    }
+
+    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+    public static String serializePlain(Component component) {
+        return PlainComponentSerializer.plain().serialize(component);
+    }
+
+    public static String serializePlainText(Component component) {
+        return PlainTextComponentSerializer.plainText().serialize(component);
+    }
+
+    public static String serializeMiniMessage(Component component) {
+        return MiniMessage.miniMessage().serialize(component);
+    }
+
+    public static BaseComponent[] serializeBungee(Component component) {
+        return BungeeComponentSerializer.get().serialize(component);
+    }
+
+    public static Component deserializeLegacy(String string) {
+        return LegacyInterpreter.SERIALIZER.deserialize(string);
+    }
+
+    public static Component deserializeLegacySection(String string) {
+        return LegacyInterpreter.SECTION_SERIALIZER.deserialize(string);
+    }
+
+    public static Component deserializeGson(String string) {
+        return GsonComponentSerializer.gson().deserialize(string);
+    }
+
+    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+    public static Component deserializePlain(String string) {
+        return PlainComponentSerializer.plain().deserialize(string);
+    }
+
+    public static Component deserializePlainText(String string) {
+        return PlainTextComponentSerializer.plainText().deserialize(string);
+    }
+
+    public static Component deserializeMiniMessage(String string) {
+        return MiniMessage.miniMessage().deserialize(string);
+    }
+
+    public static Component deserializeBungee(BaseComponent[] components) {
+        return BungeeComponentSerializer.get().deserialize(components);
+    }
+
+    public static Map<String, String> styleMap(ComponentInterpreter interpreter, Component component, String key) {
+        var result = new LinkedHashMap<String, String>();
+        result.put(key, interpreter.toString(component));
+        result.put(key + "-legacy", serializeLegacy(component));
+        result.put(key + "-parsed", serializeLegacySection(component));
+        result.put(key + "-mm", serializeMiniMessage(component));
+        result.put(key + "-plain", serializePlain(component));
+        result.put(key + "-plainText", serializePlainText(component));
+        result.put(key + "-gson", serializeGson(component));
+        return result;
+    }
+
+    public static String style(ComponentInterpreter interpreter, Component component, String key, String value) {
+        return styleMap(interpreter, component, key).get(value);
+    }
+
+    public static Map<String, String> styleMap(Component component, String key) {
+        return styleMap(I18n.global.component(), component, key);
+    }
+
+    public static String style( Component component, String key, String value) {
+        return style(I18n.global.component(), component, key, value);
     }
 
 }

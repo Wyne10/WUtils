@@ -1,25 +1,19 @@
 package me.wyne.wutils.i18n.language.component;
 
+import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.Language;
 import me.wyne.wutils.i18n.language.interpretation.ComponentInterpreter;
-import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -97,32 +91,31 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     }
 
     public String legacy() {
-        return LegacyInterpreter.SERIALIZER.serialize(component);
+        return I18n.serializeLegacy(component);
     }
 
     public String legacySection() {
-        return LegacyInterpreter.SECTION_SERIALIZER.serialize(component);
+        return I18n.serializeLegacySection(component);
     }
 
     public String gson() {
-        return GsonComponentSerializer.gson().serialize(component);
+        return I18n.serializeGson(component);
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     public String plain() {
-        return PlainComponentSerializer.plain().serialize(component);
+        return I18n.serializePlain(component);
     }
 
     public String plainText() {
-        return PlainTextComponentSerializer.plainText().serialize(component);
+        return I18n.serializePlainText(component);
     }
 
     public String miniMessage() {
-        return MiniMessage.miniMessage().serialize(component);
+        return I18n.serializeMiniMessage(component);
     }
 
     public BaseComponent[] bungee() {
-        return BungeeComponentSerializer.get().serialize(component);
+        return I18n.serializeBungee(component);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -148,19 +141,11 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
     }
 
     public Map<String, String> styleMap(String key) {
-        var result = new LinkedHashMap<String, String>();
-        result.put(key, toString());
-        result.put(key + "-legacy", legacy());
-        result.put(key + "-parsed", legacySection());
-        result.put(key + "-mm", miniMessage());
-        result.put(key + "-plain", plain());
-        result.put(key + "-plainText", plainText());
-        result.put(key + "-gson", gson());
-        return result;
+        return I18n.styleMap(getInterpreter(), component, key);
     }
 
     public String style(String key, String value) {
-        return styleMap(key).get(value);
+        return I18n.style(getInterpreter(), component, key, value);
     }
 
 }

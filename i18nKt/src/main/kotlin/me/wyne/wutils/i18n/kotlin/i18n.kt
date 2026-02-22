@@ -5,17 +5,10 @@ import me.wyne.wutils.i18n.language.component.LocalizedComponent
 import me.wyne.wutils.i18n.language.component.LocalizedString
 import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedComponent
 import me.wyne.wutils.i18n.language.component.PlaceholderLocalizedString
-import me.wyne.wutils.i18n.language.interpretation.LegacyInterpreter
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement
 import me.wyne.wutils.i18n.language.replacement.TextReplacement
-import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
@@ -108,7 +101,7 @@ fun <T : LocalizedComponent> Collection<T>.reduce() =
 fun <T : ComponentLike> Collection<T>.asComponents() =
     map(ComponentLike::asComponent)
 
-fun <T : LocalizedComponent> Collection<LocalizedComponent>.apply(vararg replacements: ComponentReplacement) =
+fun <T : LocalizedComponent> Collection<T>.apply(vararg replacements: ComponentReplacement) =
     map { it.replace(*replacements) }
 
 fun Collection<String>.apply(vararg replacements: TextReplacement) =
@@ -121,53 +114,43 @@ val CommandSender.locale
     get() = this.player?.locale()
 
 val Component.legacy
-    get() = LegacyInterpreter.SERIALIZER.serialize(this)
+    get() = I18n.serializeLegacy(this)
 
 val Component.legacySection
-    get() = LegacyInterpreter.SECTION_SERIALIZER.serialize(this)
+    get() = I18n.serializeLegacySection(this)
 
 val Component.gson
-    get() = GsonComponentSerializer.gson().serialize(this)
+    get() = I18n.serializeGson(this)
 
-@Suppress("DEPRECATION", "UnstableApiUsage")
 val Component.plain
-    get() = PlainComponentSerializer.plain().serialize(this)
+    get() = I18n.serializePlain(this)
 
 val Component.plainText
-    get() = PlainTextComponentSerializer.plainText().serialize(this)
+    get() = I18n.serializePlainText(this)
 
 val Component.miniMessage
-    get() = MiniMessage.miniMessage().serialize(this)
+    get() = I18n.serializeMiniMessage(this)
 
 val Component.bungee
-    get() = BungeeComponentSerializer.get().serialize(this)
-
-@Suppress("UnstableApiUsage")
-val Component.minecraft
-    get() = MinecraftComponentSerializer.get().serialize(this)
+    get() = I18n.serializeBungee(this)
 
 val String.legacy
-    get() = LegacyInterpreter.SERIALIZER.deserialize(this)
+    get() = I18n.deserializeLegacy(this)
 
 val String.legacySection
-    get() = LegacyInterpreter.SECTION_SERIALIZER.deserialize(this)
+    get() = I18n.deserializeLegacySection(this)
 
 val String.gson
-    get() = GsonComponentSerializer.gson().deserialize(this)
+    get() = I18n.deserializeGson(this)
 
-@Suppress("DEPRECATION", "UnstableApiUsage")
 val String.plain
-    get() = PlainComponentSerializer.plain().deserialize(this)
+    get() = I18n.deserializePlain(this)
 
 val String.plainText
-    get() = PlainTextComponentSerializer.plainText().deserialize(this)
+    get() = I18n.deserializePlainText(this)
 
 val String.miniMessage
-    get() = MiniMessage.miniMessage().deserialize(this)
+    get() = I18n.deserializeMiniMessage(this)
 
 val Array<BaseComponent>.component
-    get() = BungeeComponentSerializer.get().deserialize(this)
-
-@Suppress("UnstableApiUsage")
-val Any.component
-    get() = MinecraftComponentSerializer.get().deserialize(this)
+    get() = I18n.deserializeBungee(this)
