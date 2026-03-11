@@ -3,7 +3,6 @@ package me.wyne.wutils.common.inventory;
 import me.wyne.wutils.common.item.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +22,10 @@ public final class InventoryUtils {
 
     public static void addOrDrop(Player player, ItemStack... items) {
         var exceed = player.getInventory().addItem(items);
-        exceed.values().forEach(item -> player.getLocation().getWorld().dropItem(player.getLocation(), item));
+        exceed.values()
+                .stream()
+                .filter(ItemUtils::isNotNullOrAir)
+                .forEach(item -> player.getLocation().getWorld().dropItem(player.getLocation(), item));
     }
 
     public static List<ItemStack> getAffectedItems(InventoryClickEvent event) {
