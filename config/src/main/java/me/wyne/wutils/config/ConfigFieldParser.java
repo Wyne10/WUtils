@@ -36,8 +36,8 @@ public class ConfigFieldParser {
 
     private static String getConfigurationSerializableString(ConfigurationSerializable configurationSerializable) {
         ConfigBuilder configBuilder = new ConfigBuilder();
-        configBuilder.append(1, "==", configurationSerializable.getClass().getTypeName());
-        configurationSerializable.serialize().forEach((string, o) -> configBuilder.append(1, string, o));
+        configBuilder.append("==", configurationSerializable.getClass().getTypeName());
+        configurationSerializable.serialize().forEach(configBuilder::append);
         return configBuilder.build();
     }
 
