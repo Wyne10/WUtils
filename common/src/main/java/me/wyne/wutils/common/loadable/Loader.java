@@ -37,6 +37,7 @@ public class Loader {
                             entry.getKey().load(configMap.get(entry.getValue()));
                     }
                 });
+        loadableMap.keySet().removeIf(loadable -> !loadable.persist());
     }
 
 }

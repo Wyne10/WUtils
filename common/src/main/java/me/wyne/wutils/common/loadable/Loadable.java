@@ -27,4 +27,11 @@ public interface Loadable {
         return false;
     }
 
+    default boolean persist() {
+        if (getClass().isAnnotationPresent(LoadableMeta.class)) {
+            return getClass().getAnnotation(LoadableMeta.class).persist();
+        }
+        return true;
+    }
+
 }
