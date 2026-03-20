@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class InventoryUtils {
@@ -28,6 +29,15 @@ public final class InventoryUtils {
                 .forEach(item -> player.getLocation().getWorld().dropItem(player.getLocation(), item));
     }
 
+    public static void drop(Player player, ItemStack... items) {
+        Arrays.stream(items)
+                .filter(ItemUtils::isNotNullOrAir)
+                .forEach(item -> {
+                    var drop = player.getLocation().getWorld().dropItem(player.getLocation(), item);
+                    drop.setPickupDelay(0);
+                });
+    }
+
     public static List<ItemStack> getAffectedItems(InventoryClickEvent event) {
         var result = new ArrayList<ItemStack>();
         addNonEmpty(result, event.getCurrentItem());
@@ -43,6 +53,5 @@ public final class InventoryUtils {
         if (ItemUtils.isNotNullOrAir(item))
             list.add(item);
     }
-
 
 }
