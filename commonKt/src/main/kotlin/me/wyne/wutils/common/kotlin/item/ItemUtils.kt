@@ -19,6 +19,9 @@ fun ItemStack?.isNotNullOrAir() =
 fun ItemStack.damageNaturally(player: Player) =
     ItemUtils.damageNaturally(this, player)
 
+fun ItemStack.damageNaturally(player: Player, damage: Int) =
+    ItemUtils.damageNaturally(this, player, damage)
+
 fun Collection<ItemStack>.dropActuallyNaturally(event: BlockBreakEvent) =
     ItemUtils.dropActuallyNaturally(this, event)
 

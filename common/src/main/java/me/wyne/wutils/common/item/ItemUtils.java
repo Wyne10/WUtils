@@ -42,6 +42,10 @@ public final class ItemUtils {
     }
 
     public static void damageNaturally(@Nullable ItemStack item, Player player) {
+        damageNaturally(item, player, 1);
+    }
+
+    public static void damageNaturally(@Nullable ItemStack item, Player player, int damage) {
         if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (item.getType().getMaxDurability() <= 0) return;
@@ -52,7 +56,7 @@ public final class ItemUtils {
                 return;
         }
         var damageable = (Damageable) item.getItemMeta();
-        damageable.setDamage(damageable.getDamage() + 1);
+        damageable.setDamage(damageable.getDamage() + damage);
         if (item.getType().getMaxDurability() <= damageable.getDamage()) {
             item.setAmount(item.getAmount() - 1);
             new PlayerItemBreakEvent(player, item).callEvent();
