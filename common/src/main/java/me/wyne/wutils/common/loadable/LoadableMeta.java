@@ -15,4 +15,6 @@ public @interface LoadableMeta {
 
     boolean late() default false;
 
+    boolean persist() default true;
+
 }

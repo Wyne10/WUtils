@@ -15,5 +15,8 @@ fun Player.addItem(vararg items: ItemStack) =
 fun Player.addOrDrop(vararg items: ItemStack) =
     InventoryUtils.addOrDrop(this, *items)
 
+fun Player.drop(vararg items: ItemStack) =
+    InventoryUtils.drop(this, *items)
+
 fun InventoryClickEvent.getAffectedItems() =
     InventoryUtils.getAffectedItems(this)
