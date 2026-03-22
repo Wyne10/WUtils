@@ -11,21 +11,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class ItemUtils {
+
+    public static final Set<Material> AXES = Collections.unmodifiableSet(MaterialTags.AXES.getValues());
+    public static final Set<Material> PICKAXES = Collections.unmodifiableSet(MaterialTags.PICKAXES.getValues());
+    public static final Set<Material> SHOVELS = Collections.unmodifiableSet(MaterialTags.SHOVELS.getValues());
+    public static final Set<Material> HOES = Collections.unmodifiableSet(MaterialTags.HOES.getValues());
+    public static final Set<Material> SWORDS = Collections.unmodifiableSet(MaterialTags.SWORDS.getValues());
+    public static final Set<Material> TOOLS = Stream
+            .of(AXES, PICKAXES, SHOVELS, HOES, SWORDS)
+            .flatMap(Set::stream)
+            .collect(Collectors.toUnmodifiableSet());
 
     public static final Set<Material> ARMOR = Stream
             .of(MaterialTags.HELMETS.getValues(), MaterialTags.CHESTPLATES.getValues(),
@@ -33,11 +41,11 @@ public final class ItemUtils {
             .flatMap(Set::stream)
             .collect(Collectors.toUnmodifiableSet());
 
-    public static boolean isNullOrAir(ItemStack item) {
+    public static boolean isNullOrAir(@Nullable ItemStack item) {
         return item == null || item.getType() == Material.AIR;
     }
 
-    public static boolean isNotNullOrAir(ItemStack item) {
+    public static boolean isNotNullOrAir(@Nullable ItemStack item) {
         return item != null && item.getType() != Material.AIR;
     }
 
@@ -49,14 +57,15 @@ public final class ItemUtils {
         if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (item.getType().getMaxDurability() <= 0) return;
-        if (ARMOR.contains(item.getType())) return;
         if (item.getItemMeta().isUnbreakable()) return;
         if (item.getItemMeta().hasEnchant(Enchantment.DURABILITY)) {
             if (ThreadLocalRandom.current().nextDouble() >= (1.0 / item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY) + 1))
                 return;
         }
         var damageable = (Damageable) item.getItemMeta();
-        damageable.setDamage(damageable.getDamage() + damage);
+        var damageEvent = new PlayerItemDamageEvent(player, item, damage);
+        if (!damageEvent.callEvent()) return;
+        damageable.setDamage(damageable.getDamage() + damageEvent.getDamage());
         if (item.getType().getMaxDurability() <= damageable.getDamage()) {
             item.setAmount(item.getAmount() - 1);
             new PlayerItemBreakEvent(player, item).callEvent();
