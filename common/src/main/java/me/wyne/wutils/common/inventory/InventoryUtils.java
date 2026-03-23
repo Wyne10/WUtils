@@ -23,10 +23,7 @@ public final class InventoryUtils {
 
     public static void addOrDrop(Player player, ItemStack... items) {
         var exceed = player.getInventory().addItem(items);
-        exceed.values()
-                .stream()
-                .filter(ItemUtils::isNotNullOrAir)
-                .forEach(item -> player.getLocation().getWorld().dropItem(player.getLocation(), item));
+        drop(player, exceed.values().toArray(ItemStack[]::new));
     }
 
     public static void drop(Player player, ItemStack... items) {
@@ -34,6 +31,7 @@ public final class InventoryUtils {
                 .filter(ItemUtils::isNotNullOrAir)
                 .forEach(item -> {
                     var drop = player.getLocation().getWorld().dropItem(player.getLocation(), item);
+                    drop.setOwner(player.getUniqueId());
                     drop.setPickupDelay(0);
                 });
     }
