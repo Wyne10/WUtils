@@ -41,6 +41,11 @@ public class LocalizedComponent extends BaseLocalized<Component, ComponentInterp
         audiences.sender(sender).sendMessage(component);
     }
 
+    public void sendMessagePlayer(CommandSender sender) {
+        if (sender instanceof Player)
+            sendMessage(sender);
+    }
+
     public void sendMessage(UUID playerId) {
         audiences.player(playerId).sendMessage(component);
     }
