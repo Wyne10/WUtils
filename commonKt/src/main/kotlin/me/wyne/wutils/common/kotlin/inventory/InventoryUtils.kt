@@ -15,8 +15,14 @@ fun Player.addItem(vararg items: ItemStack) =
 fun Player.addOrDrop(vararg items: ItemStack) =
     InventoryUtils.addOrDrop(this, *items)
 
+fun Player.addOrDrop(setOwner: Boolean, vararg items: ItemStack) =
+    InventoryUtils.addOrDrop(this, setOwner, *items)
+
 fun Player.drop(vararg items: ItemStack) =
     InventoryUtils.drop(this, *items)
+
+fun Player.drop(setOwner: Boolean, vararg items: ItemStack) =
+    InventoryUtils.drop(this, setOwner, *items)
 
 fun InventoryClickEvent.getAffectedItems() =
     InventoryUtils.getAffectedItems(this)

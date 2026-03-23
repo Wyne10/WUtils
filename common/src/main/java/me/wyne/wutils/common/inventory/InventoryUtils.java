@@ -22,16 +22,25 @@ public final class InventoryUtils {
     }
 
     public static void addOrDrop(Player player, ItemStack... items) {
+        addOrDrop(player, false, items);
+    }
+
+    public static void addOrDrop(Player player, boolean setOwner, ItemStack... items) {
         var exceed = player.getInventory().addItem(items);
-        drop(player, exceed.values().toArray(ItemStack[]::new));
+        drop(player, setOwner, exceed.values().toArray(ItemStack[]::new));
     }
 
     public static void drop(Player player, ItemStack... items) {
+        drop(player, false, items);
+    }
+
+    public static void drop(Player player, boolean setOwner, ItemStack... items) {
         Arrays.stream(items)
                 .filter(ItemUtils::isNotNullOrAir)
                 .forEach(item -> {
                     var drop = player.getLocation().getWorld().dropItem(player.getLocation(), item);
-                    drop.setOwner(player.getUniqueId());
+                    if (setOwner)
+                        drop.setOwner(player.getUniqueId());
                     drop.setPickupDelay(0);
                 });
     }
