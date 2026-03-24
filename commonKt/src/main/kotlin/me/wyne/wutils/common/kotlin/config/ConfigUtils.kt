@@ -2,11 +2,11 @@ package me.wyne.wutils.common.kotlin.config
 
 import me.wyne.wutils.common.config.ConfigUtils
 import me.wyne.wutils.common.duration.TimeSpan
+import me.wyne.wutils.common.kotlin.range.DoubleRange
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.potion.PotionEffectType
 import java.util.EnumSet
-import kotlin.random.Random
 
 const val RANGE_DELIMITER = ".."
 const val COMMA_DELIMITER = ","
@@ -93,8 +93,6 @@ fun ConfigurationSection.getIntRange(path: String, def: IntRange = 0..0): IntRan
     return def
 }
 
-typealias DoubleRange = ClosedFloatingPointRange<Double>
-
 fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.0): DoubleRange {
     val args = getString(path)?.split(RANGE_DELIMITER)
     args?.let {
@@ -102,6 +100,3 @@ fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.
     }
     return def
 }
-
-fun DoubleRange.random() =
-    Random.nextDouble(start, endInclusive)

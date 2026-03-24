@@ -5,7 +5,6 @@ import dev.jorel.commandapi.arguments.Argument
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.executors.CommandArguments
 import me.wyne.wutils.common.command.CommandUtils
-import org.bukkit.command.CommandSender
 
 fun <T : Argument<*>> T.suggest(vararg strings: String): T =
     replaceSuggestions(ArgumentSuggestions.strings(*strings)) as T
