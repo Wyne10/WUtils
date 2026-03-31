@@ -130,6 +130,8 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
     }
 
     public T loadLanguage(Plugin plugin, String languageResourcePath) {
+        if (plugin.getResource(languageResourcePath) == null)
+            throw new NullPointerException("Language resource " + languageResourcePath + " not found");
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
         if (!languageFile.exists())
             plugin.saveResource(languageResourcePath, false);
