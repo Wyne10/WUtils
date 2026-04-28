@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.kotlin.player
 
 import me.wyne.wutils.common.player.PlayerUtils
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
 val Player.expToLevelUp: Int
@@ -17,5 +18,5 @@ fun Player.addExp(exp: Int) {
     PlayerUtils.addExp(this, exp)
 }
 
-val Player.exists: Boolean
+val OfflinePlayer.exists: Boolean
     get() = PlayerUtils.exists(this)
