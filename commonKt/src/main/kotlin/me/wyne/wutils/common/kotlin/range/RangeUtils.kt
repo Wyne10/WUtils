@@ -20,3 +20,6 @@ val me.wyne.wutils.common.kotlin.range.DoubleRange.range: DoubleRange
 
 fun me.wyne.wutils.common.kotlin.range.DoubleRange.random() =
     Random.nextDouble(start, endInclusive)
+
+fun me.wyne.wutils.common.kotlin.range.DoubleRange.randomOrNull() =
+    if (start < endInclusive) Random.nextDouble(start, endInclusive) else null
