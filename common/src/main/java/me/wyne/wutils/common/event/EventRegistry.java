@@ -19,8 +19,6 @@ public class EventRegistry implements Listener, Terminable {
     private final Map<RegisterableEvent, Set<Listener>> registry = new HashMap<>();
     private final Map<Listener, Map<RegisterableEvent, Set<Method>>> handlers = new HashMap<>();
 
-    private final Object lock = new Object();
-
     public EventRegistry(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -30,17 +28,17 @@ public class EventRegistry implements Listener, Terminable {
                 .filter(method -> method.isAnnotationPresent(EventHandler.class))
                 .forEach(method -> {
                     var event = method.getParameterTypes()[0].asSubclass(Event.class);
-                    register(plugin, listener, event, method);
+                    register(listener, event, method);
                 });
     }
 
-    public void register(Plugin plugin, Listener listener, Class<? extends Event> event, Method method) {
+    public void register(Listener listener, Class<? extends Event> event, Method method) {
         if (!method.isAnnotationPresent(EventHandler.class)) return;
         var handler = method.getDeclaredAnnotation(EventHandler.class);
         var registerableEvent = new RegisterableEvent(event, handler);
         if (!registry.containsKey(registerableEvent)) {
             registry.put(registerableEvent, new HashSet<>());
-            registerEvent(plugin, registerableEvent);
+            registerEvent(registerableEvent);
         }
         registry.get(registerableEvent).add(listener);
         if (!handlers.containsKey(listener))
@@ -54,24 +52,25 @@ public class EventRegistry implements Listener, Terminable {
     @Override
     public void close() throws Exception {
         clear();
-        synchronized (lock) {
-            for (RegisterableEvent event : registry.keySet()) {
-                Method method = event.event().getMethod("getHandlerList");
-                method.setAccessible(true);
-                HandlerList handlerList = (HandlerList) method.invoke(null);
-                handlerList.unregister(this);
-            }
+        for (RegisterableEvent event : registry.keySet()) {
+            Method method = event.event().getMethod("getHandlerList");
+            method.setAccessible(true);
+            HandlerList handlerList = (HandlerList) method.invoke(null);
+            handlerList.unregister(this);
         }
+    }
+
+    public void unregister(Listener listener) {
+        registry.values().forEach(listeners -> listeners.remove(listener));
+        handlers.remove(listener);
     }
 
     public void clear() {
-        synchronized (lock) {
-            registry.values().forEach(Set::clear);
-            handlers.clear();
-        }
+        registry.values().forEach(Set::clear);
+        handlers.clear();
     }
 
-    private void registerEvent(Plugin plugin, RegisterableEvent event) {
+    private void registerEvent(RegisterableEvent event) {
         Bukkit.getPluginManager().registerEvent(
                 event.event(),
                 this,
@@ -79,7 +78,11 @@ public class EventRegistry implements Listener, Terminable {
                 (calledListener, calledEvent) -> {
                     if (event.event().isInstance(calledEvent)) {
                         registry.get(event).forEach(listener -> {
-                            handlers.get(listener).get(event).forEach(method -> {
+                            var listenerHandlers = handlers.get(listener);
+                            if (listenerHandlers == null) return;
+                            var methods = listenerHandlers.get(event);
+                            if (methods == null) return;
+                            methods.forEach(method -> {
                                 try {
                                     method.invoke(listener, calledEvent);
                                 } catch (Exception e) {

@@ -27,7 +27,7 @@ public class EventPromisedTask<T extends Event> implements RegisterableListener,
         this.promise = promise;
         this.eventRegistry = new EventRegistry(plugin);
         try {
-            eventRegistry.register(plugin, this, event, getClass().getDeclaredMethod("onEvent", Event.class));
+            eventRegistry.register(this, event, getClass().getDeclaredMethod("onEvent", Event.class));
         } catch (NoSuchMethodException ignored) {}
     }
 
