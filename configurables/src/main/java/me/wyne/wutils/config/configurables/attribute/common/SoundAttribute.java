@@ -11,8 +11,6 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Locale;
-
 public class SoundAttribute extends ConfigurableAttribute<Sound> {
 
     public SoundAttribute(String key, Sound value) {
@@ -42,7 +40,7 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> {
 
         @Override
         public SoundAttribute fromString(String key, String string, ConfigurationSection config) {
-            var args = new Args(string);
+            var args = new Args(string, Args.SPACE_DELIMITER);
             var soundKey = Preconditions.checkNotNull(args.get(0), "No sound provided for " + ConfigUtils.getPath(config, key));
             var sound = ConfigUtils.getByKeyOrName(soundKey, org.bukkit.Sound.class);
             Preconditions.checkNotNull(sound, "Invalid sound at " + ConfigUtils.getPath(config, key));
