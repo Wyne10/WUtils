@@ -76,7 +76,9 @@ public final class ItemUtils {
     }
 
     public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event) {
-        var originalItems = drops.stream().map(item -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), item)).toList();
+        var originalItems = drops.stream()
+                .filter(ItemUtils::isNotNullOrAir)
+                .map(item -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), item)).toList();
         var items = new ArrayList<>(originalItems);
         var dropItemEvent = new BlockDropItemEvent(event.getBlock(), event.getBlock().getState(), event.getPlayer(), items);
         dropItemEvent.callEvent();
