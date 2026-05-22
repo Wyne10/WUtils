@@ -62,13 +62,13 @@ fun OfflinePlayer?.placeholderComponent(path: String, vararg replacements: TextR
 fun OfflinePlayer?.placeholderComponents(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
     I18n.global.accessor(this, path).getPlaceholderComponentList(this, *replacements)
 
-fun CommandSender.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
+fun CommandSender?.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
     I18n.global.accessor(this, path).getString(*replacements)
 
-fun CommandSender.localizedStrings(path: String, vararg replacements: TextReplacement): List<LocalizedString> =
+fun CommandSender?.localizedStrings(path: String, vararg replacements: TextReplacement): List<LocalizedString> =
     I18n.global.accessor(this, path).getStringList(*replacements)
 
-fun CommandSender.localizedComponent(path: String, vararg replacements: TextReplacement): LocalizedComponent =
+fun CommandSender?.localizedComponent(path: String, vararg replacements: TextReplacement): LocalizedComponent =
     I18n.global.accessor(this, path).getComponent(*replacements)
 
 fun CommandSender?.localizedComponents(path: String, vararg replacements: TextReplacement): List<LocalizedComponent> =
