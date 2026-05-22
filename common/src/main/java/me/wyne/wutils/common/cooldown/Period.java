@@ -23,6 +23,10 @@ public class Period {
         put(duration.getMillis());
     }
 
+    public Long getFinishAt() {
+        return finishAt;
+    }
+
     public boolean isExpired() {
         return finishAt == null || System.currentTimeMillis() > finishAt;
     }
