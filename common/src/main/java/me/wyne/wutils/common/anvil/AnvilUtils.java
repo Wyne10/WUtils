@@ -1,5 +1,6 @@
 package me.wyne.wutils.common.anvil;
 
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -63,6 +64,12 @@ public final class AnvilUtils {
         var currentDamageIndex = ANVIL_DAMAGE_QUEUE.indexOf(block.getType());
         var nextDamageIndex = currentDamageIndex + 1;
         block.setType(ANVIL_DAMAGE_QUEUE.get(nextDamageIndex));
+        var damageEvent = new AnvilDamagedEvent(e.getView(), block.getBlockData());
+        if (!damageEvent.callEvent()) {
+            block.setType(ANVIL_DAMAGE_QUEUE.get(currentDamageIndex));
+            return;
+        }
+        block.setType(damageEvent.getDamageState().getMaterial());
         if (block.getType() == Material.AIR)
             block.getWorld().playSound(block.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
     }

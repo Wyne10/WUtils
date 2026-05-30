@@ -56,13 +56,14 @@ public final class ItemUtils {
     public static void damageNaturally(@Nullable ItemStack item, Player player, int damage) {
         if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
+        var meta = item.getItemMeta();
         if (item.getType().getMaxDurability() <= 0) return;
-        if (item.getItemMeta().isUnbreakable()) return;
-        if (item.getItemMeta().hasEnchant(Enchantment.DURABILITY)) {
-            if (ThreadLocalRandom.current().nextDouble() >= (1.0 / item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY) + 1))
+        if (meta.isUnbreakable()) return;
+        if (meta.hasEnchant(Enchantment.DURABILITY)) {
+            if (ThreadLocalRandom.current().nextDouble() >= (1.0 / meta.getEnchantLevel(Enchantment.DURABILITY) + 1))
                 return;
         }
-        var damageable = (Damageable) item.getItemMeta();
+        var damageable = (Damageable) meta;
         var damageEvent = new PlayerItemDamageEvent(player, item, damage);
         if (!damageEvent.callEvent()) return;
         damageable.setDamage(damageable.getDamage() + damageEvent.getDamage());

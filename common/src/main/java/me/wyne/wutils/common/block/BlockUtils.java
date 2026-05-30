@@ -31,10 +31,11 @@ public final class BlockUtils {
         if (tool == null)
             tool = EMPTY_TOOL;
         if (UNBREAKABLE_BLOCKS.contains(block.getType())) return;
+        var meta = tool.getItemMeta();
         var drops = block.getDrops(tool, player);
         var naturalBreakEvent = new NaturalBlockBreakEvent(block, player);
         naturalBreakEvent.setDropItems(!drops.isEmpty());
-        if (tool.getItemMeta() != null && !tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH) &&
+        if (meta != null && !meta.hasEnchant(Enchantment.SILK_TOUCH) &&
                 (block.getType() == Material.SPAWNER || !drops.isEmpty()))
             setExpDrop(naturalBreakEvent);
         naturalBreakEvent.callEvent();
