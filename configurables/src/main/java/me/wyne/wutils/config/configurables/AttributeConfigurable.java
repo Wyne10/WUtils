@@ -4,6 +4,7 @@ import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
 import me.wyne.wutils.config.configurables.attribute.Attribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
+import me.wyne.wutils.config.configurables.attribute.AttributeContainerBuilder;
 import me.wyne.wutils.config.configurables.attribute.AttributeMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -141,6 +142,10 @@ public class AttributeConfigurable implements CompositeConfigurable {
 
     public AttributeContainer getAttributeContainer() {
         return attributeContainer;
+    }
+
+    public AttributeContainerBuilder toBuilder() {
+        return new AttributeContainerBuilder(getAttributeContainer());
     }
 
 }

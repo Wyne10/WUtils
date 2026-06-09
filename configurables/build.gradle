@@ -6,20 +6,23 @@ repositories {
     maven {
         url 'https://repo.papermc.io/repository/maven-public/'
     }
-}
+    maven {
+        url = uri("https://repo.xenondevs.xyz/releases")
+    }}
 
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly("dev.triumphteam:triumph-gui:3.1.13") {
         exclude group: 'net.kyori'
     }
+    compileOnly("xyz.xenondevs.invui:invui:1.49")
     compileOnly project(':WUtils-i18n')
     compileOnly project(":WUtils-animation")
     implementation project(":WUtils-common")
     api project(':WUtils-config')
 }
 
-version = '1.19.0'
+version = '1.20.0'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-configurables", version.toString())
