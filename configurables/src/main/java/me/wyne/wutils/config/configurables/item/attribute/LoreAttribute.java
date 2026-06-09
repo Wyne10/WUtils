@@ -24,10 +24,18 @@ public class LoreAttribute extends ConfigurableAttribute<List<String>> implement
     @SuppressWarnings("deprecation")
     @Override
     public void apply(ItemMeta meta, ItemAttributeContext context) {
+        if (getValue().isEmpty()) return;
         if (I18n.global.getAudiences() instanceof BukkitComponentAudiences)
-            meta.setLoreComponents(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee()).toList());
+            meta.setLoreComponents(
+                    getValue().stream()
+                            .flatMap(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponentList(context.getPlayer(), context.getTextReplacements()).stream()
+                                    .map(c -> c.replace(context.getComponentReplacements()).bungee())).toList()
+            );
         else
-            meta.lore(getValue().stream().map(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).get()).toList());
+            meta.lore(getValue().stream()
+                    .flatMap(s -> I18n.global.accessor(context.getPlayer(), s).getPlaceholderComponentList(context.getPlayer(), context.getTextReplacements()).stream()
+                            .map(c -> c.replace(context.getComponentReplacements()).get())).toList()
+            );
     }
 
     public static final class Factory implements AttributeFactory<LoreAttribute> {
