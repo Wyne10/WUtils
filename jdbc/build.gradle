@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly 'com.zaxxer:HikariCP:7.0.2'
+    compileOnly 'com.zaxxer:HikariCP:7.1.0'
     compileOnly 'com.j256.ormlite:ormlite-jdbc:6.1'
 }
 
