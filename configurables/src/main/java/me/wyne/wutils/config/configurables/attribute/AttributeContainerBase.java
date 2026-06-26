@@ -49,7 +49,7 @@ public abstract class AttributeContainerBase implements AttributeContainer {
 
     @Override
     public @Nullable ConfigurationSection getRoot() {
-        return get("root");
+        return getValue("root");
     }
 
     @Override
