@@ -19,15 +19,15 @@ public final class Ticks {
     }
 
     public static long of(long duration, TimeUnit unit) {
-        return unit.toSeconds(duration) * TICKS_PER_SECOND;
+        return unit.toMillis(duration) / MILLIS_PER_TICK;
     }
 
     public static long toMillis(long ticks) {
-        return toSeconds(ticks) * 1000;
+        return ticks * MILLIS_PER_TICK;
     }
 
     public static long toSeconds(long ticks) {
-        return ticks / TICKS_PER_SECOND;
+        return toMillis(ticks) / 1000;
     }
 
     public static long to(long ticks, TimeUnit unit) {
@@ -35,7 +35,7 @@ public final class Ticks {
     }
 
     public static Duration duration(long ticks) {
-        return Duration.ofSeconds(toSeconds(ticks));
+        return Duration.ofMillis(toMillis(ticks));
     }
 
 }
