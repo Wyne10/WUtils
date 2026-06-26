@@ -2,7 +2,7 @@ package me.wyne.wutils.animation;
 
 import java.util.Collection;
 
-public record CompositeRunnable(Collection<AnimationRunnable> runnables) implements AnimationRunnable, AutoCloseable {
+public record CompositeRunnable(Collection<AnimationRunnable> runnables) implements AnimationRunnable, AutoCloseable, Finalizable {
 
     @Override
     public void run(long delay, long period, long duration) {
@@ -26,6 +26,14 @@ public record CompositeRunnable(Collection<AnimationRunnable> runnables) impleme
                         throw new RuntimeException(e);
                     }
                 });
+    }
+
+    @Override
+    public void _finalize() {
+        runnables.stream()
+                .filter(runnable -> runnable instanceof Finalizable)
+                .map(runnable -> (Finalizable) runnable)
+                .forEach(Finalizable::_finalize);
     }
 
 }
