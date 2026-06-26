@@ -24,8 +24,11 @@ public class BlockingAnimationStep extends BaseAnimationStep {
                 animation.getPlugin(),
                 () -> {
                     getRunnable().run(getDelay(), getPeriod(), getDuration());
-                    close();
-                    startNext(animation);
+                    var close = Bukkit.getScheduler().runTaskLater(animation.getPlugin(), () -> {
+                        close();
+                        startNext(animation);
+                    }, getDuration());
+                    animation.setCurrentTask(new Pair<>(this, close));
         }, getDelay());
         animation.setCurrentTask(new Pair<>(this, task));
     }

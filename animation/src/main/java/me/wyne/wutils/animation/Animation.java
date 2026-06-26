@@ -5,19 +5,19 @@ import org.bukkit.scheduler.BukkitTask;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Animation implements AutoCloseable{
+public class Animation implements AutoCloseable {
 
     private final Plugin plugin;
 
-    private final Queue<AnimationStep> steps = new LinkedList<>();
+    private final Queue<AnimationStep> steps = new ConcurrentLinkedQueue<>();
 
-    private final Queue<AnimationStep> runSteps = new LinkedList<>();
-    private final Map<AnimationStep, BukkitTask> parallelTasks = new LinkedHashMap<>();
+    private final Queue<AnimationStep> runSteps = new ConcurrentLinkedQueue<>();
+    private final Map<AnimationStep, BukkitTask> parallelTasks = new ConcurrentHashMap<>();
     private Pair<AnimationStep, BukkitTask> currentTask = null;
 
     public Animation(Plugin plugin) {
@@ -84,7 +84,7 @@ public class Animation implements AutoCloseable{
         return currentTask;
     }
 
-    public void setCurrentTask(Pair<AnimationStep, BukkitTask> currentTask) {
+    public synchronized void setCurrentTask(Pair<AnimationStep, BukkitTask> currentTask) {
         this.currentTask = currentTask;
     }
 

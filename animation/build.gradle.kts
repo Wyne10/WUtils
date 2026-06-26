@@ -13,7 +13,7 @@ dependencies {
     implementation("org.javatuples:javatuples:1.2")
 }
 
-version = "2.1.0"
+version = "2.2.0"
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-animation", version.toString())
