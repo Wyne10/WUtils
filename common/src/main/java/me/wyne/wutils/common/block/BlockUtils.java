@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Container;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
@@ -40,6 +41,10 @@ public final class BlockUtils {
             setExpDrop(naturalBreakEvent);
         naturalBreakEvent.callEvent();
         if (naturalBreakEvent.isCancelled()) return;
+        var state = block.getState();
+        if (state instanceof Container container && !naturalBreakEvent.isDropItems()) {
+            container.getInventory().clear();
+        }
         block.setType(Material.AIR);
         if (naturalBreakEvent.damageTool())
             ItemUtils.damageNaturally(tool, player);
