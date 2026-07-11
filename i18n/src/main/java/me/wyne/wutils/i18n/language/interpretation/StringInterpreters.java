@@ -5,8 +5,7 @@ import me.wyne.wutils.i18n.language.validation.StringValidator;
 import java.util.function.Function;
 
 public enum StringInterpreters {
-    BASE(BaseInterpreter::new),
-    LEGACY(LegacyInterpreter::new);
+    BASE(BaseInterpreter::new);
 
     private final Function<StringValidator, StringInterpreter> factory;
 

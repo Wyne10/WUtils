@@ -86,6 +86,30 @@ fun CommandSender?.placeholderComponent(path: String, vararg replacements: TextR
 fun CommandSender?.placeholderComponents(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
     I18n.global.accessor(this, path).getPlaceholderComponentList(this, *replacements)
 
+fun String.localizedString(vararg replacements: TextReplacement): LocalizedString =
+    I18n.global.accessor(this).getString(*replacements)
+
+fun String.localizedStrings(vararg replacements: TextReplacement): List<LocalizedString> =
+    I18n.global.accessor(this).getStringList(*replacements)
+
+fun String.localizedComponent(vararg replacements: TextReplacement): LocalizedComponent =
+    I18n.global.accessor(this).getComponent(*replacements)
+
+fun String.localizedComponents(vararg replacements: TextReplacement): List<LocalizedComponent> =
+    I18n.global.accessor(this).getComponentList(*replacements)
+
+fun String.placeholderString(vararg replacements: TextReplacement): PlaceholderLocalizedString =
+    I18n.global.accessor(this).getPlaceholderString(null, *replacements)
+
+fun String.placeholderStrings(vararg replacements: TextReplacement): List<PlaceholderLocalizedString> =
+    I18n.global.accessor(this).getPlaceholderStringList(null, *replacements)
+
+fun String.placeholderComponent(vararg replacements: TextReplacement): PlaceholderLocalizedComponent =
+    I18n.global.accessor(this).getPlaceholderComponent(null, *replacements)
+
+fun String.placeholderComponents(vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
+    I18n.global.accessor(this).getPlaceholderComponentList(null, *replacements)
+
 fun Collection<String>.reduceRaw() =
     reduceOrNull(I18n::reduceRawString)
 

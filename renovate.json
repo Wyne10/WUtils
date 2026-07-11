@@ -22,6 +22,14 @@
     {
       "matchDepNames": ["com.vanniktech:gradle-maven-publish-plugin"],
       "allowedVersions": "<0.36.0"
+    },
+    {
+      "matchDepNames": ["net.kyori:adventure-text-minimessage"],
+      "allowedVersions": "<5.0.0"
+    },
+    {
+      "matchDepNames": ["xyz.xenondevs.invui:invui"],
+      "allowedVersions": "<2.0.0"
     }
   ]
 }
