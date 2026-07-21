@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnlyApi("com.sk89q.worldedit:worldedit-bukkit:7.2.17")
+    compileOnlyApi("com.sk89q.worldedit:worldedit-bukkit:7.4.4")
     compileOnlyApi("com.sk89q.worldguard:worldguard-bukkit:7.0.5")
     api(project(":WUtils-common"))
     api(project(":WUtils-configurables"))
