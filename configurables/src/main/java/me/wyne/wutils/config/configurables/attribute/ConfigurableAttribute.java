@@ -19,7 +19,7 @@ public abstract class ConfigurableAttribute<V> extends AttributeBase<V> implemen
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("ConfigurableAttribute is deserialized via attribute factory");
     }
 
 }

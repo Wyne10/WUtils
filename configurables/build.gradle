@@ -18,11 +18,11 @@ dependencies {
     compileOnly("xyz.xenondevs.invui:invui:1.49")
     compileOnly project(':WUtils-i18n')
     compileOnly project(":WUtils-animation")
-    implementation project(":WUtils-common")
+    api project(":WUtils-common")
     api project(':WUtils-config')
 }
 
-version = '1.20.2'
+version = '1.20.3'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-configurables", version.toString())

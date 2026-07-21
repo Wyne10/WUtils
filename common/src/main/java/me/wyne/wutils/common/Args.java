@@ -8,19 +8,23 @@ import java.util.List;
 public class Args {
 
     public static final String COLON_DELIMITER = ":";
-    public static final String SPACE_DELIMITER = " ";
-    public static final String COLON_OR_SPACE_DELIMITER = "[: ]";
+    public static final String SPACE_DELIMITER = "\\s+";
+    public static final String COLON_OR_SPACE_DELIMITER = ":|\\s+";
 
     private final List<String> args;
 
     public Args(String string) {
-        var split = string.split(COLON_OR_SPACE_DELIMITER);
+        var split = string.trim().split(COLON_OR_SPACE_DELIMITER);
         args = List.of(split);
     }
 
     public Args(String string, String regex) {
-        var split = string.split(regex);
+        var split = string.trim().split(regex);
         args = List.of(split);
+    }
+
+    public List<String> getArgs() {
+        return args;
     }
 
     @Nullable
