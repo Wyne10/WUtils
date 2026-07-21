@@ -20,14 +20,14 @@ dependencies {
     implementation("org.javatuples:javatuples:1.2")
 }
 
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-animation", version.toString())
 
     pom {
         name = "WUtils Structure"
-        description = "A lightweight API utilizing WorldEdit and WorldGuard for creating in-game structures in Bukkit/Paper plugins."
+        description = "A configurable API for placing schematic-based structures in Bukkit/Paper worlds using WorldEdit and WorldGuard."
         inceptionYear = "2026"
     }
 }
