@@ -23,7 +23,7 @@ dependencies {
 version = "1.0.0-SNAPSHOT"
 
 mavenPublishing {
-    coordinates(findProperty("centralGroup").toString(), "wutils-animation", version.toString())
+    coordinates(findProperty("centralGroup").toString(), "wutils-structure", version.toString())
 
     pom {
         name = "WUtils Structure"
