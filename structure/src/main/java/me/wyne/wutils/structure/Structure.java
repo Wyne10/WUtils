@@ -215,6 +215,7 @@ public class Structure implements CompositeConfigurable {
             return CompletableFuture.failedFuture(new IllegalStateException("Couldn't generate intermediate structure in " + timeoutMillis + " ms"));
         return WorldUtils.getHighestLocationAtAsync(location.getLocation())
                 .thenComposeAsync(highestLocation -> {
+                    highestLocation.add(0, 1, 0);
                     var clipboard = scheme.getClipboard();
                     var protectedRegion = this.region.getRegion(clipboard, highestLocation);
                     var editLocation = BukkitAdapter.adapt(highestLocation);

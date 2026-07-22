@@ -25,6 +25,8 @@ public interface LocationCondition extends CompositeConfigurable {
                         new OceanCondition(!config.getBoolean(key)));
                 put("is-in-mountains", (key, config) ->
                         new MountainsCondition(!config.getBoolean(key)));
+                put("height", (key, config) ->
+                        new HeightCondition(ConfigUtils.getIntComparator(config, key)));
             }}
     );
 

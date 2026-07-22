@@ -94,7 +94,11 @@ public class WorldStructure implements AutoCloseable {
                     .to(location.toVector().toBlockPoint());
             pasteModifiers.forEach(pasteModifier -> pasteModifier.apply(pasteBuilder, clipboardRegion.getWorld()));
             Operations.complete(pasteBuilder.build());
-            editSessionModifiers.forEach(editSessionModifier -> editSessionModifier.apply(editSession, clipboardRegion));
+            editSession.flushSession();
+            editSessionModifiers.forEach(editSessionModifier -> {
+                editSessionModifier.apply(editSession, clipboardRegion);
+                editSession.flushSession();
+            });
         } catch (WorldEditException e) {
             throw new RuntimeException("Structure " + uniqueKey + " paste exception", e);
         }

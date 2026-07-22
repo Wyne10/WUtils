@@ -22,6 +22,6 @@ public record BlockCondition(@NotNull Set<@NotNull Material> blocks, boolean inv
 
     @Override
     public boolean isValid(@NotNull Location location) {
-        return blocks.contains(location.getBlock().getType()) != invert;
+        return blocks.contains(location.clone().subtract(0, 1, 0).getBlock().getType()) != invert;
     }
 }
