@@ -27,7 +27,7 @@ public class DeformEditModifier extends MarginEditModifier<DeformSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         Vector3 min = region.getMinimumPoint().toVector3();
         Vector3 max = region.getMaximumPoint().toVector3();
         Vector3 zero = max.add(min).divide(2);

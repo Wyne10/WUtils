@@ -25,7 +25,7 @@ public class NaturalizeEditModifier extends MarginEditModifier<Integer> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         try {
             editSession.naturalizeCuboidBlocks(region);
         } catch (MaxChangedBlocksException e) {

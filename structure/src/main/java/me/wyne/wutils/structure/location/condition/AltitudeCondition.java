@@ -6,11 +6,11 @@ import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-public record HeightCondition(@NotNull IntComparator comparator) implements LocationCondition {
+public record AltitudeCondition(@NotNull IntComparator comparator) implements LocationCondition {
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder()
-                .append(depth, "height", comparator)
+                .append(depth, "altitude", comparator)
                 .buildNoTrail();
     }
 

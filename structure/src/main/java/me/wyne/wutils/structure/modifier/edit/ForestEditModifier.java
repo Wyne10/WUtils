@@ -25,7 +25,7 @@ public class ForestEditModifier extends MarginEditModifier<ForestSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         try {
             editSession.makeForest(region, getValue().density() / 100, getValue().type());
         } catch (MaxChangedBlocksException e) {

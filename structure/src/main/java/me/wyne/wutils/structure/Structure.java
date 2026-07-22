@@ -1,6 +1,7 @@
 package me.wyne.wutils.structure;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.scheduler.Schedulers;
@@ -16,8 +17,13 @@ import me.wyne.wutils.config.configurables.attribute.AttributeMap;
 import me.wyne.wutils.config.configurables.attribute.ImmutableAttributeContainer;
 import me.wyne.wutils.structure.location.StructureLocation;
 import me.wyne.wutils.structure.location.condition.LocationCondition;
+import me.wyne.wutils.structure.modifier.ClipboardModifier;
+import me.wyne.wutils.structure.modifier.LocationModifier;
 import me.wyne.wutils.structure.modifier.RegionModifier;
 import me.wyne.wutils.structure.modifier.StructureModifier;
+import me.wyne.wutils.structure.modifier.clipboard.FlipClipboardModifier;
+import me.wyne.wutils.structure.modifier.clipboard.RotateClipboardModifier;
+import me.wyne.wutils.structure.modifier.location.AltitudeLocationModifier;
 import me.wyne.wutils.structure.modifier.snapshot.BiomesSnapshotModifier;
 import me.wyne.wutils.structure.modifier.snapshot.EntitiesSnapshotModifier;
 import me.wyne.wutils.structure.modifier.snapshot.RemoveEntitiesSnapshotModifier;
@@ -37,6 +43,7 @@ import me.wyne.wutils.structure.modifier.edit.ExtinguishEditModifier;
 import me.wyne.wutils.structure.modifier.edit.FloraEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ForestEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GreenEditModifier;
+import me.wyne.wutils.structure.modifier.edit.GrowEditModifier;
 import me.wyne.wutils.structure.modifier.edit.NaturalizeEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ReplaceEditModifier;
 import me.wyne.wutils.structure.modifier.edit.SetEditModifier;
@@ -65,6 +72,9 @@ public class Structure implements CompositeConfigurable {
     public final static AttributeMap STRUCTURE_MODIFIER_MAP = new AttributeMap();
 
     static {
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.CLIPBOARD_ROTATE.getKey(), new RotateClipboardModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.CLIPBOARD_FLIP.getKey(), new FlipClipboardModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.LOCATION_ALTITUDE.getKey(), new AltitudeLocationModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_ENTITIES.getKey(), new EntitiesSnapshotModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_REMOVE_ENTITIES.getKey(), new RemoveEntitiesSnapshotModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_BIOMES.getKey(), new BiomesSnapshotModifier.Factory());
@@ -80,6 +90,7 @@ public class Structure implements CompositeConfigurable {
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_REPLACE.getKey(), new ReplaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SET.getKey(), new SetEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DEFORM.getKey(), new DeformEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GROW.getKey(), new GrowEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SMOOTH.getKey(), new SmoothEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_NATURALIZE.getKey(), new NaturalizeEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GREEN.getKey(), new GreenEditModifier.Factory());
@@ -217,20 +228,28 @@ public class Structure implements CompositeConfigurable {
                 .thenComposeAsync(highestLocation -> {
                     highestLocation.add(0, 1, 0);
                     var clipboard = scheme.getClipboard();
-                    var protectedRegion = this.region.getRegion(clipboard, highestLocation);
-                    var editLocation = BukkitAdapter.adapt(highestLocation);
-                    var region = Scheme.toWorld(clipboard, editLocation);
-                    region.setWorld(BukkitAdapter.adapt(highestLocation.getWorld()));
+                    var clipboardHolder = new ClipboardHolder(clipboard);
+                    structureModifiers.getSet(ClipboardModifier.class)
+                            .forEach(clipboardModifier -> clipboardModifier.apply(clipboardHolder));
+                    var transform = clipboardHolder.getTransform();
+                    Location placement = highestLocation;
+                    for (LocationModifier locationModifier : structureModifiers.getSet(LocationModifier.class))
+                        placement = locationModifier.apply(placement);
+                    var protectedRegion = this.region.getRegion(clipboard, placement, transform);
+                    var editLocation = BukkitAdapter.adapt(placement);
+                    var region = Scheme.toWorld(clipboard, editLocation, transform);
+                    region.setWorld(BukkitAdapter.adapt(placement.getWorld()));
                     if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
                         return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token);
                     else
                         return CompletableFuture.completedFuture(
                                 new IntermediateStructure(
-                                        getUniqueKey(highestLocation),
+                                        getUniqueKey(placement),
                                         clipboard,
-                                        highestLocation,
+                                        placement,
                                         protectedRegion,
                                         region,
+                                        transform,
                                         elapsedMillis
                                 )
                         );

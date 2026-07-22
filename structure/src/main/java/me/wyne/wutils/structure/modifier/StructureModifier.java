@@ -1,6 +1,9 @@
 package me.wyne.wutils.structure.modifier;
 
 public enum StructureModifier {
+    CLIPBOARD_ROTATE("rotate"),
+    CLIPBOARD_FLIP("flip"),
+    LOCATION_ALTITUDE("altitude"),
     REGION_EXPAND("expand"),
     REGION_CONTRACT("contract"),
     REGION_OUTSET("outset"),
@@ -15,6 +18,7 @@ public enum StructureModifier {
     PASTE_SOURCE_MASK("pasteSourceMask"),
     EDIT_REPLACE("replace"),
     EDIT_SET("set"),
+    EDIT_GROW("grow"),
     EDIT_SMOOTH("smooth"),
     EDIT_NATURALIZE("naturalize"),
     EDIT_FLORA("flora"),

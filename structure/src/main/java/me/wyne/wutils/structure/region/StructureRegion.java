@@ -1,6 +1,7 @@
 package me.wyne.wutils.structure.region;
 
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
@@ -22,7 +23,7 @@ public abstract class StructureRegion implements CompositeConfigurable {
         return regionData;
     }
 
-    public abstract @NotNull ProtectedCuboidRegion getRegion(@NotNull Clipboard clipboard, @NotNull Location location);
+    public abstract @NotNull ProtectedCuboidRegion getRegion(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform);
 
     @Override
     public void fromConfig(@Nullable Object configObject) {

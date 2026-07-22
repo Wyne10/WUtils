@@ -1,8 +1,10 @@
 package me.wyne.wutils.structure.scheme;
 
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.transform.Transform;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldedit.util.Location;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
@@ -19,14 +21,29 @@ public interface Scheme extends CompositeConfigurable {
         throw new UnsupportedOperationException("Scheme is deserialized via Scheme.Factory");
     }
 
-    static @NotNull Region toWorld(@NotNull Clipboard clipboard, @NotNull Location location) {
+    static @NotNull Region toWorld(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform) {
         var region = clipboard.getRegion();
-        try {
-            region.shift(location.toVector().toBlockPoint().subtract(clipboard.getOrigin()));
-        } catch (RegionOperationException e) {
-            throw new RuntimeException("Can't perform toWorld region operation", e);
+        var origin = clipboard.getOrigin();
+        var to = location.toVector().toBlockPoint();
+        var min = region.getMinimumPoint();
+        var max = region.getMaximumPoint();
+
+        BlockVector3 worldMin = null;
+        BlockVector3 worldMax = null;
+        for (int x = 0; x < 2; x++) {
+            for (int y = 0; y < 2; y++) {
+                for (int z = 0; z < 2; z++) {
+                    var corner = BlockVector3.at(
+                            x == 0 ? min.getX() : max.getX(),
+                            y == 0 ? min.getY() : max.getY(),
+                            z == 0 ? min.getZ() : max.getZ());
+                    var mapped = to.add(transform.apply(corner.subtract(origin).toVector3()).toBlockPoint());
+                    worldMin = worldMin == null ? mapped : worldMin.getMinimum(mapped);
+                    worldMax = worldMax == null ? mapped : worldMax.getMaximum(mapped);
+                }
+            }
         }
-        return region;
+        return new CuboidRegion(worldMin, worldMax);
     }
 
     final class Factory implements GenericFactory<Scheme> {

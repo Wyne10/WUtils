@@ -2,6 +2,7 @@ package me.wyne.wutils.structure.region;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurables.attribute.GenericFactory;
@@ -17,9 +18,9 @@ public class SchemeRegion extends StructureRegion {
     }
 
     @Override
-    public @NotNull ProtectedCuboidRegion getRegion(@NotNull Clipboard clipboard, @NotNull Location location) {
+    public @NotNull ProtectedCuboidRegion getRegion(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform) {
         var editLocation = BukkitAdapter.adapt(location);
-        var worldRegion = Scheme.toWorld(clipboard, editLocation);
+        var worldRegion = Scheme.toWorld(clipboard, editLocation, transform);
         var region = new ProtectedCuboidRegion(
                 validateId(getRegionData().id(), location),
                 getRegionData().isTransient(),

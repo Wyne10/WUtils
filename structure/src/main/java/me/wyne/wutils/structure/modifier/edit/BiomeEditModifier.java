@@ -30,7 +30,7 @@ public class BiomeEditModifier extends MarginEditModifier<BiomeSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         RegionFunction replace = new RegionMaskingFilter(ringMask, new BiomeReplace(editSession, getValue().biome()));
         RegionVisitor visitor = new RegionVisitor(region, replace);
         try {

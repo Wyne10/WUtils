@@ -22,7 +22,7 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
 
     protected abstract int margin();
 
-    protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Mask ringMask);
+    protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask);
 
     @Override
     public void apply(@NotNull EditSession editSession, @NotNull Region region) {
@@ -42,7 +42,7 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
                 ? outsideClipboard
                 : new MaskIntersection(previousMask, outsideClipboard));
         try {
-            applyEdit(editSession, expanded, outsideClipboard);
+            applyEdit(editSession, expanded, region, outsideClipboard);
         } finally {
             editSession.setMask(previousMask);
         }

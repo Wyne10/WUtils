@@ -8,6 +8,7 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
@@ -29,6 +30,7 @@ public class WorldStructure implements AutoCloseable {
     private final Location location;
     private final ProtectedCuboidRegion region;
     private final Region clipboardRegion;
+    private final Transform transform;
     private final Set<SnapshotModifier> snapshotModifiers;
     private final Set<PasteModifier> pasteModifiers;
     private final Set<EditSessionModifier> editSessionModifiers;
@@ -41,6 +43,7 @@ public class WorldStructure implements AutoCloseable {
         this.location = BukkitAdapter.adapt(intermediateStructure.location());
         this.region = region;
         this.clipboardRegion = intermediateStructure.clipboardRegion();
+        this.transform = intermediateStructure.transform();
         this.snapshotModifiers = modifierContainer.getSet(SnapshotModifier.class);
         this.pasteModifiers = modifierContainer.getSet(PasteModifier.class);
         this.editSessionModifiers = modifierContainer.getSet(EditSessionModifier.class);
@@ -89,7 +92,9 @@ public class WorldStructure implements AutoCloseable {
     private void pasteStructure() {
         Preconditions.checkNotNull(clipboardRegion.getWorld(), "Clipboard region world was null during " + uniqueKey + " paste");
         try (var editSession = WorldEdit.getInstance().newEditSession(clipboardRegion.getWorld())) {
-            var pasteBuilder = new ClipboardHolder(clipboard)
+            var clipboardHolder = new ClipboardHolder(clipboard);
+            clipboardHolder.setTransform(transform);
+            var pasteBuilder = clipboardHolder
                     .createPaste(editSession)
                     .to(location.toVector().toBlockPoint());
             pasteModifiers.forEach(pasteModifier -> pasteModifier.apply(pasteBuilder, clipboardRegion.getWorld()));
