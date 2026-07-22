@@ -52,23 +52,23 @@ public class WorldStructure implements AutoCloseable {
         setProtectedRegion();
     }
 
-    public String getUniqueKey() {
+    public @NotNull String getUniqueKey() {
         return uniqueKey;
     }
 
-    public Clipboard getClipboard() {
+    public @NotNull Clipboard getClipboard() {
         return clipboard;
     }
 
-    public Location getLocation() {
+    public @NotNull Location getLocation() {
         return location;
     }
 
-    public ProtectedCuboidRegion getRegion() {
+    public @NotNull ProtectedCuboidRegion getRegion() {
         return region;
     }
 
-    public Region getClipboardRegion() {
+    public @NotNull Region getClipboardRegion() {
         return clipboardRegion;
     }
 

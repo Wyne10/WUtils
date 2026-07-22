@@ -48,6 +48,7 @@ import me.wyne.wutils.structure.region.condition.RegionCondition;
 import me.wyne.wutils.structure.scheme.Scheme;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,8 +118,19 @@ public class Structure implements CompositeConfigurable {
         this.structureModifiers = structureModifiers;
     }
 
-    public static Builder builder() {
+    @Contract("-> new")
+    public static @NotNull Builder builder() {
         return new Builder();
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Builder builder(@NotNull Structure source) {
+        return new Builder().from(source);
+    }
+
+    @Contract("-> new")
+    public @NotNull Builder toBuilder() {
+        return new Builder().from(this);
     }
 
     @Override
@@ -166,11 +178,11 @@ public class Structure implements CompositeConfigurable {
         this.structureModifiers = structureModifiers;
     }
 
-    public CompletableFuture<WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token) {
+    public @NotNull CompletableFuture<@NotNull WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token) {
         return createWorldStructure(System.currentTimeMillis(), 0, timeoutMillis, token);
     }
 
-    private CompletableFuture<WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
+    private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
         return getIntermediateStructure(startTime, elapsedMillis, timeoutMillis, token)
                 .thenCompose(intermediate -> {
                     var regionModifiers = structureModifiers.getSet(RegionModifier.class);
@@ -196,7 +208,7 @@ public class Structure implements CompositeConfigurable {
                 });
     }
 
-    private CompletableFuture<IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
+    private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
         if (token != null && token.isCancelled())
             return CompletableFuture.failedFuture(new CancellationException("Structure generation has been cancelled"));
         if (elapsedMillis > timeoutMillis)
@@ -223,7 +235,7 @@ public class Structure implements CompositeConfigurable {
                 }, Schedulers.sync());
     }
 
-    private String getUniqueKey(@NotNull Location location) {
+    private @NotNull String getUniqueKey(@NotNull Location location) {
         return (key + "-<x>x<y>y<z>z").replace("<x>", String.valueOf(location.getBlockX()))
                 .replace("<y>", String.valueOf(location.getBlockY()))
                 .replace("<z>", String.valueOf(location.getBlockZ()))
@@ -271,43 +283,69 @@ public class Structure implements CompositeConfigurable {
 
         private Builder() {}
 
-        public Builder key(@NotNull String key) {
+        @Contract("_ -> this")
+        public @NotNull Builder from(@NotNull Structure source) {
+            if (source.key != null)
+                this.key = source.key;
+            if (source.location != null)
+                this.location = source.location;
+            if (source.scheme != null)
+                this.scheme = source.scheme;
+            if (source.region != null)
+                this.region = source.region;
+            if (source.locationConditions != null)
+                this.locationConditions.addAll(source.locationConditions);
+            if (source.regionConditions != null)
+                this.regionConditions.addAll(source.regionConditions);
+            if (source.structureModifiers != null)
+                this.modifiers.putAll(source.structureModifiers.getAttributes());
+            return this;
+        }
+
+        @Contract("_ -> this")
+        public @NotNull Builder key(@NotNull String key) {
             this.key = key;
             return this;
         }
 
-        public Builder location(@NotNull StructureLocation location) {
+        @Contract("_ -> this")
+        public @NotNull Builder location(@NotNull StructureLocation location) {
             this.location = location;
             return this;
         }
 
-        public Builder scheme(@NotNull Scheme scheme) {
+        @Contract("_ -> this")
+        public @NotNull Builder scheme(@NotNull Scheme scheme) {
             this.scheme = scheme;
             return this;
         }
 
-        public Builder region(@NotNull StructureRegion region) {
+        @Contract("_ -> this")
+        public @NotNull Builder region(@NotNull StructureRegion region) {
             this.region = region;
             return this;
         }
 
-        public Builder locationCondition(@NotNull LocationCondition... conditions) {
+        @Contract("_ -> this")
+        public @NotNull Builder locationCondition(@NotNull LocationCondition... conditions) {
             this.locationConditions.addAll(Arrays.asList(conditions));
             return this;
         }
 
-        public Builder regionCondition(@NotNull RegionCondition... conditions) {
+        @Contract("_ -> this")
+        public @NotNull Builder regionCondition(@NotNull RegionCondition... conditions) {
             this.regionConditions.addAll(Arrays.asList(conditions));
             return this;
         }
 
-        public Builder modifier(@NotNull Attribute<?>... modifiers) {
+        @Contract("_ -> this")
+        public @NotNull Builder modifier(@NotNull Attribute<?>... modifiers) {
             for (Attribute<?> modifier : modifiers)
                 this.modifiers.put(modifier.getKey(), modifier);
             return this;
         }
 
-        public Structure build() {
+        public @NotNull Structure build() {
             Preconditions.checkNotNull(key, "Structure key must be set");
             Preconditions.checkNotNull(location, "Structure location must be set");
             Preconditions.checkNotNull(scheme, "Structure scheme must be set");
