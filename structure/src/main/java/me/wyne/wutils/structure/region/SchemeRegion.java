@@ -32,7 +32,7 @@ public class SchemeRegion extends StructureRegion {
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        return "";
+        return getRegionData().toConfig(depth, configEntry);
     }
 
     public static final class Factory implements GenericFactory<StructureRegion> {

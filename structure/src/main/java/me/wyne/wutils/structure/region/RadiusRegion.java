@@ -39,7 +39,8 @@ public class RadiusRegion extends StructureRegion {
     public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "radius", radius)
-                .buildNoTrail();
+                .buildNoTrail()
+                + getRegionData().toConfig(depth, configEntry);
     }
 
     public static final class Factory implements GenericFactory<StructureRegion> {

@@ -28,15 +28,16 @@ public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@
 
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
-        var builder = new ConfigBuilder();
-        builder.append(depth, "id", id);
-        builder.append(depth, "transient", priority);
-        builder.append(depth, "priority", priority);
-        builder.appendString(depth, "flags", "");
-        flags.forEach((flag, value) -> {
-            builder.append(depth + 1, flag.getName(), marshal(flag, value));
-        });
-        return builder.build();
+        var builder = new ConfigBuilder()
+                .append(depth, "id", id)
+                .appendIfNotEqual(depth, "transient", isTransient, false)
+                .appendIfNotEqual(depth, "priority", priority, 0);
+        if (!flags.isEmpty()) {
+            var flagsBuilder = new ConfigBuilder();
+            flags.forEach((flag, value) -> flagsBuilder.append(depth + 1, flag.getName(), marshal(flag, value)));
+            builder.appendString(depth, "flags", flagsBuilder.buildNoTrail());
+        }
+        return builder.buildNoTrail();
     }
 
     @Override
@@ -58,9 +59,12 @@ public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@
                 throw new IllegalArgumentException("Region id is missing at " + ConfigUtils.getPath(section, "id"));
             var isTransient = section.getBoolean("transient", false);
             Map<Flag<?>, Object> flags = new HashMap<>();
-            for (String flagName : section.getKeys(false)) {
-                var parsed = parseFlag(flagName, section.getString(flagName, ""));
-                flags.put(parsed.getValue0(), parsed.getValue1());
+            var flagsSection = section.getConfigurationSection("flags");
+            if (flagsSection != null) {
+                for (String flagName : flagsSection.getKeys(false)) {
+                    var parsed = parseFlag(flagName, flagsSection.getString(flagName, ""));
+                    flags.put(parsed.getValue0(), parsed.getValue1());
+                }
             }
             var priority = section.getInt("priority", 0);
             return new RegionData(id, isTransient, flags, priority);
