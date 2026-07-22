@@ -219,6 +219,7 @@ public class Structure implements CompositeConfigurable {
                     var protectedRegion = this.region.getRegion(clipboard, highestLocation);
                     var editLocation = BukkitAdapter.adapt(highestLocation);
                     var region = Scheme.toWorld(clipboard, editLocation);
+                    region.setWorld(BukkitAdapter.adapt(highestLocation.getWorld()));
                     if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
                         return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token);
                     else
