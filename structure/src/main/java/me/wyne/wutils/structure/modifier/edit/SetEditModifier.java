@@ -40,7 +40,7 @@ public class SetEditModifier extends ConfigurableAttribute<LazyMaskPatternPair> 
     public static final class Factory implements AttributeFactory<SetEditModifier> {
         @Override
         public SetEditModifier create(String key, ConfigurationSection config) {
-            var args = new Args(config.getString(key, ""));
+            var args = new Args(config.getString(key, ""), Args.SPACE_DELIMITER);
             return new SetEditModifier(key, new LazyMaskPatternPair(args.get(0, ""), args.get(1, "")));
         }
     }

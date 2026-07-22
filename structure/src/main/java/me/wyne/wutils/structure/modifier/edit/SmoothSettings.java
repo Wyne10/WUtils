@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public record SmoothSettings(int iterations, int margin, @Nullable String mask) {
 
     public static @NotNull SmoothSettings parse(@NotNull String input) {
-        var args = new Args(input);
+        var args = new Args(input, Args.SPACE_DELIMITER);
         int iterations = Integer.parseInt(args.get(0, "1"));
         int margin = Integer.parseInt(args.get(1, "5"));
         String mask = args.getNullable(2);

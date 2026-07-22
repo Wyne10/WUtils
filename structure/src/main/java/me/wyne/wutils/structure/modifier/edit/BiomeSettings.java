@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public record BiomeSettings(int margin, @NotNull BiomeType biome) {
 
     public static @NotNull BiomeSettings parse(@NotNull String input) {
-        var args = new Args(input);
+        var args = new Args(input, Args.SPACE_DELIMITER);
         int margin = Integer.parseInt(args.get(0, "0"));
         String id = args.get(1);
         BiomeType biome = BiomeTypes.get(id.contains(":") ? id : "minecraft:" + id);

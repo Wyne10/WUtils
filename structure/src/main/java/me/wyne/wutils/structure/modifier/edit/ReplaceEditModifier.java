@@ -36,7 +36,7 @@ public class ReplaceEditModifier extends ConfigurableAttribute<LazyMaskPatternPa
     public static final class Factory implements AttributeFactory<ReplaceEditModifier> {
         @Override
         public ReplaceEditModifier create(String key, ConfigurationSection config) {
-            var args = new Args(config.getString(key, ""));
+            var args = new Args(config.getString(key, ""), Args.SPACE_DELIMITER);
             return new ReplaceEditModifier(key, new LazyMaskPatternPair(args.get(0, ""), args.get(1, "")));
         }
     }
