@@ -6,6 +6,7 @@ import com.sk89q.worldedit.function.GroundFunction;
 import com.sk89q.worldedit.function.generator.FloraGenerator;
 import com.sk89q.worldedit.function.mask.ExistingBlockMask;
 import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.MaskIntersection2D;
 import com.sk89q.worldedit.function.mask.NoiseFilter2D;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.function.visitor.LayerVisitor;
@@ -41,7 +42,9 @@ public class FloraEditModifier extends MarginEditModifier<FloraSettings> {
                 Regions.minimumBlockY(region),
                 Regions.maximumBlockY(region),
                 ground);
-        visitor.setMask(new NoiseFilter2D(new RandomNoise(), getValue().density() / 100));
+        visitor.setMask(new MaskIntersection2D(
+                new NoiseFilter2D(new RandomNoise(), getValue().density() / 100),
+                outsideFootprint(clipboardRegion)));
         try {
             Operations.completeLegacy(visitor);
         } catch (MaxChangedBlocksException e) {

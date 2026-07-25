@@ -2,6 +2,7 @@ package me.wyne.wutils.structure.modifier.edit;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.Mask2D;
 import com.sk89q.worldedit.function.mask.MaskIntersection;
 import com.sk89q.worldedit.function.mask.Masks;
 import com.sk89q.worldedit.function.mask.RegionMask;
@@ -23,6 +24,20 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
     protected abstract int margin();
 
     protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask);
+
+    protected static @NotNull Mask2D outsideFootprint(@NotNull Region clipboardRegion) {
+        var min = clipboardRegion.getMinimumPoint();
+        var max = clipboardRegion.getMaximumPoint();
+        int minX = min.getBlockX();
+        int maxX = max.getBlockX();
+        int minZ = min.getBlockZ();
+        int maxZ = max.getBlockZ();
+        return vector -> {
+            int x = vector.getBlockX();
+            int z = vector.getBlockZ();
+            return x < minX || x > maxX || z < minZ || z > maxZ;
+        };
+    }
 
     @Override
     public void apply(@NotNull EditSession editSession, @NotNull Region region) {
