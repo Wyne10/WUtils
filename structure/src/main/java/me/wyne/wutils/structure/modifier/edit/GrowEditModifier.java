@@ -74,7 +74,11 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
                 double distance = Math.sqrt((double) dx * dx + (double) dz * dz);
                 double falloff = Math.pow(Math.max(0.0, 1.0 - distance / margin), strength);
                 int blended = (int) Math.round(natural + (baseY - natural) * falloff);
-                target[index] = Math.max(natural, blended);   // raise-only: grow land, never carve
+                target[index] = switch (settings.direction()) {
+                    case UP -> Math.max(natural, blended);     // only grow land up toward the base
+                    case DOWN -> Math.min(natural, blended);   // only slope hills down toward the base
+                    case BOTH -> blended;                      // fill dips up and cut hills down
+                };
             }
         }
 
