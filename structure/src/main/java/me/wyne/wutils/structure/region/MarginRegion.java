@@ -13,13 +13,13 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
-public class RadiusRegion extends StructureRegion {
+public class MarginRegion extends StructureRegion {
 
-    private final int radius;
+    private final int margin;
 
-    public RadiusRegion(@NotNull RegionData regionData, int radius) {
+    public MarginRegion(@NotNull RegionData regionData, int margin) {
         super(regionData);
-        this.radius = radius;
+        this.margin = margin;
     }
 
     @Override
@@ -29,8 +29,8 @@ public class RadiusRegion extends StructureRegion {
         var region = new ProtectedCuboidRegion(
                 validateId(getRegionData().id(), location),
                 getRegionData().isTransient(),
-                worldRegion.getMinimumPoint().subtract(radius, radius, radius),
-                worldRegion.getMaximumPoint().add(radius, radius, radius)
+                worldRegion.getMinimumPoint().subtract(margin, margin, margin),
+                worldRegion.getMaximumPoint().add(margin, margin, margin)
         );
         getRegionData().apply(region);
         return region;
@@ -39,7 +39,7 @@ public class RadiusRegion extends StructureRegion {
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder()
-                .append(depth, "radius", radius)
+                .append(depth, "margin", margin)
                 .buildNoTrail()
                 + getRegionData().toConfig(depth, configEntry);
     }
@@ -48,7 +48,7 @@ public class RadiusRegion extends StructureRegion {
         @Override
         public StructureRegion create(String key, ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
-            return new RadiusRegion(new RegionData.Factory().create(key, config), section.getInt("radius"));
+            return new MarginRegion(new RegionData.Factory().create(key, config), section.getInt("margin"));
         }
     }
 }

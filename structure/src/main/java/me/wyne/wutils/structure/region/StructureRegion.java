@@ -41,8 +41,8 @@ public abstract class StructureRegion implements CompositeConfigurable {
     public static final class Factory implements GenericFactory<StructureRegion> {
         @Override
         public StructureRegion create(String key, ConfigurationSection config) {
-            if (ConfigUtils.getConfigurationSection(config, key).contains("radius")) {
-                return new RadiusRegion.Factory().create(key, config);
+            if (ConfigUtils.getConfigurationSection(config, key).contains("margin")) {
+                return new MarginRegion.Factory().create(key, config);
             } else {
                 return new SchemeRegion.Factory().create(key, config);
             }
