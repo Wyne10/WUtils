@@ -7,3 +7,4 @@
 ![WUtils Internationalization Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-i18n?style=flat-square&label=wutils-i18n)
 ![WUtils JDBC Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-jdbc?style=flat-square&label=wutils-jdbc)
 ![WUtils Json Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-json?style=flat-square&label=wutils-json)
+![WUtils Structure Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-structure?style=flat-square&label=wutils-structure)
