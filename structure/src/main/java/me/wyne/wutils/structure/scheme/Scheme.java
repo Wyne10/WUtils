@@ -37,7 +37,7 @@ public interface Scheme extends CompositeConfigurable {
                             x == 0 ? min.getX() : max.getX(),
                             y == 0 ? min.getY() : max.getY(),
                             z == 0 ? min.getZ() : max.getZ());
-                    var mapped = to.add(transform.apply(corner.subtract(origin).toVector3()).toBlockPoint());
+                    var mapped = ClipboardScan.toWorld(corner, origin, to, transform);
                     worldMin = worldMin == null ? mapped : worldMin.getMinimum(mapped);
                     worldMax = worldMax == null ? mapped : worldMax.getMaximum(mapped);
                 }

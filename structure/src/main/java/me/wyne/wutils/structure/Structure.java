@@ -113,6 +113,10 @@ public class Structure implements CompositeConfigurable {
 
     public Structure() {}
 
+    public Structure(ConfigurationSection section) {
+        fromConfig(section);
+    }
+
     private Structure(@NotNull String key,
                       @NotNull StructureLocation location,
                       @NotNull Scheme scheme,

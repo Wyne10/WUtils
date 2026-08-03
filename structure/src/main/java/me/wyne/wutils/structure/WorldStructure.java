@@ -8,6 +8,7 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -16,9 +17,12 @@ import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
+import me.wyne.wutils.structure.scheme.ClipboardScan;
 import me.wyne.wutils.structure.modifier.EditSessionModifier;
 import me.wyne.wutils.structure.modifier.PasteModifier;
 import me.wyne.wutils.structure.modifier.SnapshotModifier;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -73,6 +77,40 @@ public class WorldStructure implements AutoCloseable {
 
     public @NotNull Region getClipboardRegion() {
         return clipboardRegion;
+    }
+
+    public @NotNull Transform getTransform() {
+        return transform;
+    }
+
+    public @NotNull BlockVector3 toWorld(@NotNull BlockVector3 clipboardPos) {
+        return ClipboardScan.toWorld(clipboardPos, clipboard.getOrigin(), location.toVector().toBlockPoint(), transform);
+    }
+
+    public void liftPlayersToSurface() {
+        Preconditions.checkNotNull(clipboardRegion.getWorld(), "Clipboard region world was null during " + uniqueKey + " player lift");
+        World world = BukkitAdapter.adapt(clipboardRegion.getWorld());
+        for (Player player : world.getPlayers()) {
+            var loc = player.getLocation();
+            int x = loc.getBlockX();
+            int y = loc.getBlockY();
+            int z = loc.getBlockZ();
+            if (!region.contains(x, y, z))
+                continue;
+            int surfaceY = highestSolidY(world, x, z);
+            if (surfaceY < world.getMinHeight())
+                continue;
+            var destination = new org.bukkit.Location(world, x + 0.5, surfaceY + 1, z + 0.5, loc.getYaw(), loc.getPitch());
+            player.teleport(destination);
+        }
+    }
+
+    private static int highestSolidY(@NotNull World world, int x, int z) {
+        for (int y = world.getMaxHeight() - 1; y >= world.getMinHeight(); y--) {
+            if (world.getBlockAt(x, y, z).getType().isSolid())
+                return y;
+        }
+        return world.getMinHeight() - 1;
     }
 
     private Clipboard getRegionSnapshot() {
