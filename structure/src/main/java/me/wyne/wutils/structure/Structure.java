@@ -3,7 +3,6 @@ package me.wyne.wutils.structure;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.scheduler.Schedulers;
 import me.wyne.wutils.common.world.WorldUtils;
 import me.wyne.wutils.config.ConfigEntry;
@@ -223,11 +222,7 @@ public class Structure implements CompositeConfigurable {
                                         structureModifiers.getAttributeContainer()
                                 )
                         );
-                }, Schedulers.sync())
-                .whenComplete((intermediate, exception) -> {
-                    if (exception != null)
-                        PluginUtils.getLogger().error("Structure generation exception", exception);
-                });
+                }, Schedulers.sync());
     }
 
     private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
