@@ -3,7 +3,6 @@ package me.wyne.wutils.structure;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.common.scheduler.Schedulers;
 import me.wyne.wutils.common.world.WorldUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigurable;
@@ -54,7 +53,6 @@ import me.wyne.wutils.structure.region.condition.RegionCondition;
 import me.wyne.wutils.structure.scheme.Scheme;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.javatuples.Pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -200,29 +198,26 @@ public class Structure implements CompositeConfigurable {
 
     private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
         return getIntermediateStructure(startTime, elapsedMillis, timeoutMillis, token, executor)
-                .thenApplyAsync(intermediate -> {
+                .thenComposeAsync(intermediate -> {
                     var regionModifiers = structureModifiers.getSet(RegionModifier.class);
                     var mutableRegion = intermediate.region();
                     for (RegionModifier regionModifier : regionModifiers) {
                         mutableRegion = regionModifier.apply(mutableRegion, intermediate.clipboardRegion());
                     }
                     final var protectedRegion = mutableRegion;
-                    return new Pair<>(intermediate, protectedRegion);
-                }, executor)
-                .thenComposeAsync(pair -> {
                     if (token != null && token.isCancelled())
                         return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
-                    else if (regionConditions.stream().anyMatch(condition -> !condition.isValid(pair.getValue0(), pair.getValue1())))
+                    else if (regionConditions.stream().anyMatch(condition -> !condition.isValid(intermediate, protectedRegion)))
                         return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     else
                         return CompletableFuture.completedFuture(
                                 new WorldStructure(
-                                        pair.getValue0(),
-                                        pair.getValue1(),
+                                        intermediate,
+                                        protectedRegion,
                                         structureModifiers.getAttributeContainer()
                                 )
                         );
-                }, Schedulers.sync());
+                }, executor);
     }
 
     private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
@@ -231,16 +226,11 @@ public class Structure implements CompositeConfigurable {
         if (elapsedMillis > timeoutMillis)
             return CompletableFuture.failedFuture(new IllegalStateException("Couldn't generate intermediate structure in " + timeoutMillis + " ms"));
         return WorldUtils.getHighestLocationAtAsync(location.getLocation())
-                .thenApplyAsync(highestLocation -> {
+                .thenComposeAsync(highestLocation -> {
                     if (token != null && token.isCancelled())
-                        return null;
+                        return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     highestLocation.add(0, 1, 0);
                     if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
-                        return null;
-                    return highestLocation;
-                }, Schedulers.sync())
-                .thenComposeAsync(highestLocation -> {
-                    if (highestLocation == null)
                         return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     var clipboard = scheme.getClipboard();
                     var clipboardHolder = new ClipboardHolder(clipboard);

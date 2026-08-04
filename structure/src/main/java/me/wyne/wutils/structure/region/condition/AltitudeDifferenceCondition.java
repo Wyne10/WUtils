@@ -22,13 +22,14 @@ public record AltitudeDifferenceCondition(@NotNull IntComparator comparator) imp
 
     @Override
     public boolean isValid(@NotNull IntermediateStructure intermediateStructure, @NotNull ProtectedCuboidRegion region) {
-        var dimensions = region.getMaximumPoint().subtract(region.getMinimumPoint());
+        var clipboardRegion = intermediateStructure.clipboardRegion();
+        var dimensions = clipboardRegion.getMaximumPoint().subtract(clipboardRegion.getMinimumPoint());
 
         Location minimumPoint = new Location(
                 intermediateStructure.location().getWorld(),
-                region.getMinimumPoint().getX(),
-                region.getMinimumPoint().getY(),
-                region.getMinimumPoint().getZ()
+                clipboardRegion.getMinimumPoint().getX(),
+                clipboardRegion.getMinimumPoint().getY(),
+                clipboardRegion.getMinimumPoint().getZ()
         ).toHighestLocation(HeightMap.OCEAN_FLOOR);
 
         Location xCorner = minimumPoint.clone()
