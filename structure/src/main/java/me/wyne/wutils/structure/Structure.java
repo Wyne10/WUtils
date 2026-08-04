@@ -2,7 +2,6 @@ package me.wyne.wutils.structure;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.scheduler.Schedulers;
@@ -212,7 +211,9 @@ public class Structure implements CompositeConfigurable {
                     return new Pair<>(intermediate, protectedRegion);
                 }, executor)
                 .thenComposeAsync(pair -> {
-                    if (regionConditions.stream().anyMatch(condition -> !condition.isValid(pair.getValue0(), pair.getValue1())))
+                    if (token != null && token.isCancelled())
+                        return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
+                    else if (regionConditions.stream().anyMatch(condition -> !condition.isValid(pair.getValue0(), pair.getValue1())))
                         return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     else
                         return CompletableFuture.completedFuture(
@@ -236,6 +237,8 @@ public class Structure implements CompositeConfigurable {
             return CompletableFuture.failedFuture(new IllegalStateException("Couldn't generate intermediate structure in " + timeoutMillis + " ms"));
         return WorldUtils.getHighestLocationAtAsync(location.getLocation())
                 .thenApplyAsync(highestLocation -> {
+                    if (token != null && token.isCancelled())
+                        return null;
                     highestLocation.add(0, 1, 0);
                     if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
                         return null;

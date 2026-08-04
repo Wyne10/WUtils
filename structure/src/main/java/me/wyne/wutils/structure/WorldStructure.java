@@ -17,6 +17,7 @@ import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
+import me.wyne.wutils.structure.persistence.WorldStructureMemento;
 import me.wyne.wutils.structure.scheme.ClipboardScan;
 import me.wyne.wutils.structure.modifier.EditSessionModifier;
 import me.wyne.wutils.structure.modifier.PasteModifier;
@@ -53,10 +54,42 @@ public class WorldStructure implements AutoCloseable {
         this.editSessionModifiers = modifierContainer.getSet(EditSessionModifier.class);
     }
 
+    private WorldStructure(@NotNull WorldStructureMemento memento) {
+        this.uniqueKey = memento.uniqueKey();
+        this.clipboard = memento.clipboard();
+        this.location = memento.location();
+        this.region = memento.region();
+        this.clipboardRegion = memento.clipboardRegion();
+        this.transform = memento.transform();
+        this.snapshotModifiers = Set.of();
+        this.pasteModifiers = Set.of();
+        this.editSessionModifiers = Set.of();
+        this.snapshot = memento.snapshot();
+    }
+
     public void spawn() {
         snapshot = getRegionSnapshot();
         pasteStructure();
         setProtectedRegion();
+    }
+
+    /**
+     * Captures the resolved runtime state of this already-spawned structure into a plain
+     * {@link WorldStructureMemento} for external persistence. This structure must have been
+     * {@link #spawn()}ed (or {@link #restore(WorldStructureMemento) restored}) first.
+     */
+    public @NotNull WorldStructureMemento capture() {
+        Preconditions.checkNotNull(snapshot, "Structure " + uniqueKey + " cannot be captured before it is spawned");
+        return new WorldStructureMemento(uniqueKey, location, region, clipboardRegion, transform, clipboard, snapshot);
+    }
+
+    /**
+     * Reconstructs an already-spawned structure from a previously {@link #capture() captured} memento.
+     * The returned instance is treated as spawned and must not be {@link #spawn()}ed again; it can be
+     * queried or {@link #close()}d.
+     */
+    public static @NotNull WorldStructure restore(@NotNull WorldStructureMemento memento) {
+        return new WorldStructure(memento);
     }
 
     public @NotNull String getUniqueKey() {
