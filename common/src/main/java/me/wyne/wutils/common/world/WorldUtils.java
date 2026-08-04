@@ -2,7 +2,6 @@ package me.wyne.wutils.common.world;
 
 import me.wyne.wutils.common.range.ClosedIntRange;
 import me.wyne.wutils.common.range.VectorRange;
-import me.wyne.wutils.common.scheduler.Schedulers;
 import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,12 +20,12 @@ public final class WorldUtils {
 
     public static CompletableFuture<Block> getHighestBlockAtAsync(World world, int x, int z) {
         return world.getChunkAtAsync(x >> 4, z >> 4)
-                .thenApplyAsync(chunk -> world.getHighestBlockAt(x, z), Schedulers.sync());
+                .thenApply(chunk -> world.getHighestBlockAt(x, z));
     }
 
     public static CompletableFuture<Location> getHighestLocationAtAsync(World world, int x, int z) {
         return world.getChunkAtAsync(x >> 4, z >> 4)
-                .thenApplyAsync(chunk -> world.getHighestBlockAt(x, z).getLocation(), Schedulers.sync());
+                .thenApply(chunk -> world.getHighestBlockAt(x, z).getLocation());
     }
 
     public static CompletableFuture<Block> getHighestBlockAtAsync(World world, double x, double z) {
