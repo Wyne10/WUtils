@@ -14,13 +14,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Function;
 
-/**
- * Optional standalone facade for persisting a single {@link WorldStructure} to a JSON file (plus its two
- * side-car {@code .schem} files) and reloading it. Callers who instead nest a structure inside a larger,
- * separately-serialized object should register a {@link WorldStructureMementoSerializer} on their own
- * {@link GsonBuilder} and keep a {@link WorldStructureMemento} field (obtained via
- * {@link WorldStructure#capture()}) alongside their own state.
- */
 public class WorldStructurePersistence {
 
     private final Gson gson;
@@ -41,10 +34,6 @@ public class WorldStructurePersistence {
                 .create();
     }
 
-    /**
-     * Captures the (already spawned) structure and writes its JSON metadata to {@code jsonFile}, writing
-     * the two {@code .schem} side-cars into the serializer's schematic directory as a side effect.
-     */
     public void save(@NotNull File jsonFile, @NotNull WorldStructure worldStructure) throws IOException {
         var parent = jsonFile.getParentFile();
         if (parent != null && !parent.exists())
@@ -54,10 +43,6 @@ public class WorldStructurePersistence {
         }
     }
 
-    /**
-     * Reads the JSON metadata and side-car {@code .schem} files and reconstructs an already-spawned
-     * {@link WorldStructure}. The returned instance must not be {@code spawn()}ed again.
-     */
     public @NotNull WorldStructure load(@NotNull File jsonFile) throws IOException {
         try (Reader reader = new FileReader(jsonFile)) {
             var memento = gson.fromJson(reader, WorldStructureMemento.class);

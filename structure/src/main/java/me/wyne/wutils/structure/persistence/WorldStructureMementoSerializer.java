@@ -31,19 +31,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
-/**
- * Optional Gson adapter that persists a {@link WorldStructureMemento} as JSON metadata plus two side-car
- * {@code .schem} files (the structure clipboard and the pre-paste snapshot, written in
- * {@link BuiltInClipboardFormat#SPONGE_SCHEMATIC} format so their origins round-trip).
- *
- * <p>Register it on a {@link com.google.gson.GsonBuilder} to nest a {@code WorldStructureMemento} field
- * inside a larger, separately-serialized object, or use {@link WorldStructurePersistence} for a
- * standalone save/load.</p>
- *
- * <p>Serialization writes the two {@code .schem} files into {@code schematicDirectory} as a side effect;
- * deserialization reads them back from the same directory and resolves the world by name via the supplied
- * {@code worldResolver} (injectable to keep the adapter unit-testable without a running server).</p>
- */
 public class WorldStructureMementoSerializer implements JsonSerializer<WorldStructureMemento>, JsonDeserializer<WorldStructureMemento> {
 
     private final File schematicDirectory;
@@ -55,9 +42,6 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         this.worldResolver = worldResolver;
     }
 
-    /**
-     * Creates a serializer that resolves worlds by name through the running Bukkit server.
-     */
     public static @NotNull WorldStructureMementoSerializer of(@NotNull File schematicDirectory) {
         return new WorldStructureMementoSerializer(schematicDirectory, name -> {
             org.bukkit.World bukkitWorld = Bukkit.getWorld(name);

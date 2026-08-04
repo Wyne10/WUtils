@@ -73,21 +73,11 @@ public class WorldStructure implements AutoCloseable {
         setProtectedRegion();
     }
 
-    /**
-     * Captures the resolved runtime state of this already-spawned structure into a plain
-     * {@link WorldStructureMemento} for external persistence. This structure must have been
-     * {@link #spawn()}ed (or {@link #restore(WorldStructureMemento) restored}) first.
-     */
     public @NotNull WorldStructureMemento capture() {
         Preconditions.checkNotNull(snapshot, "Structure " + uniqueKey + " cannot be captured before it is spawned");
         return new WorldStructureMemento(uniqueKey, location, region, clipboardRegion, transform, clipboard, snapshot);
     }
 
-    /**
-     * Reconstructs an already-spawned structure from a previously {@link #capture() captured} memento.
-     * The returned instance is treated as spawned and must not be {@link #spawn()}ed again; it can be
-     * queried or {@link #close()}d.
-     */
     public static @NotNull WorldStructure restore(@NotNull WorldStructureMemento memento) {
         return new WorldStructure(memento);
     }
