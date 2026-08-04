@@ -1,6 +1,7 @@
 package me.wyne.wutils.structure.scheme;
 
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,10 @@ public final class ClipboardScanCache {
     public @NotNull List<BlockVector3> find(@NotNull Clipboard clipboard, @NotNull BlockType @NotNull ... types) {
         Set<BlockType> key = Set.copyOf(Arrays.asList(types));
         return resolve(clipboard, key, scan -> List.copyOf(scan.find(types)));
+    }
+
+    public @NotNull List<BlockVector3> find(@NotNull Clipboard clipboard, @NotNull String key, @NotNull Mask mask) {
+        return resolve(clipboard, key, scan -> List.copyOf(scan.find(mask)));
     }
 
     public @NotNull List<BlockVector3> find(@NotNull Clipboard clipboard, @NotNull String key,

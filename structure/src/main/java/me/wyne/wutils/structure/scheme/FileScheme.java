@@ -23,14 +23,17 @@ public class FileScheme implements Scheme {
 
     public FileScheme(@NotNull String path) {
         this.file = new File(PluginUtils.getPlugin().getDataFolder(), path);
+        preloadClipboard();
     }
 
     public FileScheme(@NotNull String path, @NotNull Plugin plugin) {
         this.file = new File(plugin.getDataFolder(), path);
+        preloadClipboard();
     }
 
     public FileScheme(@NotNull File file) {
         this.file = file;
+        preloadClipboard();
     }
 
     public @NotNull Clipboard loadClipboard() {
@@ -42,6 +45,15 @@ public class FileScheme implements Scheme {
             throw new RuntimeException("Failed to load scheme file " + file.getName(), e);
         }
         return clipboard;
+    }
+
+    private void preloadClipboard() {
+        if (!file.exists()) return;
+        try {
+            loadClipboard();
+        } catch (Exception e) {
+            PluginUtils.getLogger().warn("Failed to preload scheme {}, will retry lazily", file.getName());
+        }
     }
 
     @Override

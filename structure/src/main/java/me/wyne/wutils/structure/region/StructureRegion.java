@@ -30,12 +30,11 @@ public abstract class StructureRegion implements CompositeConfigurable {
         throw new UnsupportedOperationException("StructureRegion is deserialized via StructureRegion.Factory");
     }
 
-    public @NotNull String validateId(@NotNull String id, @NotNull Location location) {
+    public static @NotNull String validateId(@NotNull String id, @NotNull Location location) {
         return id.replace("<x>", String.valueOf(location.getBlockX()))
                 .replace("<y>", String.valueOf(location.getBlockY()))
                 .replace("<z>", String.valueOf(location.getBlockZ()))
-                .replace(".0", "")
-                .replace(",", "-");
+                .replaceAll("[^A-Za-z0-9_,'+/-]", "");
     }
 
     public static final class Factory implements GenericFactory<StructureRegion> {

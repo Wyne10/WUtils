@@ -2,6 +2,7 @@ package me.wyne.wutils.structure;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.common.scheduler.Schedulers;
@@ -55,6 +56,7 @@ import me.wyne.wutils.structure.region.condition.RegionCondition;
 import me.wyne.wutils.structure.scheme.Scheme;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.javatuples.Pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,6 +68,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class Structure implements CompositeConfigurable {
 
@@ -193,44 +196,54 @@ public class Structure implements CompositeConfigurable {
         this.structureModifiers = structureModifiers;
     }
 
-    public @NotNull CompletableFuture<@NotNull WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token) {
-        return createWorldStructure(System.currentTimeMillis(), 0, timeoutMillis, token);
+    public @NotNull CompletableFuture<@NotNull WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
+        return createWorldStructure(System.currentTimeMillis(), 0, timeoutMillis, token, executor);
     }
 
-    private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
-        return getIntermediateStructure(startTime, elapsedMillis, timeoutMillis, token)
-                .thenCompose(intermediate -> {
+    private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
+        return getIntermediateStructure(startTime, elapsedMillis, timeoutMillis, token, executor)
+                .thenApplyAsync(intermediate -> {
                     var regionModifiers = structureModifiers.getSet(RegionModifier.class);
                     var mutableRegion = intermediate.region();
                     for (RegionModifier regionModifier : regionModifiers) {
                         mutableRegion = regionModifier.apply(mutableRegion, intermediate.clipboardRegion());
                     }
                     final var protectedRegion = mutableRegion;
-                    if (regionConditions.stream().anyMatch(condition -> !condition.isValid(intermediate, protectedRegion)))
-                        return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token);
+                    return new Pair<>(intermediate, protectedRegion);
+                }, executor)
+                .thenComposeAsync(pair -> {
+                    if (regionConditions.stream().anyMatch(condition -> !condition.isValid(pair.getValue0(), pair.getValue1())))
+                        return createWorldStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     else
                         return CompletableFuture.completedFuture(
                                 new WorldStructure(
-                                        intermediate,
-                                        protectedRegion,
+                                        pair.getValue0(),
+                                        pair.getValue1(),
                                         structureModifiers.getAttributeContainer()
                                 )
                         );
-                })
+                }, Schedulers.sync())
                 .whenComplete((intermediate, exception) -> {
                     if (exception != null)
                         PluginUtils.getLogger().error("Structure generation exception", exception);
                 });
     }
 
-    private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token) {
+    private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
         if (token != null && token.isCancelled())
             return CompletableFuture.failedFuture(new CancellationException("Structure generation has been cancelled"));
         if (elapsedMillis > timeoutMillis)
             return CompletableFuture.failedFuture(new IllegalStateException("Couldn't generate intermediate structure in " + timeoutMillis + " ms"));
         return WorldUtils.getHighestLocationAtAsync(location.getLocation())
-                .thenComposeAsync(highestLocation -> {
+                .thenApplyAsync(highestLocation -> {
                     highestLocation.add(0, 1, 0);
+                    if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
+                        return null;
+                    return highestLocation;
+                }, Schedulers.sync())
+                .thenComposeAsync(highestLocation -> {
+                    if (highestLocation == null)
+                        return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);
                     var clipboard = scheme.getClipboard();
                     var clipboardHolder = new ClipboardHolder(clipboard);
                     structureModifiers.getSet(ClipboardModifier.class)
@@ -243,29 +256,26 @@ public class Structure implements CompositeConfigurable {
                     var editLocation = BukkitAdapter.adapt(placement);
                     var region = Scheme.toWorld(clipboard, editLocation, transform);
                     region.setWorld(BukkitAdapter.adapt(placement.getWorld()));
-                    if (locationConditions.stream().anyMatch(condition -> !condition.isValid(highestLocation)))
-                        return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token);
-                    else
-                        return CompletableFuture.completedFuture(
-                                new IntermediateStructure(
-                                        getUniqueKey(placement),
-                                        clipboard,
-                                        placement,
-                                        protectedRegion,
-                                        region,
-                                        transform,
-                                        elapsedMillis
-                                )
-                        );
-                }, Schedulers.sync());
+                    return CompletableFuture.completedFuture(
+                            new IntermediateStructure(
+                                    getUniqueKey(placement),
+                                    clipboard,
+                                    placement,
+                                    protectedRegion,
+                                    region,
+                                    transform,
+                                    elapsedMillis
+                            )
+                    );
+                }, executor);
     }
 
     private @NotNull String getUniqueKey(@NotNull Location location) {
-        return (key + "-<x>x<y>y<z>z").replace("<x>", String.valueOf(location.getBlockX()))
+        return (key + "-<x>x<y>y<z>z")
+                .replace("<x>", String.valueOf(location.getBlockX()))
                 .replace("<y>", String.valueOf(location.getBlockY()))
                 .replace("<z>", String.valueOf(location.getBlockZ()))
-                .replace(".0", "")
-                .replace(",", "-");
+                .replaceAll("[^A-Za-z0-9_,'+/-]", "");
     }
 
     public String getKey() {
