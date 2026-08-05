@@ -3,9 +3,12 @@ package me.wyne.wutils.common.kotlin.config
 import me.wyne.wutils.common.config.ConfigUtils
 import me.wyne.wutils.common.duration.TimeSpan
 import me.wyne.wutils.common.kotlin.range.DoubleRange
+import me.wyne.wutils.common.plugin.PluginUtils
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffectType
+import java.io.File
 import java.util.EnumSet
 
 const val RANGE_DELIMITER = ".."
@@ -100,3 +103,9 @@ fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.
     }
     return def
 }
+
+fun Plugin.saveDirectoryResource(directory: File) =
+    ConfigUtils.saveDirectoryResource(this, directory)
+
+fun Plugin.saveDirectoryResource(directoryPath: String) =
+    ConfigUtils.saveDirectoryResource(this, File(directoryPath))

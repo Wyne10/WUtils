@@ -16,10 +16,15 @@ import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.*;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public final class ConfigUtils {
@@ -229,6 +234,63 @@ public final class ConfigUtils {
                 .map(Material::matchMaterial)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public static void saveDirectoryResource(File directory) {
+        saveDirectoryResource(PluginUtils.getPlugin(), directory);
+    }
+
+    public static void saveDirectoryResource(Plugin plugin, File directory) {
+        String resourcePath = getRelativePath(directory, plugin.getDataFolder());
+        if (resourcePath == null) {
+            return;
+        }
+
+        try {
+            File jarFile = new File(plugin.getClass().getProtectionDomain()
+                    .getCodeSource().getLocation().toURI());
+
+            try (JarFile jar = new JarFile(jarFile)) {
+                String prefix = resourcePath + "/";
+                Enumeration<JarEntry> entries = jar.entries();
+
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    if (!entry.isDirectory() && entry.getName().startsWith(prefix)) {
+                        File target = new File(plugin.getDataFolder(), entry.getName());
+                        if (target.exists()) {
+                            continue;
+                        }
+
+                        if (target.getParentFile() != null) {
+                            target.getParentFile().mkdirs();
+                        }
+
+                        try (InputStream input = jar.getInputStream(entry);
+                             OutputStream output = new FileOutputStream(target)) {
+                            byte[] buffer = new byte[8192];
+                            int bytesRead;
+                            while ((bytesRead = input.read(buffer)) != -1) {
+                                output.write(buffer, 0, bytesRead);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            PluginUtils.getLogger().error("Failed to save resource {}", resourcePath, e);
+        }
+    }
+
+    public static String getRelativePath(File file, File base) {
+        try {
+            Path filePath = file.getCanonicalFile().toPath();
+            Path basePath = base.getCanonicalFile().toPath();
+            return basePath.relativize(filePath).toString()
+                    .replace(File.separator, "/");
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 }
