@@ -108,4 +108,4 @@ fun Plugin.saveDirectoryResource(directory: File) =
     ConfigUtils.saveDirectoryResource(this, directory)
 
 fun Plugin.saveDirectoryResource(directoryPath: String) =
-    ConfigUtils.saveDirectoryResource(this, File(directoryPath))
+    ConfigUtils.saveDirectoryResource(this, File(dataFolder, directoryPath))
