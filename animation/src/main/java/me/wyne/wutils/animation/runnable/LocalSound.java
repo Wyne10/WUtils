@@ -18,7 +18,7 @@ public record LocalSound(Location location, Sound sound, float volume, float pit
                 location,
                 Arrays.stream(org.bukkit.Sound.values())
                         .filter(bsound -> sound.name().value().equals(bsound.getKey().value()))
-                        .findAny().orElse(null),
+                        .findAny().orElseThrow(),
                 sound.volume(),
                 sound.pitch()
         );
