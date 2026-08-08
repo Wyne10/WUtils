@@ -2,10 +2,11 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.common.range.ClosedIntRange;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
-public class IntRangeConfigurable implements CompositeConfigurable {
+public class IntRangeConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private ClosedIntRange range = new ClosedIntRange(0, 1);
 

@@ -4,10 +4,11 @@ import me.wyne.wutils.common.comparator.Comparators;
 import me.wyne.wutils.common.comparator.Equals;
 import me.wyne.wutils.common.comparator.IntComparator;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
-public class IntComparatorConfigurable implements CompositeConfigurable {
+public class IntComparatorConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private IntComparator intComparator = new IntComparator(0, new Equals<>());
 

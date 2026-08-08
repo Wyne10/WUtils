@@ -8,18 +8,17 @@ import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.GenericFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@NotNull Flag<?>, @NotNull Object> flags, int priority) implements CompositeConfigurable {
+public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@NotNull Flag<?>, @NotNull Object> flags, int priority) implements CompositeConfigSerializable {
 
     public void apply(@NotNull ProtectedRegion region) {
         region.setFlags(flags);
@@ -38,11 +37,6 @@ public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@
             builder.appendString(depth, "flags", flagsBuilder.buildNoTrail());
         }
         return builder.buildNoTrail();
-    }
-
-    @Override
-    public void fromConfig(@Nullable Object configObject) {
-        throw new UnsupportedOperationException("RegionData is deserialized via RegionData.Factory");
     }
 
     @SuppressWarnings("unchecked")

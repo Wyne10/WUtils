@@ -1,7 +1,8 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.attribute.ImmutableAttributeContainer;
 import me.wyne.wutils.config.configurables.interaction.InteractionAttributeContext;
@@ -18,7 +19,7 @@ import java.util.*;
 
 import static me.wyne.wutils.config.configurables.InteractionConfigurable.INTERACTION_ATTRIBUTE_MAP;
 
-public class InteractionListConfigurable implements CompositeConfigurable {
+public class InteractionListConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<InteractionConfigurable> interactions;
 

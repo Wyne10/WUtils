@@ -4,10 +4,11 @@ import me.wyne.wutils.common.operation.DoubleOperation;
 import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.operation.Set;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
-public class DoubleOperationConfigurable implements CompositeConfigurable {
+public class DoubleOperationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private DoubleOperation doubleOperation = new DoubleOperation(0, new Set<>());
 

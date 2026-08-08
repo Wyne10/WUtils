@@ -1,6 +1,7 @@
 package me.wyne.wutils.config;
 
-import me.wyne.wutils.config.configurable.Configurable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
+import me.wyne.wutils.config.configurable.ConfigSerializable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -80,8 +81,11 @@ public class Config {
                     try {
                         if (!config.contains(configField.path()))
                             return;
-                        if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
-                            ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
+                        Object fieldValue = configField.field().get(configField.holder());
+                        if (fieldValue instanceof ConfigDeserializable)
+                            ((ConfigDeserializable) fieldValue).fromConfig(config.get(configField.path()));
+                        else if (fieldValue instanceof ConfigSerializable)
+                            return;
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                         logger.debug("Reloaded WUtils config");
@@ -102,8 +106,11 @@ public class Config {
                     try {
                         if (!config.contains(configField.path()))
                             return;
-                        if (configField.field().get(configField.holder()) != null && Configurable.class.isAssignableFrom(configField.field().get(configField.holder()).getClass()))
-                            ((Configurable)configField.field().get(configField.holder())).fromConfig(config.get(configField.path()));
+                        Object fieldValue = configField.field().get(configField.holder());
+                        if (fieldValue instanceof ConfigDeserializable)
+                            ((ConfigDeserializable) fieldValue).fromConfig(config.get(configField.path()));
+                        else if (fieldValue instanceof ConfigSerializable)
+                            return;
                         else
                             configField.field().set(configField.holder(), configField.field().getType() == String.class ? String.valueOf(config.get(configField.path())) : config.get(configField.path()));
                         logger.debug("Reloaded WUtils config for object '{}'", object.getClass().getSimpleName());

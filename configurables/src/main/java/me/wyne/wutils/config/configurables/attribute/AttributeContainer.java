@@ -1,13 +1,14 @@
 package me.wyne.wutils.config.configurables.attribute;
 
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
 
-public interface AttributeContainer extends CompositeConfigurable {
+public interface AttributeContainer extends CompositeConfigSerializable, ConfigDeserializable {
     @Nullable ConfigurationSection getRoot();
 
     AttributeContainer ignore(String... ignore);

@@ -1,7 +1,8 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListMapConfigurable<E> implements CompositeConfigurable {
+public class ListMapConfigurable<E> implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final Map<String, List<E>> map = new HashMap<>();
 

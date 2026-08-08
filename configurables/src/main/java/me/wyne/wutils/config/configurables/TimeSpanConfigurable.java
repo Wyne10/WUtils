@@ -3,11 +3,12 @@ package me.wyne.wutils.config.configurables;
 import me.wyne.wutils.common.duration.Durations;
 import me.wyne.wutils.common.duration.TimeSpan;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-public class TimeSpanConfigurable implements CompositeConfigurable {
+public class TimeSpanConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private TimeSpan timeSpan = new TimeSpan(0, Durations.Ticks);
 

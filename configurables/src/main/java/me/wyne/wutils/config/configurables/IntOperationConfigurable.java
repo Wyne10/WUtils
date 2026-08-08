@@ -4,10 +4,11 @@ import me.wyne.wutils.common.operation.IntOperation;
 import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.operation.Set;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
-public class IntOperationConfigurable implements CompositeConfigurable {
+public class IntOperationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private IntOperation intOperation = new IntOperation(0, new Set<>());
 

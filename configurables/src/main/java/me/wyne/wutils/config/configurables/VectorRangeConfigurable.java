@@ -3,10 +3,11 @@ package me.wyne.wutils.config.configurables;
 import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
-public class VectorRangeConfigurable implements CompositeConfigurable {
+public class VectorRangeConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private VectorRange range = new VectorRange(VectorUtils.zero(), 1.0);
 

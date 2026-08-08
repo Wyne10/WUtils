@@ -22,7 +22,7 @@ dependencies {
     api project(':WUtils-config')
 }
 
-version = '1.20.3'
+version = '1.21.0'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-configurables", version.toString())

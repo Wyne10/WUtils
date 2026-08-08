@@ -95,7 +95,7 @@ public class ConfigBuilder {
         return this;
     }
 
-    public ConfigBuilder appendComposite(int depth, String path, CompositeConfigurable value, ConfigEntry configEntry) {
+    public ConfigBuilder appendComposite(int depth, String path, CompositeConfigSerializable value, ConfigEntry configEntry) {
         String string = value.toConfig(depth + 1, configEntry);
         if (!string.isEmpty()) {
             return appendString(depth, path, string);

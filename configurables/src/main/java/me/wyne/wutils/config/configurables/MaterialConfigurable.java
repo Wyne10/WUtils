@@ -1,11 +1,12 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-public class MaterialConfigurable implements CompositeConfigurable {
+public class MaterialConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private Material material = Material.STONE;
 

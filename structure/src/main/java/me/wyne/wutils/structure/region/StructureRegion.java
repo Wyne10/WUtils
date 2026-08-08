@@ -4,14 +4,13 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurables.attribute.GenericFactory;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public abstract class StructureRegion implements CompositeConfigurable {
+public abstract class StructureRegion implements CompositeConfigSerializable {
 
     private final RegionData regionData;
 
@@ -24,11 +23,6 @@ public abstract class StructureRegion implements CompositeConfigurable {
     }
 
     public abstract @NotNull ProtectedCuboidRegion getRegion(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform);
-
-    @Override
-    public void fromConfig(@Nullable Object configObject) {
-        throw new UnsupportedOperationException("StructureRegion is deserialized via StructureRegion.Factory");
-    }
 
     public static @NotNull String validateId(@NotNull String id, @NotNull Location location) {
         return id.replace("<x>", String.valueOf(location.getBlockX()))

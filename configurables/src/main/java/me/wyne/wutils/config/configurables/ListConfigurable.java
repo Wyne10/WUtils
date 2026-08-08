@@ -1,12 +1,13 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ListConfigurable<E> implements CompositeConfigurable {
+public class ListConfigurable<E> implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<E> list = new ArrayList<>();
 

@@ -1,14 +1,15 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 
-public class SoundConfigurable implements CompositeConfigurable {
+public class SoundConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     @Nullable
     private Sound sound;

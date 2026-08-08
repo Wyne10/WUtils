@@ -2,7 +2,8 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.animation.Animation;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class AnimationConfigurable implements CompositeConfigurable {
+public class AnimationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<AnimationStepConfigurable> animationSteps;
 

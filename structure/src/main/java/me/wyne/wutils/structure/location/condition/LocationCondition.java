@@ -1,16 +1,15 @@
 package me.wyne.wutils.structure.location.condition;
 
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurables.attribute.GenericFactoryMap;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 
-public interface LocationCondition extends CompositeConfigurable {
+public interface LocationCondition extends CompositeConfigSerializable {
     GenericFactoryMap<LocationCondition> FACTORY_MAP = new GenericFactoryMap<>(
             new LinkedHashMap<>() {{
                 put("is-in-biome", (key, config) ->
@@ -31,9 +30,4 @@ public interface LocationCondition extends CompositeConfigurable {
     );
 
     boolean isValid(@NotNull Location location);
-
-    @Override
-    default void fromConfig(@Nullable Object configObject) {
-        throw new UnsupportedOperationException("LocationCondition is deserialized via LocationCondition.FACTORY_MAP");
-    }
 }

@@ -5,7 +5,8 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import me.wyne.wutils.common.config.ConfigUtils;
 import me.wyne.wutils.common.world.WorldUtils;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import com.google.common.base.Preconditions;
 import me.wyne.wutils.config.configurables.AttributeConfigurable;
@@ -66,7 +67,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class Structure implements CompositeConfigurable {
+public class Structure implements CompositeConfigSerializable, ConfigDeserializable {
 
     public final static AttributeMap STRUCTURE_MODIFIER_MAP = new AttributeMap();
 

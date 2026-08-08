@@ -2,7 +2,8 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.common.MapUtils;
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
+import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericMapConfigurable<K, V> implements CompositeConfigurable {
+public class GenericMapConfigurable<K, V> implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final Map<K, V> map = new HashMap<>();
     private final MapUtils.MapFunction<K, V, String, String> valueMapper;

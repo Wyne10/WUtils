@@ -1,14 +1,14 @@
 package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
-import me.wyne.wutils.config.configurable.Configurable;
+import me.wyne.wutils.config.configurable.ConfigSerializable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
 @Deprecated
-public class ListOfConfigurables<T extends Configurable> extends ListConfigurable<T> {
+public class ListOfConfigurables<T extends ConfigSerializable> extends ListConfigurable<T> {
 
     private final Function<Object, T> configurableSupplier;
 

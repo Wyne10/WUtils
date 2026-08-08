@@ -7,19 +7,13 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.util.Location;
 import me.wyne.wutils.common.config.ConfigUtils;
-import me.wyne.wutils.config.configurable.CompositeConfigurable;
+import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurables.attribute.GenericFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface Scheme extends CompositeConfigurable {
+public interface Scheme extends CompositeConfigSerializable {
     @NotNull Clipboard getClipboard();
-
-    @Override
-    default void fromConfig(@Nullable Object configObject) {
-        throw new UnsupportedOperationException("Scheme is deserialized via Scheme.Factory");
-    }
 
     static @NotNull Region toWorld(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform) {
         var region = clipboard.getRegion();
