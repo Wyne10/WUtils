@@ -3,7 +3,6 @@ package me.wyne.wutils.common.kotlin.config
 import me.wyne.wutils.common.config.ConfigUtils
 import me.wyne.wutils.common.duration.TimeSpan
 import me.wyne.wutils.common.kotlin.range.DoubleRange
-import me.wyne.wutils.common.plugin.PluginUtils
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.plugin.Plugin

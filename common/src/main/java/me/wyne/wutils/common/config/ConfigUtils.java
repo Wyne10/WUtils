@@ -142,7 +142,7 @@ public final class ConfigUtils {
             try {
                 result.add(Enum.valueOf(enumClass, value.toUpperCase(Locale.ENGLISH)));
             } catch (IllegalArgumentException e) {
-                PluginUtils.getLogger().warn("Skipping illegal enum '{}' at '{}'", value, key);
+                PluginUtils.getLogger().warn("Skipping illegal enum '{}' at '{}'", value, getPath(section, key));
             }
         }
 
@@ -169,18 +169,16 @@ public final class ConfigUtils {
             try {
                 result.add(Enum.valueOf(enumClass, value.toUpperCase(Locale.ENGLISH)));
                 continue;
-            } catch (IllegalArgumentException e) {
-                PluginUtils.getLogger().warn("Skipping illegal enum '{}' at '{}'", value, key);
-            }
+            } catch (IllegalArgumentException ignored) {}
 
             NamespacedKey valueKey = NamespacedKey.fromString(value);
             if (valueKey == null) {
-                PluginUtils.getLogger().warn("Skipping illegal key '{}' at '{}'", value, key);
+                PluginUtils.getLogger().warn("Skipping illegal enum/key '{}' at '{}'", value, getPath(section, key));
                 continue;
             }
             E enumValue = keyMap.get(valueKey.toString());
             if (enumValue == null) {
-                PluginUtils.getLogger().warn("Skipping illegal key '{}' at '{}'", value, key);
+                PluginUtils.getLogger().warn("Skipping illegal enum/key '{}' at '{}'", value, getPath(section, key));
                 continue;
             }
             result.add(enumValue);
