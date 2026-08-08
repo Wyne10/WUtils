@@ -45,9 +45,9 @@ public class ListConfigurable<E> implements CompositeConfigSerializable, ConfigD
     @SuppressWarnings("unchecked")
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        list.clear();
         if (configObject == null)
             return;
+        list.clear();
         list.addAll((List<E>)configObject);
     }
 

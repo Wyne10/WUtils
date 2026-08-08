@@ -38,6 +38,8 @@ public class ListOfConfigurables<T extends ConfigSerializable> extends ListConfi
 
     @Override
     public void fromConfig(Object configObject) {
+        if (configObject == null)
+            return;
         List<String> config = (List<String>) configObject;
         getList().clear();
         for (int i = 0; i < config.size(); i++) {

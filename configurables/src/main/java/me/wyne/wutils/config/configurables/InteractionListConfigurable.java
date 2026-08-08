@@ -48,6 +48,8 @@ public class InteractionListConfigurable implements CompositeConfigSerializable,
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
+        if (configObject == null)
+            return;
         if (configObject instanceof String) {
             interactions.clear();
             var container = new ImmutableAttributeContainer(INTERACTION_ATTRIBUTE_MAP).toBuilder()

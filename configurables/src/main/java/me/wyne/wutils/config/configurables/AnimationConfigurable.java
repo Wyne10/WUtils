@@ -41,6 +41,8 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
+        if (configObject == null)
+            return;
         ConfigurationSection config = (ConfigurationSection) configObject;
         animationSteps.clear();
         config.getKeys(false).forEach(key ->

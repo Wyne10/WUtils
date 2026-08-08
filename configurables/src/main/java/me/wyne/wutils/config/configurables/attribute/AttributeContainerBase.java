@@ -194,9 +194,9 @@ public abstract class AttributeContainerBase implements AttributeContainer {
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        attributes.clear();
         if (configObject == null)
             return;
+        attributes.clear();
         attributes.put("root", new RootAttribute.Factory().create("root", (ConfigurationSection) configObject));
         attributes.putAll(attributeMap.createAllMap((ConfigurationSection) configObject));
     }

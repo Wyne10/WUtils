@@ -37,9 +37,9 @@ public class ListMapConfigurable<E> implements CompositeConfigSerializable, Conf
     @SuppressWarnings("unchecked")
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        map.clear();
         if (configObject == null)
             return;
+        map.clear();
         ConfigurationSection config = (ConfigurationSection) configObject;
         config.getKeys(false).forEach(key -> map.put(key, (List<E>) config.getList(key)));
     }

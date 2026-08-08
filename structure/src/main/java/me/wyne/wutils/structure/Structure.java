@@ -175,7 +175,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
     @Override
     public void fromConfig(@Nullable Object configObject) {
         if (configObject == null)
-            throw new NullPointerException("Can't deserialize Structure object because config is null");
+            return;
         var section = (ConfigurationSection) configObject;
         var key = section.getString("key", section.getName());
         var location = new StructureLocation.Factory().create("location", section);

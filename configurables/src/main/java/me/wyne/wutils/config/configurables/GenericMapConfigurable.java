@@ -45,9 +45,9 @@ public class GenericMapConfigurable<K, V> implements CompositeConfigSerializable
 
     @Override
     public void fromConfig(@Nullable Object configObject) {
-        map.clear();
         if (configObject == null)
             return;
+        map.clear();
         ConfigurationSection config = (ConfigurationSection) configObject;
         config.getKeys(false).stream()
                 .map(key -> configMapper.map(MapUtils.entry(key, config.get(key))))
