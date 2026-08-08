@@ -45,8 +45,12 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
             return;
         ConfigurationSection config = (ConfigurationSection) configObject;
         animationSteps.clear();
-        config.getKeys(false).forEach(key ->
-                animationSteps.add(new AnimationStepConfigurable(config.getConfigurationSection(key))));
+        config.getKeys(false).forEach(key -> {
+            var repeat = config.getInt(key + ".repeat");
+            for (int i = 0; i < repeat; i++) {
+                animationSteps.add(new AnimationStepConfigurable(config.getConfigurationSection(key)));
+            }
+        });
     }
 
     public Animation build(Plugin plugin, AnimationContext context) {

@@ -23,6 +23,8 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FIREWORK.getKey(), new FireworkAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_MESSAGE.getKey(), new PlayerMessageAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.GLOBAL_MESSAGE.getKey(), new GlobalMessageAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.INTERACTION.getKey(), new InteractionAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.INTERACTIONS.getKey(), new InteractionListAttribute.Factory());
     }
 
     public AnimationStepConfigurable() {

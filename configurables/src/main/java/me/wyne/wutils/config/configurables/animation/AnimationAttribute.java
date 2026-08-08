@@ -9,10 +9,13 @@ public enum AnimationAttribute {
     FORCE_FIELD("forceField"),
     PLAYER_TITLE("playerTitle"),
     LOCAL_SOUND("localSound"),
+    PLAYER_SOUND("playerSound"),
     WORLD_PARTICLE("worldParticle"),
     FIREWORK("firework"),
     PLAYER_MESSAGE("playerMessage"),
-    GLOBAL_MESSAGE("globalMessage");
+    GLOBAL_MESSAGE("globalMessage"),
+    INTERACTION("interaction"),
+    INTERACTIONS("interactions");
 
     private final String key;
 
