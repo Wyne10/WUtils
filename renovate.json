@@ -30,6 +30,15 @@
     {
       "matchDepNames": ["xyz.xenondevs.invui:invui"],
       "allowedVersions": "<2.0.0"
+    },
+    {
+      "matchDepNames": ["com.sk89q.worldedit:worldedit-bukkit"],
+      "allowedVersions": "<7.2.18"
+    },
+    {
+      "matchDepNames": ["com.sk89q.worldguard:worldguard-bukkit"],
+      "allowedVersions": "<7.0.6"
     }
+
   ]
 }
