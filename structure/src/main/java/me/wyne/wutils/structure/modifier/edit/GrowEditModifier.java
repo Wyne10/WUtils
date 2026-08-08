@@ -32,7 +32,7 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
                              @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         var settings = getValue();
         Preconditions.checkNotNull(region.getWorld(), "Grow modifier region world is null");
-        Mask mask = settings.mask() == null ? null : MaskUtils.parseMask(settings.mask(), region.getWorld());
+        Mask mask = settings.mask() == null ? null : MaskUtils.parseMask(settings.mask(), region.getWorld(), editSession);
 
         var regionMin = region.getMinimumPoint();
         var regionMax = region.getMaximumPoint();

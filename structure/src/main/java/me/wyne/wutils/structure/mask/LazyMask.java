@@ -23,6 +23,10 @@ public record LazyMask(@NotNull String mask) {
         return MaskUtils.parseMask(mask, extent);
     }
 
+    public Mask getMask(@NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        return MaskUtils.parseMask(mask, world, extent);
+    }
+
     @Override
     public @NotNull String toString() {
         return mask;

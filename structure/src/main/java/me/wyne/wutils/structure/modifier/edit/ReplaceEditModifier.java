@@ -27,7 +27,7 @@ public class ReplaceEditModifier extends ConfigurableAttribute<LazyMaskPatternPa
     public void apply(@NotNull EditSession editSession, @NotNull Region region) {
         try {
             Preconditions.checkNotNull(region.getWorld(), "Replace modifier region world is null");
-            editSession.replaceBlocks(region, getValue().getMask(region.getWorld()), getValue().getPattern(region.getWorld()));
+            editSession.replaceBlocks(region, getValue().getMask(region.getWorld(), editSession), getValue().getPattern(region.getWorld(), editSession));
         } catch (MaxChangedBlocksException e) {
             throw new RuntimeException("Replace modifier '" + getKey() + "' is changing too many blocks", e);
         }

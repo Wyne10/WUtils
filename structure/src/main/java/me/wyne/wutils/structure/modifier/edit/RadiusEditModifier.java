@@ -26,4 +26,12 @@ public abstract class RadiusEditModifier extends ConfigurableAttribute<Double> i
 
     protected abstract void applyAt(@NotNull EditSession editSession, @NotNull Region region,
                                     @NotNull BlockVector3 center, double radius) throws MaxChangedBlocksException;
+
+    protected static @NotNull BlockVector3 columnBase(@NotNull Region region, @NotNull BlockVector3 center) {
+        return BlockVector3.at(center.getBlockX(), region.getMinimumPoint().getBlockY(), center.getBlockZ());
+    }
+
+    protected static int columnTop(@NotNull Region region) {
+        return region.getMaximumPoint().getBlockY() + 1;
+    }
 }

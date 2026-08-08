@@ -6,6 +6,8 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public final class LocationUtils {
 
     public static Location of(World world, Vector vector) {
@@ -53,6 +55,13 @@ public final class LocationUtils {
                 .add(up.multiply(relativeOffset.getY()))
                 .add(forward.multiply(relativeOffset.getZ()));
         return location.clone().add(worldOffset);
+    }
+
+    public static Location getRandomPointNear(Location center, int radius) {
+        double angle = ThreadLocalRandom.current().nextDouble(0, Math.PI * 2);
+        int x = (int) Math.round(Math.cos(angle) * radius);
+        int z = (int) Math.round(Math.sin(angle) * radius);
+        return center.clone().add(x, 0, z);
     }
 
 }

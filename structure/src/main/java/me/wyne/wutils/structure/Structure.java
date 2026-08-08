@@ -3,6 +3,7 @@ package me.wyne.wutils.structure;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.wyne.wutils.common.config.ConfigUtils;
+import me.wyne.wutils.common.scheduler.Schedulers;
 import me.wyne.wutils.common.world.WorldUtils;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
@@ -41,6 +42,7 @@ import me.wyne.wutils.structure.modifier.edit.DeformEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ExtinguishEditModifier;
 import me.wyne.wutils.structure.modifier.edit.FloraEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ForestEditModifier;
+import me.wyne.wutils.structure.modifier.edit.AdaptSurfaceEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GreenEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GrowEditModifier;
 import me.wyne.wutils.structure.modifier.edit.NaturalizeEditModifier;
@@ -48,6 +50,7 @@ import me.wyne.wutils.structure.modifier.edit.ReplaceEditModifier;
 import me.wyne.wutils.structure.modifier.edit.SetEditModifier;
 import me.wyne.wutils.structure.modifier.edit.SmoothEditModifier;
 import me.wyne.wutils.structure.modifier.edit.SnowEditModifier;
+import me.wyne.wutils.structure.modifier.edit.SnowIfColdEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ThawEditModifier;
 import me.wyne.wutils.structure.region.StructureRegion;
 import me.wyne.wutils.structure.region.condition.RegionCondition;
@@ -99,6 +102,8 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_FOREST.getKey(), new ForestEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_THAW.getKey(), new ThawEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SNOW.getKey(), new SnowEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SNOW_IF_COLD.getKey(), new SnowIfColdEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_EXTINGUISH.getKey(), new ExtinguishEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_BUTCHER.getKey(), new ButcherEditModifier.Factory());
     }
@@ -226,7 +231,8 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
             return CompletableFuture.failedFuture(new CancellationException("Structure generation has been cancelled"));
         if (elapsedMillis > timeoutMillis)
             return CompletableFuture.failedFuture(new IllegalStateException("Couldn't generate intermediate structure in " + timeoutMillis + " ms"));
-        return WorldUtils.getHighestLocationAtAsync(location.getLocation())
+        return CompletableFuture.supplyAsync(location::getLocation, Schedulers.sync())
+                .thenCompose(WorldUtils::getHighestLocationAtAsync)
                 .thenComposeAsync(highestLocation -> {
                     if (token != null && token.isCancelled())
                         return getIntermediateStructure(startTime, System.currentTimeMillis() - startTime, timeoutMillis, token, executor);

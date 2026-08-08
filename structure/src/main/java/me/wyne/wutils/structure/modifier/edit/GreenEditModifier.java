@@ -22,7 +22,7 @@ public class GreenEditModifier extends RegionRadiusEditModifier {
     @Override
     protected void applyAt(@NotNull EditSession editSession, @NotNull Region region,
                            @NotNull BlockVector3 center, double radius) throws MaxChangedBlocksException {
-        editSession.green(center, radius, true);
+        editSession.green(columnBase(region, center), radius, columnTop(region), true);
     }
 
     public static final class Factory implements AttributeFactory<GreenEditModifier> {

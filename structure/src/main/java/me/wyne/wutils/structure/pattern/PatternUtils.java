@@ -54,4 +54,17 @@ public final class PatternUtils {
         }
     }
 
+    public static @NotNull Pattern parsePattern(@NotNull String input, @NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        ParserContext context = new ParserContext();
+        // setWorld also sets the extent, so it must come first to keep the explicit extent below.
+        context.setWorld(world);
+        context.setExtent(extent);
+        context.setRestricted(false);
+        try {
+            return WorldEdit.getInstance().getPatternFactory().parseFromInput(input, context);
+        } catch (InputParseException e) {
+            throw new IllegalArgumentException("Invalid pattern '" + input + "': " + e.getMessage(), e);
+        }
+    }
+
 }

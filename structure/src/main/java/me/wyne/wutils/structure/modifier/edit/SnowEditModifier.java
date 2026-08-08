@@ -22,7 +22,7 @@ public class SnowEditModifier extends RegionRadiusEditModifier {
     @Override
     protected void applyAt(@NotNull EditSession editSession, @NotNull Region region,
                            @NotNull BlockVector3 center, double radius) throws MaxChangedBlocksException {
-        editSession.simulateSnow(center, radius);
+        editSession.simulateSnow(columnBase(region, center), radius, columnTop(region));
     }
 
     public static final class Factory implements AttributeFactory<SnowEditModifier> {

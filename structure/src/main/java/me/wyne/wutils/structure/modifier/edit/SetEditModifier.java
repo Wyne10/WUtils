@@ -28,8 +28,8 @@ public class SetEditModifier extends ConfigurableAttribute<LazyMaskPatternPair> 
         var previousMask = editSession.getMask();
         try {
             Preconditions.checkNotNull(region.getWorld(), "Set modifier region world is null");
-            editSession.setMask(getValue().getMask(region.getWorld()));
-            editSession.setBlocks(region, getValue().getPattern(region.getWorld()));
+            editSession.setMask(getValue().getMask(region.getWorld(), editSession));
+            editSession.setBlocks(region, getValue().getPattern(region.getWorld(), editSession));
         } catch (MaxChangedBlocksException e) {
             throw new RuntimeException("Set modifier '" + getKey() + "' is changing too many blocks", e);
         } finally {

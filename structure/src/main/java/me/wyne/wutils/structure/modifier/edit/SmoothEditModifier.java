@@ -36,7 +36,7 @@ public class SmoothEditModifier extends MarginEditModifier<SmoothSettings> {
     protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
         var settings = getValue();
         Preconditions.checkNotNull(region.getWorld(), "Smooth modifier region world is null");
-        Mask mask = settings.mask() == null ? null : MaskUtils.parseMask(settings.mask(), region.getWorld());
+        Mask mask = settings.mask() == null ? null : MaskUtils.parseMask(settings.mask(), region.getWorld(), editSession);
         HeightMap heightMap = new HeightMap(editSession, region, mask);
         try {
             heightMap.applyFilter(new HeightMapFilter(KERNEL), settings.iterations());

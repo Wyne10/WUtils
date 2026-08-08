@@ -23,6 +23,10 @@ public record LazyPattern(@NotNull String pattern) {
         return PatternUtils.parsePattern(pattern, extent);
     }
 
+    public Pattern getPattern(@NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        return PatternUtils.parsePattern(pattern, world, extent);
+    }
+
     @Override
     public @NotNull String toString() {
         return pattern;

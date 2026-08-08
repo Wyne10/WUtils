@@ -26,6 +26,8 @@ public enum StructureModifier {
     EDIT_BIOME("biome"),
     EDIT_DEFORM("deform"),
     EDIT_SNOW("snow"),
+    EDIT_SNOW_IF_COLD("snowIfCold"),
+    EDIT_ADAPT_SURFACE("adaptSurface"),
     EDIT_THAW("thaw"),
     EDIT_GREEN("green"),
     EDIT_EXTINGUISH("ex"),

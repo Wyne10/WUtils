@@ -13,7 +13,12 @@ public interface StructureLocation extends CompositeConfigSerializable {
     final class Factory implements GenericFactory<StructureLocation> {
         @Override
         public StructureLocation create(String key, ConfigurationSection config) {
-            if (ConfigUtils.getConfigurationSection(config, key).contains("range")) {
+            var section = ConfigUtils.getConfigurationSection(config, key);
+            if (section.contains("near-biome") || section.contains("far-biome") || section.contains("biome-preset")) {
+                return new BiomeLocation.Factory().create(key, config);
+            } else if (section.contains("near-structure") || section.contains("far-structure")) {
+                return new NearestStructureLocation.Factory().create(key, config);
+            } else if (section.contains("range")) {
                 return new RandomLocation.Factory().create(key, config);
             } else {
                 return new SetLocation.Factory().create(key, config);

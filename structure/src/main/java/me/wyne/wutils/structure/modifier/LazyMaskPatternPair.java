@@ -58,6 +58,18 @@ public record LazyMaskPatternPair(@NotNull String mask, @NotNull String pattern)
         return new MaskPatternPair(getMask(extent), getPattern(extent));
     }
 
+    public Mask getMask(@NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        return MaskUtils.parseMask(mask, world, extent);
+    }
+
+    public Pattern getPattern(@NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        return PatternUtils.parsePattern(pattern, world, extent);
+    }
+
+    public MaskPatternPair getEager(@NotNull com.sk89q.worldedit.world.World world, @NotNull Extent extent) {
+        return new MaskPatternPair(getMask(world, extent), getPattern(world, extent));
+    }
+
     @Override
     public @NotNull String toString() {
         return mask + " " + pattern;

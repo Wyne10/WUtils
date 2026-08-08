@@ -10,8 +10,11 @@ import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 public final class WorldUtils {
+
+    public static final Pattern HIGHLAND_REGEX = Pattern.compile(".*(?:MOUNTAINS|HILLS|PEAKS|SLOPES|PLATEAU|ERODED).*");
 
     public static final ClosedIntRange CHUNK_X_RANGE = new ClosedIntRange(0, 15);
     public static final ClosedIntRange CHUNK_Y_RANGE = new ClosedIntRange(0, 255);

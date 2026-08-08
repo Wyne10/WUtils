@@ -22,7 +22,7 @@ public class ThawEditModifier extends RegionRadiusEditModifier {
     @Override
     protected void applyAt(@NotNull EditSession editSession, @NotNull Region region,
                            @NotNull BlockVector3 center, double radius) throws MaxChangedBlocksException {
-        editSession.thaw(center, radius);
+        editSession.thaw(columnBase(region, center), radius, columnTop(region));
     }
 
     public static final class Factory implements AttributeFactory<ThawEditModifier> {

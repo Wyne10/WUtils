@@ -16,6 +16,10 @@ public interface LocationCondition extends CompositeConfigSerializable {
                         new BiomeCondition(ConfigUtils.getKeyedEnumSet(config, key, Biome.class), false));
                 put("is-not-in-biome", (key, config) ->
                         new BiomeCondition(ConfigUtils.getKeyedEnumSet(config, key, Biome.class), true));
+                put("is-in-biome-preset", (key, config) ->
+                        BiomePresetCondition.of(config.getStringList(key), false));
+                put("is-not-in-biome-preset", (key, config) ->
+                        BiomePresetCondition.of(config.getStringList(key), true));
                 put("is-on-block", (key, config) ->
                         new BlockCondition(ConfigUtils.getMaterialEnumSet(config, key), false));
                 put("is-not-on-block", (key, config) ->
@@ -26,6 +30,8 @@ public interface LocationCondition extends CompositeConfigSerializable {
                         new MountainsCondition(!config.getBoolean(key)));
                 put("altitude", (key, config) ->
                         new AltitudeCondition(ConfigUtils.getIntComparator(config, key)));
+                put("temperature", (key, config) ->
+                        new TemperatureCondition(ConfigUtils.getDoubleComparator(config, key)));
             }}
     );
 
