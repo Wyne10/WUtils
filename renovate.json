@@ -4,7 +4,7 @@
     "config:recommended", ":disableDependencyDashboard"
   ],
   "constraints": {
-    "java": "16"
+    "java": "25.0.4+7.0.LTS"
   },
   "packageRules": [
     {
