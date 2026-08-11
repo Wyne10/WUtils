@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -30,9 +31,8 @@ public final class AnvilUtils {
         if (e.getSlotType() != InventoryType.SlotType.RESULT) return false;
         if (e.getAction() != InventoryAction.NOTHING) return false;
         if (isNullOrAir(anvil.getResult())) return false;
-        if (!isNullOrAir(e.getCursor()) && !e.isShiftClick()) return false;
         var player = (Player) e.getWhoClicked();
-        if (anvil.getRepairCost() > player.getLevel()) return false;
+        if (!ANVIL_DAMAGE_IMMUNITY.contains(player.getGameMode()) && anvil.getRepairCost() > player.getLevel()) return false;
         return true;
     }
 
@@ -41,14 +41,48 @@ public final class AnvilUtils {
         var anvil = (AnvilInventory) e.getInventory();
         var player = (Player) e.getWhoClicked();
         e.setCancelled(true);
-        if (e.isShiftClick()) {
-            if (player.getInventory().firstEmpty() == -1) return;
-            player.getInventory().addItem(anvil.getResult());
-        } else {
-            player.setItemOnCursor(anvil.getResult());
+        var result = anvil.getResult();
+        var pickupAction = switch (e.getClick()) {
+            case NUMBER_KEY, SWAP_OFFHAND -> InventoryAction.HOTBAR_SWAP;
+            case DROP -> InventoryAction.DROP_ONE_SLOT;
+            case CONTROL_DROP -> InventoryAction.DROP_ALL_SLOT;
+            default -> e.isShiftClick() ? InventoryAction.MOVE_TO_OTHER_INVENTORY : InventoryAction.PICKUP_ALL;
+        };
+        switch (e.getClick()) {
+            case NUMBER_KEY -> {
+                if (e.getHotbarButton() < 0) return;
+                if (isNotNullOrAir(player.getInventory().getItem(e.getHotbarButton()))) return;
+            }
+            case SWAP_OFFHAND -> {
+                if (isNotNullOrAir(player.getInventory().getItemInOffHand())) return;
+            }
+            default -> {
+                if (e.isShiftClick() && player.getInventory().firstEmpty() == -1) return;
+            }
         }
-        anvil.getResult().setAmount(0);
-        player.setLevel(player.getLevel() - anvil.getRepairCost());
+        var pickup = new InventoryClickEvent(e.getView(), InventoryType.SlotType.RESULT, e.getRawSlot(), e.getClick(), pickupAction, e.getHotbarButton());
+        pickup.setResult(Event.Result.ALLOW);
+        if (!pickup.callEvent())
+            return;
+        switch (e.getClick()) {
+            case NUMBER_KEY -> player.getInventory().setItem(e.getHotbarButton(), result);
+            case SWAP_OFFHAND -> player.getInventory().setItemInOffHand(result);
+            case DROP, CONTROL_DROP -> {
+                var dropped = player.getWorld().dropItem(player.getEyeLocation(), result);
+                dropped.setVelocity(player.getEyeLocation().getDirection().multiply(0.3));
+                dropped.setPickupDelay(40);
+                dropped.setThrower(player.getUniqueId());
+            }
+            default -> {
+                if (e.isShiftClick())
+                    player.getInventory().addItem(result);
+                else
+                    player.setItemOnCursor(result);
+            }
+        }
+        result.setAmount(0);
+        if (!ANVIL_DAMAGE_IMMUNITY.contains(player.getGameMode()))
+            player.setLevel(player.getLevel() - anvil.getRepairCost());
         if (isNotNullOrAir(anvil.getFirstItem()) && isNotNullOrAir(anvil.getSecondItem())) {
             var amount = Math.min(anvil.getFirstItem().getAmount(), anvil.getSecondItem().getAmount());
             anvil.getFirstItem().setAmount(anvil.getFirstItem().getAmount() - amount);

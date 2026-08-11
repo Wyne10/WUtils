@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
 
@@ -57,6 +58,10 @@ public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
         World world = region.getWorld();
         Preconditions.checkNotNull(world, "Deltree modifier region world is null");
 
+        Predicate<BlockVector3> inScope = getValue().includeClipboard()
+                ? pos -> true
+                : pos -> !clipboardRegion.contains(pos);
+
         BlockVector3 min = region.getMinimumPoint();
         BlockVector3 max = region.getMaximumPoint();
         int minX = min.getBlockX();
@@ -72,10 +77,10 @@ public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
             for (int z = minZ; z <= maxZ; z++) {
                 for (int y = maxY; y >= minY; y--) {
                     BlockVector3 pos = BlockVector3.at(x, y, z);
-                    if (processed.contains(pos) || !isTreeBlock(editSession.getBlock(pos).getBlockType()))
+                    if (processed.contains(pos) || !inScope.test(pos) || !isTreeBlock(editSession.getBlock(pos).getBlockType()))
                         continue;
                     Set<BlockVector3> tree = new HashSet<>();
-                    if (isFloating(editSession, pos, tree))
+                    if (isFloating(editSession, pos, inScope, tree))
                         toRemove.addAll(tree);
                     processed.addAll(tree);
                 }
@@ -91,7 +96,8 @@ public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
         }
     }
 
-    private static boolean isFloating(@NotNull EditSession editSession, @NotNull BlockVector3 origin, @NotNull Set<BlockVector3> tree) {
+    private static boolean isFloating(@NotNull EditSession editSession, @NotNull BlockVector3 origin,
+                                      @NotNull Predicate<BlockVector3> inScope, @NotNull Set<BlockVector3> tree) {
         Set<BlockVector3> visited = new HashSet<>();
         Deque<BlockVector3> queue = new ArrayDeque<>();
         queue.addLast(origin);
@@ -106,6 +112,8 @@ public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
             for (BlockVector3 direction : DIRECTIONS) {
                 BlockVector3 next = current.add(direction);
                 if (origin.distanceSq(next) > RANGE_SQ || !visited.add(next))
+                    continue;
+                if (!inScope.test(next))
                     continue;
                 BlockType type = editSession.getBlock(next).getBlockType();
                 if (type.getMaterial().isAir() || type == BlockTypes.SNOW)

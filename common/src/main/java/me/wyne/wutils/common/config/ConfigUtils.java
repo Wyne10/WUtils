@@ -235,10 +235,22 @@ public final class ConfigUtils {
     }
 
     public static void saveDirectoryResource(File directory) {
-        saveDirectoryResource(PluginUtils.getPlugin(), directory);
+        saveDirectoryResource(PluginUtils.getPlugin(), directory, false);
+    }
+
+    public static void saveDirectoryResource(File directory, boolean replace) {
+        saveDirectoryResource(PluginUtils.getPlugin(), directory, replace);
     }
 
     public static void saveDirectoryResource(Plugin plugin, File directory) {
+        saveDirectoryResource(plugin, directory, false);
+    }
+
+    public static void saveDirectoryResource(Plugin plugin, File directory, boolean force) {
+        if (!force && directory.exists()) {
+            return;
+        }
+
         String resourcePath = getRelativePath(directory, plugin.getDataFolder());
         if (resourcePath == null) {
             return;
