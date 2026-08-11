@@ -44,6 +44,7 @@ import me.wyne.wutils.structure.modifier.edit.FloraEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ForestEditModifier;
 import me.wyne.wutils.structure.modifier.edit.AdaptSurfaceEditModifier;
 import me.wyne.wutils.structure.modifier.edit.DelTreeEditModifier;
+import me.wyne.wutils.structure.modifier.edit.DropFloatingEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GreenEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GrowEditModifier;
 import me.wyne.wutils.structure.modifier.edit.NaturalizeEditModifier;
@@ -96,6 +97,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DEFORM.getKey(), new DeformEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GROW.getKey(), new GrowEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SMOOTH.getKey(), new SmoothEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_NATURALIZE.getKey(), new NaturalizeEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GREEN.getKey(), new GreenEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_BIOME.getKey(), new BiomeEditModifier.Factory());
@@ -104,10 +106,10 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_THAW.getKey(), new ThawEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SNOW.getKey(), new SnowEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SNOW_IF_COLD.getKey(), new SnowIfColdEditModifier.Factory());
-        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_EXTINGUISH.getKey(), new ExtinguishEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_BUTCHER.getKey(), new ButcherEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DELTREE.getKey(), new DelTreeEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DROP_FLOATING.getKey(), new DropFloatingEditModifier.Factory());
     }
 
     private String key;

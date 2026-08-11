@@ -32,7 +32,8 @@ public enum StructureModifier {
     EDIT_GREEN("green"),
     EDIT_EXTINGUISH("ex"),
     EDIT_BUTCHER("butcher"),
-    EDIT_DELTREE("deltree");
+    EDIT_DELTREE("deltree"),
+    EDIT_DROP_FLOATING("dropFloating");
 
     private final String key;
 

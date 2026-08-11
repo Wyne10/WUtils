@@ -23,6 +23,7 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
                             @Nullable List<@NotNull String> presets) implements StructureLocation {
 
     public static final int DEFAULT_RADIUS = 6400;
+    private static final int BOUNDS_ATTEMPTS = 16;
 
     @Override
     public @NotNull Location getLocation() {
@@ -33,7 +34,12 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
         Location found = from.getWorld().locateNearestBiome(from, target, radius, 64);
         if (found == null)
             return from;
-        return LocationUtils.getRandomPointNear(found, near.getRandom());
+        for (int attempt = 0; attempt < BOUNDS_ATTEMPTS; attempt++) {
+            Location candidate = LocationUtils.getRandomPointNear(found, near.getRandom());
+            if (origin.withinBounds(candidate))
+                return candidate;
+        }
+        return from;
     }
 
     private @Nullable Biome pickBiome() {
@@ -80,7 +86,7 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
             int radius = section.getInt("radius", DEFAULT_RADIUS);
             ClosedIntRange near = section.contains("near")
                     ? ClosedIntRange.getIntRange(section.getString("near", "10..200"))
-                    : new ClosedIntRange(0, 0);
+                    : new ClosedIntRange(10, 200);
 
             if (section.contains("biome-preset")) {
                 List<String> presets = section.getStringList("biome-preset");

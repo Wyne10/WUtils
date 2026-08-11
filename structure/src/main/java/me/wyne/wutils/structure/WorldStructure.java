@@ -14,6 +14,8 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.util.SideEffect;
+import com.sk89q.worldedit.util.SideEffectSet;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
@@ -153,8 +155,9 @@ public class WorldStructure implements AutoCloseable {
     }
 
     private void pasteStructure() {
-        Preconditions.checkNotNull(clipboardRegion.getWorld(), "Clipboard region world was null during " + uniqueKey + " paste");
-        try (var editSession = WorldEdit.getInstance().newEditSession(clipboardRegion.getWorld())) {
+        var world = clipboardRegion.getWorld();
+        Preconditions.checkNotNull(world, "Clipboard region world was null during " + uniqueKey + " paste");
+        try (var editSession = WorldEdit.getInstance().newEditSession(world)) {
             var clipboardHolder = new ClipboardHolder(clipboard);
             clipboardHolder.setTransform(transform);
             var pasteBuilder = clipboardHolder
@@ -162,13 +165,13 @@ public class WorldStructure implements AutoCloseable {
                     .to(location.toVector().toBlockPoint());
             pasteModifiers.forEach(pasteModifier -> pasteModifier.apply(pasteBuilder, clipboardRegion.getWorld()));
             Operations.complete(pasteBuilder.build());
-            editSession.flushSession();
-            editSessionModifiers.forEach(editSessionModifier -> {
-                editSessionModifier.apply(editSession, clipboardRegion);
-                editSession.flushSession();
-            });
         } catch (WorldEditException e) {
             throw new RuntimeException("Structure " + uniqueKey + " paste exception", e);
+        }
+        for (EditSessionModifier modifier : editSessionModifiers) {
+            try (var editSession = WorldEdit.getInstance().newEditSession(clipboardRegion.getWorld())) {
+                modifier.apply(editSession, clipboardRegion);
+            }
         }
     }
 

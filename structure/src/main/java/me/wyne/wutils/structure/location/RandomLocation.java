@@ -25,6 +25,12 @@ public record RandomLocation(@NotNull LocationRange range, @Nullable VectorRange
         return LocationUtils.of(range.getWorld(), random);
     }
 
+    public boolean withinBounds(@NotNull Location location) {
+        if (!range.contains(location))
+            return false;
+        return except == null || !except.contains(location.toVector());
+    }
+
     @Override
     public String toConfig(int depth, ConfigEntry configEntry) {
         return new ConfigBuilder()

@@ -26,6 +26,7 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
 
     public static final int DEFAULT_RADIUS = 100;
     public static final boolean DEFAULT_FIND_UNEXPLORED = false;
+    private static final int BOUNDS_ATTEMPTS = 16;
 
     @Override
     public @NotNull Location getLocation() {
@@ -36,7 +37,12 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
         Location found = from.getWorld().locateNearestStructure(from, target, radius, findUnexplored);
         if (found == null)
             return from;
-        return LocationUtils.getRandomPointNear(found, near.getRandom());
+        for (int attempt = 0; attempt < BOUNDS_ATTEMPTS; attempt++) {
+            Location candidate = LocationUtils.getRandomPointNear(found, near.getRandom());
+            if (origin.withinBounds(candidate))
+                return candidate;
+        }
+        return from;
     }
 
     private StructureType pickStructure() {
@@ -80,7 +86,7 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
             boolean findUnexplored = section.getBoolean("find-unexplored", DEFAULT_FIND_UNEXPLORED);
             ClosedIntRange near = section.contains("near")
                     ? ClosedIntRange.getIntRange(section.getString("near", "10..100"))
-                    : new ClosedIntRange(0, 0);
+                    : new ClosedIntRange(10, 100);
 
             boolean invert = section.contains("far-structure");
             Set<StructureType> structures = parseStructures(section, invert ? "far-structure" : "near-structure");
