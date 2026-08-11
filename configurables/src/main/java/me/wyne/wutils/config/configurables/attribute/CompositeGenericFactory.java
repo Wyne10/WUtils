@@ -7,8 +7,10 @@ public interface CompositeGenericFactory<T> extends GenericFactory<T> {
     default T create(String key, ConfigurationSection config) {
         if (config.isConfigurationSection(key))
             return fromSection(key, config.getConfigurationSection(key));
-        else
+        else if (config.isString(key))
             return fromString(key, config.getString(key), config);
+        else
+            return fromSection(key, config);
     }
 
     T fromSection(String key, ConfigurationSection section);

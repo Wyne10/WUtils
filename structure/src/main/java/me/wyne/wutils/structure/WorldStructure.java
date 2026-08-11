@@ -14,8 +14,6 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldedit.util.SideEffect;
-import com.sk89q.worldedit.util.SideEffectSet;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
