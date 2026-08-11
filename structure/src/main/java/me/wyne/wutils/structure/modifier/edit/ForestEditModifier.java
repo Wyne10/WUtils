@@ -5,7 +5,7 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.function.GroundFunction;
 import com.sk89q.worldedit.function.generator.ForestGenerator;
 import com.sk89q.worldedit.function.mask.ExistingBlockMask;
-import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.Mask2D;
 import com.sk89q.worldedit.function.mask.MaskIntersection2D;
 import com.sk89q.worldedit.function.mask.NoiseFilter2D;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -34,7 +34,12 @@ public class ForestEditModifier extends MarginEditModifier<ForestSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
+    protected boolean excludeFootprint() {
+        return !getValue().includeClipboard();
+    }
+
+    @Override
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion) {
         ForestGenerator generator = new ForestGenerator(editSession, getValue().type());
         GroundFunction ground = new GroundFunction(new ExistingBlockMask(editSession), generator);
         LayerVisitor visitor = new LayerVisitor(
@@ -42,9 +47,10 @@ public class ForestEditModifier extends MarginEditModifier<ForestSettings> {
                 Regions.minimumBlockY(region),
                 Regions.maximumBlockY(region),
                 ground);
-        visitor.setMask(new MaskIntersection2D(
-                new NoiseFilter2D(new RandomNoise(), getValue().density() / 100),
-                outsideFootprint(clipboardRegion)));
+        Mask2D density = new NoiseFilter2D(new RandomNoise(), getValue().density() / 100);
+        visitor.setMask(getValue().includeClipboard()
+                ? density
+                : new MaskIntersection2D(density, outsideFootprint(clipboardRegion)));
         try {
             Operations.completeLegacy(visitor);
         } catch (MaxChangedBlocksException e) {

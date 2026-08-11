@@ -79,7 +79,7 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
             var origin = (RandomLocation) new RandomLocation.Factory().create(key, config);
             int radius = section.getInt("radius", DEFAULT_RADIUS);
             ClosedIntRange near = section.contains("near")
-                    ? ClosedIntRange.getIntRange(section.getString("near", "10..100"))
+                    ? ClosedIntRange.getIntRange(section.getString("near", "10..200"))
                     : new ClosedIntRange(0, 0);
 
             if (section.contains("biome-preset")) {

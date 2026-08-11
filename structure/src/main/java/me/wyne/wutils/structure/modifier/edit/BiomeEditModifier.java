@@ -5,7 +5,8 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.function.RegionFunction;
 import com.sk89q.worldedit.function.RegionMaskingFilter;
 import com.sk89q.worldedit.function.biome.BiomeReplace;
-import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.Masks;
+import com.sk89q.worldedit.function.mask.RegionMask;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.function.visitor.RegionVisitor;
 import com.sk89q.worldedit.regions.Region;
@@ -30,7 +31,8 @@ public class BiomeEditModifier extends MarginEditModifier<BiomeSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion) {
+        var ringMask = Masks.negate(new RegionMask(clipboardRegion));
         RegionFunction replace = new RegionMaskingFilter(ringMask, new BiomeReplace(editSession, getValue().biome()));
         RegionVisitor visitor = new RegionVisitor(region, replace);
         try {

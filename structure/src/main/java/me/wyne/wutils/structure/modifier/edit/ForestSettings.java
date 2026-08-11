@@ -4,7 +4,7 @@ import com.sk89q.worldedit.util.TreeGenerator;
 import me.wyne.wutils.common.Args;
 import org.jetbrains.annotations.NotNull;
 
-public record ForestSettings(int margin, @NotNull TreeGenerator.TreeType type, double density) {
+public record ForestSettings(int margin, @NotNull TreeGenerator.TreeType type, double density, boolean includeClipboard) {
 
     public static @NotNull ForestSettings parse(@NotNull String input) {
         var args = new Args(input);
@@ -14,11 +14,12 @@ public record ForestSettings(int margin, @NotNull TreeGenerator.TreeType type, d
         if (type == null)
             throw new IllegalArgumentException("Unknown tree type '" + typeName + "'");
         double density = Double.parseDouble(args.get(2, "5"));
-        return new ForestSettings(margin, type, density);
+        boolean includeClipboard = Boolean.parseBoolean(args.get(3, "false"));
+        return new ForestSettings(margin, type, density, includeClipboard);
     }
 
     @Override
     public @NotNull String toString() {
-        return margin + " " + type.name().toLowerCase() + " " + density;
+        return margin + " " + type.name().toLowerCase() + " " + density + " " + includeClipboard;
     }
 }

@@ -22,6 +22,7 @@ import me.wyne.wutils.structure.scheme.ClipboardScan;
 import me.wyne.wutils.structure.modifier.EditSessionModifier;
 import me.wyne.wutils.structure.modifier.PasteModifier;
 import me.wyne.wutils.structure.modifier.SnapshotModifier;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -114,6 +115,7 @@ public class WorldStructure implements AutoCloseable {
         Preconditions.checkNotNull(clipboardRegion.getWorld(), "Clipboard region world was null during " + uniqueKey + " player lift");
         World world = BukkitAdapter.adapt(clipboardRegion.getWorld());
         for (Player player : world.getPlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) continue;
             var loc = player.getLocation();
             int x = loc.getBlockX();
             int y = loc.getBlockY();
@@ -192,6 +194,8 @@ public class WorldStructure implements AutoCloseable {
             var pasteBuilder = new ClipboardHolder(snapshot)
                     .createPaste(editSession)
                     .ignoreAirBlocks(false)
+                    .copyBiomes(snapshot.hasBiomes())
+                    .copyEntities(true)
                     .to(snapshot.getOrigin());
             Operations.complete(pasteBuilder.build());
         } catch (WorldEditException e) {

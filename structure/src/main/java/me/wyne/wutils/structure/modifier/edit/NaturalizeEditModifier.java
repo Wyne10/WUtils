@@ -2,7 +2,6 @@ package me.wyne.wutils.structure.modifier.edit;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.regions.Region;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.structure.modifier.StructureModifier;
@@ -25,7 +24,7 @@ public class NaturalizeEditModifier extends MarginEditModifier<Integer> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion) {
         try {
             editSession.naturalizeCuboidBlocks(region);
         } catch (MaxChangedBlocksException e) {

@@ -23,7 +23,11 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
 
     protected abstract int margin();
 
-    protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask);
+    protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion);
+
+    protected boolean excludeFootprint() {
+        return true;
+    }
 
     protected static @NotNull Mask2D outsideFootprint(@NotNull Region clipboardRegion) {
         var min = clipboardRegion.getMinimumPoint();
@@ -53,11 +57,12 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
 
         Mask previousMask = editSession.getMask();
         Mask outsideClipboard = Masks.negate(new RegionMask(region));
-        editSession.setMask(previousMask == null
-                ? outsideClipboard
-                : new MaskIntersection(previousMask, outsideClipboard));
+        if (excludeFootprint())
+            editSession.setMask(previousMask == null
+                    ? outsideClipboard
+                    : new MaskIntersection(previousMask, outsideClipboard));
         try {
-            applyEdit(editSession, expanded, region, outsideClipboard);
+            applyEdit(editSession, expanded, region);
         } finally {
             editSession.setMask(previousMask);
         }

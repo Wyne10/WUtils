@@ -31,7 +31,8 @@ public enum StructureModifier {
     EDIT_THAW("thaw"),
     EDIT_GREEN("green"),
     EDIT_EXTINGUISH("ex"),
-    EDIT_BUTCHER("butcher");
+    EDIT_BUTCHER("butcher"),
+    EDIT_DELTREE("deltree");
 
     private final String key;
 

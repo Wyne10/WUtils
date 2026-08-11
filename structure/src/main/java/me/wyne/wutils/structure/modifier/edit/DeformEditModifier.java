@@ -2,7 +2,6 @@ package me.wyne.wutils.structure.modifier.edit;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.internal.expression.ExpressionException;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.Region;
@@ -27,7 +26,7 @@ public class DeformEditModifier extends MarginEditModifier<DeformSettings> {
     }
 
     @Override
-    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
+    protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion) {
         Vector3 min = region.getMinimumPoint().toVector3();
         Vector3 max = region.getMaximumPoint().toVector3();
         Vector3 zero = max.add(min).divide(2);

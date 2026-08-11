@@ -29,7 +29,7 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
 
     @Override
     protected void applyEdit(@NotNull EditSession editSession, @NotNull Region region,
-                             @NotNull Region clipboardRegion, @NotNull Mask ringMask) {
+                             @NotNull Region clipboardRegion) {
         var settings = getValue();
         Preconditions.checkNotNull(region.getWorld(), "Grow modifier region world is null");
         Mask mask = settings.mask() == null ? null : MaskUtils.parseMask(settings.mask(), region.getWorld(), editSession);

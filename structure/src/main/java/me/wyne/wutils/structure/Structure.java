@@ -43,6 +43,7 @@ import me.wyne.wutils.structure.modifier.edit.ExtinguishEditModifier;
 import me.wyne.wutils.structure.modifier.edit.FloraEditModifier;
 import me.wyne.wutils.structure.modifier.edit.ForestEditModifier;
 import me.wyne.wutils.structure.modifier.edit.AdaptSurfaceEditModifier;
+import me.wyne.wutils.structure.modifier.edit.DelTreeEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GreenEditModifier;
 import me.wyne.wutils.structure.modifier.edit.GrowEditModifier;
 import me.wyne.wutils.structure.modifier.edit.NaturalizeEditModifier;
@@ -106,6 +107,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_EXTINGUISH.getKey(), new ExtinguishEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_BUTCHER.getKey(), new ButcherEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DELTREE.getKey(), new DelTreeEditModifier.Factory());
     }
 
     private String key;
