@@ -57,7 +57,11 @@ public final class AnvilUtils {
                 if (isNotNullOrAir(player.getInventory().getItemInOffHand())) return;
             }
             default -> {
-                if (e.isShiftClick() && player.getInventory().firstEmpty() == -1) return;
+                if (e.isShiftClick()) {
+                    if (player.getInventory().firstEmpty() == -1) return;
+                } else if (isNotNullOrAir(e.getCursor())) {
+                    return;
+                }
             }
         }
         var pickup = new InventoryClickEvent(e.getView(), InventoryType.SlotType.RESULT, e.getRawSlot(), e.getClick(), pickupAction, e.getHotbarButton());
