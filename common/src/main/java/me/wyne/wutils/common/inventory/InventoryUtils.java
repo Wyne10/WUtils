@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.inventory;
 
 import me.wyne.wutils.common.item.ItemUtils;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public final class InventoryUtils {
@@ -17,7 +19,15 @@ public final class InventoryUtils {
         return inventory.addItem(items).isEmpty();
     }
 
+    public static boolean addItem(Inventory inventory, Collection<ItemStack> items) {
+        return inventory.addItem(items.toArray(ItemStack[]::new)).isEmpty();
+    }
+
     public static boolean addItem(Player player, ItemStack... items) {
+        return addItem(player.getInventory(), items);
+    }
+
+    public static boolean addItem(Player player, Collection<ItemStack> items) {
         return addItem(player.getInventory(), items);
     }
 
@@ -25,22 +35,47 @@ public final class InventoryUtils {
         addOrDrop(player, false, items);
     }
 
+    public static void addOrDrop(Player player, Collection<ItemStack> items) {
+        addOrDrop(player, false, items);
+    }
+
     public static void addOrDrop(Player player, boolean setOwner, ItemStack... items) {
-        var exceed = player.getInventory().addItem(items);
-        drop(player, setOwner, exceed.values().toArray(ItemStack[]::new));
+        addOrDrop(player, setOwner, Arrays.asList(items));
+    }
+
+    public static void addOrDrop(Player player, boolean setOwner, Collection<ItemStack> items) {
+        var exceed = player.getInventory().addItem(items.toArray(ItemStack[]::new));
+        drop(player, setOwner, exceed.values());
     }
 
     public static void drop(Player player, ItemStack... items) {
         drop(player, false, items);
     }
 
+    public static void drop(Player player, Collection<ItemStack> items) {
+        drop(player, false, items);
+    }
+
     public static void drop(Player player, boolean setOwner, ItemStack... items) {
-        Arrays.stream(items)
+        drop(player, setOwner, Arrays.asList(items));
+    }
+
+    public static void drop(Player player, boolean setOwner, Collection<ItemStack> items) {
+        items.stream()
                 .filter(ItemUtils::isNotNullOrAir)
                 .forEach(item -> {
                     var drop = player.getLocation().getWorld().dropItem(player.getLocation(), item);
                     if (setOwner)
                         drop.setOwner(player.getUniqueId());
+                    drop.setPickupDelay(0);
+                });
+    }
+
+    public static void drop(Location location, Collection<ItemStack> items) {
+        items.stream()
+                .filter(ItemUtils::isNotNullOrAir)
+                .forEach(item -> {
+                    var drop = location.getWorld().dropItem(location, item);
                     drop.setPickupDelay(0);
                 });
     }

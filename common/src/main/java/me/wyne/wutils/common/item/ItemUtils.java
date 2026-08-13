@@ -2,6 +2,7 @@ package me.wyne.wutils.common.item;
 
 import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockState;
@@ -76,10 +77,22 @@ public final class ItemUtils {
         item.setItemMeta((ItemMeta) damageable);
     }
 
+    public static void dropActuallyNaturally(BlockBreakEvent event, ItemStack... drops) {
+        dropActuallyNaturally(event, event.getBlock().getLocation(), drops);
+    }
+
+    public static void dropActuallyNaturally(BlockBreakEvent event, Location location, ItemStack... drops) {
+        dropActuallyNaturally(Arrays.asList(drops), event, location);
+    }
+
     public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event) {
+        dropActuallyNaturally(drops, event, event.getBlock().getLocation());
+    }
+
+    public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event, Location location) {
         var originalItems = drops.stream()
                 .filter(ItemUtils::isNotNullOrAir)
-                .map(item -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), item)).toList();
+                .map(item -> event.getBlock().getWorld().dropItemNaturally(location, item)).toList();
         var items = new ArrayList<>(originalItems);
         var dropItemEvent = new BlockDropItemEvent(event.getBlock(), event.getBlock().getState(), event.getPlayer(), items);
         dropItemEvent.callEvent();

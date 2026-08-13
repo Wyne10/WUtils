@@ -3,6 +3,7 @@ package me.wyne.wutils.common.kotlin.item
 import com.destroystokyo.paper.MaterialTags
 import me.wyne.wutils.common.item.ItemUtils
 import me.wyne.wutils.common.item.TileStateLoader
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.block.BlockState
@@ -22,8 +23,17 @@ fun ItemStack.damageNaturally(player: Player) =
 fun ItemStack.damageNaturally(player: Player, damage: Int) =
     ItemUtils.damageNaturally(this, player, damage)
 
+fun BlockBreakEvent.dropActuallyNaturally(vararg drops: ItemStack) =
+    ItemUtils.dropActuallyNaturally(this, *drops)
+
+fun BlockBreakEvent.dropActuallyNaturally(location: Location, vararg drops: ItemStack) =
+    ItemUtils.dropActuallyNaturally(this, location, *drops)
+
 fun Collection<ItemStack>.dropActuallyNaturally(event: BlockBreakEvent) =
     ItemUtils.dropActuallyNaturally(this, event)
+
+fun Collection<ItemStack>.dropActuallyNaturally(event: BlockBreakEvent, location: Location) =
+    ItemUtils.dropActuallyNaturally(this, event, location)
 
 fun ItemStack.saveBlockState(blockState: BlockState) =
     ItemUtils.saveBlockState(this, blockState)
