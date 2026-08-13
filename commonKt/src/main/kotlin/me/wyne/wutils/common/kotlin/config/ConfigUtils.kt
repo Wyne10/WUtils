@@ -106,8 +106,8 @@ fun ConfigurationSection.getDoubleRange(path: String, def: DoubleRange = 0.0..0.
     return def
 }
 
-fun Plugin.saveDirectoryResource(directory: File) =
-    ConfigUtils.saveDirectoryResource(this, directory)
+fun Plugin.saveDirectoryResource(directory: File, force: Boolean = false) =
+    ConfigUtils.saveDirectoryResource(this, directory, force)
 
-fun Plugin.saveDirectoryResource(directoryPath: String) =
-    ConfigUtils.saveDirectoryResource(this, File(dataFolder, directoryPath))
+fun Plugin.saveDirectoryResource(directoryPath: String, force: Boolean = false) =
+    ConfigUtils.saveDirectoryResource(this, File(dataFolder, directoryPath), force)
