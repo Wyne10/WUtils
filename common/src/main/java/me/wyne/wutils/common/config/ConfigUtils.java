@@ -9,6 +9,7 @@ import me.wyne.wutils.common.operation.DoubleOperation;
 import me.wyne.wutils.common.operation.IntOperation;
 import me.wyne.wutils.common.operation.Operations;
 import me.wyne.wutils.common.plugin.PluginUtils;
+import me.wyne.wutils.common.range.LocationRange;
 import me.wyne.wutils.common.range.TimeSpanRange;
 import me.wyne.wutils.common.range.VectorRange;
 import me.wyne.wutils.common.vector.VectorUtils;
@@ -126,6 +127,10 @@ public final class ConfigUtils {
 
     public static VectorRange getVectorRange(ConfigurationSection config, String path) {
         return VectorRange.getVectorRange(config.getString(path));
+    }
+
+    public static LocationRange getLocationRange(ConfigurationSection config, String path) {
+        return LocationRange.getLocationRange(config.getString(path));
     }
 
     public static <E extends Enum<E>> EnumSet<E> getEnumSet(ConfigurationSection section, String key, Class<E> enumClass) {

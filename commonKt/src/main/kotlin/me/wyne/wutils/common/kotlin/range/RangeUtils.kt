@@ -2,6 +2,8 @@ package me.wyne.wutils.common.kotlin.range
 
 import me.wyne.wutils.common.range.ClosedIntRange
 import me.wyne.wutils.common.range.DoubleRange
+import me.wyne.wutils.common.range.LocationRange
+import org.bukkit.Location
 import kotlin.random.Random
 
 typealias DoubleRange = ClosedFloatingPointRange<Double>
@@ -23,3 +25,6 @@ fun me.wyne.wutils.common.kotlin.range.DoubleRange.random() =
 
 fun me.wyne.wutils.common.kotlin.range.DoubleRange.randomOrNull() =
     if (start < endInclusive) Random.nextDouble(start, endInclusive) else null
+
+fun LocationRange.locations(step: Double = 1.0): Iterable<Location> =
+    Iterable { locationIterator(step) }

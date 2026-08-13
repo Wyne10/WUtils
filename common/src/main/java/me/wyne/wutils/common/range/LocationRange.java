@@ -1,6 +1,9 @@
 package me.wyne.wutils.common.range;
 
+import me.wyne.wutils.common.Args;
 import me.wyne.wutils.common.location.LocationUtils;
+import me.wyne.wutils.common.range.iterator.LocationRangeIterator;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -49,6 +52,24 @@ public class LocationRange extends VectorRange {
 
     public boolean contains(Block block) {
         return contains(block.getLocation());
+    }
+
+    public LocationRangeIterator locationIterator() {
+        return locationIterator(1.0);
+    }
+
+    public LocationRangeIterator locationIterator(double step) {
+        return new LocationRangeIterator(this, step);
+    }
+
+    @Override
+    public String toString() {
+        return world.getName() + " " + super.toString();
+    }
+
+    public static LocationRange getLocationRange(String string) {
+        var args = new Args(string);
+        return new LocationRange(Bukkit.getWorld(args.get(0)), VectorRange.getVectorRange(args.get(1)));
     }
 
 }
