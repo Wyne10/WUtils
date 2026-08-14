@@ -53,8 +53,11 @@ public class GenericFactoryMap<T> {
 
     private AttributeKeys getAttributeKeyMap(ConfigurationSection config) {
         Map<String, Set<String>> attributeKeyMap = new LinkedHashMap<>();
-        Set<String> typedKeys = new HashSet<>();
+        Set<String> typedKeys = new LinkedHashSet<>();
         keyMap.keySet().forEach(key -> attributeKeyMap.put(key, new LinkedHashSet<>()));
+        keyMap.keySet().stream()
+                .filter(config::contains)
+                .forEach(key -> attributeKeyMap.get(key).add(key));
         config.getKeys(false).stream()
                 .map(config::getConfigurationSection)
                 .filter(Objects::nonNull)
@@ -64,9 +67,6 @@ public class GenericFactoryMap<T> {
                     attributeKeyMap.get(section.getString("attributeType")).add(section.getName());
                     typedKeys.add(section.getName());
                 });
-        keyMap.keySet().stream()
-                .filter(config::contains)
-                .forEach(key -> attributeKeyMap.get(key).add(key));
         return new AttributeKeys(attributeKeyMap, typedKeys);
     }
 
