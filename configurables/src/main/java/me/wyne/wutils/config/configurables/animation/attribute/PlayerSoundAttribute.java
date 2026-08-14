@@ -11,7 +11,7 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class PlayerSoundAttribute extends SoundAttribute implements ContextAnimationAttribute {
+public class PlayerSoundAttribute extends SoundAttribute implements ContextAnimationAttribute<AnimationContext> {
 
     public PlayerSoundAttribute(String key, Sound value) {
         super(key, value);

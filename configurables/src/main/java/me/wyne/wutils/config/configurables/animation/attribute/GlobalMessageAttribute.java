@@ -14,7 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
-public class GlobalMessageAttribute extends ConfigurableAttribute<List<String>> implements ContextAnimationAttribute {
+public class GlobalMessageAttribute extends ConfigurableAttribute<List<String>> implements ContextAnimationAttribute<AnimationContext> {
 
     public GlobalMessageAttribute(String key, List<String> value) {
         super(key, value);

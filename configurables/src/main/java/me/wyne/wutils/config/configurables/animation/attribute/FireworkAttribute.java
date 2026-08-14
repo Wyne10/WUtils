@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.FireworkData> implements ContextAnimationAttribute {
+public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.FireworkData> implements ContextAnimationAttribute<AnimationContext> {
 
     public FireworkAttribute(String key, FireworkData value) {
         super(key, value);

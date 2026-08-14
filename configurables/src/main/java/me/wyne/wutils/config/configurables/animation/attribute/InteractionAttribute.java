@@ -12,7 +12,7 @@ import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.config.configurables.interaction.InteractionAttributeContext;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class InteractionAttribute extends ConfigurableAttribute<InteractionConfigurable> implements ContextAnimationAttribute {
+public class InteractionAttribute extends ConfigurableAttribute<InteractionConfigurable> implements ContextAnimationAttribute<AnimationContext> {
 
     public InteractionAttribute(String key, InteractionConfigurable value) {
         super(key, value);

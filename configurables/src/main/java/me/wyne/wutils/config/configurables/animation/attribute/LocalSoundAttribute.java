@@ -10,7 +10,7 @@ import me.wyne.wutils.config.configurables.attribute.common.SoundAttribute;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class LocalSoundAttribute extends SoundAttribute implements ContextAnimationAttribute {
+public class LocalSoundAttribute extends SoundAttribute implements ContextAnimationAttribute<AnimationContext> {
 
     public LocalSoundAttribute(String key, Sound value) {
         super(key, value);

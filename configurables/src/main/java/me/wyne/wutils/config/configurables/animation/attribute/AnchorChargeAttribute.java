@@ -9,7 +9,7 @@ import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class AnchorChargeAttribute extends ConfigurableAttribute<Integer> implements ContextAnimationAttribute {
+public class AnchorChargeAttribute extends ConfigurableAttribute<Integer> implements ContextAnimationAttribute<AnimationContext> {
 
     public AnchorChargeAttribute(String key, Integer value) {
         super(key, value);

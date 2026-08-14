@@ -11,7 +11,7 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.title.Title;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class PlayerTitleAttribute extends TitleAttribute implements ContextAnimationAttribute {
+public class PlayerTitleAttribute extends TitleAttribute implements ContextAnimationAttribute<AnimationContext> {
 
     public PlayerTitleAttribute(String key, TitleData value) {
         super(key, value);

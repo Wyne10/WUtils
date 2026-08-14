@@ -9,7 +9,7 @@ import me.wyne.wutils.config.configurables.animation.ContextAnimationAttribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class WorldParticleAttribute extends AnimationParticleAttribute implements ContextAnimationAttribute {
+public class WorldParticleAttribute extends AnimationParticleAttribute implements ContextAnimationAttribute<AnimationContext> {
 
     public WorldParticleAttribute(String key, AnimationParticle value) {
         super(key, value);

@@ -17,7 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribute.ForceFieldData> implements ContextAnimationAttribute {
+public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribute.ForceFieldData> implements ContextAnimationAttribute<AnimationContext> {
 
     public ForceFieldAttribute(String key, ForceFieldData value) {
         super(key, value);

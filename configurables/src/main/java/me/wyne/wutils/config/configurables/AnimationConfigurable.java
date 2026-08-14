@@ -6,6 +6,8 @@ import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurable.ConfigDeserializable;
 import me.wyne.wutils.config.configurable.ConfigBuilder;
 import me.wyne.wutils.config.configurables.animation.AnimationContext;
+import me.wyne.wutils.config.configurables.attribute.AttributeMap;
+import me.wyne.wutils.config.configurables.attribute.ImmutableAttributeContainer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -15,9 +17,10 @@ import java.util.*;
 public class AnimationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<AnimationStepConfigurable> animationSteps;
+    private final AttributeMap attributeMap;
 
     public AnimationConfigurable() {
-        animationSteps = new LinkedList<>();
+        this(AnimationStepConfigurable.ANIMATION_STEP_ATTRIBUTE_MAP);
     }
 
     public AnimationConfigurable(AnimationStepConfigurable... steps) {
@@ -26,7 +29,21 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
     }
 
     public AnimationConfigurable(ConfigurationSection section) {
-        this();
+        this(AnimationStepConfigurable.ANIMATION_STEP_ATTRIBUTE_MAP, section);
+    }
+
+    public AnimationConfigurable(AttributeMap attributeMap) {
+        this.animationSteps = new LinkedList<>();
+        this.attributeMap = attributeMap;
+    }
+
+    public AnimationConfigurable(AttributeMap attributeMap, AnimationStepConfigurable... steps) {
+        this(attributeMap);
+        addSteps(steps);
+    }
+
+    public AnimationConfigurable(AttributeMap attributeMap, ConfigurationSection section) {
+        this(attributeMap);
         fromConfig(section);
     }
 
@@ -48,7 +65,8 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
         config.getKeys(false).forEach(key -> {
             var repeat = config.getInt(key + ".repeat", 1);
             for (int i = 0; i < repeat; i++) {
-                animationSteps.add(new AnimationStepConfigurable(config.getConfigurationSection(key)));
+                animationSteps.add(new AnimationStepConfigurable(
+                        new ImmutableAttributeContainer(attributeMap, config.getConfigurationSection(key))));
             }
         });
     }
