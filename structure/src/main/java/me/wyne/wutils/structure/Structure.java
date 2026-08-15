@@ -97,8 +97,8 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_DEFORM.getKey(), new DeformEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GROW.getKey(), new GrowEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_SMOOTH.getKey(), new SmoothEditModifier.Factory());
-        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_NATURALIZE.getKey(), new NaturalizeEditModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_ADAPT_SURFACE.getKey(), new AdaptSurfaceEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_GREEN.getKey(), new GreenEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_BIOME.getKey(), new BiomeEditModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.EDIT_FLORA.getKey(), new FloraEditModifier.Factory());

@@ -3,14 +3,26 @@ package me.wyne.wutils.structure.modifier.edit;
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.Masks;
+import com.sk89q.worldedit.function.mask.RegionMask;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.convolution.HeightMap;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.structure.mask.MaskUtils;
 import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
 
@@ -55,6 +67,9 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
         double margin = Math.max(1, settings.margin());
         double strength = settings.strength();
 
+        clearUnmatched(editSession, region.getWorld(), clipboardRegion, mask,
+                minX, minY, minZ, maxX, maxY, maxZ);
+
         HeightMap heightMap = new HeightMap(editSession, region, mask);
         int[] target = new int[width * region.getLength()];
 
@@ -86,6 +101,41 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
             heightMap.apply(target);
         } catch (MaxChangedBlocksException e) {
             throw new RuntimeException("Grow modifier '" + getKey() + "' is changing too many blocks", e);
+        }
+    }
+
+    private static void clearUnmatched(@NotNull EditSession editSession, @NotNull World world,
+                                       @NotNull Region clipboardRegion, @Nullable Mask mask,
+                                       int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        if (mask == null)
+            return;
+
+        // Collect from the passed session (reads the un-mutated world) before writing anything.
+        List<BlockVector3> toClear = new ArrayList<>();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int y = minY; y <= maxY; y++) {
+                    BlockVector3 pos = BlockVector3.at(x, y, z);
+                    BlockType type = editSession.getBlock(pos).getBlockType();
+                    var material = type.getMaterial();
+                    if (material.isAir() || material.isLiquid())
+                        continue;
+                    if (mask.test(pos))
+                        continue;
+                    toClear.add(pos);
+                }
+            }
+        }
+        if (toClear.isEmpty())
+            return;
+
+        var air = BlockTypes.AIR.getDefaultState();
+        try (var clearSession = WorldEdit.getInstance().newEditSession(world)) {
+            clearSession.setMask(Masks.negate(new RegionMask(clipboardRegion)));
+            for (BlockVector3 pos : toClear)
+                clearSession.setBlock(pos, air);
+        } catch (WorldEditException e) {
+            throw new RuntimeException("Grow modifier is changing too many blocks while clearing non-ground blocks", e);
         }
     }
 

@@ -24,7 +24,9 @@ import java.util.Set;
 
 public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSettings> {
 
-    private static final Set<BlockType> NEEDS_GROUND = buildVegetationSet();
+    private static final Set<BlockType> NEEDS_GROUND = buildUnstableSet();
+    private static final Set<BlockType> NON_SUPPORTING = buildNonSupporting();
+    private static final Set<BlockType> SELF_STACKABLE = buildSelfStackable();
 
     public DropFloatingEditModifier(@NotNull String key, @NotNull DropFloatingSettings value) {
         super(key, value);
@@ -61,15 +63,16 @@ public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSet
         List<BlockVector3> toRemove = new ArrayList<>();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                boolean belowAir = minY - 1 < world.getMinY()
-                        || editSession.getBlock(BlockVector3.at(x, minY - 1, z)).getBlockType().getMaterial().isAir();
+                BlockType below = minY - 1 < world.getMinY()
+                        ? BlockTypes.AIR
+                        : editSession.getBlock(BlockVector3.at(x, minY - 1, z)).getBlockType();
                 for (int y = minY; y <= maxY; y++) {
                     BlockType type = editSession.getBlock(BlockVector3.at(x, y, z)).getBlockType();
-                    boolean removed = belowAir && NEEDS_GROUND.contains(type);
+                    boolean removed = NEEDS_GROUND.contains(type) && !supports(below, type);
                     if (removed)
                         toRemove.add(BlockVector3.at(x, y, z));
-                    // The block above rests on air when this cell is air, or when we just cleared it.
-                    belowAir = removed || type.getMaterial().isAir();
+                    // The block above rests on air when we just cleared this cell, otherwise on this block.
+                    below = removed ? BlockTypes.AIR : type;
                 }
             }
         }
@@ -83,7 +86,7 @@ public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSet
         }
     }
 
-    private static Set<BlockType> buildVegetationSet() {
+    private static Set<BlockType> buildUnstableSet() {
         // Single-block plants that require a solid block below.
         Set<BlockType> types = new HashSet<>(Arrays.asList(
                 BlockTypes.GRASS, BlockTypes.FERN, BlockTypes.DEAD_BUSH,
@@ -97,7 +100,8 @@ public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSet
                 // Pumpkins and melons for visual aesthetics
                 BlockTypes.PUMPKIN, BlockTypes.MELON,
                 // Snow layers cannot survive without a block beneath them.
-                BlockTypes.SNOW));
+                BlockTypes.SNOW,
+                BlockTypes.TORCH, BlockTypes.REDSTONE_TORCH, BlockTypes.SOUL_TORCH));
         // Flowers and saplings vary by version; pull them from tags where available.
         addCategory(types, BlockCategories.SMALL_FLOWERS);
         addCategory(types, BlockCategories.SAPLINGS);
@@ -108,6 +112,39 @@ public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSet
     private static void addCategory(@NotNull Set<BlockType> types, BlockCategory category) {
         if (category != null)
             types.addAll(category.getAll());
+    }
+
+    private static Set<BlockType> buildNonSupporting() {
+        Set<BlockType> types = new HashSet<>(NEEDS_GROUND);
+        // Full-cube blocks have a solid top face, so they can support the block above them.
+        types.remove(BlockTypes.PUMPKIN);
+        types.remove(BlockTypes.MELON);
+        return Set.copyOf(types);
+    }
+
+    private static Set<BlockType> buildSelfStackable() {
+        Set<BlockType> types = new HashSet<>(Arrays.asList(
+                BlockTypes.CACTUS, BlockTypes.SUGAR_CANE, BlockTypes.BAMBOO,
+                BlockTypes.TALL_GRASS, BlockTypes.LARGE_FERN,
+                BlockTypes.SUNFLOWER, BlockTypes.LILAC, BlockTypes.ROSE_BUSH, BlockTypes.PEONY));
+        types.removeIf(Objects::isNull);
+        return Set.copyOf(types);
+    }
+
+    private static boolean supports(@NotNull BlockType below, @NotNull BlockType above) {
+        if (below.getMaterial().isAir())
+            return false;
+        if (isValidStack(below, above))
+            return true;
+        return !NON_SUPPORTING.contains(below);
+    }
+
+    private static boolean isValidStack(@NotNull BlockType below, @NotNull BlockType above) {
+        if (!SELF_STACKABLE.contains(above))
+            return false;
+        if (above == BlockTypes.BAMBOO)
+            return below == BlockTypes.BAMBOO || below == BlockTypes.BAMBOO_SAPLING;
+        return below == above;
     }
 
     public static final class Factory implements AttributeFactory<DropFloatingEditModifier> {
