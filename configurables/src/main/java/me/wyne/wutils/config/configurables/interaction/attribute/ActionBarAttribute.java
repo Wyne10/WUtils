@@ -20,7 +20,7 @@ public class ActionBarAttribute extends ConfigurableAttribute<List<String>> impl
     }
 
     public ActionBarAttribute(List<String> value) {
-        super(InteractionAttribute.MESSAGE.getKey(), value);
+        super(InteractionAttribute.ACTION_BAR.getKey(), value);
     }
 
     @Override
