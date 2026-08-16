@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
+import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,7 +23,11 @@ public class SnowEditModifier extends RegionRadiusEditModifier {
     @Override
     protected void applyAt(@NotNull EditSession editSession, @NotNull Region region,
                            @NotNull BlockVector3 center, double radius) throws MaxChangedBlocksException {
-        editSession.simulateSnow(columnBase(region, center), radius, columnTop(region));
+        try {
+            editSession.simulateSnow(columnBase(region, center), radius, columnTop(region));
+        } catch (IndexOutOfBoundsException e) {
+            PluginUtils.getLogger().warn("Skipped snow simulation at {} due to a WorldEdit SnowSimulator block-state bug", center, e);
+        }
     }
 
     public static final class Factory implements AttributeFactory<SnowEditModifier> {

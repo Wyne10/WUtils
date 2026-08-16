@@ -7,6 +7,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
+import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,7 +35,11 @@ public class SnowIfColdEditModifier extends RegionRadiusEditModifier {
         if (temperature > SNOW_TEMPERATURE)
             return;
 
-        editSession.simulateSnow(columnBase(region, center), radius, columnTop(region));
+        try {
+            editSession.simulateSnow(columnBase(region, center), radius, columnTop(region));
+        } catch (IndexOutOfBoundsException e) {
+            PluginUtils.getLogger().warn("Skipped snow simulation at {} due to a WorldEdit SnowSimulator block-state bug", center, e);
+        }
     }
 
     public static final class Factory implements AttributeFactory<SnowIfColdEditModifier> {
