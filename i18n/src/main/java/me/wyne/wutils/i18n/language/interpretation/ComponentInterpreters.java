@@ -7,7 +7,10 @@ import java.util.function.Function;
 public enum ComponentInterpreters {
     LEGACY(LegacyInterpreter::new),
     ENHANCED_LEGACY(EnhancedLegacyInterpreter::new),
-    MINI_MESSAGE(MiniMessageInterpreter::new);
+    MINI_MESSAGE(MiniMessageInterpreter::new),
+    ITEM_LEGACY(ItemLegacyInterpreter::new),
+    ITEM_ENHANCED_LEGACY(ItemEnhancedLegacyInterpreter::new),
+    ITEM_MINI_MESSAGE(ItemMiniMessageInterpreter::new);
 
     private final Function<StringValidator, ComponentInterpreter> factory;
 
