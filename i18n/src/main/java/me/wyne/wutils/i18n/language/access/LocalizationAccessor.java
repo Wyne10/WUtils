@@ -24,7 +24,7 @@ public interface LocalizationAccessor {
     ComponentInterpreter componentInterpreter();
 
     default boolean contains() {
-        return language().contains(path());
+        return language().getStrings().contains(path());
     }
 
     LocalizedString getString(TextReplacement... textReplacements);

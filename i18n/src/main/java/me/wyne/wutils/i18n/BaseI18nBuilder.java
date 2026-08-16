@@ -1,7 +1,9 @@
 package me.wyne.wutils.i18n;
 
-import me.wyne.wutils.i18n.language.BaseLanguage;
+import me.wyne.wutils.i18n.language.JsonLanguage;
+import me.wyne.wutils.i18n.language.LangLanguage;
 import me.wyne.wutils.i18n.language.Language;
+import me.wyne.wutils.i18n.language.YamlLanguage;
 import me.wyne.wutils.i18n.language.component.ComponentAudiences;
 import me.wyne.wutils.i18n.language.component.PaperComponentAudiences;
 import me.wyne.wutils.i18n.language.interpretation.BaseInterpreter;
@@ -124,9 +126,18 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         String languageCode = getLanguageCode(languageFile);
         if (getLanguageMap().containsKey(languageCode))
             return (T) this;
-        getLanguageMap().put(languageCode, new BaseLanguage(defaultLanguage, languageFile, getLogger()));
+        getLanguageMap().put(languageCode, createLanguage(defaultLanguage, languageFile));
         getLogger().debug("Loaded {} language", languageCode);
         return (T) this;
+    }
+
+    public Language createLanguage(@Nullable Language defaultLanguage, File languageFile) {
+        String extension = FilenameUtils.getExtension(languageFile.getName());
+        if (extension.equalsIgnoreCase("json"))
+            return new JsonLanguage(defaultLanguage, languageFile, getLogger());
+        if (extension.equalsIgnoreCase("lang"))
+            return new LangLanguage(defaultLanguage, languageFile, getLogger());
+        return new YamlLanguage(defaultLanguage, languageFile, getLogger());
     }
 
     public T loadLanguage(Plugin plugin, String languageResourcePath) {
@@ -141,7 +152,7 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         } catch (IOException e) {
             getLogger().error("An exception occurred trying to write resource {} to a file", languageResourcePath, e);
         }
-        loadLanguage(new BaseLanguage(languageResourceFile, getLogger()), languageFile);
+        loadLanguage(createLanguage(null, languageResourceFile), languageFile);
         return (T) this;
     }
 

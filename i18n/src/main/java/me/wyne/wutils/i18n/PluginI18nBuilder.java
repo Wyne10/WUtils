@@ -56,8 +56,8 @@ public class PluginI18nBuilder extends BaseI18nBuilder<PluginI18nBuilder> {
 
     @Override
     public I18n build() {
-        loadDefaultLanguage();
         loadLanguages();
+        loadDefaultLanguage();
         return super.build();
     }
 

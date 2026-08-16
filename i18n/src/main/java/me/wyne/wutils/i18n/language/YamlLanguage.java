@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class BaseLanguage implements Language {
+public class YamlLanguage implements Language {
 
     private final Logger logger;
 
@@ -21,30 +21,24 @@ public class BaseLanguage implements Language {
     private final Locale locale;
 
     private final File languageFile;
-    private final ConfigurationSection strings;
+    private final LanguageStrings strings;
     private final Map<String, String> stringMap = new HashMap<>();
 
-    public BaseLanguage(File languageFile, Logger logger) {
-        this.logger = logger;
-        this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
-        this.locale = new Locale(languageCode);
-        this.languageFile = languageFile;
-        this.strings = YamlConfiguration.loadConfiguration(languageFile);
-        strings.getKeys(false).stream()
-                .filter(strings::isString)
-                .forEach(path -> stringMap.put(path, strings.getString(path)));
+    public YamlLanguage(File languageFile, Logger logger) {
+        this(null, languageFile, logger);
     }
 
-    public BaseLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
+    public YamlLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
         this.logger = logger;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
         this.languageFile = languageFile;
-        this.strings = YamlConfiguration.loadConfiguration(languageFile);
-        strings.getKeys(false).stream()
-                .filter(strings::isString)
-                .forEach(path -> stringMap.put(path, strings.getString(path)));
+        ConfigurationSection section = YamlConfiguration.loadConfiguration(languageFile);
+        this.strings = new YamlLanguageStrings(section);
+        section.getKeys(false).stream()
+                .filter(section::isString)
+                .forEach(path -> stringMap.put(path, section.getString(path)));
     }
 
     private void mergeDefaultStrings(@Nullable Language defaultLanguage, File languageFile) {
@@ -75,18 +69,13 @@ public class BaseLanguage implements Language {
     }
 
     @Override
-    public ConfigurationSection getStrings() {
+    public LanguageStrings getStrings() {
         return strings;
     }
 
     @Override
     public Map<String, String> getStringMap() {
         return stringMap;
-    }
-
-    @Override
-    public boolean contains(String path) {
-        return strings.contains(path);
     }
 
 }
