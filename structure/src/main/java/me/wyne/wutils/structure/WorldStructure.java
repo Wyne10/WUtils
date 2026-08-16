@@ -16,6 +16,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import me.wyne.wutils.common.plugin.PluginUtils;
 import me.wyne.wutils.config.configurables.attribute.AttributeContainer;
 import me.wyne.wutils.structure.persistence.WorldStructureMemento;
 import me.wyne.wutils.structure.scheme.ClipboardScan;
@@ -70,8 +71,13 @@ public class WorldStructure implements AutoCloseable {
 
     public void spawn() {
         snapshot = getRegionSnapshot();
-        pasteStructure();
-        setProtectedRegion();
+        try {
+            pasteStructure();
+            setProtectedRegion();
+        } catch (RuntimeException e) {
+            restoreRegionSnapshot();
+            throw e;
+        }
     }
 
     public @NotNull WorldStructureMemento capture() {
@@ -143,7 +149,13 @@ public class WorldStructure implements AutoCloseable {
         var region = new CuboidRegion(clipboardRegion.getWorld(), this.region.getMinimumPoint(), this.region.getMaximumPoint());
         var snapshot = new BlockArrayClipboard(region);
         var forwardExtentCopy = new ForwardExtentCopy(clipboardRegion.getWorld(), region, snapshot, region.getMinimumPoint());
-        snapshotModifiers.forEach(snapshotModifier -> snapshotModifier.apply(forwardExtentCopy, clipboardRegion.getWorld()));
+        snapshotModifiers.forEach(snapshotModifier -> {
+            try {
+                snapshotModifier.apply(forwardExtentCopy, clipboardRegion.getWorld());
+            } catch (RuntimeException e) {
+                PluginUtils.getLogger().error("Structure {} snapshot modifier {} threw an exception, skipping", uniqueKey, snapshotModifier.getClass().getSimpleName(), e);
+            }
+        });
         try {
             Operations.complete(forwardExtentCopy);
         } catch (WorldEditException e) {
@@ -161,7 +173,13 @@ public class WorldStructure implements AutoCloseable {
             var pasteBuilder = clipboardHolder
                     .createPaste(editSession)
                     .to(location.toVector().toBlockPoint());
-            pasteModifiers.forEach(pasteModifier -> pasteModifier.apply(pasteBuilder, clipboardRegion.getWorld()));
+            pasteModifiers.forEach(pasteModifier -> {
+                try {
+                    pasteModifier.apply(pasteBuilder, clipboardRegion.getWorld());
+                } catch (RuntimeException e) {
+                    PluginUtils.getLogger().error("Structure {} paste modifier {} threw an exception, skipping", uniqueKey, pasteModifier.getClass().getSimpleName(), e);
+                }
+            });
             Operations.complete(pasteBuilder.build());
         } catch (WorldEditException e) {
             throw new RuntimeException("Structure " + uniqueKey + " paste exception", e);
@@ -169,6 +187,8 @@ public class WorldStructure implements AutoCloseable {
         for (EditSessionModifier modifier : editSessionModifiers) {
             try (var editSession = WorldEdit.getInstance().newEditSession(clipboardRegion.getWorld())) {
                 modifier.apply(editSession, clipboardRegion);
+            } catch (RuntimeException e) {
+                PluginUtils.getLogger().error("Structure {} edit session modifier {} threw an exception, skipping", uniqueKey, modifier.getClass().getSimpleName(), e);
             }
         }
     }
