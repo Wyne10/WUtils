@@ -3,8 +3,16 @@ package me.wyne.wutils.structure.modifier.region;
 import me.wyne.wutils.common.Args;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An amount to grow or shrink a region by, scoped to the horizontal axes, the vertical axis, or
+ * both.
+ */
 public record ScopedAmount(int amount, boolean horizontal, boolean vertical) {
 
+    /**
+     * Parses an amount with optional {@code -h}/{@code -v} scope flags, e.g. {@code "3 -h"}.
+     * Specifying neither flag, or both, scopes to both axes.
+     */
     public static @NotNull ScopedAmount parse(@NotNull String input) {
         boolean h = false, v = false;
         int amount = 1;

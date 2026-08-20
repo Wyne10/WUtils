@@ -12,38 +12,50 @@ import me.wyne.wutils.config.configurables.attribute.common.ColorsAttribute;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+/**
+ * A single firework effect (type, flicker/trail, colors, fade colors), nested under a
+ * {@link FireworkAttribute}'s {@code effects} section.
+ *
+ * <p>{@link #toConfig} renders only the effect's body, leading with a newline, because it is always
+ * written through {@link ConfigBuilder#appendComposite} — which has already emitted the key.</p>
+ */
 public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffect> {
 
-    public FireworkEffectAttribute(String key, FireworkEffect value) {
+    public FireworkEffectAttribute(@NotNull String key, @NotNull FireworkEffect value) {
         super(key, value);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
-        builder.appendString(depth, getKey(), "");
-        builder.append(depth + 1, "type", getValue().getType().name());
-        builder.appendIfNotEqual(depth + 1, "flicker", getValue().hasFlicker(), false);
-        builder.appendIfNotEqual(depth + 1, "trail", getValue().hasFlicker(), false);
+        builder.append(depth, "type", getValue().getType().name());
+        builder.appendIfNotEqual(depth, "flicker", getValue().hasFlicker(), false);
+        builder.appendIfNotEqual(depth, "trail", getValue().hasTrail(), false);
+        appendColors(builder, depth, "colors", "color-", getValue().getColors());
+        appendColors(builder, depth, "fadeColors", "fade-", getValue().getFadeColors());
+        return builder.buildNoTrail();
+    }
+
+    // An empty section would reload as a null ConfigurationSection and NPE in CompositeAttribute.
+    private void appendColors(@NotNull ConfigBuilder builder, int depth, @NotNull String path,
+                              @NotNull String prefix, @NotNull List<@NotNull Color> colors) {
+        if (colors.isEmpty())
+            return;
+        builder.appendString(depth, path, "");
         int i = 0;
-        builder.appendString(depth + 1, "colors", "");
-        for (Color color : getValue().getColors()) {
-            builder.append(depth + 2, "color-" + i, color.asRGB());
+        for (Color color : colors) {
+            builder.append(depth + 1, prefix + i, ColorAttribute.toHex(color));
             i++;
         }
-        i = 0;
-        builder.appendString(depth + 1, "fadeColors", "");
-        for (Color color : getValue().getFadeColors()) {
-            builder.append(depth + 2, "fade-" + i, color.asRGB());
-            i++;
-        }
-        return builder.buildNoSpace();
     }
 
     public static final class Factory implements CompositeAttributeFactory<FireworkEffectAttribute> {
         @Override
-        public FireworkEffectAttribute fromSection(String key, ConfigurationSection section) {
+        public @NotNull FireworkEffectAttribute fromSection(@NotNull String key, @NotNull ConfigurationSection section) {
             return new FireworkEffectAttribute(
                     key,
                     FireworkEffect.builder()
@@ -57,7 +69,7 @@ public class FireworkEffectAttribute extends ConfigurableAttribute<FireworkEffec
         }
 
         @Override
-        public FireworkEffectAttribute fromString(String key, String string, ConfigurationSection config) {
+        public @NotNull FireworkEffectAttribute fromString(@NotNull String key, @NotNull String string, @NotNull ConfigurationSection config) {
             var args = new Args(string);
             return new FireworkEffectAttribute(
                     key,

@@ -7,20 +7,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Static helpers for locating the owning plugin and the running server version.
+ */
 public final class PluginUtils {
 
-    public static final Pattern VERSION_REGEX = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?");
+    /**
+     * Matches a Bukkit version string's {@code major.minor} and optional {@code .patch}
+     * segments, e.g. against {@link Bukkit#getBukkitVersion()}.
+     */
+    public static final @NotNull Pattern VERSION_REGEX = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?");
 
     private static int currentServerVersion = 0;
     private static Plugin plugin = null;
     private static Logger logger = null;
 
-    @Nonnull
-    public static synchronized Plugin getPlugin() {
+    /**
+     * Returns the plugin that owns the classloader {@link PluginUtils} was loaded by, caching
+     * the result after the first call. Delegates to {@link JavaPlugin#getProvidingPlugin}, which
+     * throws if this class was not loaded from a plugin jar.
+     */
+    public static synchronized @NotNull Plugin getPlugin() {
         if (plugin == null) {
             plugin = JavaPlugin.getProvidingPlugin(PluginUtils.class);
         }
@@ -28,8 +38,10 @@ public final class PluginUtils {
         return plugin;
     }
 
-    @NotNull
-    public static Logger getLogger() {
+    /**
+     * Returns {@link #getPlugin()}'s SLF4J logger, caching the result after the first call.
+     */
+    public static @NotNull Logger getLogger() {
         if (logger == null) {
             logger = getPlugin().getSLF4JLogger();
         }
@@ -37,6 +49,12 @@ public final class PluginUtils {
         return logger;
     }
 
+    /**
+     * Parses {@link Bukkit#getBukkitVersion()} into a comparable integer combining the major,
+     * minor and patch segments (e.g. {@code 1.16.5} becomes {@code 1165}), caching the result
+     * after the first successful parse. Returns {@code 0} if the version string could not be
+     * parsed.
+     */
     public static int getServerVersion() {
         if (currentServerVersion != 0)
             return currentServerVersion;
@@ -61,7 +79,10 @@ public final class PluginUtils {
         return version;
     }
 
-    public static void setPlugin(Plugin plugin) {
+    /**
+     * Overrides the plugin {@link #getPlugin()} returns, bypassing classloader lookup.
+     */
+    public static void setPlugin(@NotNull Plugin plugin) {
         PluginUtils.plugin = plugin;
     }
 

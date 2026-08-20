@@ -27,7 +27,7 @@ public class ContractRegionModifier extends DeltaRegionModifier<DirectionalAmoun
 
     public static final class Factory implements AttributeFactory<ContractRegionModifier> {
         @Override
-        public ContractRegionModifier create(String key, ConfigurationSection config) {
+        public @NotNull ContractRegionModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ContractRegionModifier(key, DirectionalAmount.parse(config.getString(key, "")));
         }
     }

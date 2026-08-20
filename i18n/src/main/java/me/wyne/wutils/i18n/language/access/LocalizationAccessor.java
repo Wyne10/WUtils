@@ -10,94 +10,113 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * Resolves a fixed {@code (language, path)} pair to {@link LocalizedString}/{@link LocalizedComponent}
+ * values, on demand and without caching them itself. See {@link StringLocalizationAccessor} and
+ * {@link ListLocalizationAccessor} for the two implementations: {@code I18n.accessor(...)} chooses
+ * between them once per {@code (language, path)} pair, based on whether the path is a list at the time
+ * of the first lookup, and caches that choice — so if the underlying language file later changes shape
+ * at that path, the cached accessor kind does not follow.
+ */
 public interface LocalizationAccessor {
-    String path();
+    @NotNull String path();
 
-    Language language();
+    @NotNull Language language();
 
-    StringInterpreter stringInterpreter();
+    @NotNull StringInterpreter stringInterpreter();
 
-    ComponentInterpreter componentInterpreter();
+    @NotNull ComponentInterpreter componentInterpreter();
 
+    /**
+     * Returns whether {@link #path()} exists in {@link #language()}.
+     */
     default boolean contains() {
         return language().getStrings().contains(path());
     }
 
-    LocalizedString getString(TextReplacement... textReplacements);
+    @NotNull LocalizedString getString(@NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable Player player);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable Player player);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable Player player, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable Player player, @NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable OfflinePlayer player, @NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender);
 
-    PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedString getPlaceholderString(@Nullable CommandSender sender, @NotNull TextReplacement... textReplacements);
 
-    List<LocalizedString> getStringList(TextReplacement... textReplacements);
+    @NotNull List<@NotNull LocalizedString> getStringList(@NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable Player player, @NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable OfflinePlayer player, @NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender);
 
-    List<PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedString> getPlaceholderStringList(@Nullable CommandSender sender, @NotNull TextReplacement... textReplacements);
 
-    LocalizedComponent getComponent(TextReplacement... textReplacements);
+    @NotNull LocalizedComponent getComponent(@NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable Player player, @NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable OfflinePlayer player, @NotNull TextReplacement... textReplacements);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender);
 
-    PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender, TextReplacement... textReplacements);
+    @NotNull PlaceholderLocalizedComponent getPlaceholderComponent(@Nullable CommandSender sender, @NotNull TextReplacement... textReplacements);
 
-    List<LocalizedComponent> getComponentList(TextReplacement... textReplacements);
+    @NotNull List<@NotNull LocalizedComponent> getComponentList(@NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable Player player, @NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable OfflinePlayer player, @NotNull TextReplacement... textReplacements);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender);
 
-    List<PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, TextReplacement... textReplacements);
+    @NotNull List<@NotNull PlaceholderLocalizedComponent> getPlaceholderComponentList(@Nullable CommandSender sender, @NotNull TextReplacement... textReplacements);
 
-    LocalizationAccessor withLanguage(Language language);
+    /**
+     * Returns an accessor for the same {@link #path()} against {@code language} instead.
+     */
+    @NotNull LocalizationAccessor withLanguage(@NotNull Language language);
 
-    default LocalizedString ls(Language language, String path, String string) {
+    @NotNull
+    default LocalizedString ls(@NotNull Language language, @NotNull String path, @NotNull String string) {
         return new LocalizedString(I18n.global.string(), language, path, string);
     }
 
-    default PlaceholderLocalizedString pls(Language language, String path, String string, @Nullable OfflinePlayer player) {
+    @NotNull
+    default PlaceholderLocalizedString pls(@NotNull Language language, @NotNull String path, @NotNull String string, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedString(I18n.global.string(), language, path, string, player);
     }
 
-    default LocalizedComponent lc(Language language, String path, Component component, ComponentAudiences audiences) {
+    @NotNull
+    default LocalizedComponent lc(@NotNull Language language, @NotNull String path, @NotNull Component component, @NotNull ComponentAudiences audiences) {
         return new LocalizedComponent(I18n.global.component(), language, path, component, audiences);
     }
 
-    default PlaceholderLocalizedComponent plc(Language language, String path, Component component, ComponentAudiences audiences, @Nullable OfflinePlayer player) {
+    @NotNull
+    default PlaceholderLocalizedComponent plc(@NotNull Language language, @NotNull String path, @NotNull Component component, @NotNull ComponentAudiences audiences, @Nullable OfflinePlayer player) {
         return new PlaceholderLocalizedComponent(I18n.global.component(), language, path, component, audiences, player);
     }
 }

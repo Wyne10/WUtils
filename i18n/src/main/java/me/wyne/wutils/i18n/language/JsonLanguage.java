@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -22,6 +23,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * {@link Language} backed by a JSON object file, parsed with Gson (available transitively via paper-api,
+ * not a declared dependency of this module).
+ *
+ * <p>{@link #getStringMap()} is built from every string value in the object tree, at any depth, keyed by
+ * its full dotted path — so {@code messages.welcome} resolves the same way through
+ * {@link #getStringMap()} as it does through {@link #getStrings()}.</p>
+ */
 public class JsonLanguage implements Language {
 
     private static final Gson GSON = new GsonBuilder()
@@ -39,11 +48,17 @@ public class JsonLanguage implements Language {
     private final LanguageStrings strings;
     private final Map<String, String> stringMap = new HashMap<>();
 
-    public JsonLanguage(File languageFile, Logger logger) {
+    /** Equivalent to {@link #JsonLanguage(Language, File, Logger)} with no default language. */
+    public JsonLanguage(@NotNull File languageFile, @NotNull Logger logger) {
         this(null, languageFile, logger);
     }
 
-    public JsonLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
+    /**
+     * Loads a JSON object from {@code languageFile}, then recursively back-fills any keys present in
+     * {@code defaultLanguage}'s file but missing from this one, rewriting {@code languageFile} on disk if
+     * anything changed. Skipped when {@code defaultLanguage} is {@code null} or its file is empty.
+     */
+    public JsonLanguage(@Nullable Language defaultLanguage, @NotNull File languageFile, @NotNull Logger logger) {
         this.logger = logger;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
@@ -51,14 +66,26 @@ public class JsonLanguage implements Language {
         this.root = loadJson(languageFile);
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.strings = new JsonLanguageStrings(root);
-        for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
+        flattenStrings(root, "");
+    }
+
+    /**
+     * Records every string value reachable under {@code object} into {@link #getStringMap()}, keyed by its
+     * full dotted path. Non-string primitives and arrays are skipped — arrays are reached through
+     * {@link #getStrings()} instead.
+     */
+    private void flattenStrings(@NotNull JsonObject object, @NotNull String prefix) {
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            String path = prefix.isEmpty() ? entry.getKey() : prefix + "." + entry.getKey();
             JsonElement value = entry.getValue();
-            if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
-                stringMap.put(entry.getKey(), value.getAsString());
+            if (value.isJsonObject())
+                flattenStrings(value.getAsJsonObject(), path);
+            else if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
+                stringMap.put(path, value.getAsString());
         }
     }
 
-    private void mergeDefaultStrings(@Nullable Language defaultLanguage, File languageFile) {
+    private void mergeDefaultStrings(@Nullable Language defaultLanguage, @NotNull File languageFile) {
         if (defaultLanguage == null)
             return;
         if (defaultLanguage.getLanguageFile().length() == 0)
@@ -70,7 +97,9 @@ public class JsonLanguage implements Language {
         }
     }
 
-    private boolean mergeMissing(JsonObject from, JsonObject to) {
+    // Recursively copies entries present in `from` but absent from `to`, descending into nested objects
+    // that exist on both sides; returns whether `to` was changed.
+    private boolean mergeMissing(@NotNull JsonObject from, @NotNull JsonObject to) {
         boolean changed = false;
         for (Map.Entry<String, JsonElement> entry : from.entrySet()) {
             String key = entry.getKey();
@@ -85,7 +114,8 @@ public class JsonLanguage implements Language {
         return changed;
     }
 
-    private JsonObject loadJson(File file) {
+    /** Returns an empty object for a missing, empty or unreadable file rather than throwing. */
+    private @NotNull JsonObject loadJson(@Nullable File file) {
         if (file == null || !file.exists() || file.length() == 0)
             return new JsonObject();
         try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
@@ -99,7 +129,7 @@ public class JsonLanguage implements Language {
         return new JsonObject();
     }
 
-    private void writeJson(File file, JsonObject object) {
+    private void writeJson(@NotNull File file, @NotNull JsonObject object) {
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             GSON.toJson(object, writer);
         } catch (IOException e) {
@@ -108,27 +138,27 @@ public class JsonLanguage implements Language {
     }
 
     @Override
-    public String getLanguageCode() {
+    public @NotNull String getLanguageCode() {
         return languageCode;
     }
 
     @Override
-    public Locale getLocale() {
+    public @NotNull Locale getLocale() {
         return locale;
     }
 
     @Override
-    public File getLanguageFile() {
+    public @NotNull File getLanguageFile() {
         return languageFile;
     }
 
     @Override
-    public LanguageStrings getStrings() {
+    public @NotNull LanguageStrings getStrings() {
         return strings;
     }
 
     @Override
-    public Map<String, String> getStringMap() {
+    public @NotNull Map<@NotNull String, @NotNull String> getStringMap() {
         return stringMap;
     }
 

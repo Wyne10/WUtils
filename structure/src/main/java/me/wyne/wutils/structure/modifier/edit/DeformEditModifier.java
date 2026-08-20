@@ -10,6 +10,11 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Applies a WorldEdit deform expression over the margin region via
+ * {@link EditSession#deformRegion}, with coordinates normalized to the region's centre and
+ * half-extents.
+ */
 public class DeformEditModifier extends MarginEditModifier<DeformSettings> {
 
     public DeformEditModifier(@NotNull String key, @NotNull DeformSettings value) {
@@ -47,7 +52,7 @@ public class DeformEditModifier extends MarginEditModifier<DeformSettings> {
 
     public static final class Factory implements AttributeFactory<DeformEditModifier> {
         @Override
-        public DeformEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull DeformEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new DeformEditModifier(key, DeformSettings.parse(config.getString(key, "")));
         }
     }

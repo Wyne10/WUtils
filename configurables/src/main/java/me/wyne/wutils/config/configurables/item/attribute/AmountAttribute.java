@@ -6,25 +6,27 @@ import me.wyne.wutils.config.configurables.item.ItemAttribute;
 import me.wyne.wutils.config.configurables.item.ItemStackAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+/** Sets the stack size. Defaults to {@code 1} when unconfigured. */
 public class AmountAttribute extends ConfigurableAttribute<Integer> implements ItemStackAttribute {
 
-    public AmountAttribute(String key, Integer value) {
+    public AmountAttribute(@NotNull String key, @NotNull Integer value) {
         super(key, value);
     }
 
-    public AmountAttribute(Integer value) {
+    public AmountAttribute(@NotNull Integer value) {
         super(ItemAttribute.AMOUNT.getKey(), value);
     }
 
     @Override
-    public void apply(ItemStack item) {
+    public void apply(@NotNull ItemStack item) {
         item.setAmount(getValue());
     }
 
     public static final class Factory implements AttributeFactory<AmountAttribute> {
         @Override
-        public AmountAttribute create(String key, ConfigurationSection config) {
+        public @NotNull AmountAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new AmountAttribute(key, config.getInt(key, 1));
         }
     }

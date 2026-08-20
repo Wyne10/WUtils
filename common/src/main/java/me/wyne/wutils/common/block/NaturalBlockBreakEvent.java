@@ -10,9 +10,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+/**
+ * A {@link BlockBreakEvent} fired by {@link BlockUtils#breakActuallyNaturally}
+ * for breaks that are not otherwise natural, letting listeners cancel or adjust the drop/damage
+ * behavior before it is applied.
+ */
 public class NaturalBlockBreakEvent extends BlockBreakEvent {
 
-    public static final Map<Material, Range<Integer>> EXP_DROPS = Map.of(
+    /** Experience-orb count range dropped by each ore/spawner type, matching vanilla ranges. */
+    public static final @NotNull Map<@NotNull Material, @NotNull Range<@NotNull Integer>> EXP_DROPS = Map.of(
             Material.NETHER_GOLD_ORE, new ClosedIntRange(0, 1),
             Material.COAL_ORE, new ClosedIntRange(0, 2),
             Material.REDSTONE_ORE, new ClosedIntRange(1, 5),

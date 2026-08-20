@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -18,14 +19,39 @@ import java.util.concurrent.ThreadLocalRandom;
 import static me.wyne.wutils.common.item.ItemUtils.isNotNullOrAir;
 import static me.wyne.wutils.common.item.ItemUtils.isNullOrAir;
 
+/**
+ * Makes custom anvil recipes obtainable by reimplementing the anvil result-slot pickup.
+ *
+ * <p>A plugin-supplied result cannot normally be taken out of an anvil: the server did not
+ * compute it, so it refuses the result-slot click and Bukkit reports the click as
+ * {@link InventoryAction#NOTHING}. {@link #isClickValid(InventoryClickEvent)} recognises that
+ * case and {@link #getResult(InventoryClickEvent)} performs the pickup by hand.</p>
+ *
+ * <p>Because the pickup is reimplemented rather than delegated, the surrounding vanilla behaviour
+ * is reproduced along with it — repair-cost deduction (waived for {@link GameMode#CREATIVE} and
+ * {@link GameMode#SPECTATOR}), input consumption, and the chance to progressively damage the
+ * anvil block.</p>
+ */
 public final class AnvilUtils {
 
+    /** Chance, per successful pickup, that the anvil advances one stage in {@link #ANVIL_DAMAGE_QUEUE}. */
     public final static double ANVIL_DAMAGE_CHANCE = 0.12;
-    public final static Set<GameMode> ANVIL_DAMAGE_IMMUNITY = Set.of(GameMode.CREATIVE, GameMode.SPECTATOR);
-    public final static Set<Material> ANVIL_TYPES = Set.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL);
-    public final static List<Material> ANVIL_DAMAGE_QUEUE = List.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL, Material.AIR);
+    /** Game modes exempt from anvil repair-cost enforcement. */
+    public final static @NotNull Set<@NotNull GameMode> ANVIL_DAMAGE_IMMUNITY = Set.of(GameMode.CREATIVE, GameMode.SPECTATOR);
+    /** Materials recognized as an anvil, at any damage stage. */
+    public final static @NotNull Set<@NotNull Material> ANVIL_TYPES = Set.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL);
+    /** Anvil damage progression, ending in {@link Material#AIR} once destroyed. */
+    public final static @NotNull List<@NotNull Material> ANVIL_DAMAGE_QUEUE = List.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL, Material.AIR);
 
-    public static boolean isClickValid(InventoryClickEvent e) {
+    /**
+     * Checks whether the given click is a blocked anvil result-slot pickup that
+     * {@link #getResult(InventoryClickEvent)} should handle manually.
+     *
+     * @return {@code true} only when the click targets the anvil result slot with
+     *         {@link InventoryAction#NOTHING} and a non-empty result, and the clicking player's
+     *         repair cost is affordable or the player is immune to it
+     */
+    public static boolean isClickValid(@NotNull InventoryClickEvent e) {
         if (e.getInventory().getType() != InventoryType.ANVIL) return false;
         var anvil = (AnvilInventory) e.getInventory();
         if (e.getSlotType() != InventoryType.SlotType.RESULT) return false;
@@ -36,7 +62,17 @@ public final class AnvilUtils {
         return true;
     }
 
-    public static void getResult(InventoryClickEvent e) {
+    /**
+     * Performs the manual pickup of an anvil result blocked by {@link InventoryAction#NOTHING},
+     * mirroring vanilla pickup/hotbar-swap/drop behavior, deducts the repair cost from the
+     * player's level (unless immune), and consumes the matching amount from both input slots.
+     * <p>
+     * Also has {@link #ANVIL_DAMAGE_CHANCE} chance of advancing the anvil block one damage stage
+     * by firing an {@link AnvilDamagedEvent}, up to destroying it.
+     * <p>
+     * No-op if {@link #isClickValid(InventoryClickEvent)} returns {@code false} for the event.
+     */
+    public static void getResult(@NotNull InventoryClickEvent e) {
         if (!isClickValid(e)) return;
         var anvil = (AnvilInventory) e.getInventory();
         var player = (Player) e.getWhoClicked();

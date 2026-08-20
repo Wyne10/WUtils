@@ -3,69 +3,80 @@ package me.wyne.wutils.i18n.language.component;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.function.Predicate;
 
+/**
+ * {@link ComponentAudiences} using Bukkit types directly as Adventure {@link Audience}s (a {@link Player}
+ * and the console sender natively implement {@code Audience} on Paper). Requires a server that natively
+ * implements Adventure — Paper or a Paper fork — with no additional dependency. This is the default
+ * {@link ComponentAudiences} used by the {@code I18n} builders; use {@link BukkitComponentAudiences}
+ * instead on servers without native Adventure support.
+ */
 public class PaperComponentAudiences implements ComponentAudiences {
 
     @Override
-    public Audience player(Player player) {
+    public @NotNull Audience player(@NotNull Player player) {
         return player;
     }
 
     @Override
-    public Audience sender(CommandSender sender) {
+    public @NotNull Audience sender(@NotNull CommandSender sender) {
         return sender;
     }
 
     @Override
-    public Audience player(UUID playerId) {
-        return Bukkit.getPlayer(playerId);
+    public @NotNull Audience player(@NotNull UUID playerId) {
+        Player player = Bukkit.getPlayer(playerId);
+        return player != null ? player : Audience.empty();
     }
 
     @Override
-    public Audience all() {
+    public @NotNull Audience all() {
         return Bukkit.getServer();
     }
 
     @Override
-    public Audience filter(Predicate<CommandSender> filter) {
+    public @NotNull Audience filter(@NotNull Predicate<CommandSender> filter) {
         return Audience.audience(Bukkit.getOnlinePlayers().stream()
                 .filter(filter)
                 .toList());
     }
 
     @Override
-    public Audience console() {
+    public @NotNull Audience console() {
         return Bukkit.getConsoleSender();
     }
 
     @Override
-    public Audience permission(Key permission) {
+    public @NotNull Audience permission(@NotNull Key permission) {
         return permission(permission.namespace() + '.' + permission.value());
     }
 
     @Override
-    public Audience permission(String permission) {
+    public @NotNull Audience permission(@NotNull String permission) {
         return filter(sender -> sender.hasPermission(permission));
     }
 
     @Override
-    public Audience players() {
+    public @NotNull Audience players() {
         return Audience.audience(Bukkit.getOnlinePlayers());
     }
 
     @Override
-    public Audience server(String serverName) {
+    public @NotNull Audience server(@NotNull String serverName) {
         return Bukkit.getServer();
     }
 
     @Override
-    public Audience world(Key worldKey) {
-        return Bukkit.getWorld(worldKey.value());
+    public @NotNull Audience world(@NotNull Key worldKey) {
+        World world = Bukkit.getWorld(worldKey.value());
+        return world != null ? world : Audience.empty();
     }
 
 }

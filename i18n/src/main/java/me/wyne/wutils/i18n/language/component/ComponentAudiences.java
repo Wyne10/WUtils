@@ -4,30 +4,36 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.function.Predicate;
 
+/**
+ * Resolves Bukkit senders and groups of senders into Adventure {@link Audience}s. See
+ * {@link PaperComponentAudiences} and {@link BukkitComponentAudiences} for the two implementations
+ * this module ships.
+ */
 public interface ComponentAudiences {
-    Audience player(Player player);
+    @NotNull Audience player(@NotNull Player player);
 
-    Audience sender(CommandSender sender);
+    @NotNull Audience sender(@NotNull CommandSender sender);
 
-    Audience player(UUID playerId);
+    @NotNull Audience player(@NotNull UUID playerId);
 
-    Audience all();
+    @NotNull Audience all();
 
-    Audience filter(Predicate<CommandSender> filter);
+    @NotNull Audience filter(@NotNull Predicate<CommandSender> filter);
 
-    Audience console();
+    @NotNull Audience console();
 
-    Audience permission(Key permission);
+    @NotNull Audience permission(@NotNull Key permission);
 
-    Audience permission(String permission);
+    @NotNull Audience permission(@NotNull String permission);
 
-    Audience players();
+    @NotNull Audience players();
 
-    Audience server(String serverName);
+    @NotNull Audience server(@NotNull String serverName);
 
-    Audience world(Key worldKey);
+    @NotNull Audience world(@NotNull Key worldKey);
 }

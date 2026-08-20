@@ -15,100 +15,100 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 fun Player?.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
-    I18n.global.accessor(this, path).getString(*replacements)
+    I18n.global!!.accessor(this, path).getString(*replacements)
 
 fun Player?.localizedStrings(path: String, vararg replacements: TextReplacement): List<LocalizedString> =
-    I18n.global.accessor(this, path).getStringList(*replacements)
+    I18n.global!!.accessor(this, path).getStringList(*replacements)
 
 fun Player?.localizedComponent(path: String, vararg replacements: TextReplacement): LocalizedComponent =
-    I18n.global.accessor(this, path).getComponent(*replacements)
+    I18n.global!!.accessor(this, path).getComponent(*replacements)
 
 fun Player?.localizedComponents(path: String, vararg replacements: TextReplacement): List<LocalizedComponent> =
-    I18n.global.accessor(this, path).getComponentList(*replacements)
+    I18n.global!!.accessor(this, path).getComponentList(*replacements)
 
 fun Player?.placeholderString(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedString =
-    I18n.global.accessor(this, path).getPlaceholderString(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderString(this, *replacements)
 
 fun Player?.placeholderStrings(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedString> =
-    I18n.global.accessor(this, path).getPlaceholderStringList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderStringList(this, *replacements)
 
 fun Player?.placeholderComponent(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedComponent =
-    I18n.global.accessor(this, path).getPlaceholderComponent(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponent(this, *replacements)
 
 fun Player?.placeholderComponents(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
-    I18n.global.accessor(this, path).getPlaceholderComponentList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponentList(this, *replacements)
 
 fun OfflinePlayer?.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
-    I18n.global.accessor(this, path).getString(*replacements)
+    I18n.global!!.accessor(this, path).getString(*replacements)
 
 fun OfflinePlayer?.localizedStrings(path: String, vararg replacements: TextReplacement): List<LocalizedString> =
-    I18n.global.accessor(this, path).getStringList(*replacements)
+    I18n.global!!.accessor(this, path).getStringList(*replacements)
 
 fun OfflinePlayer?.localizedComponent(path: String, vararg replacements: TextReplacement): LocalizedComponent =
-    I18n.global.accessor(this, path).getComponent(*replacements)
+    I18n.global!!.accessor(this, path).getComponent(*replacements)
 
 fun OfflinePlayer?.localizedComponents(path: String, vararg replacements: TextReplacement): List<LocalizedComponent> =
-    I18n.global.accessor(this, path).getComponentList(*replacements)
+    I18n.global!!.accessor(this, path).getComponentList(*replacements)
 
 fun OfflinePlayer?.placeholderString(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedString =
-    I18n.global.accessor(this, path).getPlaceholderString(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderString(this, *replacements)
 
 fun OfflinePlayer?.placeholderStrings(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedString> =
-    I18n.global.accessor(this, path).getPlaceholderStringList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderStringList(this, *replacements)
 
 fun OfflinePlayer?.placeholderComponent(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedComponent =
-    I18n.global.accessor(this, path).getPlaceholderComponent(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponent(this, *replacements)
 
 fun OfflinePlayer?.placeholderComponents(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
-    I18n.global.accessor(this, path).getPlaceholderComponentList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponentList(this, *replacements)
 
 fun CommandSender?.localizedString(path: String, vararg replacements: TextReplacement): LocalizedString =
-    I18n.global.accessor(this, path).getString(*replacements)
+    I18n.global!!.accessor(this, path).getString(*replacements)
 
 fun CommandSender?.localizedStrings(path: String, vararg replacements: TextReplacement): List<LocalizedString> =
-    I18n.global.accessor(this, path).getStringList(*replacements)
+    I18n.global!!.accessor(this, path).getStringList(*replacements)
 
 fun CommandSender?.localizedComponent(path: String, vararg replacements: TextReplacement): LocalizedComponent =
-    I18n.global.accessor(this, path).getComponent(*replacements)
+    I18n.global!!.accessor(this, path).getComponent(*replacements)
 
 fun CommandSender?.localizedComponents(path: String, vararg replacements: TextReplacement): List<LocalizedComponent> =
-    I18n.global.accessor(this, path).getComponentList(*replacements)
+    I18n.global!!.accessor(this, path).getComponentList(*replacements)
 
 fun CommandSender?.placeholderString(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedString =
-    I18n.global.accessor(this, path).getPlaceholderString(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderString(this, *replacements)
 
 fun CommandSender?.placeholderStrings(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedString> =
-    I18n.global.accessor(this, path).getPlaceholderStringList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderStringList(this, *replacements)
 
 fun CommandSender?.placeholderComponent(path: String, vararg replacements: TextReplacement): PlaceholderLocalizedComponent =
-    I18n.global.accessor(this, path).getPlaceholderComponent(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponent(this, *replacements)
 
 fun CommandSender?.placeholderComponents(path: String, vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
-    I18n.global.accessor(this, path).getPlaceholderComponentList(this, *replacements)
+    I18n.global!!.accessor(this, path).getPlaceholderComponentList(this, *replacements)
 
 fun String.localizedString(vararg replacements: TextReplacement): LocalizedString =
-    I18n.global.accessor(this).getString(*replacements)
+    I18n.global!!.accessor(this).getString(*replacements)
 
 fun String.localizedStrings(vararg replacements: TextReplacement): List<LocalizedString> =
-    I18n.global.accessor(this).getStringList(*replacements)
+    I18n.global!!.accessor(this).getStringList(*replacements)
 
 fun String.localizedComponent(vararg replacements: TextReplacement): LocalizedComponent =
-    I18n.global.accessor(this).getComponent(*replacements)
+    I18n.global!!.accessor(this).getComponent(*replacements)
 
 fun String.localizedComponents(vararg replacements: TextReplacement): List<LocalizedComponent> =
-    I18n.global.accessor(this).getComponentList(*replacements)
+    I18n.global!!.accessor(this).getComponentList(*replacements)
 
 fun String.placeholderString(vararg replacements: TextReplacement): PlaceholderLocalizedString =
-    I18n.global.accessor(this).getPlaceholderString(null, *replacements)
+    I18n.global!!.accessor(this).getPlaceholderString(null, *replacements)
 
 fun String.placeholderStrings(vararg replacements: TextReplacement): List<PlaceholderLocalizedString> =
-    I18n.global.accessor(this).getPlaceholderStringList(null, *replacements)
+    I18n.global!!.accessor(this).getPlaceholderStringList(null, *replacements)
 
 fun String.placeholderComponent(vararg replacements: TextReplacement): PlaceholderLocalizedComponent =
-    I18n.global.accessor(this).getPlaceholderComponent(null, *replacements)
+    I18n.global!!.accessor(this).getPlaceholderComponent(null, *replacements)
 
 fun String.placeholderComponents(vararg replacements: TextReplacement): List<PlaceholderLocalizedComponent> =
-    I18n.global.accessor(this).getPlaceholderComponentList(null, *replacements)
+    I18n.global!!.accessor(this).getPlaceholderComponentList(null, *replacements)
 
 fun Collection<String>.reduceRaw() =
     reduceOrNull(I18n::reduceRawString)

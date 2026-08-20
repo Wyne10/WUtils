@@ -12,7 +12,22 @@ import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * An {@link ItemConfigurable} that additionally builds a {@code triumph-gui} {@link GuiItem} — the
+ * item plus its {@link ClickEventAttribute} click handlers. Requires the {@code triumph-gui}
+ * dependency.
+ *
+ * <p>{@link #GUI_ITEM_ATTRIBUTE_MAP} copies {@link ItemConfigurable#ITEM_ATTRIBUTE_MAP} into its own
+ * static initialiser at class-load time. A factory added to {@code ITEM_ATTRIBUTE_MAP} after this
+ * class has been loaded does not reach GUI items — register to both maps explicitly if item
+ * attributes need to apply everywhere.</p>
+ *
+ * <p>{@link GuiItemAttribute#CLICK} is defined but deliberately never registered here, since a raw
+ * click-handling lambda cannot be expressed in YAML; the built {@link GuiItem}'s click handler never
+ * cancels the click event itself.</p>
+ */
 public class GuiConfigurable extends ItemConfigurable {
 
     public final static AttributeMap GUI_ITEM_ATTRIBUTE_MAP = new AttributeMap();
@@ -29,19 +44,19 @@ public class GuiConfigurable extends ItemConfigurable {
         super(new ImmutableAttributeContainer(GUI_ITEM_ATTRIBUTE_MAP));
     }
 
-    public GuiConfigurable(ConfigurationSection section) {
+    public GuiConfigurable(@NotNull ConfigurationSection section) {
         super(new ImmutableAttributeContainer(GUI_ITEM_ATTRIBUTE_MAP), section);
     }
 
-    public GuiConfigurable(AttributeContainer attributeContainer) {
+    public GuiConfigurable(@NotNull AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public GuiConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public GuiConfigurable(@NotNull AttributeContainer attributeContainer, @NotNull ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
-    public GuiItem buildGuiItem(ItemAttributeContext context) {
+    public @NotNull GuiItem buildGuiItem(@NotNull ItemAttributeContext context) {
         var itemStack = build(context);
         var actions = getAttributeContainer().getSet(ClickEventAttribute.class);
         return ItemBuilder.from(itemStack)
@@ -53,22 +68,22 @@ public class GuiConfigurable extends ItemConfigurable {
                 }));
     }
 
-    public GuiItem buildGuiItem(TextReplacement... textReplacements) {
+    public @NotNull GuiItem buildGuiItem(@NotNull TextReplacement... textReplacements) {
         var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
         return buildGuiItem(context);
     }
 
-    public GuiItem buildGuiItem(Player player, TextReplacement... textReplacements) {
+    public @NotNull GuiItem buildGuiItem(@NotNull Player player, @NotNull TextReplacement... textReplacements) {
         var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
         return buildGuiItem(context);
     }
 
-    public GuiItem buildGuiItemComponent(ComponentReplacement... componentReplacements) {
+    public @NotNull GuiItem buildGuiItemComponent(@NotNull ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
         return buildGuiItem(context);
     }
 
-    public GuiItem buildGuiItemComponent(Player player, ComponentReplacement... componentReplacements) {
+    public @NotNull GuiItem buildGuiItemComponent(@NotNull Player player, @NotNull ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         return buildGuiItem(context);
     }
@@ -77,7 +92,7 @@ public class GuiConfigurable extends ItemConfigurable {
         return getValue(GuiItemAttribute.SLOT.getKey(), 0);
     }
 
-    public static AttributeContainerBuilder builder() {
+    public static @NotNull AttributeContainerBuilder builder() {
         return new GuiConfigurable().getAttributeContainer().toBuilder();
     }
 

@@ -11,6 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A {@link StructureRegion} sized exactly to the pasted clipboard's bounds.
+ */
 public class SchemeRegion extends StructureRegion {
 
     public SchemeRegion(@NotNull RegionData regionData) {
@@ -32,13 +35,13 @@ public class SchemeRegion extends StructureRegion {
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return getRegionData().toConfig(depth, configEntry);
     }
 
     public static final class Factory implements GenericFactory<StructureRegion> {
         @Override
-        public StructureRegion create(String key, ConfigurationSection config) {
+        public @NotNull StructureRegion create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SchemeRegion(new RegionData.Factory().create(key, config));
         }
     }

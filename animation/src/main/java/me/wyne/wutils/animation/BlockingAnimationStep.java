@@ -4,6 +4,10 @@ import org.bukkit.Bukkit;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A step whose {@link AnimationRunnable} runs on the main server thread, and which blocks the
+ * animation queue: the next step is not started until this one's {@code duration} has elapsed.
+ */
 public class BlockingAnimationStep extends BaseAnimationStep {
 
     public BlockingAnimationStep(AnimationRunnable runnable, long delay, long period, long duration) {
@@ -34,7 +38,7 @@ public class BlockingAnimationStep extends BaseAnimationStep {
     }
 
     @Override
-    protected void runRepeating(Animation animation) {
+    protected void runRepeating(@NotNull Animation animation) {
         var task = Bukkit.getScheduler().runTaskTimer(
                 animation.getPlugin(),
                 () -> {

@@ -18,6 +18,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Scatters flora across the margin region's surface via WorldEdit's {@link FloraGenerator}, with
+ * per-column probability driven by {@link FloraSettings#density()}.
+ */
 public class FloraEditModifier extends MarginEditModifier<FloraSettings> {
 
     public FloraEditModifier(@NotNull String key, @NotNull FloraSettings value) {
@@ -60,7 +64,7 @@ public class FloraEditModifier extends MarginEditModifier<FloraSettings> {
 
     public static final class Factory implements AttributeFactory<FloraEditModifier> {
         @Override
-        public FloraEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull FloraEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new FloraEditModifier(key, FloraSettings.parse(config.getString(key, "")));
         }
     }

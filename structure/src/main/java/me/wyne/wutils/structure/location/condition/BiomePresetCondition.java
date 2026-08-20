@@ -13,12 +13,16 @@ import java.util.Set;
 public record BiomePresetCondition(@NotNull Set<@NotNull Biome> biomes, @NotNull List<@NotNull String> presets,
                                    boolean invert) implements LocationCondition {
 
-    public static BiomePresetCondition of(@NotNull List<@NotNull String> presets, boolean invert) {
+    /**
+     * Resolves {@code presets} (named biome groups, e.g. {@code "ocean"}) to their member
+     * biomes via {@link BiomePreset#resolve} and builds the condition from the result.
+     */
+    public static @NotNull BiomePresetCondition of(@NotNull List<@NotNull String> presets, boolean invert) {
         return new BiomePresetCondition(BiomePreset.resolve(presets), presets, invert);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .appendCollection(depth, invert ? "is-not-in-biome-preset" : "is-in-biome-preset", presets)
                 .buildNoTrail();

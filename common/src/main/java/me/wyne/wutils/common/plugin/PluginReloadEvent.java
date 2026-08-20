@@ -5,6 +5,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fired synchronously on the calling thread when {@link CompositePlugin#reload()} or
+ * {@link CompositeJavaPlugin#reload()} is invoked, just before the {@link StepScope#RELOAD} steps
+ * run. Not fired by Bukkit itself.
+ */
 public class PluginReloadEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -14,16 +19,19 @@ public class PluginReloadEvent extends Event {
         this.plugin = plugin;
     }
 
-    public Plugin getPlugin() {
+    /**
+     * The plugin being reloaded.
+     */
+    public @NotNull Plugin getPlugin() {
         return plugin;
     }
 
-    public static HandlerList getHandlerList() {
+    public static @NotNull HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 

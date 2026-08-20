@@ -10,11 +10,22 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
+/**
+ * A single reaction to something happening — one or more {@link ContextInteractionAttribute}s (a
+ * message, a sound, a command, ...) fired at an {@link Audience} resolved from the configured
+ * {@link InteractionAudienceAttribute}s.
+ *
+ * <p>{@link #getAudience} unions every declared audience attribute with no de-duplication, and falls
+ * back to a {@link PlayerAudience} wrapping the sender <em>only when no audience attribute is
+ * declared at all</em> — configuring any audience key (e.g. {@code audience-all}) silently drops the
+ * sender from the recipients unless it is also declared.</p>
+ */
 public class InteractionConfigurable extends AttributeConfigurable {
 
     public final static AttributeMap INTERACTION_ATTRIBUTE_MAP = new AttributeMap();
@@ -40,42 +51,42 @@ public class InteractionConfigurable extends AttributeConfigurable {
         super(new ImmutableAttributeContainer(INTERACTION_ATTRIBUTE_MAP));
     }
 
-    public InteractionConfigurable(ConfigurationSection section) {
+    public InteractionConfigurable(@NotNull ConfigurationSection section) {
         super(new ImmutableAttributeContainer(INTERACTION_ATTRIBUTE_MAP), section);
     }
 
-    public InteractionConfigurable(AttributeContainer attributeContainer) {
+    public InteractionConfigurable(@NotNull AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public InteractionConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public InteractionConfigurable(@NotNull AttributeContainer attributeContainer, @NotNull ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
-    public void send(CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         var audience = getAudience(sender);
         getAttributeContainer().getSet(ContextInteractionAttribute.class)
                 .forEach(attribute -> attribute.send(audience, sender, context));
     }
 
-    public void send(CommandSender sender, @Nullable OfflinePlayer placeholderTarget, TextReplacement... textReplacements) {
+    public void send(@NotNull CommandSender sender, @Nullable OfflinePlayer placeholderTarget, @NotNull TextReplacement... textReplacements) {
         var context = new InteractionAttributeContext(placeholderTarget, textReplacements, new ComponentReplacement[]{});
         send(sender, context);
     }
-    public void send(CommandSender sender, TextReplacement... textReplacements) {
+    public void send(@NotNull CommandSender sender, @NotNull TextReplacement... textReplacements) {
         send(sender, I18n.toOfflinePlayer(sender), textReplacements);
     }
 
-    public void sendComponent(CommandSender sender, @Nullable OfflinePlayer placeholderTarget, ComponentReplacement... componentReplacements) {
+    public void sendComponent(@NotNull CommandSender sender, @Nullable OfflinePlayer placeholderTarget, @NotNull ComponentReplacement... componentReplacements) {
         var context = new InteractionAttributeContext(placeholderTarget, new TextReplacement[]{}, componentReplacements);
         send(sender, context);
     }
 
-    public void sendComponent(CommandSender sender, ComponentReplacement... componentReplacements) {
+    public void sendComponent(@NotNull CommandSender sender, @NotNull ComponentReplacement... componentReplacements) {
         sendComponent(sender, I18n.toOfflinePlayer(sender), componentReplacements);
     }
 
-    public Audience getAudience(CommandSender sender) {
+    public @NotNull Audience getAudience(@NotNull CommandSender sender) {
         var audiences = getAttributeContainer().getSet(InteractionAudienceAttribute.class)
                 .stream().map(attribute -> attribute.get(sender))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -84,7 +95,7 @@ public class InteractionConfigurable extends AttributeConfigurable {
         return Audience.audience(audiences);
     }
 
-    public static AttributeContainerBuilder builder() {
+    public static @NotNull AttributeContainerBuilder builder() {
         return new InteractionConfigurable().getAttributeContainer().toBuilder();
     }
 

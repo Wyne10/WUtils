@@ -43,7 +43,7 @@ public class FlipClipboardModifier extends ConfigurableAttribute<FlipSettings> i
 
     public static final class Factory implements AttributeFactory<FlipClipboardModifier> {
         @Override
-        public FlipClipboardModifier create(String key, ConfigurationSection config) {
+        public @NotNull FlipClipboardModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new FlipClipboardModifier(key, FlipSettings.parse(config.getString(key, "")));
         }
     }

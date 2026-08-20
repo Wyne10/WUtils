@@ -12,33 +12,43 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Sets a {@link SkullMeta} owner by player name. No-ops on any meta that is not a
+ * {@link SkullMeta}.
+ *
+ * <p>The name must be one the server has already seen: {@link Bukkit#getPlayerUniqueId}
+ * returning {@code null} for an unknown name aborts the whole config load via
+ * {@code Preconditions.checkNotNull} — the message does name the config path. Prefer
+ * {@link Skull64Attribute} for a fixed texture that does not depend on server lookups.</p>
+ */
 public class SkullAttribute extends ConfigurableAttribute<OfflinePlayer> implements MetaAttribute {
 
-    public SkullAttribute(String key, OfflinePlayer value) {
+    public SkullAttribute(@NotNull String key, @NotNull OfflinePlayer value) {
         super(key, value);
     }
 
-    public SkullAttribute(OfflinePlayer value) {
+    public SkullAttribute(@NotNull OfflinePlayer value) {
         super(ItemAttribute.SKULL.getKey(), value);
     }
 
     @Override
-    public void apply(ItemMeta meta) {
+    public void apply(@NotNull ItemMeta meta) {
         if (!(meta instanceof SkullMeta)) return;
         ((SkullMeta)meta).setOwningPlayer(getValue());
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(), getValue().getName()).buildNoSpace();
     }
 
     public static final class Factory implements AttributeFactory<SkullAttribute> {
         @Override
-        public SkullAttribute create(String key, ConfigurationSection config) {
+        public @NotNull SkullAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             UUID uuid = Bukkit.getPlayerUniqueId(config.getString(key, ""));
             Preconditions.checkNotNull(uuid, "Invalid UUID at " + ConfigUtils.getPath(config, key));
             return new SkullAttribute(key, Bukkit.getOfflinePlayer(uuid));

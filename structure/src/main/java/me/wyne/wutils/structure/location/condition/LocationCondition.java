@@ -9,8 +9,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 
+/**
+ * Validates a candidate placement {@link Location} against a structure-config-declared rule.
+ *
+ * <p>{@link #FACTORY_MAP} is the YAML condition vocabulary: each key is the literal config key
+ * a structure's {@code conditions} section may use. Note that {@code is-in-ocean} and
+ * {@code is-in-mountains} store the <em>inverted</em> boolean they read &mdash; the record's
+ * {@code invert} flag means "must not be", so {@code is-in-ocean: true} is stored as
+ * {@code invert = false} and means "must be in ocean".</p>
+ */
 public interface LocationCondition extends CompositeConfigSerializable {
-    GenericFactoryMap<LocationCondition> FACTORY_MAP = new GenericFactoryMap<>(
+    @NotNull GenericFactoryMap<@NotNull LocationCondition> FACTORY_MAP = new GenericFactoryMap<>(
             new LinkedHashMap<>() {{
                 put("is-in-biome", (key, config) ->
                         new BiomeCondition(ConfigUtils.getKeyedEnumSet(config, key, Biome.class), false));
@@ -24,8 +33,10 @@ public interface LocationCondition extends CompositeConfigSerializable {
                         new BlockCondition(ConfigUtils.getMaterialEnumSet(config, key), false));
                 put("is-not-on-block", (key, config) ->
                         new BlockCondition(ConfigUtils.getMaterialEnumSet(config, key), true));
+                // inverted: "is-in-ocean: true" must store invert = false
                 put("is-in-ocean", (key, config) ->
                         new OceanCondition(!config.getBoolean(key)));
+                // inverted: "is-in-mountains: true" must store invert = false
                 put("is-in-mountains", (key, config) ->
                         new MountainsCondition(!config.getBoolean(key)));
                 put("altitude", (key, config) ->
@@ -35,5 +46,8 @@ public interface LocationCondition extends CompositeConfigSerializable {
             }}
     );
 
+    /**
+     * Returns whether the candidate {@code location} satisfies this condition.
+     */
     boolean isValid(@NotNull Location location);
 }

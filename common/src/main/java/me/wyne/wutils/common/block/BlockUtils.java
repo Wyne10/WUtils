@@ -12,14 +12,21 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
+/**
+ * Block-breaking helpers that reproduce vanilla "natural" break behavior (drops, tool damage,
+ * experience orbs) for breaks that Bukkit does not otherwise treat as natural, such as breaks
+ * triggered by custom mechanics rather than a {@link BlockBreakEvent}.
+ */
 public final class BlockUtils {
 
     private static final ItemStack EMPTY_TOOL = new ItemStack(Material.AIR);
-    public static final Set<Material> UNBREAKABLE_BLOCKS = Set.of(
+    /** Block types excluded from {@link #breakActuallyNaturally(Block, ItemStack, Player)}. */
+    public static final @NotNull Set<@NotNull Material> UNBREAKABLE_BLOCKS = Set.of(
             Material.BARRIER, Material.BEDROCK, Material.JIGSAW, Material.STRUCTURE_BLOCK,
             Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK,
             Material.END_GATEWAY, Material.END_PORTAL, Material.END_PORTAL_FRAME, Material.NETHER_PORTAL,
@@ -28,7 +35,15 @@ public final class BlockUtils {
             Material.STRUCTURE_VOID
     );
 
-    public static void breakActuallyNaturally(Block block, @Nullable ItemStack tool, Player player) {
+    /**
+     * Breaks {@code block} as if mined naturally: rolls drops for {@code tool}, fires a
+     * {@link NaturalBlockBreakEvent} (which callers can cancel or adjust), then applies the
+     * drops, spawns an experience orb when applicable, and damages the tool.
+     * <p>
+     * {@code tool} may be {@code null} to mean an empty hand. No-op for blocks in
+     * {@link #UNBREAKABLE_BLOCKS}, and drops nothing while {@code player} is in creative mode.
+     */
+    public static void breakActuallyNaturally(@NotNull Block block, @Nullable ItemStack tool, @NotNull Player player) {
         if (tool == null)
             tool = EMPTY_TOOL;
         if (UNBREAKABLE_BLOCKS.contains(block.getType())) return;
@@ -57,13 +72,22 @@ public final class BlockUtils {
         }
     }
 
-    public static void setExpDrop(BlockBreakEvent event) {
+    /**
+     * Sets {@code event}'s experience drop to a random amount from {@link NaturalBlockBreakEvent#EXP_DROPS}
+     * for the broken block's type. No-op in creative/adventure mode or for block types with no
+     * configured experience range.
+     */
+    public static void setExpDrop(@NotNull BlockBreakEvent event) {
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE || event.getPlayer().getGameMode() == GameMode.ADVENTURE) return;
         if (!NaturalBlockBreakEvent.EXP_DROPS.containsKey(event.getBlock().getType())) return;
         event.setExpToDrop(NaturalBlockBreakEvent.EXP_DROPS.get(event.getBlock().getType()).getRandom());
     }
 
-    public static float getYaw(BlockFace face) {
+    /**
+     * Converts a cardinal {@code face} to the yaw a player would need to face that direction.
+     * Non-cardinal faces (including diagonals) yield {@code 0.0f}.
+     */
+    public static float getYaw(@NotNull BlockFace face) {
         return switch (face) {
             case SOUTH -> 0.0f;
             case WEST -> 90.0f;

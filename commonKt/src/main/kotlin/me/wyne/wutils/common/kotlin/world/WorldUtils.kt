@@ -5,17 +5,17 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.util.Vector
 
-fun World.getHighestBlockAtAsync(x: Int, y: Int) =
-    WorldUtils.getHighestBlockAtAsync(this, x, y)
+fun World.getHighestBlockAtAsync(x: Int, z: Int) =
+    WorldUtils.getHighestBlockAtAsync(this, x, z)
 
-fun World.getHighestLocationAtAsync(x: Int, y: Int) =
-    WorldUtils.getHighestLocationAtAsync(this, x, y)
+fun World.getHighestLocationAtAsync(x: Int, z: Int) =
+    WorldUtils.getHighestLocationAtAsync(this, x, z)
 
-fun World.getHighestBlockAtAsync(x: Double, y: Double) =
-    WorldUtils.getHighestBlockAtAsync(this, x, y)
+fun World.getHighestBlockAtAsync(x: Double, z: Double) =
+    WorldUtils.getHighestBlockAtAsync(this, x, z)
 
-fun World.getHighestLocationAtAsync(x: Double, y: Double) =
-    WorldUtils.getHighestLocationAtAsync(this, x, y)
+fun World.getHighestLocationAtAsync(x: Double, z: Double) =
+    WorldUtils.getHighestLocationAtAsync(this, x, z)
 
 fun World.getHighestBlockAtAsync(vector: Vector) =
     WorldUtils.getHighestBlockAtAsync(this, vector)

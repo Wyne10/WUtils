@@ -16,7 +16,7 @@ public class EntitiesPasteModifier extends ConfigurableAttribute<Boolean> implem
     }
 
     public EntitiesPasteModifier(@NotNull Boolean value) {
-        super(StructureModifier.SNAPSHOT_ENTITIES.getKey(), value);
+        super(StructureModifier.PASTE_ENTITIES.getKey(), value);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class EntitiesPasteModifier extends ConfigurableAttribute<Boolean> implem
 
     public static final class Factory implements AttributeFactory<EntitiesPasteModifier> {
         @Override
-        public EntitiesPasteModifier create(String key, ConfigurationSection config) {
+        public @NotNull EntitiesPasteModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new EntitiesPasteModifier(key, config.getBoolean(key, false));
         }
     }

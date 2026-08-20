@@ -23,6 +23,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +32,15 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
+/**
+ * Gson {@link JsonSerializer}/{@link JsonDeserializer} for {@link WorldStructureMemento}: writes the
+ * clipboard and snapshot out as {@code .schem} files under {@code schematicDirectory} and everything
+ * else as JSON fields, so a spawned structure survives a restart.
+ *
+ * <p>Requires WorldEdit on the runtime classpath ({@code compileOnlyApi} — the consumer must
+ * supply it); Gson itself is not declared directly by this module but arrives transitively through
+ * WorldEdit's own dependencies, so any consumer able to use this class already has it.</p>
+ */
 public class WorldStructureMementoSerializer implements JsonSerializer<WorldStructureMemento>, JsonDeserializer<WorldStructureMemento> {
 
     private final File schematicDirectory;
@@ -42,6 +52,11 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         this.worldResolver = worldResolver;
     }
 
+    /**
+     * Creates a serializer that resolves a memento's saved world name via {@link Bukkit#getWorld}
+     * (returning {@code null}, and so failing deserialization, if that world is not currently
+     * loaded).
+     */
     public static @NotNull WorldStructureMementoSerializer of(@NotNull File schematicDirectory) {
         return new WorldStructureMementoSerializer(schematicDirectory, name -> {
             org.bukkit.World bukkitWorld = Bukkit.getWorld(name);
@@ -49,8 +64,15 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         });
     }
 
+    /**
+     * Writes {@code src}'s clipboard and snapshot to {@code <uniqueKey>-structure.schem} and
+     * {@code <uniqueKey>-snapshot.schem} under {@code schematicDirectory} as a side effect, then
+     * returns the remaining state as JSON.
+     *
+     * @throws JsonParseException if the clipboard region's world is unset
+     */
     @Override
-    public JsonElement serialize(WorldStructureMemento src, Type typeOfSrc, JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull WorldStructureMemento src, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
         var region = src.region();
         var clipboardRegion = src.clipboardRegion();
         var world = clipboardRegion.getWorld();
@@ -85,8 +107,15 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         return json;
     }
 
+    /**
+     * Rebuilds a {@link WorldStructureMemento} from JSON, reading its clipboard and snapshot back
+     * from the schematic files {@link #serialize} wrote.
+     *
+     * @throws JsonParseException if the saved world name does not resolve via this serializer's
+     *                            world resolver (not currently loaded)
+     */
     @Override
-    public WorldStructureMemento deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public @NotNull WorldStructureMemento deserialize(@NotNull JsonElement element, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
         var json = element.getAsJsonObject();
         var uniqueKey = json.get("uniqueKey").getAsString();
 
@@ -121,7 +150,7 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         return new WorldStructureMemento(uniqueKey, location, region, clipboardRegion, transform, clipboard, snapshot);
     }
 
-    private static JsonElement serializeTransform(@NotNull Transform transform) {
+    private static @NotNull JsonElement serializeTransform(@NotNull Transform transform) {
         if (transform.isIdentity())
             return JsonNull.INSTANCE;
         if (transform instanceof AffineTransform affine) {
@@ -133,7 +162,7 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         throw new UnsupportedOperationException("Cannot serialize transform of type " + transform.getClass().getName());
     }
 
-    private static Transform deserializeTransform(JsonElement element) {
+    private static @NotNull Transform deserializeTransform(@Nullable JsonElement element) {
         if (element == null || element.isJsonNull())
             return new AffineTransform();
         var array = element.getAsJsonArray();
@@ -143,7 +172,7 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         return new AffineTransform(coefficients);
     }
 
-    private static JsonArray vector(double x, double y, double z) {
+    private static @NotNull JsonArray vector(double x, double y, double z) {
         var array = new JsonArray();
         array.add(x);
         array.add(y);
@@ -151,7 +180,7 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         return array;
     }
 
-    private static JsonArray vector(@NotNull BlockVector3 vector) {
+    private static @NotNull JsonArray vector(@NotNull BlockVector3 vector) {
         var array = new JsonArray();
         array.add(vector.getX());
         array.add(vector.getY());
@@ -159,7 +188,7 @@ public class WorldStructureMementoSerializer implements JsonSerializer<WorldStru
         return array;
     }
 
-    private static BlockVector3 vector(JsonElement element) {
+    private static @NotNull BlockVector3 vector(@NotNull JsonElement element) {
         var array = element.getAsJsonArray();
         return BlockVector3.at(array.get(0).getAsInt(), array.get(1).getAsInt(), array.get(2).getAsInt());
     }

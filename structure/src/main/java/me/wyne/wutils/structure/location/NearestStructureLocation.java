@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.StructureType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,18 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+/**
+ * A location near a structure, drawn from an {@code origin} {@link RandomLocation}.
+ *
+ * <p>Follows the same pattern as {@link BiomeLocation}: draw an origin point, locate the
+ * nearest matching structure within {@code radius} via {@link World#locateNearestStructure},
+ * then try up to {@value #BOUNDS_ATTEMPTS} random points at a {@code near} distance from it,
+ * falling back to the plain origin point if none lands inside the origin range (or if no
+ * matching structure is found at all). {@code invert} selects a structure type <em>not</em>
+ * in {@code structures} instead of one that is.</p>
+ *
+ * <p>{@link World#locateNearestStructure} is expensive and must be called on the main thread.</p>
+ */
 public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNull StructureType> structures,
                                        boolean invert, int radius, boolean findUnexplored,
                                        @NotNull ClosedIntRange near) implements StructureLocation {
@@ -45,7 +58,11 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
         return from;
     }
 
-    private StructureType pickStructure() {
+    /**
+     * Picks a random structure type from {@code structures} (or its complement, if
+     * {@code invert}), or {@code null} if the resulting pool is empty.
+     */
+    private @Nullable StructureType pickStructure() {
         List<StructureType> pool;
         if (invert) {
             pool = new ArrayList<>();
@@ -62,7 +79,7 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         List<String> names = structures.stream()
                 .map(StructureType::getName)
                 .toList();
@@ -79,7 +96,7 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
 
     public static final class Factory implements GenericFactory<StructureLocation> {
         @Override
-        public StructureLocation create(String key, ConfigurationSection config) {
+        public @NotNull StructureLocation create(@NotNull String key, @NotNull ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
             var origin = (RandomLocation) new RandomLocation.Factory().create(key, config);
             int radius = section.getInt("radius", DEFAULT_RADIUS);
@@ -93,7 +110,7 @@ public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull 
             return new NearestStructureLocation(origin, structures, invert, radius, findUnexplored, near);
         }
 
-        private static Set<StructureType> parseStructures(ConfigurationSection section, String path) {
+        private static @NotNull Set<@NotNull StructureType> parseStructures(@NotNull ConfigurationSection section, @NotNull String path) {
             Map<String, StructureType> registry = StructureType.getStructureTypes();
             return ConfigUtils.getStringList(section, path).stream()
                     .map(name -> registry.get(name.toLowerCase(Locale.ENGLISH)))

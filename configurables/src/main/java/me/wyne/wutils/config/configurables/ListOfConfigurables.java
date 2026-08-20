@@ -2,32 +2,40 @@ package me.wyne.wutils.config.configurables;
 
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.ConfigSerializable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * A {@link ListConfigurable} of strings, each converted to a {@code T} via a supplier function
+ * rather than read back as {@code T} directly.
+ *
+ * @param <T> the configurable element type
+ */
 @Deprecated
 public class ListOfConfigurables<T extends ConfigSerializable> extends ListConfigurable<T> {
 
     private final Function<Object, T> configurableSupplier;
 
-    public ListOfConfigurables(Collection<T> list, Function<Object, T> configurableSupplier) {
+    public ListOfConfigurables(@NotNull Collection<@NotNull T> list, @NotNull Function<@NotNull Object, @NotNull T> configurableSupplier) {
         super(list);
         this.configurableSupplier = configurableSupplier;
     }
 
-    public ListOfConfigurables(Object configObject, Function<Object, T> configurableSupplier) {
+    public ListOfConfigurables(@Nullable Object configObject, @NotNull Function<@NotNull Object, @NotNull T> configurableSupplier) {
         super(configObject);
         this.configurableSupplier = configurableSupplier;
     }
 
-    public ListOfConfigurables(Function<Object, T> configurableSupplier) {
+    public ListOfConfigurables(@NotNull Function<@NotNull Object, @NotNull T> configurableSupplier) {
         this.configurableSupplier = configurableSupplier;
     }
 
     @Override
-    public String toConfig(ConfigEntry configEntry) {
+    public @NotNull String toConfig(@NotNull ConfigEntry configEntry) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getList().stream()
                 .map(configurable -> configurable.toConfig(configEntry))
@@ -37,7 +45,7 @@ public class ListOfConfigurables<T extends ConfigSerializable> extends ListConfi
     }
 
     @Override
-    public void fromConfig(Object configObject) {
+    public void fromConfig(@Nullable Object configObject) {
         if (configObject == null)
             return;
         List<String> config = (List<String>) configObject;

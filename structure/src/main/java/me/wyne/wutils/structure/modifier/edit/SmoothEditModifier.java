@@ -15,6 +15,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Smooths the terrain height map across the margin region using a Gaussian-weighted
+ * {@link HeightMapFilter}, repeated {@link SmoothSettings#iterations()} times.
+ */
 public class SmoothEditModifier extends MarginEditModifier<SmoothSettings> {
 
     private static final Kernel KERNEL = new GaussianKernel(5, 1.0);
@@ -47,7 +51,7 @@ public class SmoothEditModifier extends MarginEditModifier<SmoothSettings> {
 
     public static final class Factory implements AttributeFactory<SmoothEditModifier> {
         @Override
-        public SmoothEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull SmoothEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SmoothEditModifier(key, SmoothSettings.parse(config.getString(key, "")));
         }
     }

@@ -4,8 +4,14 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.RespawnAnchor;
+import org.jetbrains.annotations.NotNull;
 
-public record AnchorCharge(Location location, int amount) implements AnimationRunnable {
+/**
+ * Adds (or removes, for a negative {@code amount}) charges to the respawn anchor at
+ * {@code location}, clamped to its valid charge range. Does nothing if the block there is not
+ * a respawn anchor.
+ */
+public record AnchorCharge(@NotNull Location location, int amount) implements AnimationRunnable {
 
     @Override
     public void run() {

@@ -26,7 +26,7 @@ public class EntitiesSnapshotModifier extends ConfigurableAttribute<Boolean> imp
 
     public static final class Factory implements AttributeFactory<EntitiesSnapshotModifier> {
         @Override
-        public EntitiesSnapshotModifier create(String key, ConfigurationSection config) {
+        public @NotNull EntitiesSnapshotModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new EntitiesSnapshotModifier(key, config.getBoolean(key, false));
         }
     }

@@ -11,7 +11,7 @@ import java.util.Set;
 
 public record BlockCondition(@NotNull Set<@NotNull Material> blocks, boolean invert) implements LocationCondition {
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         List<String> keys = blocks.stream()
                 .map(block -> block.getKey().toString())
                 .toList();

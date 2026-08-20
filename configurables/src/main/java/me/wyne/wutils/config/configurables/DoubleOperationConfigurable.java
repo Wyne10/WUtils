@@ -6,24 +6,32 @@ import me.wyne.wutils.common.operation.Set;
 import me.wyne.wutils.config.ConfigEntry;
 import me.wyne.wutils.config.configurable.CompositeConfigSerializable;
 import me.wyne.wutils.config.configurable.ConfigDeserializable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link DoubleOperation}, read from a string via {@link Operations#getDoubleOperation}.
+ *
+ * <p>{@link #fromConfig} casts the incoming value to {@code String} with no {@code instanceof}
+ * guard, and a {@code null} config value is a no-op that leaves the previous
+ * {@link #getDoubleOperation()} in place rather than reverting to the constructor default.</p>
+ */
 public class DoubleOperationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private DoubleOperation doubleOperation = new DoubleOperation(0, new Set<>());
 
     public DoubleOperationConfigurable() {}
 
-    public DoubleOperationConfigurable(String operation) {
+    public DoubleOperationConfigurable(@NotNull String operation) {
         fromConfig(operation);
     }
 
-    public DoubleOperationConfigurable(DoubleOperation doubleOperation) {
+    public DoubleOperationConfigurable(@NotNull DoubleOperation doubleOperation) {
         this.doubleOperation = doubleOperation;
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return doubleOperation.toString();
     }
 
@@ -34,7 +42,7 @@ public class DoubleOperationConfigurable implements CompositeConfigSerializable,
         this.doubleOperation = Operations.getDoubleOperation((String) configObject);
     }
 
-    public DoubleOperation getDoubleOperation() {
+    public @NotNull DoubleOperation getDoubleOperation() {
         return doubleOperation;
     }
 

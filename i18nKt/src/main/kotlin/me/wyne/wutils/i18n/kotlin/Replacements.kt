@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.chat.BaseComponent
 import java.util.regex.Pattern
 
-infix fun <T> String.replace(value: T): TextReplacement =
+infix fun <T : Any> String.replace(value: T): TextReplacement =
     Placeholder.replace(this, value)
 
 infix fun String.replace(value: String): TextReplacement =

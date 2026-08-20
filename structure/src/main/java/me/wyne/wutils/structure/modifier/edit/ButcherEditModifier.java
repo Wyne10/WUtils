@@ -14,6 +14,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Removes non-player, non-decorative entities within the radius, sparing armor stands, item
+ * frames and paintings.
+ */
 public class ButcherEditModifier extends RadiusEditModifier {
 
     public ButcherEditModifier(@NotNull String key, @NotNull Double value) {
@@ -45,7 +49,7 @@ public class ButcherEditModifier extends RadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<ButcherEditModifier> {
         @Override
-        public ButcherEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull ButcherEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ButcherEditModifier(key, config.getDouble(key));
         }
     }

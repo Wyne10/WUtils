@@ -1,32 +1,43 @@
 package me.wyne.wutils.config;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
+/**
+ * A single top-level section of the generated config, holding its fields grouped by sub-section.
+ *
+ * <p>Sub-sections are emitted in the order they were first added, and fields in the order they were
+ * added within their sub-section, so regenerating an unchanged config produces unchanged text.</p>
+ */
 public class ConfigSection {
 
     private final String section;
     /**
      * Key - Sub section
      */
-    private final Map<String, Set<ConfigField>> fields = new HashMap<>();
+    private final Map<String, Set<ConfigField>> fields = new LinkedHashMap<>();
 
-    public ConfigSection(String section)
+    public ConfigSection(@NotNull String section)
     {
         this.section = section;
     }
 
-    public ConfigSection(String section, Map<String, Set<ConfigField>> fields) {
+    public ConfigSection(@NotNull String section, @NotNull Map<@NotNull String, @NotNull Set<@NotNull ConfigField>> fields) {
         this(section);
         this.fields.putAll(fields);
     }
 
-    public void addField(String subSection, ConfigField field) {
+    public void addField(@NotNull String subSection, @NotNull ConfigField field) {
         if (!fields.containsKey(subSection))
             fields.put(subSection, new LinkedHashSet<>());
         fields.get(subSection).add(field);
     }
 
-    public String generateConfigSection() {
+    /**
+     * Renders this section's YAML text, including its header line and every sub-section's fields.
+     */
+    public @NotNull String generateConfigSection() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
         stringBuilder.append(section.replaceAll(" ", "").toLowerCase()).append(":").append("\n");
@@ -42,7 +53,7 @@ public class ConfigSection {
         return stringBuilder.toString();
     }
 
-    private String generateSubSection(String subSection) {
+    private @NotNull String generateSubSection(@NotNull String subSection) {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (!subSection.isEmpty()) {

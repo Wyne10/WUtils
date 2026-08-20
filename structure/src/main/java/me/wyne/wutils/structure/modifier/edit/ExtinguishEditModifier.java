@@ -11,6 +11,9 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Removes fire blocks within the radius via {@link EditSession#removeNear}.
+ */
 public class ExtinguishEditModifier extends RadiusEditModifier {
 
     public ExtinguishEditModifier(@NotNull String key, @NotNull Double value) {
@@ -29,7 +32,7 @@ public class ExtinguishEditModifier extends RadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<ExtinguishEditModifier> {
         @Override
-        public ExtinguishEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull ExtinguishEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ExtinguishEditModifier(key, config.getDouble(key));
         }
     }

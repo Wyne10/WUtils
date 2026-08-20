@@ -5,8 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.jetbrains.annotations.NotNull;
 
-public record Firework(Location location, FireworkMeta fireworkMeta) implements AnimationRunnable {
+/**
+ * Spawns a firework at {@code location} with the given meta. Does nothing if
+ * {@code location}'s world is not currently loaded.
+ */
+public record Firework(@NotNull Location location, @NotNull FireworkMeta fireworkMeta) implements AnimationRunnable {
 
     @Override
     public void run() {

@@ -11,21 +11,29 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code command} payload — dispatches each configured command as {@code sender}.
+ *
+ * <p>Not audience-aware: it iterates the configured list and dispatches once per entry as the
+ * single {@code sender} passed to {@link #send}, ignoring the resolved {@code audience} entirely —
+ * it never runs once per audience member.</p>
+ */
 public class PlayerCommandAttribute extends ConfigurableAttribute<List<String>> implements ContextInteractionAttribute {
 
-    public PlayerCommandAttribute(String key, List<String> value) {
+    public PlayerCommandAttribute(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public PlayerCommandAttribute(List<String> value) {
+    public PlayerCommandAttribute(@NotNull List<@NotNull String> value) {
         super(InteractionAttribute.PLAYER_COMMAND.getKey(), value);
     }
 
     @Override
-    public void send(Audience audience, CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull Audience audience, @NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         getValue().stream()
                 .map(s -> I18n.global.accessor(sender, s).getPlaceholderString(context.getPlaceholderTarget(), context.getTextReplacements()).get())
                 .forEach(command -> Bukkit.dispatchCommand(sender, command));
@@ -33,7 +41,7 @@ public class PlayerCommandAttribute extends ConfigurableAttribute<List<String>> 
 
     public static final class Factory implements AttributeFactory<PlayerCommandAttribute> {
         @Override
-        public PlayerCommandAttribute create(String key, ConfigurationSection config) {
+        public @NotNull PlayerCommandAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new PlayerCommandAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }

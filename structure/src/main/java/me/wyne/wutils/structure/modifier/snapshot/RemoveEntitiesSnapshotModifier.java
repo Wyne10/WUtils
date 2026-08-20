@@ -26,7 +26,7 @@ public class RemoveEntitiesSnapshotModifier extends ConfigurableAttribute<Boolea
 
     public static final class Factory implements AttributeFactory<RemoveEntitiesSnapshotModifier> {
         @Override
-        public RemoveEntitiesSnapshotModifier create(String key, ConfigurationSection config) {
+        public @NotNull RemoveEntitiesSnapshotModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new RemoveEntitiesSnapshotModifier(key, config.getBoolean(key, false));
         }
     }

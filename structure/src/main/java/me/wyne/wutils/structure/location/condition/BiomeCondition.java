@@ -11,7 +11,7 @@ import java.util.Set;
 
 public record BiomeCondition(@NotNull Set<@NotNull Biome> biomes, boolean invert) implements LocationCondition {
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         List<String> keys = biomes.stream()
                 .map(biome -> biome.getKey().toString())
                 .toList();

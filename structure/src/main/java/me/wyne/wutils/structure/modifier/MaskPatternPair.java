@@ -8,6 +8,12 @@ import me.wyne.wutils.structure.pattern.PatternUtils;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An already-resolved {@link Mask}/{@link Pattern} pair, requires WorldEdit on the classpath.
+ *
+ * <p>Eager counterpart to {@link LazyMaskPatternPair}: use this when the mask and pattern strings
+ * can be parsed once, up front, against a known world or extent.</p>
+ */
 public record MaskPatternPair(@NotNull Mask mask, @NotNull Pattern pattern) {
 
     public MaskPatternPair(@NotNull String mask, @NotNull String pattern, @NotNull World world) {

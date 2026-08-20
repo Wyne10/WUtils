@@ -3,6 +3,11 @@ package me.wyne.wutils.animation;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A step whose {@link AnimationRunnable} runs on the main server thread, and which does not
+ * block the animation queue: the next step is started immediately, running alongside this one
+ * until its {@code duration} elapses.
+ */
 public class ParallelAnimationStep extends BaseAnimationStep {
 
     public ParallelAnimationStep(AnimationRunnable runnable, long delay, long period, long duration) {
@@ -34,7 +39,7 @@ public class ParallelAnimationStep extends BaseAnimationStep {
     }
 
     @Override
-    protected void runRepeating(Animation animation) {
+    protected void runRepeating(@NotNull Animation animation) {
         var task = Bukkit.getScheduler().runTaskTimer(
                 animation.getPlugin(),
                 () -> {

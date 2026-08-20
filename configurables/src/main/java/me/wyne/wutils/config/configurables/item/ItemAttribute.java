@@ -1,5 +1,11 @@
 package me.wyne.wutils.config.configurables.item;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Config keys for the item attribute vocabulary, in {@code ItemConfigurable} registration
+ * order — which is also application order at build time.
+ */
 public enum ItemAttribute {
     MATERIAL("material"),
     AMOUNT("amount"),
@@ -28,11 +34,11 @@ public enum ItemAttribute {
 
     private final String key;
 
-    ItemAttribute(String key) {
+    ItemAttribute(@NotNull String key) {
         this.key = key;
     }
 
-    public String getKey() {
+    public @NotNull String getKey() {
         return key;
     }
 }

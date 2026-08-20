@@ -13,6 +13,11 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Simulates snowfall within the radius, like {@link SnowEditModifier}, but only when the biome
+ * temperature at the sphere's centre is at or below {@value #SNOW_TEMPERATURE}; otherwise the
+ * call is skipped entirely.
+ */
 public class SnowIfColdEditModifier extends RegionRadiusEditModifier {
 
     private static final double SNOW_TEMPERATURE = 0.15;
@@ -44,7 +49,7 @@ public class SnowIfColdEditModifier extends RegionRadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<SnowIfColdEditModifier> {
         @Override
-        public SnowIfColdEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull SnowIfColdEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SnowIfColdEditModifier(key, config.getDouble(key));
         }
     }

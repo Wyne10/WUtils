@@ -1,12 +1,19 @@
 package me.wyne.wutils.common.particle;
 
 import org.bukkit.Color;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Parses a {@link Color} either by the name of one of {@link Color}'s predefined static fields
+ * (e.g. {@code "RED"}) or, for anything else, as a 24-bit RGB hex value (e.g. {@code "#FF0000"}
+ * or {@code "FF0000"}, {@code #} optional).
+ */
 public class ColorParser implements StringDataParser<Color> {
 
     private final static Collection<String> suggestions = Arrays.stream(Color.class.getDeclaredFields())
@@ -15,12 +22,13 @@ public class ColorParser implements StringDataParser<Color> {
             .filter(name -> !name.equals("BIT_MASK")).toList();
 
     @Override
-    public Collection<String> getSuggestions() {
+    public @NotNull Collection<@NotNull String> getSuggestions() {
         return suggestions;
     }
 
+    /** @throws NumberFormatException if {@code string} is neither a known color name nor valid hex */
     @Override
-    public Color getData(String string) {
+    public @NotNull Color getData(@NotNull String string) {
         if (suggestions.contains(string)) {
             try {
                 return (Color) Color.class.getField(string).get(null);
@@ -33,7 +41,7 @@ public class ColorParser implements StringDataParser<Color> {
     }
 
     @Override
-    public String toString(Object data) {
+    public @NotNull String toString(@Nullable Object data) {
         return String.valueOf(((Color)data).asRGB());
     }
 

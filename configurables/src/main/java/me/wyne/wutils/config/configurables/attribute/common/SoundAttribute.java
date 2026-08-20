@@ -10,21 +10,30 @@ import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * An Adventure {@link Sound}, configurable either as a {@code sound}/{@code volume}/{@code pitch}/
+ * {@code source} section or as a {@code "<sound> <volume> <pitch> <source>"} string, and rendered
+ * back into generated config the same way.
+ *
+ * <p>Both forms resolve the sound name through {@link ConfigUtils#getByKeyOrName}, so a Bukkit enum
+ * name (any case) or a namespaced key both work.</p>
+ */
 public class SoundAttribute extends ConfigurableAttribute<Sound> {
 
-    public SoundAttribute(String key, Sound value) {
+    public SoundAttribute(@NotNull String key, @NotNull Sound value) {
         super(key, value);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(), getValue().name().asString() + " " + getValue().volume() + " " + getValue().pitch() + " " + getValue().source().name()).buildNoSpace();
     }
 
     public static final class Factory implements CompositeAttributeFactory<SoundAttribute> {
         @Override
-        public SoundAttribute fromSection(String key, ConfigurationSection section) {
+        public @NotNull SoundAttribute fromSection(@NotNull String key, @NotNull ConfigurationSection section) {
             var soundKey = Preconditions.checkNotNull(section.getString("sound"), "No sound provided for " + section.getCurrentPath());
             var sound = ConfigUtils.getByKeyOrName(soundKey, org.bukkit.Sound.class);
             Preconditions.checkNotNull(sound, "Invalid sound at " + section.getCurrentPath());
@@ -38,8 +47,12 @@ public class SoundAttribute extends ConfigurableAttribute<Sound> {
             );
         }
 
+        /**
+         * Parses {@code string} with {@link Args#SPACE_DELIMITER}, as
+         * {@code "<sound> <volume> <pitch> <source>"} — volume, pitch and source are all optional.
+         */
         @Override
-        public SoundAttribute fromString(String key, String string, ConfigurationSection config) {
+        public @NotNull SoundAttribute fromString(@NotNull String key, @NotNull String string, @NotNull ConfigurationSection config) {
             var args = new Args(string, Args.SPACE_DELIMITER);
             var soundKey = Preconditions.checkNotNull(args.get(0), "No sound provided for " + ConfigUtils.getPath(config, key));
             var sound = ConfigUtils.getByKeyOrName(soundKey, org.bukkit.Sound.class);

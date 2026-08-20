@@ -23,18 +23,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code firework} effect — launches a firework rocket from a point offset from the context
+ * location. Needs a location; returns {@link AnimationRunnable#EMPTY} when the context has none.
+ */
 public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.FireworkData> implements ContextAnimationAttribute<AnimationContext> {
 
-    public FireworkAttribute(String key, FireworkData value) {
+    public FireworkAttribute(@NotNull String key, @NotNull FireworkData value) {
         super(key, value);
     }
 
-    public FireworkAttribute(FireworkData value) {
+    public FireworkAttribute(@NotNull FireworkData value) {
         super(AnimationAttribute.FIREWORK.getKey(), value);
     }
 
     @Override
-    public AnimationRunnable create(AnimationContext context) {
+    public @NotNull AnimationRunnable create(@NotNull AnimationContext context) {
         if (context.getLocation() == null) return AnimationRunnable.EMPTY;
         var fireworkMeta = (FireworkMeta) new ItemStack(Material.FIREWORK_ROCKET).getItemMeta();
         fireworkMeta.addEffects(getValue().effects());
@@ -44,7 +48,7 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
         builder.appendString(depth, getKey(), "");
         builder.appendIfNotEqual(depth + 1, "offset", getValue().offset(), VectorUtils.zero());
@@ -59,11 +63,16 @@ public class FireworkAttribute extends ConfigurableAttribute<FireworkAttribute.F
         return builder.buildNoSpace();
     }
 
-    public record FireworkData(@NotNull Vector offset, int power, @NotNull List<FireworkEffect> effects) {}
+    public record FireworkData(@NotNull Vector offset, int power, @NotNull List<@NotNull FireworkEffect> effects) {}
 
+    /**
+     * Requires the {@code firework} value to be a section — {@link ConfigurationSection#getConfigurationSection}
+     * is passed straight through, so a non-section value throws {@link NullPointerException} rather
+     * than a descriptive error.
+     */
     public static final class Factory implements AttributeFactory<FireworkAttribute> {
         @Override
-        public FireworkAttribute create(String key, ConfigurationSection config) {
+        public @NotNull FireworkAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             ConfigurationSection section = config.getConfigurationSection(key);
             return new FireworkAttribute(
                     key,

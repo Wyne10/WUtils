@@ -18,15 +18,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Config-declared WorldGuard region metadata: id, whether the region is transient (not
+ * persisted to WorldGuard's own storage), its flags, and its priority. Requires WorldGuard.
+ */
 public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@NotNull Flag<?>, @NotNull Object> flags, int priority) implements CompositeConfigSerializable {
 
+    /**
+     * Applies {@link #flags()} and {@link #priority()} to {@code region}.
+     */
     public void apply(@NotNull ProtectedRegion region) {
         region.setFlags(flags);
         region.setPriority(priority);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         var builder = new ConfigBuilder()
                 .append(depth, "id", id)
                 .appendIfNotEqual(depth, "transient", isTransient, false)
@@ -40,13 +47,19 @@ public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@
     }
 
     @SuppressWarnings("unchecked")
-    private static Object marshal(Flag<?> flag, Object value) {
+    private static @NotNull Object marshal(@NotNull Flag<?> flag, @NotNull Object value) {
         return ((Flag<Object>) flag).marshal(value);
     }
 
+    /**
+     * Builds a {@link RegionData} from config. The {@code flags} section, if present, is
+     * matched against WorldGuard's live flag registry via {@link Flags#fuzzyMatchFlag} and
+     * parsed with each flag's own parser; an unknown flag name or an unparseable value
+     * throws {@link IllegalArgumentException} naming the offending key.
+     */
     public static final class Factory implements GenericFactory<RegionData> {
         @Override
-        public RegionData create(String key, ConfigurationSection config) {
+        public @NotNull RegionData create(@NotNull String key, @NotNull ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
             var id = section.getString("id");
             if (id == null)
@@ -64,7 +77,7 @@ public record RegionData(@NotNull String id, boolean isTransient, @NotNull Map<@
             return new RegionData(id, isTransient, flags, priority);
         }
 
-        private Pair<Flag<?>, Object> parseFlag(String key, String value) {
+        private @NotNull Pair<@NotNull Flag<?>, @NotNull Object> parseFlag(@NotNull String key, @NotNull String value) {
             var flag = Flags.fuzzyMatchFlag(WorldGuard.getInstance().getFlagRegistry(), key);
             if (flag == null)
                 throw new IllegalArgumentException("Unknown region flag '" + key + "'");

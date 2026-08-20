@@ -12,9 +12,14 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Internal helper for resolving the owning {@link Plugin} and a matching SLF4J {@link Logger}, and for
+ * reading the running server's version. Duplicated with small variations in other WUtils modules rather
+ * than shared, since each module is published independently.
+ */
 final class PluginUtils {
 
-    public static final Pattern VERSION_REGEX = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?");
+    public static final @NotNull Pattern VERSION_REGEX = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?");
 
     private static int currentServerVersion = 0;
     private static Plugin plugin = null;
@@ -34,7 +39,7 @@ final class PluginUtils {
     }
 
     @NotNull
-    public static Logger getLogger(Class<?> fallback) {
+    public static Logger getLogger(@NotNull Class<?> fallback) {
         if (logger == null) {
             var plugin = getPlugin();
             if (plugin != null)
@@ -70,7 +75,7 @@ final class PluginUtils {
         return version;
     }
 
-    public static void setPlugin(Plugin plugin) {
+    public static void setPlugin(@NotNull Plugin plugin) {
         PluginUtils.plugin = plugin;
     }
 

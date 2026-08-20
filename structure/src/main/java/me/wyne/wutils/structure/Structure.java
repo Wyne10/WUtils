@@ -72,8 +72,23 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+/**
+ * A config-declared recipe for placing a schematic-based structure: where to look for a valid
+ * location, which {@link Scheme} supplies the clipboard, how the placement region is shaped, which
+ * conditions a candidate location and region must satisfy, and which {@link StructureModifier}s to
+ * apply along the way.
+ *
+ * <p>A {@code Structure} only describes the recipe; it holds no world state. Calling {@link #create}
+ * runs the recipe and yields a {@link WorldStructure}, the placed (but not yet spawned) instance.</p>
+ */
 public class Structure implements CompositeConfigSerializable, ConfigDeserializable {
 
+    /**
+     * Canonical registry of every built-in {@link StructureModifier} key to its factory. This is the
+     * order {@link Builder#build()} re-sorts a structure's configured modifiers into — modifiers
+     * configured under a key present here are moved to this map's iteration order, and any
+     * unrecognised (e.g. custom) modifier keys are appended afterward in their original order.
+     */
     public final static AttributeMap STRUCTURE_MODIFIER_MAP = new AttributeMap();
 
     static {
@@ -158,7 +173,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "key", key)
                 .appendComposite(depth, "location", location, configEntry)
@@ -170,7 +185,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
     }
 
     @Nullable
-    private String conditionsToConfig(int depth, ConfigEntry configEntry) {
+    private String conditionsToConfig(int depth, @NotNull ConfigEntry configEntry) {
         StringBuilder builder = new StringBuilder();
         for (LocationCondition locationCondition : locationConditions) {
             builder.append(locationCondition.toConfig(depth, configEntry));
@@ -181,6 +196,11 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         return builder.isEmpty() ? null : builder.toString();
     }
 
+    /**
+     * Reads {@code key}, {@code location}, {@code scheme}, {@code region}, {@code conditions}, and
+     * {@code modifiers} from the given {@link ConfigurationSection}, replacing this structure's
+     * current state. A {@code null} argument is a no-op.
+     */
     @Override
     public void fromConfig(@Nullable Object configObject) {
         if (configObject == null)
@@ -202,11 +222,26 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         this.structureModifiers = structureModifiers;
     }
 
-    public @NotNull CompletableFuture<@NotNull WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
+    /**
+     * Resolves a valid location and region and returns the resulting {@link WorldStructure}, ready
+     * to be {@link WorldStructure#spawn() spawned}.
+     *
+     * <p>Internally this retries: a candidate location is rejected if it fails any
+     * {@link LocationCondition}, and a candidate region is rejected if it fails any
+     * {@link RegionCondition}, in which case generation restarts from a fresh location. Retrying
+     * continues until every condition passes, {@code timeoutMillis} (measured from the first call,
+     * not per attempt) has elapsed, or {@code token} is cancelled — either of the latter two fails the
+     * returned future. Location lookup hops onto the main thread via {@link Schedulers#sync()}
+     * because it queries world height; the rest of generation, including modifier application, runs
+     * on {@code executor}.</p>
+     *
+     * @param timeoutMillis the total time budget across all retries, in milliseconds
+     */
+    public @NotNull CompletableFuture<@NotNull WorldStructure> create(long timeoutMillis, @Nullable StructureCancellationToken token, @NotNull Executor executor) {
         return createWorldStructure(System.currentTimeMillis(), 0, timeoutMillis, token, executor);
     }
 
-    private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
+    private @NotNull CompletableFuture<@NotNull WorldStructure> createWorldStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, @NotNull Executor executor) {
         return getIntermediateStructure(startTime, elapsedMillis, timeoutMillis, token, executor)
                 .thenComposeAsync(intermediate -> {
                     var regionModifiers = structureModifiers.getSet(RegionModifier.class);
@@ -230,7 +265,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
                 }, executor);
     }
 
-    private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, Executor executor) {
+    private @NotNull CompletableFuture<@NotNull IntermediateStructure> getIntermediateStructure(long startTime, long elapsedMillis, long timeoutMillis, @Nullable StructureCancellationToken token, @NotNull Executor executor) {
         if (token != null && token.isCancelled())
             return CompletableFuture.failedFuture(new CancellationException("Structure generation has been cancelled"));
         if (elapsedMillis > timeoutMillis)
@@ -269,6 +304,11 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
                 }, executor);
     }
 
+    /**
+     * Builds this structure's config {@code key} with {@code <x>}, {@code <y>}, {@code <z>}
+     * placeholders substituted for {@code location}'s block coordinates, then strips any character
+     * outside {@code [A-Za-z0-9_,'+/-]} so the result is safe to use as a WorldGuard region id.
+     */
     private @NotNull String getUniqueKey(@NotNull Location location) {
         return (key + "-<x>x<y>y<z>z")
                 .replace("<x>", String.valueOf(location.getBlockX()))
@@ -305,6 +345,10 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         return structureModifiers;
     }
 
+    /**
+     * Fluent builder for a {@link Structure}. {@link #build()} requires {@code key}, {@code location},
+     * {@code scheme}, and {@code region} to have been set.
+     */
     public static final class Builder {
 
         private String key;
@@ -379,6 +423,14 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
             return this;
         }
 
+        /**
+         * Builds the {@link Structure}, re-sorting configured modifiers into
+         * {@link #STRUCTURE_MODIFIER_MAP}'s registration order and appending any unrecognised
+         * modifier keys afterward in the order they were added.
+         *
+         * @throws NullPointerException if {@code key}, {@code location}, {@code scheme}, or
+         *                               {@code region} was never set
+         */
         public @NotNull Structure build() {
             Preconditions.checkNotNull(key, "Structure key must be set");
             Preconditions.checkNotNull(location, "Structure location must be set");

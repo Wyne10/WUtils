@@ -3,6 +3,11 @@ package me.wyne.wutils.structure.modifier.edit;
 import me.wyne.wutils.common.Args;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Config value for {@link AdaptSurfaceEditModifier}, parsed by {@link #parse} from a single
+ * space-delimited string: {@code margin(4) mask("") sampleMask(#surface)} — all tokens optional,
+ * defaults in parentheses.
+ */
 public record AdaptSurfaceSettings(int margin, @NotNull String mask, @NotNull String sampleMask) {
 
     public static @NotNull AdaptSurfaceSettings parse(@NotNull String input) {

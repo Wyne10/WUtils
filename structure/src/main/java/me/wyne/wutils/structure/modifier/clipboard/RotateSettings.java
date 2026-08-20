@@ -7,10 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The set of rotation angles one of which is picked at random for each placement.
+ */
 public record RotateSettings(@NotNull List<Integer> angles) {
 
     private static final List<Integer> DEFAULT = List.of(0, 90, 180, 270);
 
+    /**
+     * Parses a whitespace-separated list of rotation angles.
+     *
+     * <p>An empty string, {@code true}, {@code random} or {@code any} (case-insensitive) yields
+     * the default set {@code 0 90 180 270}. Each angle must be an integer multiple of 90 and is
+     * normalised into {@code [0,360)}.</p>
+     *
+     * @throws IllegalArgumentException if a token is not an integer or not a multiple of 90
+     */
     public static @NotNull RotateSettings parse(@NotNull String input) {
         var trimmed = input.trim();
         if (trimmed.isEmpty() || trimmed.equalsIgnoreCase("true")

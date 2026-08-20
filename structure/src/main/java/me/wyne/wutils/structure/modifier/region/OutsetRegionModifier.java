@@ -28,7 +28,7 @@ public class OutsetRegionModifier extends DeltaRegionModifier<ScopedAmount> {
 
     public static final class Factory implements AttributeFactory<OutsetRegionModifier> {
         @Override
-        public OutsetRegionModifier create(String key, ConfigurationSection config) {
+        public @NotNull OutsetRegionModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new OutsetRegionModifier(key, ScopedAmount.parse(config.getString(key, "")));
         }
     }

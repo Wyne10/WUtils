@@ -27,7 +27,7 @@ public class ExpandRegionModifier extends DeltaRegionModifier<DirectionalAmount>
 
     public static final class Factory implements AttributeFactory<ExpandRegionModifier> {
         @Override
-        public ExpandRegionModifier create(String key, ConfigurationSection config) {
+        public @NotNull ExpandRegionModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ExpandRegionModifier(key, DirectionalAmount.parse(config.getString(key, "")));
         }
     }

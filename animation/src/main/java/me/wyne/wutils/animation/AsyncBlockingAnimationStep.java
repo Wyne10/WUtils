@@ -4,6 +4,18 @@ import org.bukkit.Bukkit;
 import org.javatuples.Pair;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A step whose {@link AnimationRunnable} runs off the main server thread (via
+ * {@link org.bukkit.scheduler.BukkitScheduler#runTaskLaterAsynchronously} /
+ * {@code runTaskTimerAsynchronously}), so most Bukkit API is unsafe to call from it. It blocks
+ * the animation queue the same way {@link BlockingAnimationStep} does: the next step is not
+ * started until this one's {@code duration} has elapsed.
+ *
+ * <p>The step never calls {@link #close()} from its async callback: on completion it is
+ * scheduled back onto the main server thread, so a runnable's cleanup may safely use Bukkit
+ * API. A close triggered by {@link Animation#stop()} instead runs on whichever thread called
+ * {@code stop()}.</p>
+ */
 public class AsyncBlockingAnimationStep extends BaseAnimationStep {
 
     public AsyncBlockingAnimationStep(AnimationRunnable runnable, long delay, long period, long duration) {
@@ -34,16 +46,18 @@ public class AsyncBlockingAnimationStep extends BaseAnimationStep {
     }
 
     @Override
-    protected void runRepeating(Animation animation) {
+    protected void runRepeating(@NotNull Animation animation) {
         var task = Bukkit.getScheduler().runTaskTimerAsynchronously(
                 animation.getPlugin(),
                 () -> {
                     if (getDuration() > 0 && ticksElapsed >= getDuration()) {
-                        close();
                         var currentTask = animation.getCurrentTask();
                         if (currentTask != null)
                             currentTask.getValue1().cancel();
-                        startNext(animation);
+                        Bukkit.getScheduler().runTask(animation.getPlugin(), () -> {
+                            close();
+                            startNext(animation);
+                        });
                         return;
                     }
                     getRunnable().run(getDelay(), getPeriod(), getDuration());

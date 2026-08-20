@@ -11,21 +11,26 @@ import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code playerMessage} effect — sends the configured lines to the context player. Needs a
+ * player; returns {@link AnimationRunnable#EMPTY} when the context has none.
+ */
 public class PlayerMessageAttribute extends ConfigurableAttribute<List<String>> implements ContextAnimationAttribute<AnimationContext> {
 
-    public PlayerMessageAttribute(String key, List<String> value) {
+    public PlayerMessageAttribute(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public PlayerMessageAttribute(List<String> value) {
+    public PlayerMessageAttribute(@NotNull List<@NotNull String> value) {
         super(AnimationAttribute.PLAYER_MESSAGE.getKey(), value);
     }
 
     @Override
-    public AnimationRunnable create(AnimationContext context) {
+    public @NotNull AnimationRunnable create(@NotNull AnimationContext context) {
         if (context.getPlayer() == null) return AnimationRunnable.EMPTY;
         return new MessageEffect(
                 I18n.global.getAudiences().player(context.getPlayer()),
@@ -37,7 +42,7 @@ public class PlayerMessageAttribute extends ConfigurableAttribute<List<String>> 
 
     public static final class Factory implements AttributeFactory<PlayerMessageAttribute> {
         @Override
-        public PlayerMessageAttribute create(String key, ConfigurationSection config) {
+        public @NotNull PlayerMessageAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new PlayerMessageAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }

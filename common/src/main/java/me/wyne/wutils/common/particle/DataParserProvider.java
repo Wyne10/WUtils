@@ -7,10 +7,18 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Looks up the {@link StringDataParser} registered for a particle data class. Lookup is an exact
+ * {@link Class} match against a fixed set of {@link Void}, {@link Material}, {@link BlockFace},
+ * {@link Potion}, {@link Integer}, {@link Color}, {@link ItemStack}, {@link BlockData} and
+ * {@link Particle.DustOptions} parsers — subclasses and unregistered classes have no parser.
+ */
 @SuppressWarnings("deprecation")
 public final class DataParserProvider {
 
@@ -27,7 +35,8 @@ public final class DataParserProvider {
         { put(Particle.DustOptions.class, new DustOptionsParser()); }
     };
 
-    public static StringDataParser<?> getDataParser(Class<?> clazz)
+    /** Returns the parser registered for {@code clazz}, or {@code null} if none is registered for that exact class. */
+    public static @Nullable StringDataParser<?> getDataParser(@NotNull Class<?> clazz)
     {
         return parserMap.get(clazz);
     }

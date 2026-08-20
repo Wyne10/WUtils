@@ -32,7 +32,7 @@ public class RotateClipboardModifier extends ConfigurableAttribute<RotateSetting
 
     public static final class Factory implements AttributeFactory<RotateClipboardModifier> {
         @Override
-        public RotateClipboardModifier create(String key, ConfigurationSection config) {
+        public @NotNull RotateClipboardModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new RotateClipboardModifier(key, RotateSettings.parse(config.getString(key, "")));
         }
     }

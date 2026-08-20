@@ -7,20 +7,28 @@ import me.wyne.wutils.i18n.I18n;
 import me.wyne.wutils.i18n.language.component.BukkitComponentAudiences;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Sets the item's display name, resolving the configured string through
+ * {@code I18n.global.accessor(...)} — so it may be a translation key, MiniMessage markup or a
+ * PlaceholderAPI placeholder, with {@code context}'s player deciding language and placeholder
+ * source. Branches on whether the configured audience is a {@link BukkitComponentAudiences} and
+ * uses the deprecated bungee component API if so. Defaults to an empty string when unconfigured.
+ */
 public class NameAttribute extends ConfigurableAttribute<String> implements ContextMetaAttribute {
 
-    public NameAttribute(String key, String value) {
+    public NameAttribute(@NotNull String key, @NotNull String value) {
         super(key, value);
     }
 
-    public NameAttribute(String value) {
+    public NameAttribute(@NotNull String value) {
         super(ItemAttribute.NAME.getKey(), value);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void apply(ItemMeta meta, ItemAttributeContext context) {
+    public void apply(@NotNull ItemMeta meta, @NotNull ItemAttributeContext context) {
         if (I18n.global.getAudiences() instanceof BukkitComponentAudiences)
             meta.setDisplayNameComponent(I18n.global.accessor(context.getPlayer(), getValue()).getPlaceholderComponent(context.getPlayer(), context.getTextReplacements()).replace(context.getComponentReplacements()).bungee());
         else
@@ -29,7 +37,7 @@ public class NameAttribute extends ConfigurableAttribute<String> implements Cont
 
     public static final class Factory implements AttributeFactory<NameAttribute> {
         @Override
-        public NameAttribute create(String key, ConfigurationSection config) {
+        public @NotNull NameAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new NameAttribute(key, config.getString(key, ""));
         }
     }

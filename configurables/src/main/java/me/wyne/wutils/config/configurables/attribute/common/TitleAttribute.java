@@ -12,14 +12,20 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An Adventure {@link Title}, configurable either as a {@code title}/{@code subtitle}/{@code fadeIn}/
+ * {@code stay}/{@code fadeOut} section or as a
+ * {@code "<title> <subtitle> <fadeIn> <stay> <fadeOut>"} string, and rendered back the same way.
+ * Fade/stay times are ticks.
+ */
 public class TitleAttribute extends ConfigurableAttribute<TitleAttribute.TitleData> {
 
-    public TitleAttribute(String key, TitleData value) {
+    public TitleAttribute(@NotNull String key, @NotNull TitleData value) {
         super(key, value);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(),
                 getValue().title() + " " +
                         getValue().subtitle() + " " +
@@ -45,7 +51,7 @@ public class TitleAttribute extends ConfigurableAttribute<TitleAttribute.TitleDa
 
     public static final class Factory implements CompositeAttributeFactory<TitleAttribute> {
         @Override
-        public TitleAttribute fromSection(String key, ConfigurationSection section) {
+        public @NotNull TitleAttribute fromSection(@NotNull String key, @NotNull ConfigurationSection section) {
             return new TitleAttribute(
                     key,
                     new TitleData(
@@ -60,8 +66,13 @@ public class TitleAttribute extends ConfigurableAttribute<TitleAttribute.TitleDa
             );
         }
 
+        /**
+         * Parses {@code string} with {@link Args}'s default colon-or-whitespace delimiter, as
+         * {@code "<title>:<subtitle>:<fadeIn>:<stay>:<fadeOut>"} (or space-separated). A colon inside
+         * the title or subtitle text is therefore indistinguishable from a field separator.
+         */
         @Override
-        public TitleAttribute fromString(String key, String string, ConfigurationSection config) {
+        public @NotNull TitleAttribute fromString(@NotNull String key, @NotNull String string, @NotNull ConfigurationSection config) {
             var args = new Args(string);
             return new TitleAttribute(
                     key,

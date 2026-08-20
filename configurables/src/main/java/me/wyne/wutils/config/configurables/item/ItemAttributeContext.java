@@ -3,9 +3,16 @@ package me.wyne.wutils.config.configurables.item;
 import me.wyne.wutils.i18n.language.replacement.ComponentReplacement;
 import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ItemAttributeContext(@Nullable Player player, TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
+/**
+ * Per-build context for an item attribute: the player and the text/component replacements
+ * substituted into resolved i18n strings, chiefly for {@code name} and {@code lore}.
+ *
+ * <p>A {@code null} player means no player-specific language or PlaceholderAPI source is used.</p>
+ */
+public record ItemAttributeContext(@Nullable Player player, @NotNull TextReplacement[] textReplacements, @NotNull ComponentReplacement[] componentReplacements) {
 
     public static final ItemAttributeContext EMPTY = new ItemAttributeContext();
 
@@ -17,15 +24,15 @@ public record ItemAttributeContext(@Nullable Player player, TextReplacement[] te
         this(player, new TextReplacement[0], new ComponentReplacement[0]);
     }
 
-    public ItemAttributeContext(TextReplacement[] textReplacements, ComponentReplacement[] componentReplacements) {
+    public ItemAttributeContext(@NotNull TextReplacement[] textReplacements, @NotNull ComponentReplacement[] componentReplacements) {
         this(null, textReplacements, componentReplacements);
     }
 
-    public ItemAttributeContext(TextReplacement... textReplacements) {
+    public ItemAttributeContext(@NotNull TextReplacement... textReplacements) {
         this(null, textReplacements, new ComponentReplacement[0]);
     }
 
-    public ItemAttributeContext(ComponentReplacement... componentReplacements) {
+    public ItemAttributeContext(@NotNull ComponentReplacement... componentReplacements) {
         this(null, new TextReplacement[0], componentReplacements);
     }
 
@@ -34,11 +41,11 @@ public record ItemAttributeContext(@Nullable Player player, TextReplacement[] te
         return player;
     }
 
-    public TextReplacement[] getTextReplacements() {
+    public @NotNull TextReplacement[] getTextReplacements() {
         return textReplacements;
     }
 
-    public ComponentReplacement[] getComponentReplacements() {
+    public @NotNull ComponentReplacement[] getComponentReplacements() {
         return componentReplacements;
     }
 

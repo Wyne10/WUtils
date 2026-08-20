@@ -1,6 +1,7 @@
 package me.wyne.wutils.i18n.language;
 
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -17,6 +18,14 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * {@link Language} backed by a flat {@code key=value} {@code .lang} file (one entry per line, {@code #}
+ * comments, blank lines ignored).
+ *
+ * <p>The format has no nesting: {@link #getStringMap()} is the entire loaded map and {@link #getStrings()}
+ * wraps that same map. {@link YamlLanguage} and {@link JsonLanguage} flatten their nesting into dotted
+ * paths to present the same flat view.</p>
+ */
 public class LangLanguage implements Language {
 
     private final Logger logger;
@@ -28,11 +37,17 @@ public class LangLanguage implements Language {
     private final LanguageStrings strings;
     private final Map<String, String> stringMap;
 
-    public LangLanguage(File languageFile, Logger logger) {
+    /** Equivalent to {@link #LangLanguage(Language, File, Logger)} with no default language. */
+    public LangLanguage(@NotNull File languageFile, @NotNull Logger logger) {
         this(null, languageFile, logger);
     }
 
-    public LangLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
+    /**
+     * Loads {@code key=value} entries from {@code languageFile}, then back-fills any keys present in
+     * {@code defaultLanguage}'s file but missing from this one, appending them to {@code languageFile} on
+     * disk. Skipped when {@code defaultLanguage} is {@code null} or its file is empty.
+     */
+    public LangLanguage(@Nullable Language defaultLanguage, @NotNull File languageFile, @NotNull Logger logger) {
         this.logger = logger;
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
         this.locale = new Locale(languageCode);
@@ -42,7 +57,7 @@ public class LangLanguage implements Language {
         this.strings = new LangLanguageStrings(stringMap);
     }
 
-    private void mergeDefaultStrings(@Nullable Language defaultLanguage, File languageFile) {
+    private void mergeDefaultStrings(@Nullable Language defaultLanguage, @NotNull File languageFile) {
         if (defaultLanguage == null)
             return;
         if (defaultLanguage.getLanguageFile().length() == 0)
@@ -59,7 +74,8 @@ public class LangLanguage implements Language {
         logger.debug("Merged missing strings to {}", languageFile.getName());
     }
 
-    private Map<String, String> loadLang(File file) {
+    /** Returns an empty map for a missing or empty file rather than throwing. */
+    private @NotNull Map<@NotNull String, @NotNull String> loadLang(@Nullable File file) {
         Map<String, String> result = new LinkedHashMap<>();
         if (file == null || !file.exists() || file.length() == 0)
             return result;
@@ -82,7 +98,7 @@ public class LangLanguage implements Language {
         return result;
     }
 
-    private void appendLang(File file, Map<String, String> entries) {
+    private void appendLang(@NotNull File file, @NotNull Map<@NotNull String, @NotNull String> entries) {
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8)) {
             if (file.length() > 0)
                 writer.write(System.lineSeparator());
@@ -94,27 +110,27 @@ public class LangLanguage implements Language {
     }
 
     @Override
-    public String getLanguageCode() {
+    public @NotNull String getLanguageCode() {
         return languageCode;
     }
 
     @Override
-    public Locale getLocale() {
+    public @NotNull Locale getLocale() {
         return locale;
     }
 
     @Override
-    public File getLanguageFile() {
+    public @NotNull File getLanguageFile() {
         return languageFile;
     }
 
     @Override
-    public LanguageStrings getStrings() {
+    public @NotNull LanguageStrings getStrings() {
         return strings;
     }
 
     @Override
-    public Map<String, String> getStringMap() {
+    public @NotNull Map<@NotNull String, @NotNull String> getStringMap() {
         return stringMap;
     }
 

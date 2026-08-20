@@ -5,7 +5,17 @@ import me.wyne.wutils.config.configurables.animation.*;
 import me.wyne.wutils.config.configurables.animation.attribute.*;
 import me.wyne.wutils.config.configurables.attribute.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * A single step of an {@link AnimationConfigurable} — its timing ({@code delay}/{@code period}/
+ * {@code duration}, applied via {@link TimingsAnimationAttribute}) and its effects (particles,
+ * sounds, titles, ..., via {@link ContextAnimationAttribute}).
+ *
+ * <p>{@link #build(AnimationTypeAttribute.AnimationType, AnimationContext)} wraps the step's effect
+ * attributes in a {@link CompositeRunnable} whenever there is not exactly one — including zero, which
+ * yields a {@code CompositeRunnable} over an empty list rather than failing.</p>
+ */
 public class AnimationStepConfigurable extends AttributeConfigurable {
 
     public final static AttributeMap ANIMATION_STEP_ATTRIBUTE_MAP = new AttributeMap();
@@ -19,6 +29,7 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FORCE_FIELD.getKey(), new ForceFieldAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_TITLE.getKey(), new PlayerTitleAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.LOCAL_SOUND.getKey(), new LocalSoundAttribute.Factory());
+        ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_SOUND.getKey(), new PlayerSoundAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.WORLD_PARTICLE.getKey(), new WorldParticleAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.FIREWORK.getKey(), new FireworkAttribute.Factory());
         ANIMATION_STEP_ATTRIBUTE_MAP.put(AnimationAttribute.PLAYER_MESSAGE.getKey(), new PlayerMessageAttribute.Factory());
@@ -31,19 +42,19 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         super(new ImmutableAttributeContainer(ANIMATION_STEP_ATTRIBUTE_MAP));
     }
 
-    public AnimationStepConfigurable(ConfigurationSection section) {
+    public AnimationStepConfigurable(@NotNull ConfigurationSection section) {
         super(new ImmutableAttributeContainer(ANIMATION_STEP_ATTRIBUTE_MAP), section);
     }
 
-    public AnimationStepConfigurable(AttributeContainer attributeContainer) {
+    public AnimationStepConfigurable(@NotNull AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public AnimationStepConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public AnimationStepConfigurable(@NotNull AttributeContainer attributeContainer, @NotNull ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
-    public AnimationStep build(AnimationTypeAttribute.AnimationType type, AnimationContext context) {
+    public @NotNull AnimationStep build(@NotNull AnimationTypeAttribute.AnimationType type, @NotNull AnimationContext context) {
         var timing = new AnimationTimings(0, 0, 0);
         getAttributeContainer().getSet(TimingsAnimationAttribute.class)
                 .forEach(attribute -> attribute.apply(timing));
@@ -56,20 +67,20 @@ public class AnimationStepConfigurable extends AttributeConfigurable {
         return type.create(runnable, timing.delay, timing.period, timing.duration);
     }
 
-    public AnimationStep build(AnimationContext context) {
+    public @NotNull AnimationStep build(@NotNull AnimationContext context) {
         var type = getAttributeContainer().getValue(AnimationAttribute.TYPE.getKey(), AnimationTypeAttribute.AnimationType.BLOCKING);
         return build(type, context);
     }
 
-    public AnimationStep buildBlocking(AnimationContext context) {
+    public @NotNull AnimationStep buildBlocking(@NotNull AnimationContext context) {
         return build(AnimationTypeAttribute.AnimationType.BLOCKING, context);
     }
 
-    public AnimationStep buildParallel(AnimationContext context) {
+    public @NotNull AnimationStep buildParallel(@NotNull AnimationContext context) {
         return build(AnimationTypeAttribute.AnimationType.PARALLEL, context);
     }
 
-    public static AttributeContainerBuilder builder() {
+    public static @NotNull AttributeContainerBuilder builder() {
         return new AnimationStepConfigurable().getAttributeContainer().toBuilder();
     }
 

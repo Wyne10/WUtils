@@ -13,6 +13,10 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A {@link StructureRegion} expanded by {@code margin} blocks on every axis beyond the
+ * pasted clipboard's bounds.
+ */
 public class MarginRegion extends StructureRegion {
 
     private final int margin;
@@ -37,7 +41,7 @@ public class MarginRegion extends StructureRegion {
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "margin", margin)
                 .buildNoTrail()
@@ -46,7 +50,7 @@ public class MarginRegion extends StructureRegion {
 
     public static final class Factory implements GenericFactory<StructureRegion> {
         @Override
-        public StructureRegion create(String key, ConfigurationSection config) {
+        public @NotNull StructureRegion create(@NotNull String key, @NotNull ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
             return new MarginRegion(new RegionData.Factory().create(key, config), section.getInt("margin"));
         }

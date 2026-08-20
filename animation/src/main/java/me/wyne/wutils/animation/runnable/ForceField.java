@@ -5,10 +5,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public record ForceField(Location location, double radius, double velocity) implements AnimationRunnable {
+/**
+ * Pushes every player within {@code radius} of {@code location} away from it at
+ * {@code velocity}. Does nothing if {@code location}'s world is not currently loaded.
+ */
+public record ForceField(@NotNull Location location, double radius, double velocity) implements AnimationRunnable {
 
     @Override
     public void run() {

@@ -9,6 +9,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Melts snow and ice within the radius via {@link EditSession#thaw}, scanning the full height
+ * column over the region.
+ */
 public class ThawEditModifier extends RegionRadiusEditModifier {
 
     public ThawEditModifier(@NotNull String key, @NotNull Double value) {
@@ -27,7 +31,7 @@ public class ThawEditModifier extends RegionRadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<ThawEditModifier> {
         @Override
-        public ThawEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull ThawEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ThawEditModifier(key, config.getDouble(key));
         }
     }

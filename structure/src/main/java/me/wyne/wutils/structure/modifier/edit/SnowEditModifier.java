@@ -10,6 +10,12 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Simulates snowfall within the radius via {@link EditSession#simulateSnow}, scanning the full
+ * height column over the region. An {@link IndexOutOfBoundsException} from a known WorldEdit
+ * snow-simulator bug is caught and logged rather than propagated, so a single bad column does not
+ * abort the rest of the structure's edits.
+ */
 public class SnowEditModifier extends RegionRadiusEditModifier {
 
     public SnowEditModifier(@NotNull String key, @NotNull Double value) {
@@ -32,7 +38,7 @@ public class SnowEditModifier extends RegionRadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<SnowEditModifier> {
         @Override
-        public SnowEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull SnowEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SnowEditModifier(key, config.getDouble(key));
         }
     }

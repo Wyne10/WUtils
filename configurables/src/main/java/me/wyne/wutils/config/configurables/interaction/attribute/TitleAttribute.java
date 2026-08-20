@@ -9,19 +9,29 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.title.Title;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The {@code title} payload — shows the configured title/subtitle to the audience.
+ *
+ * <p>A thin subclass of the shared {@link me.wyne.wutils.config.configurables.attribute.common.TitleAttribute},
+ * so it accepts both the string and section config forms and, because its factory dispatches through
+ * a {@code CompositeAttributeFactory}, can be aliased with {@code attributeType}. The string form
+ * splits on both spaces and colons, so {@code 'Hello there 20 60 20'} parses to title {@code Hello},
+ * subtitle {@code there}; quote multi-word spans or use the section form instead.</p>
+ */
 public class TitleAttribute extends me.wyne.wutils.config.configurables.attribute.common.TitleAttribute implements ContextInteractionAttribute {
 
-    public TitleAttribute(String key, me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.TitleData value) {
+    public TitleAttribute(@NotNull String key, @NotNull me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.TitleData value) {
         super(key, value);
     }
 
-    public TitleAttribute(me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.TitleData value) {
+    public TitleAttribute(@NotNull me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.TitleData value) {
         super(InteractionAttribute.TITLE.getKey(), value);
     }
 
     @Override
-    public void send(Audience audience, CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull Audience audience, @NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         audience.showTitle(Title.title(
                 I18n.global.accessor(sender, getValue().title()).getPlaceholderComponent(context.getPlaceholderTarget(), context.getTextReplacements()).replace(context.getComponentReplacements()).get(),
                 I18n.global.accessor(sender, getValue().subtitle()).getPlaceholderComponent(context.getPlaceholderTarget(), context.getTextReplacements()).replace(context.getComponentReplacements()).get(),
@@ -31,7 +41,7 @@ public class TitleAttribute extends me.wyne.wutils.config.configurables.attribut
 
     public static final class Factory implements AttributeFactory<me.wyne.wutils.config.configurables.attribute.common.TitleAttribute> {
         @Override
-        public TitleAttribute create(String key, ConfigurationSection config) {
+        public @NotNull TitleAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new TitleAttribute(key, new me.wyne.wutils.config.configurables.attribute.common.TitleAttribute.Factory().create(key, config).getValue());
         }
     }

@@ -20,12 +20,32 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * A {@link Plugin} decorator that adds the {@link Step}/{@link StepScope} pipeline to an existing
+ * plugin instance.
+ *
+ * <p>Every {@link Plugin} method other than the lifecycle callbacks below is delegated verbatim to
+ * the wrapped {@code T} passed to the constructor. Unlike {@link CompositeJavaPlugin}, this class
+ * does not extend {@link org.bukkit.plugin.java.JavaPlugin}, so it is not itself a Bukkit plugin
+ * main class that the server loader can instantiate — whoever constructs it is responsible for
+ * calling {@link #onLoad()}, {@link #onEnable()} and {@link #onDisable()} at the appropriate
+ * times, and steps run against the wrapped {@code T}, not against this object.</p>
+ *
+ * <p>{@link #onLoad()} collects both steps added via {@link #addStep}/{@link #addSteps} and
+ * methods annotated {@link Step @Step} declared directly on the subclass, then runs every
+ * {@link StepScope#LOAD} step. {@link #onEnable()} and {@link #onDisable()} run the
+ * {@code ENABLE} and {@code DISABLE} steps respectively. {@link #reload()} is not part of the
+ * {@link Plugin} interface and is never called by Bukkit; call it to fire a
+ * {@link PluginReloadEvent} and run the {@code RELOAD} steps.</p>
+ *
+ * @param <T> the wrapped plugin type
+ */
 public class CompositePlugin<T extends Plugin> implements Plugin {
 
     private final T plugin;
     private final Set<PluginStep<T>> steps = new LinkedHashSet<>();
 
-    public CompositePlugin(T plugin) {
+    public CompositePlugin(@NotNull T plugin) {
         this.plugin = plugin;
     }
 
@@ -36,6 +56,10 @@ public class CompositePlugin<T extends Plugin> implements Plugin {
         }
     }
 
+    /**
+     * Hook invoked once during {@link #onLoad()}, after annotated steps are collected but before
+     * any step runs. Override to register additional steps or perform other one-time setup.
+     */
     public void init() {}
 
     @Override
@@ -55,16 +79,23 @@ public class CompositePlugin<T extends Plugin> implements Plugin {
         runSteps(StepScope.DISABLE);
     }
 
+    /**
+     * Fires a {@link PluginReloadEvent} and runs every {@link StepScope#RELOAD} step. Not invoked
+     * automatically; call this from a reload command or similar.
+     */
     public void reload() {
         new PluginReloadEvent(this).callEvent();
         runSteps(StepScope.RELOAD);
     }
 
-    public void addStep(PluginStep<T> step) {
+    /**
+     * Registers a step to run when its scope is reached.
+     */
+    public void addStep(@NotNull PluginStep<T> step) {
         steps.add(step);
     }
 
-    public void addSteps(PluginStep<T>... steps) {
+    public void addSteps(@NotNull PluginStep<T>... steps) {
         this.steps.addAll(Set.of(steps));
     }
 

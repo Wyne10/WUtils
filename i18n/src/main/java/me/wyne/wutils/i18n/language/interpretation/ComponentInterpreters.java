@@ -1,9 +1,15 @@
 package me.wyne.wutils.i18n.language.interpretation;
 
 import me.wyne.wutils.i18n.language.validation.StringValidator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
+/**
+ * Factory for the available {@link ComponentInterpreter} implementations. {@code ENHANCED_LEGACY} and
+ * {@code ITEM_ENHANCED_LEGACY} require the {@code enhancedlegacytext} dependency on the consumer's
+ * classpath — this module only declares it {@code compileOnly}.
+ */
 public enum ComponentInterpreters {
     LEGACY(LegacyInterpreter::new),
     ENHANCED_LEGACY(EnhancedLegacyInterpreter::new),
@@ -14,11 +20,14 @@ public enum ComponentInterpreters {
 
     private final Function<StringValidator, ComponentInterpreter> factory;
 
-    ComponentInterpreters(Function<StringValidator, ComponentInterpreter> factory) {
+    ComponentInterpreters(@NotNull Function<StringValidator, ComponentInterpreter> factory) {
         this.factory = factory;
     }
 
-    public ComponentInterpreter get(StringValidator validator) {
+    /**
+     * Creates a new interpreter of this kind, validating lookups with {@code validator}.
+     */
+    public @NotNull ComponentInterpreter get(@NotNull StringValidator validator) {
         return factory.apply(validator);
     }
 }

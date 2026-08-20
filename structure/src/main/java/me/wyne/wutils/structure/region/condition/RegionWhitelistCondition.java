@@ -10,14 +10,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+/**
+ * Requires every WorldGuard region overlapping the structure's protected region to be in
+ * {@code regions}. Requires WorldGuard.
+ */
 public record RegionWhitelistCondition(@NotNull Set<@NotNull String> regions) implements RegionCondition {
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .appendCollection(depth, "region-whitelist", regions)
                 .buildNoTrail();
     }
 
+    /**
+     * Fetches every existing WorldGuard region applicable to {@code region} and returns
+     * whether all of them are contained in {@link #regions()}.
+     */
     @Override
     public boolean isValid(@NotNull IntermediateStructure intermediateStructure, @NotNull ProtectedCuboidRegion region) {
         var container = WorldGuard.getInstance().getPlatform().getRegionContainer();

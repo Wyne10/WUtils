@@ -9,27 +9,31 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code toThatPlayers} audience — every online player whose name is in the configured list.
+ */
 public class ThatPlayersAudience extends ConfigurableAttribute<List<String>> implements InteractionAudienceAttribute {
 
-    public ThatPlayersAudience(String key, List<String> value) {
+    public ThatPlayersAudience(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public ThatPlayersAudience(List<String> value) {
+    public ThatPlayersAudience(@NotNull List<@NotNull String> value) {
         super(InteractionAttribute.AUDIENCE_THAT_PLAYERS.getKey(), value);
     }
 
     @Override
-    public Audience get(CommandSender sender) {
+    public @NotNull Audience get(@NotNull CommandSender sender) {
         return I18n.global.getAudiences().filter(player -> getValue().contains(player.getName()));
     }
 
     public static final class Factory implements AttributeFactory<ThatPlayersAudience> {
         @Override
-        public ThatPlayersAudience create(String key, ConfigurationSection config) {
+        public @NotNull ThatPlayersAudience create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ThatPlayersAudience(key, ConfigUtils.getStringList(config, key));
         }
     }

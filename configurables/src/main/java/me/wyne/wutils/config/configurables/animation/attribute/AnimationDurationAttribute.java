@@ -7,10 +7,15 @@ import me.wyne.wutils.config.configurables.animation.TimingsAnimationAttribute;
 import me.wyne.wutils.config.configurables.attribute.AttributeFactory;
 import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The {@code duration} timing — total ticks the step runs for, parsed via {@link ConfigUtils#getTicks}
+ * so it accepts duration expressions ({@code 20}, {@code 20t}, {@code 1s}, {@code 1500ms}, ...).
+ */
 public class AnimationDurationAttribute extends ConfigurableAttribute<Long> implements TimingsAnimationAttribute {
 
-    public AnimationDurationAttribute(String key, long value) {
+    public AnimationDurationAttribute(@NotNull String key, long value) {
         super(key, value);
     }
 
@@ -19,13 +24,13 @@ public class AnimationDurationAttribute extends ConfigurableAttribute<Long> impl
     }
 
     @Override
-    public void apply(AnimationTimings timings) {
+    public void apply(@NotNull AnimationTimings timings) {
         timings.duration = getValue();
     }
 
     public static final class Factory implements AttributeFactory<AnimationDurationAttribute> {
         @Override
-        public AnimationDurationAttribute create(String key, ConfigurationSection config) {
+        public @NotNull AnimationDurationAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new AnimationDurationAttribute(key, ConfigUtils.getTicks(config, key));
         }
     }

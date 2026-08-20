@@ -17,23 +17,43 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Adds an {@link AttributeModifier} (e.g. {@code generic.attack_damage}) to the item.
+ *
+ * <p>Config form is {@code <attribute> <amount> <operation> <slot>} or a section with
+ * {@code attribute}, {@code amount}, {@code operation}, {@code slot} and optional {@code uuid}
+ * keys. The string form splits on colon-or-whitespace (the default {@link Args} delimiter, not
+ * {@link Args#SPACE_DELIMITER}), so a namespaced key like {@code minecraft:generic.attack_damage}
+ * breaks into extra tokens and fails with a {@link NullPointerException}; only the unqualified
+ * attribute name works there. Unlike {@link EnchantmentAttribute}, use the section form for a
+ * namespaced key.</p>
+ *
+ * <p>When {@code uuid} is omitted, a fresh random {@link UUID} is generated per modifier on
+ * every load — two items built from the same config after a reload carry different modifier
+ * UUIDs, so they will not stack and vanilla will not treat the modifiers as equal.</p>
+ *
+ * <p>An unrecognized {@code attribute} aborts the whole config load (see
+ * {@link EnchantmentAttribute} for why). {@code operation} and {@code slot}, by contrast, are not
+ * guarded: {@link ConfigUtils#getByName} silently returns {@code null} for an unmatched value,
+ * which is passed straight into {@link AttributeModifier}'s constructor uncaught.</p>
+ */
 public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.AttributeData> implements MetaAttribute {
 
-    public GenericAttribute(String key, AttributeData value) {
+    public GenericAttribute(@NotNull String key, @NotNull AttributeData value) {
         super(key, value);
     }
 
-    public GenericAttribute(AttributeData value) {
+    public GenericAttribute(@NotNull AttributeData value) {
         super(ItemAttribute.ATTRIBUTE.getKey(), value);
     }
 
     @Override
-    public void apply(ItemMeta meta) {
+    public void apply(@NotNull ItemMeta meta) {
         meta.addAttributeModifier(getValue().attribute(), getValue().modifier());
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(), getValue().attribute().getKey() + " " + getValue().modifier().getAmount() + " " + getValue().modifier().getOperation() + " " + getValue().modifier().getSlot()).buildNoSpace();
     }
 
@@ -41,7 +61,7 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
 
     public static final class Factory implements CompositeAttributeFactory<GenericAttribute> {
         @Override
-        public GenericAttribute fromSection(String key, ConfigurationSection section) {
+        public @NotNull GenericAttribute fromSection(@NotNull String key, @NotNull ConfigurationSection section) {
             var attributeKey = Preconditions.checkNotNull(section.getString("attribute"), "No attribute provided for " + section.getCurrentPath());
             var attribute = ConfigUtils.getByKeyOrName(attributeKey,  Attribute.class);
             Preconditions.checkNotNull(attribute, "Invalid attribute at " + section.getCurrentPath());
@@ -61,7 +81,7 @@ public class GenericAttribute extends ConfigurableAttribute<GenericAttribute.Att
         }
 
         @Override
-        public GenericAttribute fromString(String key, String string, ConfigurationSection config) {
+        public @NotNull GenericAttribute fromString(@NotNull String key, @NotNull String string, @NotNull ConfigurationSection config) {
             var args = new Args(string);
             var attributeKey = Preconditions.checkNotNull(args.getNullable(0), "No attribute provided for " + ConfigUtils.getPath(config, key));
             var attribute = ConfigUtils.getByKeyOrName(attributeKey,  Attribute.class);

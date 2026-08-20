@@ -16,7 +16,7 @@ public class BiomesPasteModifier extends ConfigurableAttribute<Boolean> implemen
     }
 
     public BiomesPasteModifier(@NotNull Boolean value) {
-        super(StructureModifier.SNAPSHOT_BIOMES.getKey(), value);
+        super(StructureModifier.PASTE_BIOMES.getKey(), value);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class BiomesPasteModifier extends ConfigurableAttribute<Boolean> implemen
 
     public static final class Factory implements AttributeFactory<BiomesPasteModifier> {
         @Override
-        public BiomesPasteModifier create(String key, ConfigurationSection config) {
+        public @NotNull BiomesPasteModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new BiomesPasteModifier(key, config.getBoolean(key, false));
         }
     }

@@ -26,7 +26,7 @@ public class BiomesSnapshotModifier extends ConfigurableAttribute<Boolean> imple
 
     public static final class Factory implements AttributeFactory<BiomesSnapshotModifier> {
         @Override
-        public BiomesSnapshotModifier create(String key, ConfigurationSection config) {
+        public @NotNull BiomesSnapshotModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new BiomesSnapshotModifier(key, config.getBoolean(key, false));
         }
     }

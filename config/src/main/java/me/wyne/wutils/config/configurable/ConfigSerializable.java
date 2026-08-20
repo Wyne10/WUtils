@@ -1,6 +1,7 @@
 package me.wyne.wutils.config.configurable;
 
 import me.wyne.wutils.config.ConfigEntry;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Specifies configurable which can be serialized to config.
@@ -8,8 +9,8 @@ import me.wyne.wutils.config.ConfigEntry;
 public interface ConfigSerializable {
 
     /**
-     * @see ConfigBuilder
+     * Renders this object's state as generated YAML text, typically built with a {@link ConfigBuilder}.
      */
-    String toConfig(ConfigEntry configEntry);
+    @NotNull String toConfig(@NotNull ConfigEntry configEntry);
 
 }

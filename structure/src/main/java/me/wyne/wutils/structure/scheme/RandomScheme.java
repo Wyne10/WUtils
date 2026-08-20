@@ -19,12 +19,21 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
+/**
+ * A {@link Scheme} that picks one {@link FileScheme} at random, uniformly, on every
+ * {@link #getClipboard()} call.
+ */
 public class RandomScheme implements Scheme {
 
     private final List<FileScheme> schemes = new ArrayList<>();
     @Nullable
     private final String path;
 
+    /**
+     * Lists every file directly under {@code path}'s parent directory whose name matches {@code path}'s
+     * final path segment as a regular expression, and wraps each as a {@link FileScheme}. A directory
+     * with no matches yields an empty (and later unusable, see {@link #getClipboard()}) scheme list.
+     */
     public RandomScheme(@RegExp @NotNull String path) {
         this.path = path;
         this.schemes.addAll(listSchemes(path));
@@ -51,22 +60,25 @@ public class RandomScheme implements Scheme {
                 .toList();
     }
 
+    /**
+     * @throws IllegalStateException if this scheme's file list is empty
+     */
     @Override
     public @NotNull Clipboard getClipboard() {
         if (schemes.isEmpty()) throw new IllegalStateException("Random scheme list is empty");
         return schemes.get(ThreadLocalRandom.current().nextInt(schemes.size())).getClipboard();
     }
 
-    public static RandomScheme ofPaths(@NotNull Collection<@NotNull String> paths) {
+    public static @NotNull RandomScheme ofPaths(@NotNull Collection<@NotNull String> paths) {
         return new RandomScheme(paths.stream().map(FileScheme::new).toList());
     }
 
-    public static RandomScheme ofFiles(@NotNull Collection<@NotNull File> files) {
+    public static @NotNull RandomScheme ofFiles(@NotNull Collection<@NotNull File> files) {
         return new RandomScheme(files.stream().map(FileScheme::new).toList());
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "schemes", path)
                 .buildNoTrail();

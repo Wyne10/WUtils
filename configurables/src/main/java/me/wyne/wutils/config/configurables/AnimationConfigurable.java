@@ -10,10 +10,20 @@ import me.wyne.wutils.config.configurables.attribute.AttributeMap;
 import me.wyne.wutils.config.configurables.attribute.ImmutableAttributeContainer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * A sequence of {@link AnimationStepConfigurable}s built into an {@link Animation}, in the order they
+ * appear in config — unlike a single step's attributes, which apply in registration order, animation
+ * steps run in file order.
+ *
+ * <p>{@link #fromConfig} reads a {@code repeat} integer per step section (default 1) and appends that
+ * many identical steps for it; {@code repeat} is consumed here and never becomes an attribute of the
+ * step itself.</p>
+ */
 public class AnimationConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<AnimationStepConfigurable> animationSteps;
@@ -23,32 +33,32 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
         this(AnimationStepConfigurable.ANIMATION_STEP_ATTRIBUTE_MAP);
     }
 
-    public AnimationConfigurable(AnimationStepConfigurable... steps) {
+    public AnimationConfigurable(@NotNull AnimationStepConfigurable... steps) {
         this();
         addSteps(steps);
     }
 
-    public AnimationConfigurable(ConfigurationSection section) {
+    public AnimationConfigurable(@NotNull ConfigurationSection section) {
         this(AnimationStepConfigurable.ANIMATION_STEP_ATTRIBUTE_MAP, section);
     }
 
-    public AnimationConfigurable(AttributeMap attributeMap) {
+    public AnimationConfigurable(@NotNull AttributeMap attributeMap) {
         this.animationSteps = new LinkedList<>();
         this.attributeMap = attributeMap;
     }
 
-    public AnimationConfigurable(AttributeMap attributeMap, AnimationStepConfigurable... steps) {
+    public AnimationConfigurable(@NotNull AttributeMap attributeMap, @NotNull AnimationStepConfigurable... steps) {
         this(attributeMap);
         addSteps(steps);
     }
 
-    public AnimationConfigurable(AttributeMap attributeMap, ConfigurationSection section) {
+    public AnimationConfigurable(@NotNull AttributeMap attributeMap, @NotNull ConfigurationSection section) {
         this(attributeMap);
         fromConfig(section);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
         for (int i = 0; i < animationSteps.size(); i++) {
             builder.appendComposite(depth, "step-" + i, animationSteps.get(i), configEntry);
@@ -71,7 +81,7 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
         });
     }
 
-    public Animation build(Plugin plugin, AnimationContext context) {
+    public @NotNull Animation build(@NotNull Plugin plugin, @NotNull AnimationContext context) {
         Animation animation = new Animation(plugin);
         for (AnimationStepConfigurable step : animationSteps) {
             animation.addStep(step.build(context));
@@ -79,17 +89,17 @@ public class AnimationConfigurable implements CompositeConfigSerializable, Confi
         return animation;
     }
 
-    public AnimationConfigurable addStep(AnimationStepConfigurable step) {
+    public @NotNull AnimationConfigurable addStep(@NotNull AnimationStepConfigurable step) {
         animationSteps.add(step);
         return this;
     }
 
-    public AnimationConfigurable addSteps(AnimationStepConfigurable... steps) {
+    public @NotNull AnimationConfigurable addSteps(@NotNull AnimationStepConfigurable... steps) {
         animationSteps.addAll(Arrays.asList(steps));
         return this;
     }
 
-    public List<AnimationStepConfigurable> getAnimationSteps() {
+    public @NotNull List<@NotNull AnimationStepConfigurable> getAnimationSteps() {
         return animationSteps;
     }
 

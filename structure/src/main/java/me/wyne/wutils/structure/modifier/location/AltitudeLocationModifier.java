@@ -29,7 +29,7 @@ public class AltitudeLocationModifier extends ConfigurableAttribute<IntOperation
 
     public static final class Factory implements AttributeFactory<AltitudeLocationModifier> {
         @Override
-        public AltitudeLocationModifier create(String key, ConfigurationSection config) {
+        public @NotNull AltitudeLocationModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new AltitudeLocationModifier(key, Operations.getIntOperation(config.getString(key, "+0")));
         }
     }

@@ -14,6 +14,13 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Function;
 
+/**
+ * Saves and loads a spawned {@link WorldStructure} as a JSON file plus a pair of {@code .schem}
+ * files, so it can be restored after a server restart. Backed by {@link WorldStructureMementoSerializer}.
+ *
+ * <p>Requires WorldEdit on the runtime classpath ({@code compileOnlyApi} — the consumer must
+ * supply it), which is what brings Gson onto the compile classpath transitively.</p>
+ */
 public class WorldStructurePersistence {
 
     private final Gson gson;
@@ -34,6 +41,11 @@ public class WorldStructurePersistence {
                 .create();
     }
 
+    /**
+     * Captures {@code worldStructure} and writes it, and its schematic files, to disk. Requires the
+     * structure to have been {@link WorldStructure#spawn() spawned} — see
+     * {@link WorldStructure#capture()}.
+     */
     public void save(@NotNull File jsonFile, @NotNull WorldStructure worldStructure) throws IOException {
         var parent = jsonFile.getParentFile();
         if (parent != null && !parent.exists())
@@ -43,6 +55,11 @@ public class WorldStructurePersistence {
         }
     }
 
+    /**
+     * Reads a previously {@link #save saved} structure back from disk via
+     * {@link WorldStructure#restore}. The returned structure is not re-spawned; the paste already
+     * exists in the world from when it was originally saved.
+     */
     public @NotNull WorldStructure load(@NotNull File jsonFile) throws IOException {
         try (Reader reader = new FileReader(jsonFile)) {
             var memento = gson.fromJson(reader, WorldStructureMemento.class);

@@ -2,7 +2,9 @@ package me.wyne.wutils.common.player;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+/** Vanilla experience-level/point conversions and offline-player existence checks. */
 public final class PlayerUtils {
 
     /**
@@ -75,24 +77,28 @@ public final class PlayerUtils {
             return 9 * currentLevel - 158;
     }
 
-    public static int currentExp(Player player) {
+    /** Converts {@code player}'s current level and progress into total accumulated experience points. */
+    public static int currentExp(@NotNull Player player) {
         var currentExp = 0;
         currentExp += levelToExp(player.getLevel());
         currentExp += Math.round(expToLevelUp(player.getLevel()) * player.getExp());
         return currentExp;
     }
 
-    public static void setExp(Player player, int exp) {
+    /** Resets {@code player} to level 0 and grants {@code exp} total experience points. */
+    public static void setExp(@NotNull Player player, int exp) {
         player.setExp(0);
         player.setLevel(0);
         player.giveExp(exp);
     }
 
-    public static void addExp(Player player, int exp) {
+    /** Adds {@code exp} experience points to {@code player}'s current total. */
+    public static void addExp(@NotNull Player player, int exp) {
         setExp(player, currentExp(player) + exp);
     }
 
-    public static boolean exists(OfflinePlayer player) {
+    /** @return {@code true} if {@code player} is currently online or has played on this server before */
+    public static boolean exists(@NotNull OfflinePlayer player) {
         return player.isOnline() || player.hasPlayedBefore();
     }
 

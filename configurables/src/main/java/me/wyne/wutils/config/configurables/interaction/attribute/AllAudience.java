@@ -8,10 +8,18 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The {@code toAll} audience — every player and the console.
+ *
+ * <p>Its presence in a section, not its configured value, is what counts: the boolean value is
+ * always {@code true} regardless of what config says (see {@link #Factory}), so
+ * {@code toAll: false} still sends to everybody.</p>
+ */
 public class AllAudience extends ConfigurableAttribute<Boolean> implements InteractionAudienceAttribute {
 
-    public AllAudience(String key) {
+    public AllAudience(@NotNull String key) {
         super(key, true);
     }
 
@@ -20,13 +28,17 @@ public class AllAudience extends ConfigurableAttribute<Boolean> implements Inter
     }
 
     @Override
-    public Audience get(CommandSender sender) {
+    public @NotNull Audience get(@NotNull CommandSender sender) {
         return I18n.global.getAudiences().all();
     }
 
+    /**
+     * Always resolves to {@code true} — {@code toAll: false} still enables this audience because
+     * only the key's presence is read, never the configured value.
+     */
     public static final class Factory implements AttributeFactory<AllAudience> {
         @Override
-        public AllAudience create(String key, ConfigurationSection config) {
+        public @NotNull AllAudience create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new AllAudience(key);
         }
     }

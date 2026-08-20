@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record TemperatureCondition(@NotNull DoubleComparator comparator) implements LocationCondition {
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "temperature", comparator)
                 .buildNoTrail();

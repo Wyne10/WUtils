@@ -12,10 +12,22 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * An {@link ItemStack} built from config, one {@link ItemStackAttribute} at a time.
+ *
+ * <p>{@link #build} starts from a plain {@code STONE} stack and applies every registered
+ * {@link ItemStackAttribute} in the {@link #ITEM_ATTRIBUTE_MAP}'s registration order, not the order
+ * keys appear in YAML — see {@link AttributeMap}. That order is load-bearing: {@code material} is
+ * registered before {@code durability} (which reads the material's max durability), and the
+ * enchantment attributes before {@code glow} (which skips itself if the item already has
+ * enchantments). Requires a live server, since it touches {@link ItemStack}.</p>
+ */
 public class ItemConfigurable extends AttributeConfigurable {
 
     public final static AttributeMap ITEM_ATTRIBUTE_MAP = new AttributeMap();
@@ -51,19 +63,19 @@ public class ItemConfigurable extends AttributeConfigurable {
         super(new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP));
     }
 
-    public ItemConfigurable(ConfigurationSection section) {
+    public ItemConfigurable(@NotNull ConfigurationSection section) {
         super(new ImmutableAttributeContainer(ITEM_ATTRIBUTE_MAP), section);
     }
 
-    public ItemConfigurable(AttributeContainer attributeContainer) {
+    public ItemConfigurable(@NotNull AttributeContainer attributeContainer) {
         super(attributeContainer);
     }
 
-    public ItemConfigurable(AttributeContainer attributeContainer, ConfigurationSection section) {
+    public ItemConfigurable(@NotNull AttributeContainer attributeContainer, @NotNull ConfigurationSection section) {
         super(attributeContainer, section);
     }
 
-    public ItemStack build(ItemAttributeContext context) {
+    public @NotNull ItemStack build(@NotNull ItemAttributeContext context) {
         var itemStack = new ItemStack(Material.STONE);
         getAttributeContainer().getSet(ItemStackAttribute.class)
                 .forEach(attribute -> {
@@ -75,31 +87,31 @@ public class ItemConfigurable extends AttributeConfigurable {
         return itemStack;
     }
 
-    public ItemStack build(TextReplacement... textReplacements) {
+    public @NotNull ItemStack build(@NotNull TextReplacement... textReplacements) {
         var context = new ItemAttributeContext(null, textReplacements, new ComponentReplacement[]{});
         return build(context);
     }
 
-    public ItemStack build(Player player, TextReplacement... textReplacements) {
+    public @NotNull ItemStack build(@NotNull Player player, @NotNull TextReplacement... textReplacements) {
         var context = new ItemAttributeContext(player, textReplacements, new ComponentReplacement[]{});
         return build(context);
     }
 
-    public ItemStack buildComponent(ComponentReplacement... componentReplacements) {
+    public @NotNull ItemStack buildComponent(@NotNull ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(null, new TextReplacement[]{}, componentReplacements);
         return build(context);
     }
 
-    public ItemStack buildComponent(Player player, ComponentReplacement... componentReplacements) {
+    public @NotNull ItemStack buildComponent(@NotNull Player player, @NotNull ComponentReplacement... componentReplacements) {
         var context = new ItemAttributeContext(player, new TextReplacement[]{}, componentReplacements);
         return build(context);
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return getValue(ItemAttribute.NAME.getKey(), "");
     }
 
-    public List<String> getLore() {
+    public @NotNull List<@NotNull String> getLore() {
         return getValue(ItemAttribute.LORE.getKey(), new LinkedList<>());
     }
 
@@ -107,7 +119,7 @@ public class ItemConfigurable extends AttributeConfigurable {
         return getValue(ItemAttribute.AMOUNT.getKey(), 0);
     }
 
-    public static AttributeContainerBuilder builder() {
+    public static @NotNull AttributeContainerBuilder builder() {
         return new ItemConfigurable().getAttributeContainer().toBuilder();
     }
 

@@ -27,7 +27,7 @@ public class MaskSourcePasteModifier extends ConfigurableAttribute<String> imple
 
     public static final class Factory implements AttributeFactory<MaskSourcePasteModifier> {
         @Override
-        public MaskSourcePasteModifier create(String key, ConfigurationSection config) {
+        public @NotNull MaskSourcePasteModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new MaskSourcePasteModifier(key, config.getString(key, ""));
         }
     }

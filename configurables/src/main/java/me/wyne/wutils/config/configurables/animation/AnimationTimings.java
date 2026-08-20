@@ -1,5 +1,9 @@
 package me.wyne.wutils.config.configurables.animation;
 
+/**
+ * Mutable delay/period/duration accumulator, in ticks, that {@link TimingsAnimationAttribute}
+ * implementations write onto while an animation step is built.
+ */
 public class AnimationTimings {
     public long delay;
     public long period;

@@ -8,25 +8,33 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The {@code sound} payload — plays the configured sound to the audience.
+ *
+ * <p>A thin subclass of the shared {@link me.wyne.wutils.config.configurables.attribute.common.SoundAttribute},
+ * so it accepts both the string and section config forms and, because its factory dispatches through
+ * a {@code CompositeAttributeFactory}, can be aliased with {@code attributeType}.</p>
+ */
 public class SoundAttribute extends me.wyne.wutils.config.configurables.attribute.common.SoundAttribute implements ContextInteractionAttribute {
 
-    public SoundAttribute(String key, Sound value) {
+    public SoundAttribute(@NotNull String key, @NotNull Sound value) {
         super(key, value);
     }
 
-    public SoundAttribute(Sound value) {
+    public SoundAttribute(@NotNull Sound value) {
         super(InteractionAttribute.SOUND.getKey(), value);
     }
 
     @Override
-    public void send(Audience audience, CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull Audience audience, @NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         audience.playSound(getValue());
     }
 
     public static final class Factory implements AttributeFactory<SoundAttribute> {
         @Override
-        public SoundAttribute create(String key, ConfigurationSection config) {
+        public @NotNull SoundAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SoundAttribute(key, new me.wyne.wutils.config.configurables.attribute.common.SoundAttribute.Factory().create(key, config).getValue());
         }
     }

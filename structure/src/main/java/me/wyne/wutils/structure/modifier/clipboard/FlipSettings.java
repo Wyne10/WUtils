@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The set of flip axes one of which is picked at random for each placement.
+ */
 public record FlipSettings(@NotNull List<Axis> axes) {
 
     public enum Axis {
@@ -15,6 +18,16 @@ public record FlipSettings(@NotNull List<Axis> axes) {
 
     private static final List<Axis> DEFAULT = List.of(Axis.NONE, Axis.X, Axis.Z);
 
+    /**
+     * Parses a whitespace-separated list of flip axis tokens.
+     *
+     * <p>An empty string, {@code true}, {@code random} or {@code any} (case-insensitive) yields
+     * the default set {@code none x z}. Each token accepts the axis letter or a compass synonym:
+     * {@code west}/{@code east} for X, {@code up}/{@code down} for Y, {@code north}/{@code south}
+     * for Z, and {@code none}/{@code 0}/{@code -} for no flip.</p>
+     *
+     * @throws IllegalArgumentException if a token matches none of the known axes
+     */
     public static @NotNull FlipSettings parse(@NotNull String input) {
         var trimmed = input.trim();
         if (trimmed.isEmpty() || trimmed.equalsIgnoreCase("true")

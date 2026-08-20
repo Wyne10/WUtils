@@ -32,3 +32,8 @@
 
 ### Mac OS ###
 .DS_Store
+
+### Claude ###
+.claude/*
+!.claude/agents/
+!.claude/doc-context.md

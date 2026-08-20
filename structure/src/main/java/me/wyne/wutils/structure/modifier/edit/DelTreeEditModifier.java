@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/**
+ * Removes floating trees within the margin region — trunks and attached leaves/mushroom blocks
+ * not anchored to the ground — using the same flood-fill traversal range as WorldEdit's own
+ * floating tree remover.
+ */
 public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
 
     // Same traversal range as WorldEdit's FloatingTreeRemover.
@@ -140,7 +145,7 @@ public class DelTreeEditModifier extends MarginEditModifier<DelTreeSettings> {
 
     public static final class Factory implements AttributeFactory<DelTreeEditModifier> {
         @Override
-        public DelTreeEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull DelTreeEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new DelTreeEditModifier(key, DelTreeSettings.parse(config.getString(key, "")));
         }
     }

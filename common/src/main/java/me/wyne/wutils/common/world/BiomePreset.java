@@ -1,6 +1,7 @@
 package me.wyne.wutils.common.world;
 
 import org.bukkit.block.Biome;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,6 +14,11 @@ import java.util.stream.Stream;
 
 import static me.wyne.wutils.common.world.WorldUtils.HIGHLAND_REGEX;
 
+/**
+ * Named groups of {@link Biome}s (climate, terrain, or dimension based) for config-friendly
+ * biome filtering. Biome names that do not exist on the running server version are silently
+ * dropped when a preset is resolved.
+ */
 public enum BiomePreset {
     ALL(Arrays.stream(Biome.values())
             .filter(biome -> !biome.name().equals("MOUNTAIN_EDGE")
@@ -82,11 +88,17 @@ public enum BiomePreset {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public Set<Biome> getBiomes() {
+    /** @return this preset's biomes, unmodifiable */
+    public @NotNull Set<@NotNull Biome> getBiomes() {
         return biomes;
     }
 
-    public static Set<Biome> resolve(List<String> presets) {
+    /**
+     * Resolves a config-style list of preset names into a combined biome set, applying entries
+     * in order: {@code "PRESET"} adds its biomes, {@code "!PRESET"} removes them. Unknown preset
+     * names are silently skipped.
+     */
+    public static @NotNull Set<@NotNull Biome> resolve(@NotNull List<@NotNull String> presets) {
         Set<Biome> result = new HashSet<>();
         for (String entry : presets) {
             boolean negate = entry.startsWith("!");

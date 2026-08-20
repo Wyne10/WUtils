@@ -27,7 +27,7 @@ public class SourceMaskSnapshotModifier extends ConfigurableAttribute<String> im
 
     public static final class Factory implements AttributeFactory<SourceMaskSnapshotModifier> {
         @Override
-        public SourceMaskSnapshotModifier create(String key, ConfigurationSection config) {
+        public @NotNull SourceMaskSnapshotModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new SourceMaskSnapshotModifier(key, config.getString(key, ""));
         }
     }

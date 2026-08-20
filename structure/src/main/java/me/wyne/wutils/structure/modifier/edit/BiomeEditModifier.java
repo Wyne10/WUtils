@@ -15,6 +15,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Sets the biome across the margin ring around the pasted structure via WorldEdit's
+ * {@link BiomeReplace}.
+ */
 public class BiomeEditModifier extends MarginEditModifier<BiomeSettings> {
 
     public BiomeEditModifier(@NotNull String key, @NotNull BiomeSettings value) {
@@ -44,7 +48,7 @@ public class BiomeEditModifier extends MarginEditModifier<BiomeSettings> {
 
     public static final class Factory implements AttributeFactory<BiomeEditModifier> {
         @Override
-        public BiomeEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull BiomeEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new BiomeEditModifier(key, BiomeSettings.parse(config.getString(key, "")));
         }
     }

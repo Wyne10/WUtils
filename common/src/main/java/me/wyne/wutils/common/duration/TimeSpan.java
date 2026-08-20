@@ -4,7 +4,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public record TimeSpan(long duration, Duration type) implements Duration {
+/**
+ * A concrete duration: a raw {@code duration} value paired with the {@link Duration}
+ * unit it is expressed in. The no-arg {@link #getMillis()}, {@link #getTicks()} and
+ * {@link #getUnit(TimeUnit)} convert this record's own stored value; the inherited
+ * {@link Duration} methods instead convert whatever value is passed in, using this
+ * span's {@code type} as the unit (so a {@code TimeSpan} can itself be used
+ * anywhere a {@link Duration} is expected).
+ * <p>
+ * {@link #toString()} renders ticks-typed spans as {@code "<n>t"} and every other unit
+ * as a compound {@code "1d2h3m4s5ms"} string with zero components omitted, regardless
+ * of the original unit.
+ */
+public record TimeSpan(long duration, @NotNull Duration type) implements Duration {
     public long getMillis() {
         return type.getMillis(duration);
     }
@@ -13,7 +25,7 @@ public record TimeSpan(long duration, Duration type) implements Duration {
         return type.getTicks(duration);
     }
 
-    public long getUnit(TimeUnit unit) {
+    public long getUnit(@NotNull TimeUnit unit) {
         return unit.convert(getMillis(duration), TimeUnit.MILLISECONDS);
     }
 
@@ -28,7 +40,7 @@ public record TimeSpan(long duration, Duration type) implements Duration {
     }
 
     @Override
-    public long getUnit(long duration, TimeUnit unit) {
+    public long getUnit(long duration, @NotNull TimeUnit unit) {
         return unit.convert(getMillis(duration), TimeUnit.MILLISECONDS);
     }
 

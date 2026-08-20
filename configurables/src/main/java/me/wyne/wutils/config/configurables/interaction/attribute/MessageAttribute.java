@@ -10,21 +10,25 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code message} payload — sends each configured line as a chat message to the audience.
+ */
 public class MessageAttribute extends ConfigurableAttribute<List<String>> implements ContextInteractionAttribute {
 
-    public MessageAttribute(String key, List<String> value) {
+    public MessageAttribute(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public MessageAttribute(List<String> value) {
+    public MessageAttribute(@NotNull List<@NotNull String> value) {
         super(InteractionAttribute.MESSAGE.getKey(), value);
     }
 
     @Override
-    public void send(Audience audience, CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull Audience audience, @NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         getValue().stream()
                 .map(s -> I18n.global.accessor(sender, s).getPlaceholderComponent(context.getPlaceholderTarget(), context.getTextReplacements()).replace(context.getComponentReplacements()))
                 .forEach(component -> component.sendMessage(audience));
@@ -32,7 +36,7 @@ public class MessageAttribute extends ConfigurableAttribute<List<String>> implem
 
     public static final class Factory implements AttributeFactory<MessageAttribute> {
         @Override
-        public MessageAttribute create(String key, ConfigurationSection config) {
+        public @NotNull MessageAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new MessageAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }

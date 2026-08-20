@@ -12,9 +12,23 @@ import me.wyne.wutils.config.configurables.attribute.GenericFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Supplies the {@link Clipboard} a {@link me.wyne.wutils.structure.Structure} pastes. Implemented by
+ * {@link FileScheme} (a single fixed schematic) and {@link RandomScheme} (one chosen at random from
+ * a set); {@link Factory} decides between them from config.
+ */
 public interface Scheme extends CompositeConfigSerializable {
+    /**
+     * Returns the clipboard to paste. May load it lazily on first call.
+     */
     @NotNull Clipboard getClipboard();
 
+    /**
+     * Maps a clipboard's region into world coordinates under {@code transform}, as the axis-aligned
+     * bounding box of all eight transformed corners — computing the box this way, rather than just
+     * transforming the min and max corners, is what keeps the result correct when {@code transform}
+     * includes a rotation.
+     */
     static @NotNull Region toWorld(@NotNull Clipboard clipboard, @NotNull Location location, @NotNull Transform transform) {
         var region = clipboard.getRegion();
         var origin = clipboard.getOrigin();
@@ -40,6 +54,10 @@ public interface Scheme extends CompositeConfigSerializable {
         return new CuboidRegion(worldMin, worldMax);
     }
 
+    /**
+     * Dispatches to {@link FileScheme.Factory} if the section at {@code key} has a {@code scheme}
+     * entry, otherwise to {@link RandomScheme.Factory}.
+     */
     final class Factory implements GenericFactory<Scheme> {
         @Override
         public Scheme create(String key, ConfigurationSection config) {

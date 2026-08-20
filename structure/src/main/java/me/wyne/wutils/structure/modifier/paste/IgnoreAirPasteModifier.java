@@ -26,7 +26,7 @@ public class IgnoreAirPasteModifier extends ConfigurableAttribute<Boolean> imple
 
     public static final class Factory implements AttributeFactory<IgnoreAirPasteModifier> {
         @Override
-        public IgnoreAirPasteModifier create(String key, ConfigurationSection config) {
+        public @NotNull IgnoreAirPasteModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new IgnoreAirPasteModifier(key, config.getBoolean(key, false));
         }
     }

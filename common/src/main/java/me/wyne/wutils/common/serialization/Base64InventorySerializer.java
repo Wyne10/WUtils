@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +14,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+/**
+ * Gson (de)serializer that round-trips a Bukkit {@link Inventory} through Bukkit's native object
+ * (de)serialization, base64-encoded into a single JSON string. Register it on a {@code GsonBuilder}
+ * via {@code registerTypeAdapter(Inventory.class, new Base64InventorySerializer())}. Requires Gson
+ * on the classpath.
+ */
 public class Base64InventorySerializer implements JsonSerializer<Inventory>, JsonDeserializer<Inventory> {
 
+    /**
+     * Decodes the base64 JSON string back into an {@link Inventory} of the size it was
+     * serialized with.
+     *
+     * @throws JsonParseException if the encoded data is corrupt or references a class that
+     *                            cannot be resolved
+     */
     @Override
-    public Inventory deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public @NotNull Inventory deserialize(@NotNull JsonElement json, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(json.getAsString()));
              BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
             Inventory inventory = Bukkit.createInventory(null, dataInput.readInt());
@@ -30,7 +44,7 @@ public class Base64InventorySerializer implements JsonSerializer<Inventory>, Jso
     }
 
     @Override
-    public JsonElement serialize(Inventory src, Type typeOfSrc, JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull Inventory src, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
             dataOutput.writeInt(src.getSize());

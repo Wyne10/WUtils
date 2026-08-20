@@ -13,12 +13,22 @@ import me.wyne.wutils.i18n.language.replacement.TextReplacement;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 import static me.wyne.wutils.config.configurables.InteractionConfigurable.INTERACTION_ATTRIBUTE_MAP;
 
+/**
+ * A sequence of {@link InteractionConfigurable}s, all fired together by {@link #send}.
+ *
+ * <p>{@link #fromConfig} accepts three shapes: a bare string or a string list each build a single
+ * interaction carrying only a {@link MessageAttribute}, built through
+ * {@link ImmutableAttributeContainer#toBuilder()} rather than {@code fromConfig} — so, unlike a
+ * section-built interaction, that shorthand interaction has no {@code root} attribute. A section
+ * builds one interaction per child key.</p>
+ */
 public class InteractionListConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     private final List<InteractionConfigurable> interactions;
@@ -27,18 +37,18 @@ public class InteractionListConfigurable implements CompositeConfigSerializable,
         interactions = new LinkedList<>();
     }
 
-    public InteractionListConfigurable(InteractionConfigurable... interactions) {
+    public InteractionListConfigurable(@NotNull InteractionConfigurable... interactions) {
         this();
         addInteractions(interactions);
     }
 
-    public InteractionListConfigurable(ConfigurationSection section) {
+    public InteractionListConfigurable(@NotNull ConfigurationSection section) {
         this();
         fromConfig(section);
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         ConfigBuilder builder = new ConfigBuilder();
         for (int i = 0; i < interactions.size(); i++) {
             builder.appendComposite(depth, "interaction-" + i, interactions.get(i), configEntry);
@@ -46,6 +56,7 @@ public class InteractionListConfigurable implements CompositeConfigSerializable,
         return builder.build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void fromConfig(@Nullable Object configObject) {
         if (configObject == null)
@@ -72,40 +83,40 @@ public class InteractionListConfigurable implements CompositeConfigSerializable,
                 interactions.add(new InteractionConfigurable(config.getConfigurationSection(key))));
     }
 
-    public void send(CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         for (InteractionConfigurable interaction : interactions) {
             interaction.send(sender, context);
         }
     }
 
-    public void send(CommandSender sender, @Nullable OfflinePlayer placeholderTarget, TextReplacement... textReplacements) {
+    public void send(@NotNull CommandSender sender, @Nullable OfflinePlayer placeholderTarget, @NotNull TextReplacement... textReplacements) {
         var context = new InteractionAttributeContext(placeholderTarget, textReplacements, new ComponentReplacement[]{});
         send(sender, context);
     }
-    public void send(CommandSender sender, TextReplacement... textReplacements) {
+    public void send(@NotNull CommandSender sender, @NotNull TextReplacement... textReplacements) {
         send(sender, I18n.toOfflinePlayer(sender), textReplacements);
     }
 
-    public void sendComponent(CommandSender sender, @Nullable OfflinePlayer placeholderTarget, ComponentReplacement... componentReplacements) {
+    public void sendComponent(@NotNull CommandSender sender, @Nullable OfflinePlayer placeholderTarget, @NotNull ComponentReplacement... componentReplacements) {
         var context = new InteractionAttributeContext(placeholderTarget, new TextReplacement[]{}, componentReplacements);
         send(sender, context);
     }
 
-    public void sendComponent(CommandSender sender, ComponentReplacement... componentReplacements) {
+    public void sendComponent(@NotNull CommandSender sender, @NotNull ComponentReplacement... componentReplacements) {
         sendComponent(sender, I18n.toOfflinePlayer(sender), componentReplacements);
     }
 
-    public InteractionListConfigurable addInteraction(InteractionConfigurable interaction) {
+    public @NotNull InteractionListConfigurable addInteraction(@NotNull InteractionConfigurable interaction) {
         interactions.add(interaction);
         return this;
     }
 
-    public InteractionListConfigurable addInteractions(InteractionConfigurable... interactions) {
+    public @NotNull InteractionListConfigurable addInteractions(@NotNull InteractionConfigurable... interactions) {
         this.interactions.addAll(Arrays.asList(interactions));
         return this;
     }
 
-    public List<InteractionConfigurable> getInteractions() {
+    public @NotNull List<@NotNull InteractionConfigurable> getInteractions() {
         return interactions;
     }
 }

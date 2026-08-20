@@ -18,6 +18,11 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Grows trees of {@link ForestSettings#type()} across the margin region's surface via
+ * WorldEdit's {@link ForestGenerator}, with per-column probability driven by
+ * {@link ForestSettings#density()}.
+ */
 public class ForestEditModifier extends MarginEditModifier<ForestSettings> {
 
     public ForestEditModifier(@NotNull String key, @NotNull ForestSettings value) {
@@ -60,7 +65,7 @@ public class ForestEditModifier extends MarginEditModifier<ForestSettings> {
 
     public static final class Factory implements AttributeFactory<ForestEditModifier> {
         @Override
-        public ForestEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull ForestEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ForestEditModifier(key, ForestSettings.parse(config.getString(key, "")));
         }
     }

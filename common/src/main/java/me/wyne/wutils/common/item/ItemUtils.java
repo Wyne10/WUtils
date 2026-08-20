@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -24,37 +25,58 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Item-related helpers: tool/armor material sets, null/air checks, natural tool damage and
+ * natural item drops, and block-state (tile entity) persistence on items.
+ */
 public final class ItemUtils {
 
-    public static final Set<Material> AXES = Collections.unmodifiableSet(MaterialTags.AXES.getValues());
-    public static final Set<Material> PICKAXES = Collections.unmodifiableSet(MaterialTags.PICKAXES.getValues());
-    public static final Set<Material> SHOVELS = Collections.unmodifiableSet(MaterialTags.SHOVELS.getValues());
-    public static final Set<Material> HOES = Collections.unmodifiableSet(MaterialTags.HOES.getValues());
-    public static final Set<Material> SWORDS = Collections.unmodifiableSet(MaterialTags.SWORDS.getValues());
-    public static final Set<Material> TOOLS = Stream
+    public static final @NotNull Set<@NotNull Material> AXES = Collections.unmodifiableSet(MaterialTags.AXES.getValues());
+    public static final @NotNull Set<@NotNull Material> PICKAXES = Collections.unmodifiableSet(MaterialTags.PICKAXES.getValues());
+    public static final @NotNull Set<@NotNull Material> SHOVELS = Collections.unmodifiableSet(MaterialTags.SHOVELS.getValues());
+    public static final @NotNull Set<@NotNull Material> HOES = Collections.unmodifiableSet(MaterialTags.HOES.getValues());
+    public static final @NotNull Set<@NotNull Material> SWORDS = Collections.unmodifiableSet(MaterialTags.SWORDS.getValues());
+    /** Union of {@link #AXES}, {@link #PICKAXES}, {@link #SHOVELS}, {@link #HOES} and {@link #SWORDS}. */
+    public static final @NotNull Set<@NotNull Material> TOOLS = Stream
             .of(AXES, PICKAXES, SHOVELS, HOES, SWORDS)
             .flatMap(Set::stream)
             .collect(Collectors.toUnmodifiableSet());
 
-    public static final Set<Material> ARMOR = Stream
+    /** Union of all helmet, chestplate, leggings and boots materials. */
+    public static final @NotNull Set<@NotNull Material> ARMOR = Stream
             .of(MaterialTags.HELMETS.getValues(), MaterialTags.CHESTPLATES.getValues(),
                     MaterialTags.LEGGINGS.getValues(), MaterialTags.BOOTS.getValues())
             .flatMap(Set::stream)
             .collect(Collectors.toUnmodifiableSet());
 
+    /** @return {@code true} if {@code item} is {@code null} or {@link Material#AIR} */
     public static boolean isNullOrAir(@Nullable ItemStack item) {
         return item == null || item.getType() == Material.AIR;
     }
 
+    /** @return {@code true} if {@code item} is neither {@code null} nor {@link Material#AIR} */
     public static boolean isNotNullOrAir(@Nullable ItemStack item) {
         return item != null && item.getType() != Material.AIR;
     }
 
-    public static void damageNaturally(@Nullable ItemStack item, Player player) {
+    /**
+     * Applies one point of natural durability damage to {@code item}, as if used by
+     * {@code player}. No-op for {@code null} items.
+     *
+     * @see #damageNaturally(ItemStack, Player, int)
+     */
+    public static void damageNaturally(@Nullable ItemStack item, @NotNull Player player) {
         damageNaturally(item, player, 1);
     }
 
-    public static void damageNaturally(@Nullable ItemStack item, Player player, int damage) {
+    /**
+     * Applies {@code damage} points of natural durability damage to {@code item}, firing
+     * {@link PlayerItemDamageEvent} and, if the item breaks, {@link PlayerItemBreakEvent} and a
+     * break sound. Honors unbreakable items, {@link Enchantment#DURABILITY}'s chance to negate
+     * damage, and {@link GameMode#CREATIVE} (no-op). No-op for {@code null} items or items
+     * without durability.
+     */
+    public static void damageNaturally(@Nullable ItemStack item, @NotNull Player player, int damage) {
         if (item == null) return;
         if (player.getGameMode() == GameMode.CREATIVE) return;
         var meta = item.getItemMeta();
@@ -77,19 +99,28 @@ public final class ItemUtils {
         item.setItemMeta((ItemMeta) damageable);
     }
 
-    public static void dropActuallyNaturally(BlockBreakEvent event, ItemStack... drops) {
+    /** @see #dropActuallyNaturally(Collection, BlockBreakEvent, Location) */
+    public static void dropActuallyNaturally(@NotNull BlockBreakEvent event, @Nullable ItemStack... drops) {
         dropActuallyNaturally(event, event.getBlock().getLocation(), drops);
     }
 
-    public static void dropActuallyNaturally(BlockBreakEvent event, Location location, ItemStack... drops) {
+    /** @see #dropActuallyNaturally(Collection, BlockBreakEvent, Location) */
+    public static void dropActuallyNaturally(@NotNull BlockBreakEvent event, @NotNull Location location, @Nullable ItemStack... drops) {
         dropActuallyNaturally(Arrays.asList(drops), event, location);
     }
 
-    public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event) {
+    /** @see #dropActuallyNaturally(Collection, BlockBreakEvent, Location) */
+    public static void dropActuallyNaturally(@NotNull Collection<@Nullable ItemStack> drops, @NotNull BlockBreakEvent event) {
         dropActuallyNaturally(drops, event, event.getBlock().getLocation());
     }
 
-    public static void dropActuallyNaturally(Collection<ItemStack> drops, BlockBreakEvent event, Location location) {
+    /**
+     * Drops {@code drops} naturally at {@code location} (null/air entries skipped), firing a
+     * {@link BlockDropItemEvent} that listeners can cancel or edit; entities removed from or
+     * added to the event's item list are respected, and a cancelled event removes every dropped
+     * entity again.
+     */
+    public static void dropActuallyNaturally(@NotNull Collection<@Nullable ItemStack> drops, @NotNull BlockBreakEvent event, @NotNull Location location) {
         var originalItems = drops.stream()
                 .filter(ItemUtils::isNotNullOrAir)
                 .map(item -> event.getBlock().getWorld().dropItemNaturally(location, item)).toList();
@@ -107,36 +138,58 @@ public final class ItemUtils {
         }
     }
 
-    public static ItemStack saveBlockState(ItemStack item, BlockState blockState) {
+    /**
+     * Stores {@code blockState} on {@code item}'s {@link BlockStateMeta}, e.g. so a placed block
+     * item remembers a container's contents. No-op (returns {@code item} unchanged) if the item
+     * type has no block-state meta.
+     */
+    public static @NotNull ItemStack saveBlockState(@NotNull ItemStack item, @NotNull BlockState blockState) {
         if (!(item.getItemMeta() instanceof BlockStateMeta blockStateMeta)) return item;
         blockStateMeta.setBlockState(blockState);
         item.setItemMeta(blockStateMeta);
         return item;
     }
 
-    public static ItemStack saveBlockState(ItemStack item, BlockState blockState, TileStateLoader loader) {
+    /**
+     * Like {@link #saveBlockState(ItemStack, BlockState)}, and additionally runs {@code loader}
+     * to persist type-specific extra state (e.g. a spawner's mob type) that
+     * {@link BlockStateMeta} alone does not capture.
+     */
+    public static @NotNull ItemStack saveBlockState(@NotNull ItemStack item, @NotNull BlockState blockState, @NotNull TileStateLoader loader) {
         saveBlockState(item, blockState);
         return loader.save(item, blockState);
     }
 
-    public static ItemStack saveBlockStateExtended(ItemStack item, BlockState blockState) {
+    /**
+     * Saves {@code blockState} onto {@code item}, using the {@link TileStateLoader} registered in
+     * {@link #TILE_STATE_LOADERS} for the block's type when one exists, otherwise falling back to
+     * {@link #saveBlockState(ItemStack, BlockState)}.
+     */
+    public static @NotNull ItemStack saveBlockStateExtended(@NotNull ItemStack item, @NotNull BlockState blockState) {
         var loader = TILE_STATE_LOADERS.get(blockState.getType());
         if (loader == null) return saveBlockState(item, blockState);
         return saveBlockState(item, blockState, loader);
     }
 
-    public static BlockState loadBlockState(ItemStack item, BlockState blockState) {
+    /**
+     * Applies {@code item}'s saved {@link BlockStateMeta}, and any state restored by a registered
+     * {@link #TILE_STATE_LOADERS} loader, onto {@code blockState}. Returns {@code blockState}
+     * unchanged if the item has no block-state meta or no loader is registered for its type.
+     */
+    public static @NotNull BlockState loadBlockState(@NotNull ItemStack item, @NotNull BlockState blockState) {
         if (!(item.getItemMeta() instanceof BlockStateMeta)) return blockState;
         var loader = TILE_STATE_LOADERS.get(blockState.getType());
         if (loader == null) return blockState;
         return loadBlockState(item, blockState, loader);
     }
 
-    public static BlockState loadBlockState(ItemStack item, BlockState blockState, TileStateLoader loader) {
+    /** @see #loadBlockState(ItemStack, BlockState) */
+    public static @NotNull BlockState loadBlockState(@NotNull ItemStack item, @NotNull BlockState blockState, @NotNull TileStateLoader loader) {
         return loader.load(item, blockState);
     }
 
-    public static final Map<Material, TileStateLoader> TILE_STATE_LOADERS = Map.of(
+    /** Type-specific {@link TileStateLoader}s used by {@link #saveBlockStateExtended} and {@link #loadBlockState(ItemStack, BlockState)}. */
+    public static final @NotNull Map<@NotNull Material, @NotNull TileStateLoader> TILE_STATE_LOADERS = Map.of(
             Material.SPAWNER, new SpawnerLoader()
     );
 

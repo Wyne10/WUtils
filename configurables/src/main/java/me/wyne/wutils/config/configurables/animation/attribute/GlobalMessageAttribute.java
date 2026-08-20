@@ -11,21 +11,31 @@ import me.wyne.wutils.config.configurables.attribute.ConfigurableAttribute;
 import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code globalMessage} effect — sends the configured lines to every online player.
+ *
+ * <p>The audience is always {@code audiences.players()}, but the effect still needs a context
+ * player: {@link #create} returns {@link AnimationRunnable#EMPTY} when the context player is null,
+ * because the player is also used to resolve the message's language and placeholders. The player
+ * therefore gates whether anyone receives the broadcast, even though the broadcast itself goes to
+ * everyone.</p>
+ */
 public class GlobalMessageAttribute extends ConfigurableAttribute<List<String>> implements ContextAnimationAttribute<AnimationContext> {
 
-    public GlobalMessageAttribute(String key, List<String> value) {
+    public GlobalMessageAttribute(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public GlobalMessageAttribute(List<String> value) {
+    public GlobalMessageAttribute(@NotNull List<@NotNull String> value) {
         super(AnimationAttribute.GLOBAL_MESSAGE.getKey(), value);
     }
 
     @Override
-    public AnimationRunnable create(AnimationContext context) {
+    public @NotNull AnimationRunnable create(@NotNull AnimationContext context) {
         if (context.getPlayer() == null) return AnimationRunnable.EMPTY;
         return new MessageEffect(
                 I18n.global.getAudiences().players(),
@@ -37,7 +47,7 @@ public class GlobalMessageAttribute extends ConfigurableAttribute<List<String>> 
 
     public static final class Factory implements AttributeFactory<GlobalMessageAttribute> {
         @Override
-        public GlobalMessageAttribute create(String key, ConfigurationSection config) {
+        public @NotNull GlobalMessageAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new GlobalMessageAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }

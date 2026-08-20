@@ -1,5 +1,11 @@
 package me.wyne.wutils.config.configurables.interaction;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Config keys for the audience and payload attributes an interaction section resolves against, as
+ * registered in {@code InteractionConfigurable}.
+ */
 public enum InteractionAttribute {
     AUDIENCE_PLAYER("toPlayer"),
     AUDIENCE_ALL("toAll"),
@@ -17,11 +23,11 @@ public enum InteractionAttribute {
 
     private final String key;
 
-    InteractionAttribute(String key) {
+    InteractionAttribute(@NotNull String key) {
         this.key = key;
     }
 
-    public String getKey() {
+    public @NotNull String getKey() {
         return key;
     }
 }

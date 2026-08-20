@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Removes plants and other blocks in the margin region that require solid ground and no longer
+ * have it — grass, flowers, cacti, sugar cane, snow layers, torches and similar — column by
+ * column, tracking what each column's current top rests on as it scans downward.
+ */
 public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSettings> {
 
     private static final Set<BlockType> NEEDS_GROUND = buildUnstableSet();
@@ -149,7 +154,7 @@ public class DropFloatingEditModifier extends MarginEditModifier<DropFloatingSet
 
     public static final class Factory implements AttributeFactory<DropFloatingEditModifier> {
         @Override
-        public DropFloatingEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull DropFloatingEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new DropFloatingEditModifier(key, DropFloatingSettings.parse(config.getString(key, "")));
         }
     }

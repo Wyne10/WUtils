@@ -2,15 +2,18 @@ package me.wyne.wutils.i18n.language;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public record JsonLanguageStrings(JsonObject root) implements LanguageStrings {
+/** {@link LanguageStrings} view over a Gson {@link JsonObject}, resolving paths split on {@code .}. */
+public record JsonLanguageStrings(@NotNull JsonObject root) implements LanguageStrings {
 
+    /** Returns the element at the dotted path, or {@code null} if any segment is missing or not an object. */
     @Nullable
-    private JsonElement resolve(String path) {
+    private JsonElement resolve(@NotNull String path) {
         JsonElement current = root;
         for (String key : path.split("\\.")) {
             if (current == null || !current.isJsonObject())
@@ -21,18 +24,18 @@ public record JsonLanguageStrings(JsonObject root) implements LanguageStrings {
     }
 
     @Override
-    public boolean contains(String path) {
+    public boolean contains(@NotNull String path) {
         return resolve(path) != null;
     }
 
     @Override
-    public boolean isList(String path) {
+    public boolean isList(@NotNull String path) {
         JsonElement element = resolve(path);
         return element != null && element.isJsonArray();
     }
 
     @Override
-    public List<String> getStringList(String path) {
+    public @NotNull List<@NotNull String> getStringList(@NotNull String path) {
         List<String> result = new LinkedList<>();
         JsonElement element = resolve(path);
         if (element == null || !element.isJsonArray())

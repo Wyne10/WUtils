@@ -12,14 +12,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * Bounds the difference between the highest and lowest ocean-floor terrain height sampled
+ * across the structure's footprint, to reject placements over uneven ground.
+ */
 public record AltitudeDifferenceCondition(@NotNull IntComparator comparator) implements RegionCondition {
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "altitude-difference", comparator)
                 .buildNoTrail();
     }
 
+    /**
+     * Samples the ocean-floor height at the structure's origin, its footprint corners, and
+     * the midpoints between them, then compares the difference between the highest and
+     * lowest sample against {@link #comparator()}.
+     */
     @Override
     public boolean isValid(@NotNull IntermediateStructure intermediateStructure, @NotNull ProtectedCuboidRegion region) {
         var clipboardRegion = intermediateStructure.clipboardRegion();
@@ -72,7 +81,7 @@ public record AltitudeDifferenceCondition(@NotNull IntComparator comparator) imp
         return comparator.compare(max - min);
     }
 
-    private Location getMidpoint(Location first, Location second) {
+    private @NotNull Location getMidpoint(@NotNull Location first, @NotNull Location second) {
         var midpoint = first.toVector().getMidpoint(second.toVector());
         return LocationUtils.of(first.getWorld(), midpoint);
     }

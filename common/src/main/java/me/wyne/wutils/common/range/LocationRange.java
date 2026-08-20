@@ -9,65 +9,86 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * A {@link VectorRange} anchored to a specific {@link World}, inclusive of both bounds on every
+ * axis (see the {@link VectorRange} class documentation for the exact contract, including the
+ * caveats on {@link #getRandom()} and on negative dimensions).
+ * <p>
+ * Despite the constructor parameter name, {@link #LocationRange(Location, double)} builds a
+ * cube extending {@code radius} in every direction, not a sphere — containment is still the
+ * axis-aligned box check inherited from {@link VectorRange}, not a distance check.
+ */
 public class LocationRange extends VectorRange {
 
     private final World world;
 
-    public LocationRange(World world, Vector min, Vector max) {
+    public LocationRange(@NotNull World world, @NotNull Vector min, @NotNull Vector max) {
         super(min, max);
         this.world = world;
     }
 
-    public LocationRange(World world, VectorRange range) {
+    public LocationRange(@NotNull World world, @NotNull VectorRange range) {
         super(range.getMin(), range.getMax());
         this.world = world;
     }
 
-    public LocationRange(Location center, double width, double height, double depth) {
+    public LocationRange(@NotNull Location center, double width, double height, double depth) {
         super(center.toVector(), width, height, depth);
         this.world = center.getWorld();
     }
 
-    public LocationRange(Location center, double radius) {
+    /**
+     * Builds a cube centered on {@code center}, extending {@code radius} in every direction —
+     * not a sphere; see the class documentation.
+     */
+    public LocationRange(@NotNull Location center, double radius) {
         this(center, radius, radius, radius);
     }
 
-    public World getWorld() {
+    public @NotNull World getWorld() {
         return world;
     }
 
-    public Location getRandomLocation() {
+    public @NotNull Location getRandomLocation() {
         return LocationUtils.of(getWorld(), getRandom());
     }
 
-    public boolean contains(Location location) {
+    public boolean contains(@NotNull Location location) {
         if (location.getWorld() != world) return false;
         return contains(location.toVector());
     }
 
-    public <T extends Entity> boolean contains(T entity) {
+    public <T extends Entity> boolean contains(@NotNull T entity) {
         return contains(entity.getLocation());
     }
 
-    public boolean contains(Block block) {
+    public boolean contains(@NotNull Block block) {
         return contains(block.getLocation());
     }
 
-    public LocationRangeIterator locationIterator() {
+    public @NotNull LocationRangeIterator locationIterator() {
         return locationIterator(1.0);
     }
 
-    public LocationRangeIterator locationIterator(double step) {
+    /**
+     * Iterates the full volume at {@code step}-sized intervals in world coordinates via
+     * {@link LocationRangeIterator}.
+     */
+    public @NotNull LocationRangeIterator locationIterator(double step) {
         return new LocationRangeIterator(this, step);
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return world.getName() + " " + super.toString();
     }
 
-    public static LocationRange getLocationRange(String string) {
+    /**
+     * Parses a range from {@code "world minX,minY,minZ..maxX,maxY,maxZ"}.
+     */
+    public static @NotNull LocationRange getLocationRange(@NotNull String string) {
         var args = new Args(string);
         return new LocationRange(Bukkit.getWorld(args.get(0)), VectorRange.getVectorRange(args.get(1)));
     }

@@ -6,6 +6,16 @@ import me.wyne.wutils.common.operation.Operations;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Config value for {@link GrowEditModifier}, parsed by {@link #parse} from a single
+ * space-delimited string: {@code margin(5) strength(2) base(+0) [direction] [mask]}.
+ *
+ * <p>{@code direction} and {@code mask} are both optional and share one token slot: the third
+ * token is tried as a direction keyword ({@code up}/{@code raise}, {@code down}/{@code lower},
+ * {@code both}/{@code slope}); if it does not match one, it is taken as the mask instead and
+ * {@code direction} defaults to {@link Direction#BOTH}. A fourth token, present only when the
+ * third was a direction keyword, supplies the mask.</p>
+ */
 public record GrowSettings(int margin, double strength, @NotNull IntOperation base,
                            @NotNull Direction direction, @Nullable String mask) {
 

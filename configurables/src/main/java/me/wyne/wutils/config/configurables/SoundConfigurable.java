@@ -7,8 +7,20 @@ import me.wyne.wutils.config.configurable.ConfigBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * An Adventure {@link Sound}, read from a {@code sound}/{@code source}/{@code volume}/{@code pitch}
+ * section.
+ *
+ * <p>Unlike {@link me.wyne.wutils.config.configurables.attribute.common.SoundAttribute}, which
+ * resolves the sound name case-insensitively via {@code ConfigUtils.getByKeyOrName} and accepts
+ * either a Bukkit enum name or a namespaced key, this class requires an exact namespaced key
+ * ({@link Key#key}) and an exact-case {@link Sound.Source} name
+ * ({@link Sound.Source#valueOf}). A plain enum name such as {@code BLOCK_ANVIL_USE} throws
+ * {@code InvalidKeyException}, and a missing {@code sound} key throws {@link NullPointerException}.</p>
+ */
 public class SoundConfigurable implements CompositeConfigSerializable, ConfigDeserializable {
 
     @Nullable
@@ -16,7 +28,7 @@ public class SoundConfigurable implements CompositeConfigSerializable, ConfigDes
 
     public SoundConfigurable() {}
 
-    public SoundConfigurable(ConfigurationSection section) {
+    public SoundConfigurable(@NotNull ConfigurationSection section) {
         fromConfig(section);
     }
 
@@ -25,7 +37,7 @@ public class SoundConfigurable implements CompositeConfigSerializable, ConfigDes
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         if (sound == null)
             return "";
         ConfigBuilder configBuilder = new ConfigBuilder();

@@ -4,6 +4,10 @@ import me.wyne.wutils.common.Args;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Config value for {@link SmoothEditModifier}, parsed by {@link #parse} from a single
+ * space-delimited string: {@code margin(5) iterations(1) [mask]}.
+ */
 public record SmoothSettings(int margin, int iterations, @Nullable String mask) {
 
     public static @NotNull SmoothSettings parse(@NotNull String input) {

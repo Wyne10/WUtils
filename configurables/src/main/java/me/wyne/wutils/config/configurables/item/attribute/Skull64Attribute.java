@@ -9,26 +9,35 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Sets a {@link SkullMeta} owner profile from a fixed base64 texture value. No-ops on any meta
+ * that is not a {@link SkullMeta}.
+ *
+ * <p>Resolved {@link PlayerProfile}s are cached in a static map keyed by the base64 string that
+ * never evicts — fine for a fixed set of config-declared heads, not for textures built from user
+ * input.</p>
+ */
 public class Skull64Attribute extends ConfigurableAttribute<String> implements MetaAttribute {
 
     private static final Map<String, PlayerProfile> CACHED_PROFILES = new HashMap<>();
 
-    public Skull64Attribute(String key, String value) {
+    public Skull64Attribute(@NotNull String key, @NotNull String value) {
         super(key, value);
     }
 
-    public Skull64Attribute(String value) {
+    public Skull64Attribute(@NotNull String value) {
         super(ItemAttribute.SKULL64.getKey(), value);
     }
 
     @Override
-    public void apply(ItemMeta meta) {
+    public void apply(@NotNull ItemMeta meta) {
         if (!(meta instanceof SkullMeta)) return;
         if (CACHED_PROFILES.containsKey(getValue())) {
             ((SkullMeta)meta).setPlayerProfile(CACHED_PROFILES.get(getValue()));
@@ -42,7 +51,7 @@ public class Skull64Attribute extends ConfigurableAttribute<String> implements M
 
     public static final class Factory implements AttributeFactory<Skull64Attribute> {
         @Override
-        public Skull64Attribute create(String key, ConfigurationSection config) {
+        public @NotNull Skull64Attribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new Skull64Attribute(key, config.getString(key, ""));
         }
     }

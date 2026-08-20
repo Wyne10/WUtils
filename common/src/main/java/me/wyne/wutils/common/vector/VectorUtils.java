@@ -3,14 +3,25 @@ package me.wyne.wutils.common.vector;
 import me.wyne.wutils.common.Args;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Vector-building, parsing and relative-offset helpers. The {@code addRelative} overloads rotate
+ * an offset into world space relative to a facing direction, mirroring the equivalent overloads
+ * in {@link me.wyne.wutils.common.location.LocationUtils}.
+ */
 public final class VectorUtils {
 
-    public static Vector zero() {
+    /** @return a new zero vector; unlike a shared constant, each call returns a distinct mutable instance */
+    public static @NotNull Vector zero() {
         return new Vector();
     }
 
-    public static Vector getVector(String string, Vector def) {
+    /**
+     * Parses a {@code "x,y,z"}-formatted {@code string} into a {@link Vector}, falling back to
+     * the matching component of {@code def} for any axis left blank.
+     */
+    public static @NotNull Vector getVector(@NotNull String string, @NotNull Vector def) {
         var args = new Args(string, ",");
         var x = args.get(0).isEmpty() ? def.getX() : Double.parseDouble(args.get(0));
         var y = args.get(1).isEmpty() ? def.getY() : Double.parseDouble(args.get(1));
@@ -18,11 +29,13 @@ public final class VectorUtils {
         return new Vector(x, y, z);
     }
 
-    public static Vector getVectorOrZero(String string) {
+    /** @see #getVector(String, Vector) */
+    public static @NotNull Vector getVectorOrZero(@NotNull String string) {
         return getVector(string, zero());
     }
 
-    public static Vector getMin(Vector vector1, Vector vector2) {
+    /** @return a new vector with the component-wise minimum of {@code vector1} and {@code vector2} */
+    public static @NotNull Vector getMin(@NotNull Vector vector1, @NotNull Vector vector2) {
         return new Vector(
                 Math.min(vector1.getX(), vector2.getX()),
                 Math.min(vector1.getY(), vector2.getY()),
@@ -30,7 +43,8 @@ public final class VectorUtils {
         );
     }
 
-    public static Vector getMax(Vector vector1, Vector vector2) {
+    /** @return a new vector with the component-wise maximum of {@code vector1} and {@code vector2} */
+    public static @NotNull Vector getMax(@NotNull Vector vector1, @NotNull Vector vector2) {
         return new Vector(
                 Math.max(vector1.getX(), vector2.getX()),
                 Math.max(vector1.getY(), vector2.getY()),
@@ -38,11 +52,18 @@ public final class VectorUtils {
         );
     }
 
-    public static boolean isEmpty(Vector vector) {
+    /** @return {@code true} if every component of {@code vector} is exactly zero */
+    public static boolean isEmpty(@NotNull Vector vector) {
         return vector.getX() == 0.0 && vector.getY() == 0.0 && vector.getZ() == 0.0;
     }
 
-    public static Vector addRelative(Vector vector, double horizontal, double vertical, BlockFace face) {
+    /**
+     * Offsets {@code vector} by {@code horizontal}/{@code vertical} rotated so that
+     * {@code horizontal} runs along the axis {@code face} is not aligned with.
+     *
+     * @see #addRelative(Vector, double, double, double, BlockFace)
+     */
+    public static @NotNull Vector addRelative(@NotNull Vector vector, double horizontal, double vertical, @NotNull BlockFace face) {
         if (face.getModZ() != 0)
             return vector.clone().add(new Vector(horizontal, vertical, 0.0));
         else if (face.getModX() != 0)
@@ -51,7 +72,12 @@ public final class VectorUtils {
             return vector.clone().add(new Vector(horizontal, vertical, 0.0));
     }
 
-    public static Vector addRelative(Vector vector, double width, double height, double depth, BlockFace face) {
+    /**
+     * Offsets {@code vector} by {@code width}/{@code height}/{@code depth}, swapping
+     * {@code width} and {@code depth} depending on which axis {@code face} runs along, so the
+     * offset stays oriented relative to {@code face} rather than to world axes.
+     */
+    public static @NotNull Vector addRelative(@NotNull Vector vector, double width, double height, double depth, @NotNull BlockFace face) {
         if (face.getModZ() != 0)
             return vector.clone().add(new Vector(width, height, depth));
         else if (face.getModX() != 0)
@@ -60,11 +86,16 @@ public final class VectorUtils {
             return vector.clone().add(new Vector(width, height, depth));
     }
 
-    public static Vector addRelative(Vector vector, Vector relativeOffset, BlockFace face) {
+    /** Offsets {@code vector} by {@code relativeOffset}, rotated relative to {@code face}'s direction. */
+    public static @NotNull Vector addRelative(@NotNull Vector vector, @NotNull Vector relativeOffset, @NotNull BlockFace face) {
         return addRelative(vector, relativeOffset, face.getDirection());
     }
 
-    public static Vector addRelative(Vector vector, Vector relativeOffset, Vector forward) {
+    /**
+     * Offsets {@code vector} by {@code relativeOffset} (x = right, y = up, z = forward) rotated
+     * so {@code forward} points along the given {@code forward} direction vector.
+     */
+    public static @NotNull Vector addRelative(@NotNull Vector vector, @NotNull Vector relativeOffset, @NotNull Vector forward) {
         if (isEmpty(relativeOffset))
             return vector.clone();
         var up = BlockFace.UP.getDirection().clone();

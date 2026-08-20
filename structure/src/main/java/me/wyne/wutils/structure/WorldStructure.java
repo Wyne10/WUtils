@@ -30,6 +30,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+/**
+ * A structure placed in the world: the {@link Structure} recipe's output after a valid location and
+ * region have been resolved by {@link Structure#create}.
+ *
+ * <p>Requires WorldEdit and WorldGuard on the runtime classpath (both {@code compileOnlyApi} — the
+ * consumer must supply them).</p>
+ *
+ * <p>Lifecycle: {@link #spawn()} snapshots the target region, pastes the clipboard, and registers a
+ * WorldGuard region; if any of that throws, the snapshot is rolled back before the exception
+ * propagates, leaving no partial paste behind. {@link #close()} unregisters the WorldGuard region and
+ * restores the snapshot, undoing the spawn — implementing {@link AutoCloseable} so a structure can be
+ * placed and torn down with try-with-resources. Individual {@code SnapshotModifier}, {@code
+ * PasteModifier}, and {@code EditSessionModifier} instances that throw during {@link #spawn()} are
+ * logged and skipped rather than propagated, so one misbehaving modifier does not abort the whole
+ * spawn.</p>
+ */
 public class WorldStructure implements AutoCloseable {
 
     private final String uniqueKey;
@@ -69,6 +85,11 @@ public class WorldStructure implements AutoCloseable {
         this.snapshot = memento.snapshot();
     }
 
+    /**
+     * Snapshots the target region, pastes the clipboard into the world, and registers the WorldGuard
+     * protected region. If pasting or registration throws, the snapshot is restored before the
+     * exception is rethrown, so a failed spawn leaves the world unchanged.
+     */
     public void spawn() {
         snapshot = getRegionSnapshot();
         try {
@@ -80,11 +101,22 @@ public class WorldStructure implements AutoCloseable {
         }
     }
 
+    /**
+     * Captures this structure's current state, including the pre-spawn snapshot, as a
+     * {@link WorldStructureMemento} that can be persisted and later handed to {@link #restore}.
+     *
+     * @throws NullPointerException if this structure has not been {@link #spawn() spawned} yet
+     */
     public @NotNull WorldStructureMemento capture() {
         Preconditions.checkNotNull(snapshot, "Structure " + uniqueKey + " cannot be captured before it is spawned");
         return new WorldStructureMemento(uniqueKey, location, region, clipboardRegion, transform, clipboard, snapshot);
     }
 
+    /**
+     * Rebuilds a {@link WorldStructure} from a previously {@link #capture() captured} memento,
+     * without re-running {@link Structure#create}. The result already carries its restore-snapshot
+     * but has no modifiers attached, since modifiers are not part of the persisted state.
+     */
     public static @NotNull WorldStructure restore(@NotNull WorldStructureMemento memento) {
         return new WorldStructure(memento);
     }
@@ -113,10 +145,19 @@ public class WorldStructure implements AutoCloseable {
         return transform;
     }
 
+    /**
+     * Maps a position in clipboard-local coordinates to its world position after this structure's
+     * transform and placement, via {@link ClipboardScan#toWorld}.
+     */
     public @NotNull BlockVector3 toWorld(@NotNull BlockVector3 clipboardPos) {
         return ClipboardScan.toWorld(clipboardPos, clipboard.getOrigin(), location.toVector().toBlockPoint(), transform);
     }
 
+    /**
+     * Teleports every non-spectator player standing inside this structure's region up to the
+     * highest solid block at their column, so they are not left inside newly pasted terrain.
+     * Players with no solid block in the column are left where they are.
+     */
     public void liftPlayersToSurface() {
         Preconditions.checkNotNull(clipboardRegion.getWorld(), "Clipboard region world was null during " + uniqueKey + " player lift");
         World world = BukkitAdapter.adapt(clipboardRegion.getWorld());

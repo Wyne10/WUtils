@@ -9,6 +9,10 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Converts dirt to grass within the radius via {@link EditSession#green}, scanning the full
+ * height column over the region.
+ */
 public class GreenEditModifier extends RegionRadiusEditModifier {
 
     public GreenEditModifier(@NotNull String key, @NotNull Double value) {
@@ -27,7 +31,7 @@ public class GreenEditModifier extends RegionRadiusEditModifier {
 
     public static final class Factory implements AttributeFactory<GreenEditModifier> {
         @Override
-        public GreenEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull GreenEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new GreenEditModifier(key, config.getDouble(key));
         }
     }

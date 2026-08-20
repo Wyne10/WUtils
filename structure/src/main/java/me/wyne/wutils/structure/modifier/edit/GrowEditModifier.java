@@ -24,6 +24,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Blends the terrain height map across the margin region toward {@link GrowSettings#base()},
+ * falling off with distance from the structure's footprint per {@link GrowSettings#strength()}
+ * and {@link GrowSettings#direction()}. When a {@link GrowSettings#mask()} is set, non-matching
+ * blocks above the target height are first cleared in a separate {@link EditSession} masked to
+ * stay outside the structure's footprint, so the height map computed from the remaining terrain
+ * ignores them.
+ */
 public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
 
     public GrowEditModifier(@NotNull String key, @NotNull GrowSettings value) {
@@ -141,7 +149,7 @@ public class GrowEditModifier extends MarginEditModifier<GrowSettings> {
 
     public static final class Factory implements AttributeFactory<GrowEditModifier> {
         @Override
-        public GrowEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull GrowEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new GrowEditModifier(key, GrowSettings.parse(config.getString(key, "")));
         }
     }

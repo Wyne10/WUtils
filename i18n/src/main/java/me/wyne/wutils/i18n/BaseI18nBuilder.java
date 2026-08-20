@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -25,6 +26,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Generic self-typed builder for {@link I18n}: configures the interpreters, the {@link ComponentAudiences}
+ * and the loaded {@link Language}s, then produces an {@link I18n}. {@code T} is the concrete builder type,
+ * allowing setters declared here to return the subclass type without a cast.
+ *
+ * <p>{@link PluginI18nBuilder} extends this with plugin-aware language and default-language resolution.</p>
+ */
 @SuppressWarnings({"unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
 
@@ -41,63 +49,69 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
     private boolean usePlayerLanguage = true;
 
     static {
+        // Quiets yaml-config-updater's "ru.vyarus" logger, whose default INFO output is noisy for consumers;
+        // NoSuchMethodError is swallowed to tolerate log4j-core versions without this Configurator overload.
         try {
             Configurator.setLevel("ru.vyarus", Level.WARN);
             Configurator.setLevel(LogManager.getLogger("ru.vyarus"), Level.WARN);
         } catch (NoSuchMethodError ignored) {}
     }
 
-    public T setLogger(Logger logger) {
+    public @NotNull T setLogger(@NotNull Logger logger) {
         this.logger = logger;
         return (T) this;
     }
 
-    public T setComponentAudience(ComponentAudiences componentAudiences) {
+    public @NotNull T setComponentAudience(@NotNull ComponentAudiences componentAudiences) {
         this.componentAudiences = componentAudiences;
         return (T) this;
     }
 
-    public T setStringInterpreter(StringInterpreter stringInterpreter) {
+    public @NotNull T setStringInterpreter(@NotNull StringInterpreter stringInterpreter) {
         this.stringInterpreter = stringInterpreter;
         return (T) this;
     }
 
-    public T setComponentInterpreter(ComponentInterpreter componentInterpreter) {
+    public @NotNull T setComponentInterpreter(@NotNull ComponentInterpreter componentInterpreter) {
         this.componentInterpreter = componentInterpreter;
         return (T) this;
     }
 
-    public T setDefaultLanguageCode(String defaultLanguageCode) {
+    public @NotNull T setDefaultLanguageCode(@NotNull String defaultLanguageCode) {
         this.defaultLanguageCode = defaultLanguageCode;
         return (T) this;
     }
 
-    public T setUsePlayerLanguage(boolean usePlayerLanguage) {
+    public @NotNull T setUsePlayerLanguage(boolean usePlayerLanguage) {
         this.usePlayerLanguage = usePlayerLanguage;
         return (T) this;
     }
 
-    public Logger getLogger() {
+    public @NotNull Logger getLogger() {
         return logger;
     }
 
-    public ComponentAudiences getComponentAudience() {
+    public @NotNull ComponentAudiences getComponentAudience() {
         return componentAudiences;
     }
 
-    public Map<String, Language> getLanguageMap() {
+    public @NotNull Map<@NotNull String, @NotNull Language> getLanguageMap() {
         return languageMap;
     }
 
-    public String getDefaultLanguageCode() {
+    /**
+     * Returns the configured default language code, or {@code null} if none has been set yet — e.g.
+     * before {@link #setDefaultLanguageCode} or {@link PluginI18nBuilder}'s config-driven resolution runs.
+     */
+    public @Nullable String getDefaultLanguageCode() {
         return defaultLanguageCode;
     }
 
-    public StringInterpreter getStringInterpreter() {
+    public @NotNull StringInterpreter getStringInterpreter() {
         return stringInterpreter;
     }
 
-    public ComponentInterpreter getComponentInterpreter() {
+    public @NotNull ComponentInterpreter getComponentInterpreter() {
         return componentInterpreter;
     }
 
@@ -105,8 +119,9 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return usePlayerLanguage;
     }
 
+    /** Loads every file in {@code directory} via {@link #loadLanguage(File)}, creating it first if missing. */
     @SuppressWarnings("DataFlowIssue")
-    public T loadLanguages(File directory) {
+    public @NotNull T loadLanguages(@NotNull File directory) {
         if (!directory.exists())
             directory.mkdirs();
 
@@ -117,12 +132,18 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return (T) this;
     }
 
-    public T loadLanguage(File languageFile) {
+    /** Loads {@code languageFile} with no default language to back-fill missing keys from. */
+    public @NotNull T loadLanguage(@NotNull File languageFile) {
         loadLanguage(null, languageFile);
         return (T) this;
     }
 
-    public T loadLanguage(@Nullable Language defaultLanguage, File languageFile) {
+    /**
+     * Loads {@code languageFile}, dispatching on its extension via {@link #createLanguage}, and registers
+     * it under its {@link #getLanguageCode code}. First write wins: does nothing if a language with the
+     * same code is already loaded.
+     */
+    public @NotNull T loadLanguage(@Nullable Language defaultLanguage, @NotNull File languageFile) {
         String languageCode = getLanguageCode(languageFile);
         if (getLanguageMap().containsKey(languageCode))
             return (T) this;
@@ -131,7 +152,12 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return (T) this;
     }
 
-    public Language createLanguage(@Nullable Language defaultLanguage, File languageFile) {
+    /**
+     * Creates a {@link Language} for {@code languageFile}, dispatching on its extension: {@code .json} to
+     * {@link JsonLanguage}, {@code .lang} to {@link LangLanguage}, and anything else — not only
+     * {@code .yml} — to {@link YamlLanguage}.
+     */
+    public @NotNull Language createLanguage(@Nullable Language defaultLanguage, @NotNull File languageFile) {
         String extension = FilenameUtils.getExtension(languageFile.getName());
         if (extension.equalsIgnoreCase("json"))
             return new JsonLanguage(defaultLanguage, languageFile, getLogger());
@@ -140,7 +166,14 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return new YamlLanguage(defaultLanguage, languageFile, getLogger());
     }
 
-    public T loadLanguage(Plugin plugin, String languageResourcePath) {
+    /**
+     * Copies the plugin resource at {@code languageResourcePath} into the plugin's data folder if it is
+     * not already there, mirrors the bundled resource under {@code defaults/}, and loads the on-disk file
+     * as a language using the mirrored bundled copy as its default (to back-fill missing keys from).
+     *
+     * @throws NullPointerException if the plugin has no such resource
+     */
+    public @NotNull T loadLanguage(@NotNull Plugin plugin, @NotNull String languageResourcePath) {
         if (plugin.getResource(languageResourcePath) == null)
             throw new NullPointerException("Language resource " + languageResourcePath + " not found");
         File languageFile = new File(plugin.getDataFolder(), languageResourcePath);
@@ -156,17 +189,27 @@ public class BaseI18nBuilder<T extends BaseI18nBuilder<?>> {
         return (T) this;
     }
 
-    public String getLanguageCode(File languageFile) {
+    /**
+     * Returns the language code for {@code languageFile}: its filename without extension. Files sharing a
+     * base name but differing in extension (e.g. {@code en.yml} and {@code en.json}) collide on this code.
+     */
+    public @NotNull String getLanguageCode(@NotNull File languageFile) {
         return FilenameUtils.removeExtension(languageFile.getName());
     }
 
-    public Language getDefaultLanguage() {
+    /**
+     * Returns the configured default {@link Language}.
+     *
+     * @throws NullPointerException if no default language code is set, or it does not match a loaded language
+     */
+    public @NotNull Language getDefaultLanguage() {
         if (!getLanguageMap().containsKey(getDefaultLanguageCode()))
             throw new NullPointerException("Default language is null or not loaded");
         return languageMap.get(getDefaultLanguageCode());
     }
 
-    public I18n build() {
+    /** Builds the configured {@link I18n}. */
+    public @NotNull I18n build() {
         return new I18n(getComponentAudience(), getLanguageMap(), getDefaultLanguage(), getStringInterpreter(), getComponentInterpreter(), isUsePlayerLanguage());
     }
 

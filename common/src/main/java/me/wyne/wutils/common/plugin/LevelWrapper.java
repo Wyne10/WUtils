@@ -1,5 +1,10 @@
 package me.wyne.wutils.common.plugin;
 
+/**
+ * Mirrors the standard {@link org.apache.logging.log4j.Level log4j levels}, from least to most
+ * verbose, for use as {@link LoggerWrapper}'s enablement threshold without requiring API
+ * consumers to depend on log4j types directly.
+ */
 public enum LevelWrapper {
     OFF(org.apache.logging.log4j.Level.OFF),
     FATAL(org.apache.logging.log4j.Level.FATAL),

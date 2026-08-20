@@ -18,6 +18,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * A location near a biome, drawn from an {@code origin} {@link RandomLocation}.
+ *
+ * <p>{@link #getLocation()} draws an origin point, locates the nearest matching biome within
+ * {@code radius} via {@link World#locateNearestBiome}, then tries up to {@value #BOUNDS_ATTEMPTS}
+ * random points at a {@code near} distance from it, falling back to the plain origin point if
+ * none lands inside the origin range (or if no matching biome is found at all). {@code invert}
+ * selects a biome <em>not</em> in {@code biomes} instead of one that is.</p>
+ *
+ * <p>{@link World#locateNearestBiome} is expensive and must be called on the main thread.</p>
+ */
 public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNull Biome> biomes, boolean invert,
                             int radius, @NotNull ClosedIntRange near,
                             @Nullable List<@NotNull String> presets) implements StructureLocation {
@@ -42,6 +53,10 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
         return from;
     }
 
+    /**
+     * Picks a random biome from {@code biomes} (or its complement, if {@code invert}), or
+     * {@code null} if the resulting pool is empty.
+     */
     private @Nullable Biome pickBiome() {
         List<Biome> pool;
         if (invert) {
@@ -80,7 +95,7 @@ public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNul
 
     public static final class Factory implements GenericFactory<StructureLocation> {
         @Override
-        public StructureLocation create(String key, ConfigurationSection config) {
+        public @NotNull StructureLocation create(@NotNull String key, @NotNull ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
             var origin = (RandomLocation) new RandomLocation.Factory().create(key, config);
             int radius = section.getInt("radius", DEFAULT_RADIUS);

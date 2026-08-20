@@ -17,24 +17,30 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The {@code forceField} effect — pushes or pulls nearby entities around a point offset from the
+ * context location. Needs a location; returns {@link AnimationRunnable#EMPTY} when the context has
+ * none. The string form is {@code radius velocity offset}, in that order — note this does not match
+ * {@link ForceFieldData}'s own component order, {@code (offset, radius, velocity)}.
+ */
 public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribute.ForceFieldData> implements ContextAnimationAttribute<AnimationContext> {
 
-    public ForceFieldAttribute(String key, ForceFieldData value) {
+    public ForceFieldAttribute(@NotNull String key, @NotNull ForceFieldData value) {
         super(key, value);
     }
 
-    public ForceFieldAttribute(ForceFieldData value) {
+    public ForceFieldAttribute(@NotNull ForceFieldData value) {
         super(AnimationAttribute.FORCE_FIELD.getKey(), value);
     }
 
     @Override
-    public AnimationRunnable create(AnimationContext context) {
+    public @NotNull AnimationRunnable create(@NotNull AnimationContext context) {
         if (context.getLocation() == null) return AnimationRunnable.EMPTY;
         return new ForceField(LocationUtils.addRelative(context.getLocation(), getValue().offset()), getValue().radius(), getValue().velocity());
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder().append(depth, getKey(), getValue().radius() + " " + getValue().velocity() + " " + getValue().offset()).buildNoSpace();
     }
 
@@ -42,7 +48,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
 
     public static final class Factory implements CompositeAttributeFactory<ForceFieldAttribute> {
         @Override
-        public ForceFieldAttribute fromSection(String key, ConfigurationSection section) {
+        public @NotNull ForceFieldAttribute fromSection(@NotNull String key, @NotNull ConfigurationSection section) {
             return new ForceFieldAttribute(
                     key,
                     new ForceFieldData(
@@ -54,7 +60,7 @@ public class ForceFieldAttribute extends ConfigurableAttribute<ForceFieldAttribu
         }
 
         @Override
-        public ForceFieldAttribute fromString(String key, String string, ConfigurationSection config) {
+        public @NotNull ForceFieldAttribute fromString(@NotNull String key, @NotNull String string, @NotNull ConfigurationSection config) {
             var args = new Args(string);
             return new ForceFieldAttribute(
                     key,

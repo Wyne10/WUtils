@@ -3,6 +3,7 @@ package me.wyne.wutils.i18n.language;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -13,6 +14,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * {@link Language} backed by a YAML file, read with Bukkit's {@link YamlConfiguration}.
+ *
+ * <p>{@link #getStringMap()} is built from every string key in the file, at any depth, keyed by its full
+ * dotted path — so {@code messages.welcome} resolves the same way through {@link #getStringMap()} as it
+ * does through {@link #getStrings()}.</p>
+ */
 public class YamlLanguage implements Language {
 
     private final Logger logger;
@@ -24,11 +32,18 @@ public class YamlLanguage implements Language {
     private final LanguageStrings strings;
     private final Map<String, String> stringMap = new HashMap<>();
 
-    public YamlLanguage(File languageFile, Logger logger) {
+    /** Equivalent to {@link #YamlLanguage(Language, File, Logger)} with no default language. */
+    public YamlLanguage(@NotNull File languageFile, @NotNull Logger logger) {
         this(null, languageFile, logger);
     }
 
-    public YamlLanguage(@Nullable Language defaultLanguage, File languageFile, Logger logger) {
+    /**
+     * Loads YAML strings from {@code languageFile}, first back-filling any keys present in
+     * {@code defaultLanguage}'s file but missing from this one via {@code yaml-config-updater} — which
+     * mutates {@code languageFile} on disk. Skipped when {@code defaultLanguage} is {@code null} or its
+     * file is empty.
+     */
+    public YamlLanguage(@Nullable Language defaultLanguage, @NotNull File languageFile, @NotNull Logger logger) {
         this.logger = logger;
         mergeDefaultStrings(defaultLanguage, languageFile);
         this.languageCode = FilenameUtils.removeExtension(languageFile.getName());
@@ -36,12 +51,12 @@ public class YamlLanguage implements Language {
         this.languageFile = languageFile;
         ConfigurationSection section = YamlConfiguration.loadConfiguration(languageFile);
         this.strings = new YamlLanguageStrings(section);
-        section.getKeys(false).stream()
+        section.getKeys(true).stream()
                 .filter(section::isString)
                 .forEach(path -> stringMap.put(path, section.getString(path)));
     }
 
-    private void mergeDefaultStrings(@Nullable Language defaultLanguage, File languageFile) {
+    private void mergeDefaultStrings(@Nullable Language defaultLanguage, @NotNull File languageFile) {
         if (defaultLanguage == null)
             return;
         if (defaultLanguage.getLanguageFile().length() == 0)
@@ -54,27 +69,27 @@ public class YamlLanguage implements Language {
     }
 
     @Override
-    public String getLanguageCode() {
+    public @NotNull String getLanguageCode() {
         return languageCode;
     }
 
     @Override
-    public Locale getLocale() {
+    public @NotNull Locale getLocale() {
         return locale;
     }
 
     @Override
-    public File getLanguageFile() {
+    public @NotNull File getLanguageFile() {
         return languageFile;
     }
 
     @Override
-    public LanguageStrings getStrings() {
+    public @NotNull LanguageStrings getStrings() {
         return strings;
     }
 
     @Override
-    public Map<String, String> getStringMap() {
+    public @NotNull Map<@NotNull String, @NotNull String> getStringMap() {
         return stringMap;
     }
 

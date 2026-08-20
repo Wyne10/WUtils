@@ -13,6 +13,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A location drawn uniformly at random from {@code range}, optionally excluding a
+ * sub-volume.
+ *
+ * <p><b>Sharp edge:</b> {@link #getLocation()} loops until it draws a point outside
+ * {@code except}, so an {@code except} that covers the whole {@code range} hangs forever.</p>
+ */
 public record RandomLocation(@NotNull LocationRange range, @Nullable VectorRange except) implements StructureLocation {
     @Override
     public @NotNull Location getLocation() {
@@ -25,6 +32,10 @@ public record RandomLocation(@NotNull LocationRange range, @Nullable VectorRange
         return LocationUtils.of(range.getWorld(), random);
     }
 
+    /**
+     * Returns whether {@code location} falls within {@code range} and, if set, outside
+     * {@code except}.
+     */
     public boolean withinBounds(@NotNull Location location) {
         if (!range.contains(location))
             return false;
@@ -32,7 +43,7 @@ public record RandomLocation(@NotNull LocationRange range, @Nullable VectorRange
     }
 
     @Override
-    public String toConfig(int depth, ConfigEntry configEntry) {
+    public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         return new ConfigBuilder()
                 .append(depth, "world", range.getWorld().getName())
                 .append(depth, "range", range)
@@ -42,7 +53,7 @@ public record RandomLocation(@NotNull LocationRange range, @Nullable VectorRange
 
     public static final class Factory implements GenericFactory<StructureLocation> {
         @Override
-        public StructureLocation create(String key, ConfigurationSection config) {
+        public @NotNull StructureLocation create(@NotNull String key, @NotNull ConfigurationSection config) {
             var section = ConfigUtils.getConfigurationSection(config, key);
             var world = Bukkit.getWorld(section.getString("world", "world"));
             var vectorRange = ConfigUtils.getVectorRange(section, "range");

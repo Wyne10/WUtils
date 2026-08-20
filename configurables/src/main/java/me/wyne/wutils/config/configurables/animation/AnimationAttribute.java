@@ -1,5 +1,11 @@
 package me.wyne.wutils.config.configurables.animation;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Config keys for an animation step's type, timing and effect attributes, as registered in
+ * {@code AnimationStepConfigurable}.
+ */
 public enum AnimationAttribute {
     TYPE("type"),
     DELAY("delay"),
@@ -19,11 +25,11 @@ public enum AnimationAttribute {
 
     private final String key;
 
-    AnimationAttribute(String key) {
+    AnimationAttribute(@NotNull String key) {
         this.key = key;
     }
 
-    public String getKey() {
+    public @NotNull String getKey() {
         return key;
     }
 }

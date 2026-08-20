@@ -5,22 +5,37 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Location-building and relative-offset helpers. The {@code addRelative} overloads rotate an
+ * offset (given either as separate axis components/{@link BlockFace} or as a {@link Vector}
+ * relative to a facing direction) into world space, mirroring the equivalent overloads in
+ * {@link VectorUtils}.
+ */
 public final class LocationUtils {
 
-    public static Location of(World world, Vector vector) {
+    /** Builds a {@link Location} in {@code world} at {@code vector}'s coordinates, with no direction set. */
+    public static @NotNull Location of(@NotNull World world, @NotNull Vector vector) {
         return new Location(world, vector.getX(), vector.getY(), vector.getZ());
     }
 
-    public static Location of(World world, Vector vector, Vector direction) {
+    /** @see #of(World, Vector) */
+    public static @NotNull Location of(@NotNull World world, @NotNull Vector vector, @NotNull Vector direction) {
         var location = of(world, vector);
         location.setDirection(direction);
         return location;
     }
 
-    public static Location addRelative(Location location, double horizontal, double vertical, BlockFace face) {
+    /**
+     * Offsets {@code location} by {@code horizontal}/{@code vertical} rotated so that
+     * {@code horizontal} runs along the axis {@code face} is not aligned with.
+     *
+     * @see #addRelative(Location, double, double, double, BlockFace)
+     */
+    public static @NotNull Location addRelative(@NotNull Location location, double horizontal, double vertical, @NotNull BlockFace face) {
         if (face.getModZ() != 0)
             return location.clone().add(horizontal, vertical, 0.0);
         else if (face.getModX() != 0)
@@ -29,7 +44,12 @@ public final class LocationUtils {
             return location.clone().add(horizontal, vertical, 0.0);
     }
 
-    public static Location addRelative(Location location, double width, double height, double depth, BlockFace face) {
+    /**
+     * Offsets {@code location} by {@code width}/{@code height}/{@code depth}, swapping
+     * {@code width} and {@code depth} depending on which axis {@code face} runs along, so the
+     * offset stays oriented relative to {@code face} rather than to world axes.
+     */
+    public static @NotNull Location addRelative(@NotNull Location location, double width, double height, double depth, @NotNull BlockFace face) {
         if (face.getModZ() != 0)
             return location.clone().add(width, height, depth);
         else if (face.getModX() != 0)
@@ -38,15 +58,21 @@ public final class LocationUtils {
             return location.clone().add(width, height, depth);
     }
 
-    public static Location addRelative(Location location, Vector relativeOffset) {
+    /** Offsets {@code location} by {@code relativeOffset}, rotated relative to {@code location}'s own direction. */
+    public static @NotNull Location addRelative(@NotNull Location location, @NotNull Vector relativeOffset) {
         return addRelative(location, relativeOffset, location.getDirection());
     }
 
-    public static Location addRelative(Location location, Vector relativeOffset, BlockFace face) {
+    /** Offsets {@code location} by {@code relativeOffset}, rotated relative to {@code face}'s direction. */
+    public static @NotNull Location addRelative(@NotNull Location location, @NotNull Vector relativeOffset, @NotNull BlockFace face) {
         return addRelative(location, relativeOffset, face.getDirection());
     }
 
-    public static Location addRelative(Location location, Vector relativeOffset, Vector forward) {
+    /**
+     * Offsets {@code location} by {@code relativeOffset} (x = right, y = up, z = forward)
+     * rotated so {@code forward} points along the given {@code forward} direction vector.
+     */
+    public static @NotNull Location addRelative(@NotNull Location location, @NotNull Vector relativeOffset, @NotNull Vector forward) {
         if (VectorUtils.isEmpty(relativeOffset))
             return location.clone();
         var up = BlockFace.UP.getDirection().clone();
@@ -57,7 +83,8 @@ public final class LocationUtils {
         return location.clone().add(worldOffset);
     }
 
-    public static Location getRandomPointNear(Location center, int radius) {
+    /** Picks a uniformly random point on the circle of the given {@code radius} around {@code center}, at the same Y. */
+    public static @NotNull Location getRandomPointNear(@NotNull Location center, int radius) {
         double angle = ThreadLocalRandom.current().nextDouble(0, Math.PI * 2);
         int x = (int) Math.round(Math.cos(angle) * radius);
         int z = (int) Math.round(Math.sin(angle) * radius);

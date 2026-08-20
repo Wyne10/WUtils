@@ -4,10 +4,14 @@ import me.wyne.wutils.animation.AnimationRunnable;
 import me.wyne.wutils.animation.data.AnimationParticle;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public record ParticleArray(World world, Set<Vector> points, AnimationParticle particle) implements AnimationRunnable {
+/**
+ * Spawns the same {@code particle} at every point in {@code points} within {@code world}.
+ */
+public record ParticleArray(@NotNull World world, @NotNull Set<@NotNull Vector> points, @NotNull AnimationParticle particle) implements AnimationRunnable {
 
     @Override
     public void run() {

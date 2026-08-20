@@ -5,61 +5,42 @@ import me.wyne.wutils.common.range.LocationRange;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
+/**
+ * Iterates every point of a {@code [min, max]} box in {@code world} at {@code step}-sized
+ * intervals, wrapping each point into a {@link Location}.
+ * <p>
+ * Delegates to {@link VectorRangeIterator}, so axis order (X fastest, then Y, then Z slowest),
+ * inclusivity, step arithmetic and empty-range behavior are that class's — see it for details.
+ * <p>
+ * Each call to {@link #next()} returns a freshly allocated {@link Location}; no instance is
+ * reused or mutated across calls.
+ */
 public class LocationRangeIterator implements Iterator<Location> {
 
     private final World world;
-    private final Vector min;
-    private final Vector max;
-    private final double step;
+    private final VectorRangeIterator points;
 
-    private double x, y, z;
-    private boolean hasNext = true;
-
-    public LocationRangeIterator(World world, Vector min, Vector max, double step) {
+    public LocationRangeIterator(@NotNull World world, @NotNull Vector min, @NotNull Vector max, double step) {
         this.world = world;
-        this.min = min;
-        this.max = max;
-        this.step = step;
-
-        this.x = min.getX();
-        this.y = min.getY();
-        this.z = min.getZ();
+        this.points = new VectorRangeIterator(min, max, step);
     }
 
-    public LocationRangeIterator(LocationRange range, double step) {
+    public LocationRangeIterator(@NotNull LocationRange range, double step) {
         this(range.getWorld(), range.getMin(), range.getMax(), step);
     }
 
     @Override
     public boolean hasNext() {
-        return hasNext;
+        return points.hasNext();
     }
 
     @Override
-    public Location next() {
-        if (!hasNext())
-            throw new NoSuchElementException();
-
-        Location current = LocationUtils.of(world, new Vector(x, y, z));
-
-        x += step;
-        if (x > max.getX()) {
-            x = min.getX();
-            y += step;
-            if (y > max.getY()) {
-                y = min.getY();
-                z += step;
-                if (z > max.getZ()) {
-                    hasNext = false;
-                }
-            }
-        }
-
-        return current;
+    public @NotNull Location next() {
+        return LocationUtils.of(world, points.next());
     }
 
 }

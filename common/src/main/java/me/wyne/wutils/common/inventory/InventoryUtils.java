@@ -7,60 +7,90 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Helpers for adding, dropping and inspecting {@link ItemStack}s against inventories, players,
+ * and locations. Item-mutating operations run on the calling thread and must be called from the
+ * main server thread, as with any other Bukkit inventory API.
+ */
 public final class InventoryUtils {
 
-    public static boolean addItem(Inventory inventory, ItemStack... items) {
+    /** @return {@code true} if every item fit; leftovers are not tracked, use {@link Inventory#addItem} directly if needed */
+    public static boolean addItem(@NotNull Inventory inventory, @NotNull ItemStack... items) {
         return inventory.addItem(items).isEmpty();
     }
 
-    public static boolean addItem(Inventory inventory, Collection<ItemStack> items) {
+    /** @see #addItem(Inventory, ItemStack...) */
+    public static boolean addItem(@NotNull Inventory inventory, @NotNull Collection<@NotNull ItemStack> items) {
         return inventory.addItem(items.toArray(ItemStack[]::new)).isEmpty();
     }
 
-    public static boolean addItem(Player player, ItemStack... items) {
+    /** @see #addItem(Inventory, ItemStack...) */
+    public static boolean addItem(@NotNull Player player, @NotNull ItemStack... items) {
         return addItem(player.getInventory(), items);
     }
 
-    public static boolean addItem(Player player, Collection<ItemStack> items) {
+    /** @see #addItem(Inventory, ItemStack...) */
+    public static boolean addItem(@NotNull Player player, @NotNull Collection<@NotNull ItemStack> items) {
         return addItem(player.getInventory(), items);
     }
 
-    public static void addOrDrop(Player player, ItemStack... items) {
+    /** Adds {@code items} to {@code player}'s inventory, dropping at their feet whatever does not fit. */
+    public static void addOrDrop(@NotNull Player player, @NotNull ItemStack... items) {
         addOrDrop(player, false, items);
     }
 
-    public static void addOrDrop(Player player, Collection<ItemStack> items) {
+    /** @see #addOrDrop(Player, ItemStack...) */
+    public static void addOrDrop(@NotNull Player player, @NotNull Collection<@NotNull ItemStack> items) {
         addOrDrop(player, false, items);
     }
 
-    public static void addOrDrop(Player player, boolean setOwner, ItemStack... items) {
+    /**
+     * Adds {@code items} to {@code player}'s inventory, dropping at their feet whatever does not
+     * fit, marking dropped items as owned by {@code player} (subject to pickup delay) when
+     * {@code setOwner} is {@code true}.
+     */
+    public static void addOrDrop(@NotNull Player player, boolean setOwner, @NotNull ItemStack... items) {
         addOrDrop(player, setOwner, Arrays.asList(items));
     }
 
-    public static void addOrDrop(Player player, boolean setOwner, Collection<ItemStack> items) {
+    /** @see #addOrDrop(Player, boolean, ItemStack...) */
+    public static void addOrDrop(@NotNull Player player, boolean setOwner, @NotNull Collection<@NotNull ItemStack> items) {
         var exceed = player.getInventory().addItem(items.toArray(ItemStack[]::new));
         drop(player, setOwner, exceed.values());
     }
 
-    public static void drop(Player player, ItemStack... items) {
+    /**
+     * Drops {@code items} at {@code player}'s location with no pickup delay. Null and air
+     * elements are silently skipped, so callers may pass sparse arrays through unfiltered.
+     */
+    public static void drop(@NotNull Player player, @Nullable ItemStack... items) {
         drop(player, false, items);
     }
 
-    public static void drop(Player player, Collection<ItemStack> items) {
+    /** @see #drop(Player, ItemStack...) */
+    public static void drop(@NotNull Player player, @NotNull Collection<@Nullable ItemStack> items) {
         drop(player, false, items);
     }
 
-    public static void drop(Player player, boolean setOwner, ItemStack... items) {
+    /**
+     * Drops {@code items} at {@code player}'s location with no pickup delay, marking the drops as
+     * owned by {@code player} when {@code setOwner} is {@code true}. Null and air elements are
+     * silently skipped.
+     */
+    public static void drop(@NotNull Player player, boolean setOwner, @Nullable ItemStack... items) {
         drop(player, setOwner, Arrays.asList(items));
     }
 
-    public static void drop(Player player, boolean setOwner, Collection<ItemStack> items) {
+    /** @see #drop(Player, boolean, ItemStack...) */
+    public static void drop(@NotNull Player player, boolean setOwner, @NotNull Collection<@Nullable ItemStack> items) {
         items.stream()
                 .filter(ItemUtils::isNotNullOrAir)
                 .forEach(item -> {
@@ -71,7 +101,11 @@ public final class InventoryUtils {
                 });
     }
 
-    public static void drop(Location location, Collection<ItemStack> items) {
+    /**
+     * Drops {@code items} at {@code location} with no pickup delay and no owner. Null and air
+     * elements are silently skipped.
+     */
+    public static void drop(@NotNull Location location, @NotNull Collection<@Nullable ItemStack> items) {
         items.stream()
                 .filter(ItemUtils::isNotNullOrAir)
                 .forEach(item -> {
@@ -80,7 +114,12 @@ public final class InventoryUtils {
                 });
     }
 
-    public static List<ItemStack> getAffectedItems(InventoryClickEvent event) {
+    /**
+     * Collects the item(s) an {@link InventoryClickEvent} would move: the clicked slot's current
+     * item, plus the hotbar slot for a {@link ClickType#NUMBER_KEY} click or the off-hand item
+     * for a {@link ClickType#SWAP_OFFHAND} click. Null/air items are omitted.
+     */
+    public static @NotNull List<@NotNull ItemStack> getAffectedItems(@NotNull InventoryClickEvent event) {
         var result = new ArrayList<ItemStack>();
         addNonEmpty(result, event.getCurrentItem());
         if (event.getClick() == ClickType.NUMBER_KEY) {

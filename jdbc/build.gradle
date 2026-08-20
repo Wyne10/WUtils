@@ -5,9 +5,31 @@ plugins {
 dependencies {
     compileOnly 'com.zaxxer:HikariCP:7.1.0'
     compileOnly 'com.j256.ormlite:ormlite-jdbc:6.1'
+
+    testImplementation platform('org.junit:junit-bom:5.14.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'com.zaxxer:HikariCP:7.1.0'
+    testImplementation 'com.j256.ormlite:ormlite-jdbc:6.1'
+    testImplementation 'com.h2database:h2:2.4.240'
 }
 
-version = '1.3.0'
+tasks.named('test') {
+    useJUnitPlatform {
+        // Tests tagged 'network' download driver jars from Maven Central.
+        // Run them with: ./gradlew :WUtils-jdbc:test -PnetworkTests
+        if (!project.hasProperty('networkTests'))
+            excludeTags 'network'
+    }
+    // DriverLibrary resolves its download directory against the JVM working
+    // directory, so keep those jars inside build/ rather than the project root.
+    workingDir = layout.buildDirectory.dir('test-work').get().asFile
+    doFirst { workingDir.mkdirs() }
+    testLogging { events 'passed', 'skipped', 'failed' }
+}
+
+version = '2.0.0'
 
 mavenPublishing {
     coordinates(findProperty("centralGroup").toString(), "wutils-jdbc", version.toString())

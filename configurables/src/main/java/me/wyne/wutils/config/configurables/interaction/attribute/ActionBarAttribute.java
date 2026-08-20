@@ -10,21 +10,25 @@ import me.wyne.wutils.i18n.I18n;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * The {@code action} payload — sends each configured line as an action bar message to the audience.
+ */
 public class ActionBarAttribute extends ConfigurableAttribute<List<String>> implements ContextInteractionAttribute {
 
-    public ActionBarAttribute(String key, List<String> value) {
+    public ActionBarAttribute(@NotNull String key, @NotNull List<@NotNull String> value) {
         super(key, value);
     }
 
-    public ActionBarAttribute(List<String> value) {
+    public ActionBarAttribute(@NotNull List<@NotNull String> value) {
         super(InteractionAttribute.ACTION_BAR.getKey(), value);
     }
 
     @Override
-    public void send(Audience audience, CommandSender sender, InteractionAttributeContext context) {
+    public void send(@NotNull Audience audience, @NotNull CommandSender sender, @NotNull InteractionAttributeContext context) {
         getValue().stream()
                 .map(s -> I18n.global.accessor(sender, s).getPlaceholderComponent(context.getPlaceholderTarget(), context.getTextReplacements()).replace(context.getComponentReplacements()))
                 .forEach(component -> audience.sendActionBar(component.get()));
@@ -32,7 +36,7 @@ public class ActionBarAttribute extends ConfigurableAttribute<List<String>> impl
 
     public static final class Factory implements AttributeFactory<ActionBarAttribute> {
         @Override
-        public ActionBarAttribute create(String key, ConfigurationSection config) {
+        public @NotNull ActionBarAttribute create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new ActionBarAttribute(key, ConfigUtils.getStringList(config, key));
         }
     }

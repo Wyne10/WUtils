@@ -20,6 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Replaces the pasted structure's surface blocks with the block type most common in the
+ * surrounding terrain, sampled column-by-column within {@link AdaptSurfaceSettings#margin()}.
+ * Unlike the {@link MarginEditModifier} family it only reads the surroundings and never writes
+ * to them, so it does not need to grow the WorldGuard protected region.
+ */
 public class AdaptSurfaceEditModifier extends ConfigurableAttribute<AdaptSurfaceSettings> implements EditSessionModifier {
 
     public AdaptSurfaceEditModifier(@NotNull String key, @NotNull AdaptSurfaceSettings value) {
@@ -88,7 +94,7 @@ public class AdaptSurfaceEditModifier extends ConfigurableAttribute<AdaptSurface
 
     public static final class Factory implements AttributeFactory<AdaptSurfaceEditModifier> {
         @Override
-        public AdaptSurfaceEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull AdaptSurfaceEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             return new AdaptSurfaceEditModifier(key, AdaptSurfaceSettings.parse(config.getString(key, "")));
         }
     }

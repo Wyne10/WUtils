@@ -13,6 +13,11 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Replaces blocks matching a mask with a pattern across the pasted region via
+ * {@link EditSession#replaceBlocks}. Mask and pattern are lazily parsed from the config string,
+ * {@code mask pattern}, on each {@link #apply}.
+ */
 public class ReplaceEditModifier extends ConfigurableAttribute<LazyMaskPatternPair> implements EditSessionModifier {
 
     public ReplaceEditModifier(@NotNull String key, @NotNull LazyMaskPatternPair value) {
@@ -35,7 +40,7 @@ public class ReplaceEditModifier extends ConfigurableAttribute<LazyMaskPatternPa
 
     public static final class Factory implements AttributeFactory<ReplaceEditModifier> {
         @Override
-        public ReplaceEditModifier create(String key, ConfigurationSection config) {
+        public @NotNull ReplaceEditModifier create(@NotNull String key, @NotNull ConfigurationSection config) {
             var args = new Args(config.getString(key, ""), Args.SPACE_DELIMITER);
             return new ReplaceEditModifier(key, new LazyMaskPatternPair(args.get(0, ""), args.get(1, "")));
         }
