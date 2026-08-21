@@ -3,6 +3,19 @@
 Shared briefing for the `wiki-writer` and `code-doc-writer` agents working in this repo.
 Both agents must read this before starting.
 
+## The two wikis
+
+`docs/` holds two wikis with different readers, different rules, and separate indexes:
+
+| Root | Reader | Style |
+|---|---|---|
+| `docs/dev/` | someone changing WUtils itself | internals, invariants, sharp edges, `File.java:42` citations, prose-only |
+| `docs/user/` | someone using WUtils in their plugin | task-oriented, code examples, no citations |
+
+`python3 .claude/validate-docs.py` enforces both sets of rules. Anyone writing
+`docs/user/` must also read `.claude/user-doc-context.md`, which overrides the
+`wiki-writer` agent definition.
+
 ## What WUtils is
 
 A multi-module Gradle collection of independently versioned and independently published
@@ -17,16 +30,16 @@ Gradle project names are `:WUtils-<name>`; directory names differ (see `settings
 
 | Dir | Gradle project | Artifact | Version | What it does |
 |---|---|---|---|---|
-| `common/` | `:WUtils-common` | `wutils-common` | 1.16.4 | Shared toolkit: events, scheduling, promises, terminables, operations, particles, ranges, durations, comparators, plugin bootstrap, serialization |
+| `common/` | `:WUtils-common` | `wutils-common` | 1.16.5 | Shared toolkit: events, scheduling, promises, terminables, operations, particles, ranges, durations, comparators, plugin bootstrap, serialization |
 | `commonKt/` | `:WUtils-common-kotlin` | `wutils-common-kotlin` | = common | Kotlin extensions/wrappers over `common` |
-| `config/` | `:WUtils-config` | `wutils-config` | 2.10.0 | Annotation-based YAML config generation, updating and reading |
+| `config/` | `:WUtils-config` | `wutils-config` | 2.10.1 | Annotation-based YAML config generation, updating and reading |
 | `configurables/` | `:WUtils-configurables` | `wutils-configurables` | 1.21.8 | Predefined annotation-friendly config serializers (items, GUIs, animations, interactions) |
-| `i18n/` | `:WUtils-i18n` | `wutils-i18n` | 5.6.0 | Internationalization: MiniMessage/Legacy/EnhancedLegacy interpreters, PlaceholderAPI, per-player languages, YAML/JSON/`.lang` sources |
+| `i18n/` | `:WUtils-i18n` | `wutils-i18n` | 5.6.1 | Internationalization: MiniMessage/Legacy/EnhancedLegacy interpreters, PlaceholderAPI, per-player languages, YAML/JSON/`.lang` sources |
 | `i18nKt/` | `:WUtils-i18n-kotlin` | `wutils-i18n-kotlin` | = i18n | Kotlin extensions/wrappers over `i18n` |
-| `animation/` | `:WUtils-animation` | `wutils-animation` | 2.2.2 | Sequential/parallel animation orchestration (particles, sounds, fireworks, titles) |
+| `animation/` | `:WUtils-animation` | `wutils-animation` | 2.2.3 | Sequential/parallel animation orchestration (particles, sounds, fireworks, titles) |
 | `structure/` | `:WUtils-structure` | `wutils-structure` | 1.2.7 | Configurable schematic-based structure placement via WorldEdit/WorldGuard |
-| `jdbc/` | `:WUtils-jdbc` | `wutils-jdbc` | 1.3.0 | Connection-pool abstraction (HikariCP, ORMLite) + runtime JDBC driver download |
-| `json/` | `:WUtils-json` | `wutils-json` | 1.2.0 | Minimal annotation-driven Gson serialization |
+| `jdbc/` | `:WUtils-jdbc` | `wutils-jdbc` | 2.0.0 | Connection-pool abstraction (HikariCP, ORMLite) + runtime JDBC driver download |
+| `json/` | `:WUtils-json` | `wutils-json` | 1.2.1 | Minimal annotation-driven Gson serialization |
 | `log/` | — | — | 3.4.12 | **DEPRECATED.** Commented out of `settings.gradle`. Do not document. |
 
 Every module's root package is `me.wyne.wutils.<something>` — note that `configurables`

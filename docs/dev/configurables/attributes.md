@@ -408,8 +408,8 @@ Two traps, both from the static registries:
   that return value. Verified: `getMutableAccessor().with(new AmountAttribute(64))` on an
   `ItemConfigurable` leaves the amount at its original value, and `ignore("material")`
   leaves the attribute in place; both work when the configurable was built over a
-  `MutableAttributeContainer`. `copy(AttributeContainer)` had the same defect and is now
-  fixed — it writes through the live maps instead of delegating
+  `MutableAttributeContainer`. `copy(AttributeContainer)` does not share the defect — it
+  writes through the live maps instead of delegating
   (`MutableAttributeConfigurableAccessor.java:82-94`).
 - **`GenericFactoryMap` is a full copy of `AttributeMap`.** Any fix to one has to be made
   twice.

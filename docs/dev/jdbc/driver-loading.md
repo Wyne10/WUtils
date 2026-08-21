@@ -71,7 +71,7 @@ special `null` case.
 4. Sets `isRegistered = true` so later calls on the same constant become a no-op.
 
 Being `synchronized` on the enum constant means concurrent callers on the same constant
-can no longer both pass the `isRegistered` check, both download, or both register — the
+cannot both pass the `isRegistered` check, both download, or both register — the
 whole method body runs under one lock per constant.
 
 **The `URLClassLoader` is kept open for the JVM's lifetime**, stored in the constant's

@@ -70,7 +70,7 @@ Be clear about the scale of that second point. `nextDouble` is continuous, not d
 interval `1.0..10.0` it draws values like `9.999996792158166`, and roughly 11% of draws land above
 `9.0`. The only value the half-open form could never return was exactly `10.0` — one value among
 some 2⁶². Widening the bound makes `max` possible in principle; over two million draws you should
-still expect to see it zero times. The degenerate guard is the fix that changes observable
+still expect to see it zero times. The degenerate guard is the half that changes observable
 behaviour.
 
 ## Traversal order

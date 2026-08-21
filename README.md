@@ -8,3 +8,10 @@
 ![WUtils JDBC Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-jdbc?style=flat-square&label=wutils-jdbc)
 ![WUtils Json Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-json?style=flat-square&label=wutils-json)
 ![WUtils Structure Version](https://img.shields.io/maven-central/v/io.github.wyne10/wutils-structure?style=flat-square&label=wutils-structure)
+
+## Documentation
+
+- **[User wiki](docs/user/AGENTS.md)** — using WUtils in your plugin: dependency
+  coordinates, worked examples, and the traps worth knowing about.
+- **[Contributor wiki](docs/dev/AGENTS.md)** — working on WUtils itself: module and
+  package internals, invariants, and sharp edges.

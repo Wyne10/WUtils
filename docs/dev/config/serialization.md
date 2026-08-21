@@ -79,8 +79,8 @@ paths, and the two non-empty ones quote `String` elements differently:
 
 So a single-element `String` collection and a multi-element `String` collection
 produce different YAML for the same element type: `[hello]` versus
-`- 'hello'\n- 'world'`. This is observed, documented behavior, not a bug fix target —
-know it before assuming a one-item list will look like a trimmed-down multi-item one.
+`- 'hello'\n- 'world'`. Know this before assuming a one-item list will look like a
+trimmed-down multi-item one.
 
 ### Building the final text
 
