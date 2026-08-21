@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * audience attribute is declared at all.
  *
  * <p>Its presence in a section, not its configured value, is what counts: the boolean value is
- * always {@code true} regardless of what config says (see {@link #Factory}).</p>
+ * always {@code true} regardless of what config says (see {@link Factory}).</p>
  */
 public class PlayerAudience extends ConfigurableAttribute<Boolean> implements InteractionAudienceAttribute {
 

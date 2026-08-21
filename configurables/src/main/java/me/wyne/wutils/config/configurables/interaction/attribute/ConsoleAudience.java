@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * The {@code toConsole} audience — the server console only.
  *
  * <p>Its presence in a section, not its configured value, is what counts: the boolean value is
- * always {@code true} regardless of what config says (see {@link #Factory}), so
+ * always {@code true} regardless of what config says (see {@link Factory}), so
  * {@code toConsole: false} still enables it.</p>
  */
 public class ConsoleAudience extends ConfigurableAttribute<Boolean> implements InteractionAudienceAttribute {

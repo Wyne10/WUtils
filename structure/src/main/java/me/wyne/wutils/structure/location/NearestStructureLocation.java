@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
  * A location near a structure, drawn from an {@code origin} {@link RandomLocation}.
  *
  * <p>Follows the same pattern as {@link BiomeLocation}: draw an origin point, locate the
- * nearest matching structure within {@code radius} via {@link World#locateNearestStructure},
+ * nearest matching structure within {@code radius} via {@link org.bukkit.World#locateNearestStructure World#locateNearestStructure},
  * then try up to {@value #BOUNDS_ATTEMPTS} random points at a {@code near} distance from it,
  * falling back to the plain origin point if none lands inside the origin range (or if no
  * matching structure is found at all). {@code invert} selects a structure type <em>not</em>
  * in {@code structures} instead of one that is.</p>
  *
- * <p>{@link World#locateNearestStructure} is expensive and must be called on the main thread.</p>
+ * <p>{@link org.bukkit.World#locateNearestStructure World#locateNearestStructure} is expensive and must be called on the main thread.</p>
  */
 public record NearestStructureLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNull StructureType> structures,
                                        boolean invert, int radius, boolean findUnexplored,

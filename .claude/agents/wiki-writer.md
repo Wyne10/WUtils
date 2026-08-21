@@ -67,9 +67,9 @@ Maintain the index of the wiki you are writing — `docs/dev/AGENTS.md` or
 3. A flat bulleted list of every `.md` file in the wiki, each as a Markdown link whose text is the page's H1 title and whose target is the file path:
 
 ```markdown
-- [WUtils Common](docs/dev/common/common.md)
-- [Events](docs/dev/common/events.md)
-- [Scheduler](docs/dev/common/scheduler.md)
+- [WUtils Common](common/common.md)
+- [Events](common/events.md)
+- [Scheduler](common/scheduler.md)
 ```
 
 Rules for the list:
@@ -79,7 +79,11 @@ Rules for the list:
 - Order by path, with one refinement: within a module directory, the **module overview page comes first** (`jdbc/jdbc.md` before `jdbc/driver-loading.md`), then its sibling topic pages alphabetically. Directories themselves are alphabetical. Keep the list flat; the paths carry the hierarchy.
 - Run `python3 .claude/validate-docs.py` from the repo root before you report. It checks both indexes against what is on disk, verifies links resolve, enforces each wiki's code-fence rule, and checks that contributor citations are in range while rejecting citations in the user wiki outright. It must print OK.
 - Include every page of your wiki. The `AGENTS.md` index itself is not listed.
-- Paths are relative to the repo root, as shown above.
+- **Paths are relative to the index file itself**, not to the repo root — the index lives
+  inside its wiki root (`docs/dev/AGENTS.md`), so a page at `docs/dev/common/events.md` is
+  written `common/events.md`. A repo-relative `docs/dev/common/events.md` looks correct in a
+  diff and 404s in every viewer, because it resolves against the index's own directory. The
+  same rule governs prose links: `../user/AGENTS.md` to reach the other wiki.
 - Update it in the same run as any page you add, rename, retitle, or delete. A stale index is a bug.
 
 ## Writing rules

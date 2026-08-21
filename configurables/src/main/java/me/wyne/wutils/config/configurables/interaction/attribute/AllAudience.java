@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * The {@code toAll} audience — every player and the console.
  *
  * <p>Its presence in a section, not its configured value, is what counts: the boolean value is
- * always {@code true} regardless of what config says (see {@link #Factory}), so
+ * always {@code true} regardless of what config says (see {@link Factory}), so
  * {@code toAll: false} still sends to everybody.</p>
  */
 public class AllAudience extends ConfigurableAttribute<Boolean> implements InteractionAudienceAttribute {

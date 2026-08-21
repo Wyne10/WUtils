@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Applies an {@link AttributeContainer} mutator to an {@link AttributeConfigurable} and hands back
  * the result correctly typed as {@code T}, rather than as the container's own static type — which is
- * what {@link AttributeConfigurable#with} et al. cannot do on their own, since the configurable wraps
+ * what {@link AttributeContainer#with} et al. cannot do on their own, since the configurable wraps
  * a container instead of being one.
  *
  * <p>{@link ImmutableAttributeConfigurableAccessor} builds a new {@code T} per operation;

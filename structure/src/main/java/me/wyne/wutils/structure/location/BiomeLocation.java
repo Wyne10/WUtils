@@ -22,12 +22,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * A location near a biome, drawn from an {@code origin} {@link RandomLocation}.
  *
  * <p>{@link #getLocation()} draws an origin point, locates the nearest matching biome within
- * {@code radius} via {@link World#locateNearestBiome}, then tries up to {@value #BOUNDS_ATTEMPTS}
+ * {@code radius} via {@link org.bukkit.World#locateNearestBiome World#locateNearestBiome}, then tries up to {@value #BOUNDS_ATTEMPTS}
  * random points at a {@code near} distance from it, falling back to the plain origin point if
  * none lands inside the origin range (or if no matching biome is found at all). {@code invert}
  * selects a biome <em>not</em> in {@code biomes} instead of one that is.</p>
  *
- * <p>{@link World#locateNearestBiome} is expensive and must be called on the main thread.</p>
+ * <p>{@link org.bukkit.World#locateNearestBiome World#locateNearestBiome} is expensive and must be called on the main thread.</p>
  */
 public record BiomeLocation(@NotNull RandomLocation origin, @NotNull Set<@NotNull Biome> biomes, boolean invert,
                             int radius, @NotNull ClosedIntRange near,
