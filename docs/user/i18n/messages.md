@@ -161,7 +161,7 @@ the sender isn't one.
 
 - [Internationalization](i18n.md) — building `I18n`, laying out language files, and the
   `I18n.global` initialization gotcha these examples depend on.
-- [the contributor wiki](../../dev/i18n/replacements.md) — `Replacement`'s internals and
+- [the contributor wiki](/contributing/i18n/replacements) — `Replacement`'s internals and
   the full regex-hazard writeup.
-- [the contributor wiki's Localized Values page](../../dev/i18n/localized.md) — every
+- [the contributor wiki's Localized Values page](/contributing/i18n/localized) — every
   `LocalizedComponent` method, and how `ComponentAudiences` resolves targets.

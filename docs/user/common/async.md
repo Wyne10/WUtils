@@ -137,6 +137,6 @@ actually call from WUtils are `Schedulers.sync()`/`Schedulers.async()` shown abo
   with `bind`/`bindModule`.
 - [Ranges, Durations and Values](values.md#durations-and-ticks) — converting config
   strings into tick counts for delayed/repeating calls.
-- [contributor wiki: Scheduler](../../dev/common/scheduler.md) and
-  [Vendored helper Library](../../dev/common/helper.md) — internals and sharp edges in
+- [contributor wiki: Scheduler](/contributing/common/scheduler) and
+  [Vendored helper Library](/contributing/common/helper) — internals and sharp edges in
   more depth.

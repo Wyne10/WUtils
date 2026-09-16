@@ -95,5 +95,5 @@ standing set of conventional listeners.
   `EventRegistry` internally to wait for a single event.
 - [Plugin Setup](plugin.md) — binding a registry so it closes automatically with your
   plugin.
-- [contributor wiki: Events](../../dev/common/events.md) — internals and more sharp
+- [contributor wiki: Events](/contributing/common/events) — internals and more sharp
   edges.

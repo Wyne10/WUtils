@@ -187,7 +187,7 @@ doesn't sink the paste or the others.
 |---|---|---|---|
 | `rotate` | rotation | angles (`90 180`) or `any`/`random`/`true` for all four | 1 |
 | `flip` | mirroring | axes (`x z`) or `any`/`random`/`true` | 1 |
-| `altitude` | Y offset | an [`IntOperation`](../../dev/common/operations.md) string, e.g. `+2` | 2 |
+| `altitude` | Y offset | an [`IntOperation`](/contributing/common/operations) string, e.g. `+2` | 2 |
 | `expand` / `contract` | grow/shrink one face | `<direction> <amount>` | 3 |
 | `outset` / `inset` | grow/shrink all faces | `<amount> [-h] [-v]` | 3 |
 | `snapshotEntities` / `snapshotBiomes` | what the rollback snapshot captures | boolean | 4 |
@@ -216,8 +216,8 @@ doesn't sink the paste or the others.
 
 Full grammar for each key — including the `RegionRadiusEditModifier`/`MarginEditModifier`
 distinction and every settings parser's exact token order — is in the contributor wiki's
-[Modifiers](../../dev/structure/modifiers.md) and
-[Terrain Edit Modifiers](../../dev/structure/edit-modifiers.md) pages.
+[Modifiers](/contributing/structure/modifiers) and
+[Terrain Edit Modifiers](/contributing/structure/edit-modifiers) pages.
 
 ## Two things that will surprise you
 
@@ -258,22 +258,22 @@ own plugin's error handling expects.
 
 `load(...)` does **not** re-spawn the structure — the paste already exists in the world
 from before the restart — it only gives you back a handle you can `close()`. See the
-contributor wiki's [Persistence](../../dev/structure/persistence.md) page for the memento
+contributor wiki's [Persistence](/contributing/structure/persistence) page for the memento
 format and the two schematic files it writes.
 
 ## See also
 
-- [the contributor wiki](../../dev/structure/structure.md) — the full generation
+- [the contributor wiki](/contributing/structure/structure) — the full generation
   pipeline, threading rules, and the programmatic `Structure.Builder`.
-- [Schemes and Clipboards](../../dev/structure/schemes.md) — how `scheme`/`schemes`
+- [Schemes and Clipboards](/contributing/structure/schemes) — how `scheme`/`schemes`
   resolve to a clipboard, including the directory-plus-regex gotcha in `schemes`.
-- [Locations and Conditions](../../dev/structure/locations.md) — every location
+- [Locations and Conditions](/contributing/structure/locations) — every location
   strategy's exact search algorithm, including `RandomLocation`'s infinite-loop hazard if
   `except` covers all of `range`.
-- [Regions and Flags](../../dev/structure/regions.md) — `RegionData`, WorldGuard flag
+- [Regions and Flags](/contributing/structure/regions) — `RegionData`, WorldGuard flag
   resolution, and region id sanitization.
-- [Modifiers](../../dev/structure/modifiers.md) and
-  [Terrain Edit Modifiers](../../dev/structure/edit-modifiers.md) — full grammar for every
+- [Modifiers](/contributing/structure/modifiers) and
+  [Terrain Edit Modifiers](/contributing/structure/edit-modifiers) — full grammar for every
   modifier key in the tables above.
 - [Configurables](../configurables/configurables.md) — the `AttributeMap`/
   `AttributeConfigurable` machinery `Structure` and its modifiers are built on.

@@ -173,5 +173,5 @@ YAML that describes an item can also say where it sits in the structure.
   than `print`/`sound`/`command`.
 - [Configurables](configurables.md) — the module overview and dependency table.
 - [Writing Your Own Configurable](custom.md) — registering your own attribute keys.
-- [the contributor page](../../dev/configurables/guis.md) — internals of the click
+- [the contributor page](/contributing/configurables/guis) — internals of the click
   handler and the registry-copy timing, if you hit the registration-order edge case.
