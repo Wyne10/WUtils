@@ -1,3 +1,9 @@
+---
+description: >-
+  A library of ready-made config shapes, built on the machinery the config module
+  provides.
+---
+
 # WUtils Configurables
 
 `configurables` is a library of **ready-made config shapes**. Where

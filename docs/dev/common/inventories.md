@@ -1,3 +1,8 @@
+---
+description: >-
+  InventoryUtils: adding, dropping and inspecting ItemStacks against an inventory.
+---
+
 # Inventories
 
 `InventoryUtils` (`common/src/main/java/me/wyne/wutils/common/inventory/InventoryUtils.java`) is

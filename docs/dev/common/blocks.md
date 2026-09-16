@@ -1,3 +1,9 @@
+---
+description: >-
+  Reproduces vanilla natural block-break behaviour — drops, tool damage, experience
+  orbs — for breaks Bukkit does not cover.
+---
+
 # Blocks
 
 The `block/` package (`common/src/main/java/me/wyne/wutils/common/block/`) reproduces vanilla

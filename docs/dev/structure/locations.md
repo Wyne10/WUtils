@@ -1,3 +1,9 @@
+---
+description: >-
+  StructureLocation supplies a candidate placement point, which is never trusted
+  without conditions.
+---
+
 # Locations and Conditions
 
 A `StructureLocation` (`structure/src/main/java/me/wyne/wutils/structure/location/StructureLocation.java:17`)

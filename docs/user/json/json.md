@@ -1,3 +1,9 @@
+---
+description: >-
+  Mark a field with @JSON, register the object that owns it, and wutils-json writes
+  and reads that field as its own JSON file.
+---
+
 # JSON Storage
 
 `wutils-json` is a minimal, annotation-driven Gson wrapper: mark a field with

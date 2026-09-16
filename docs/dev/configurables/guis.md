@@ -1,3 +1,9 @@
+---
+description: >-
+  Two clickable item configurables, each targeting a different inventory-GUI library,
+  each behind its own optional dependency.
+---
+
 # GUIs
 
 Two configurables extend [`ItemConfigurable`](items.md) to describe a *clickable* item

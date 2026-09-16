@@ -1,3 +1,9 @@
+---
+description: >-
+  Turn a YAML section into an ItemStack: material, amount, name and lore,
+  enchantments, attributes, durability, potions, skulls and armor color.
+---
+
 # Item Configurables
 
 `ItemConfigurable` turns a YAML section into a Bukkit `ItemStack`: material, amount,
@@ -223,5 +229,5 @@ about can be silently skipped if you set it on the wrong material.
 - [Writing Your Own Configurable](custom.md) — adding your own item attribute keys.
 - [Internationalization](../i18n/i18n.md) — what `name` and `lore` are resolved
   through.
-- [the full attribute reference](../../dev/configurables/items.md) — application
+- [the full attribute reference](/contributing/configurables/items) — application
   order and the container internals, if you need to go deeper.

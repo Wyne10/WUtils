@@ -1,3 +1,9 @@
+---
+description: >-
+  The annotation-driven YAML configuration toolkit: @ConfigEntry fields, file
+  generation, key merging and reload.
+---
+
 # WUtils Config
 
 `config` is WUtils' annotation-driven YAML configuration toolkit: mark fields with

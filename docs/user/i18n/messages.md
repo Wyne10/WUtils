@@ -1,3 +1,9 @@
+---
+description: >-
+  Get an accessor for a path, apply replacements, send it — the flow for delivering a
+  localized message, and the choices along the way.
+---
+
 # Sending Messages
 
 Once [`I18n` is built](i18n.md), sending a localized message to a player is three steps:
@@ -161,7 +167,7 @@ the sender isn't one.
 
 - [Internationalization](i18n.md) — building `I18n`, laying out language files, and the
   `I18n.global` initialization gotcha these examples depend on.
-- [the contributor wiki](../../dev/i18n/replacements.md) — `Replacement`'s internals and
+- [the contributor wiki](/contributing/i18n/replacements) — `Replacement`'s internals and
   the full regex-hazard writeup.
-- [the contributor wiki's Localized Values page](../../dev/i18n/localized.md) — every
+- [the contributor wiki's Localized Values page](/contributing/i18n/localized) — every
   `LocalizedComponent` method, and how `ComponentAudiences` resolves targets.

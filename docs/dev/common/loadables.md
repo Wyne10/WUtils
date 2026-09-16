@@ -1,3 +1,9 @@
+---
+description: >-
+  A small registry for objects that read themselves out of a config section when the
+  plugin loads.
+---
+
 # Loadables
 
 `me.wyne.wutils.common.loadable` is a small registry for "things that read themselves

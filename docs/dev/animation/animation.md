@@ -1,3 +1,9 @@
+---
+description: >-
+  A lightweight API for orchestrating sequential and parallel chains of timed effects
+  in Bukkit/Paper plugins.
+---
+
 # WUtils Animation
 
 `animation` is a lightweight API for orchestrating sequential and parallel

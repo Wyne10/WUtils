@@ -1,3 +1,9 @@
+---
+description: >-
+  Async highest-block lookups, chunk-local coordinate ranges, and named biome
+  handling.
+---
+
 # Worlds and Biomes
 
 The `world/` package (`common/src/main/java/me/wyne/wutils/common/world/`) covers two things:

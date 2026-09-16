@@ -1,3 +1,9 @@
+---
+description: >-
+  DriverLibrary and DriverShim register a JDBC driver with DriverManager at runtime,
+  downloaded from Maven Central on demand.
+---
+
 # Driver loading
 
 `DriverLibrary` and `DriverShim` let a plugin register a JDBC driver with

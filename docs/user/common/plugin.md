@@ -1,3 +1,9 @@
+---
+description: >-
+  Three levels of plugin scaffolding, from a plain main class to a full WUtils base
+  class, and what each one buys you.
+---
+
 # Plugin Setup
 
 Before writing your main class, decide how much of `me.wyne.wutils.common.plugin` you
@@ -218,7 +224,7 @@ runtime.
   but commonly bound alongside it.
 - [Ranges, Durations and Values](values.md) — loading typed config values inside a
   `LOAD`-scoped step.
-- [contributor wiki: Plugin Composition](../../dev/common/plugin.md) — internals,
+- [contributor wiki: Plugin Composition](/contributing/common/plugin) — internals,
   including the `CompositeStep` scope-nesting trap this page omits.
-- [contributor wiki: Loadables](../../dev/common/loadables.md) and
-  [Commands](../../dev/common/commands.md) — internals for the sections above.
+- [contributor wiki: Loadables](/contributing/common/loadables) and
+  [Commands](/contributing/common/commands) — internals for the sections above.

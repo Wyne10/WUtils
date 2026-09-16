@@ -1,3 +1,9 @@
+---
+description: >-
+  Places schematic-based structures: searches for a spot satisfying config-declared
+  conditions, pastes it, and protects it.
+---
+
 # WUtils Structure
 
 `structure` places schematic-based structures in a Bukkit/Paper world: it

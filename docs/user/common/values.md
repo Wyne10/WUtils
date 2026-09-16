@@ -1,3 +1,9 @@
+---
+description: >-
+  Parse config strings into typed ranges, durations, cooldowns, comparators and
+  operations, plus the small utilities around them.
+---
+
 # Ranges, Durations and Values
 
 Config files are text. This page covers the parsers that turn a config string into a
@@ -324,7 +330,7 @@ expired entries.
 - [WUtils Config](../config/config.md) — the separate, annotation-driven whole-file
   config module, not to be confused with `ConfigUtils`.
 - contributor wiki pages with more depth:
-  [Ranges](../../dev/common/ranges.md), [Durations and Cooldowns](../../dev/common/durations.md),
-  [Comparators and Operations](../../dev/common/operations.md),
-  [Core Utilities](../../dev/common/utilities.md), [Config Utilities](../../dev/common/config-utils.md),
-  [Gson Serializers](../../dev/common/gson-serializers.md).
+  [Ranges](/contributing/common/ranges), [Durations and Cooldowns](/contributing/common/durations),
+  [Comparators and Operations](/contributing/common/operations),
+  [Core Utilities](/contributing/common/utilities), [Config Utilities](/contributing/common/config-utils),
+  [Gson Serializers](/contributing/common/gson-serializers).

@@ -1,3 +1,9 @@
+---
+description: >-
+  Language and LanguageStrings: a single loaded language, and the path-resolution view
+  over it.
+---
+
 # Languages
 
 The `me.wyne.wutils.i18n.language` package defines a single loaded language

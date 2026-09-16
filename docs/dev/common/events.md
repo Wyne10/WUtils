@@ -1,3 +1,9 @@
+---
+description: >-
+  The event package, mostly vendored from lucko's helper: Events, Subscription, and
+  the functional and filter layers.
+---
+
 # Events
 
 Most of `me.wyne.wutils.common.event` is vendored from lucko's helper — `Events`,

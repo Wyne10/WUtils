@@ -1,3 +1,9 @@
+---
+description: >-
+  StructureRegion builds the WorldGuard protected region a placed structure is guarded
+  by.
+---
+
 # Regions and Flags
 
 A `StructureRegion` (`structure/src/main/java/me/wyne/wutils/structure/region/StructureRegion.java:20`)

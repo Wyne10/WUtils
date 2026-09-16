@@ -1,3 +1,9 @@
+---
+description: >-
+  The attribute and container framework behind Items, Interactions, Animations and
+  GUIs.
+---
+
 # Attributes and Containers
 
 This page is the framework behind [Items](items.md), [Interactions](interactions.md),

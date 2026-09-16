@@ -1,3 +1,9 @@
+---
+description: >-
+  A thin Kotlin companion to i18n, collapsing the Java accessor API into extension
+  functions and properties.
+---
+
 # WUtils Internationalization Kotlin
 
 `i18nKt` is a thin Kotlin companion to the [`i18n`](../i18n/i18n.md) module: extension

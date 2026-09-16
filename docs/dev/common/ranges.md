@@ -1,3 +1,8 @@
+---
+description: >-
+  Bounded value ranges over integers, doubles, TimeSpans and Bukkit Vectors.
+---
+
 # Ranges
 
 The `range` package (`common/src/main/java/me/wyne/wutils/common/range/`) provides bounded

@@ -1,3 +1,9 @@
+---
+description: >-
+  A message, title, action bar, sound or dispatched command, sent to an audience the
+  config chooses.
+---
+
 # Interactions
 
 An *interaction* is "something that happens to somebody": a message, a title, an action

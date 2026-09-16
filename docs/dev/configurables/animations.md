@@ -1,3 +1,9 @@
+---
+description: >-
+  AnimationConfigurable: a whole timed sequence described as YAML and built into an
+  Animation.
+---
+
 # Animations
 
 `AnimationConfigurable` describes a whole timed sequence — particles, sounds, fireworks,

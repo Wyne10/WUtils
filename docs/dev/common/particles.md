@@ -1,3 +1,8 @@
+---
+description: >-
+  Converts a configuration string into the data object a Bukkit particle needs.
+---
+
 # Particle Data Parsers
 
 `me.wyne.wutils.common.particle` converts a configuration string into the *data*

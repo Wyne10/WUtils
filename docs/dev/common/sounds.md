@@ -1,3 +1,8 @@
+---
+description: >-
+  Three small packages gathered onto one page: SoundUtils, RandomUtils and PAPIUtils.
+---
+
 # Sounds, Randomness and Placeholders
 
 Three unrelated one- or two-method packages, merged onto a single page rather than left as stubs:

@@ -1,3 +1,8 @@
+---
+description: >-
+  The bootstrap layer a WUtils-based plugin extends its main class from.
+---
+
 # Plugin Composition
 
 The `plugin/` package (`common/src/main/java/me/wyne/wutils/common/plugin/`) is the

@@ -1,3 +1,9 @@
+---
+description: >-
+  Two matching miniature strategy libraries, so a config string can express a
+  comparison or an arithmetic operation.
+---
+
 # Comparators and Operations
 
 `me.wyne.wutils.common.comparator` and `me.wyne.wutils.common.operation` are two

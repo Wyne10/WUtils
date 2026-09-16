@@ -1,3 +1,9 @@
+---
+description: >-
+  Wraps a resolved string or Component together with where it came from, and resolves
+  Bukkit senders into a language.
+---
+
 # Localized Values and Access
 
 The `me.wyne.wutils.i18n.language.component` package wraps a resolved string or

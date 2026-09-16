@@ -1,3 +1,9 @@
+---
+description: >-
+  A minimal annotation-driven Gson helper: @JSON fields written to and read back from
+  their own files.
+---
+
 # WUtils Json
 
 `json` is a minimal annotation-driven Gson (de)serialization helper: mark a

@@ -1,3 +1,8 @@
+---
+description: >-
+  Scheme supplies the WorldEdit clipboard that a structure pastes.
+---
+
 # Schemes and Clipboards
 
 A `Scheme` (`structure/src/main/java/me/wyne/wutils/structure/scheme/Scheme.java:20`)

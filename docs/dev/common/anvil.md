@@ -1,3 +1,9 @@
+---
+description: >-
+  AnvilUtils reimplements vanilla anvil result handling so that custom anvil recipes
+  work.
+---
+
 # Anvil
 
 `AnvilUtils` (`common/src/main/java/me/wyne/wutils/common/anvil/AnvilUtils.java`) is the entire

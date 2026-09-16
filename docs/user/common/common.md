@@ -1,3 +1,9 @@
+---
+description: >-
+  The wutils-common foundation module: what it covers, what depends on it, and how to
+  take only the pieces you need.
+---
+
 # Common Toolkit
 
 `wutils-common` is the foundation module. Everything else in WUtils either depends on it
@@ -95,5 +101,5 @@ guarantee). If your IDE shows you a platform type from Kotlin instead of a clear
   this one.
 - [Kotlin Support](../kotlin/kotlin.md) — `wutils-common-kotlin`, extensions over this
   module for Kotlin consumers.
-- [contributor wiki: WUtils Common](../../dev/common/common.md) — internals, source
+- [contributor wiki: WUtils Common](/contributing/common/common) — internals, source
   locations, sharp edges in more depth.

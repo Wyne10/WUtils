@@ -1,3 +1,9 @@
+---
+description: >-
+  Register and tear down a group of Bukkit listeners as a unit, instead of hand-
+  managing registerEvents and HandlerList.
+---
+
 # Events
 
 Bukkit gives you one way to register a listener: `PluginManager.registerEvents`, with
@@ -95,5 +101,5 @@ standing set of conventional listeners.
   `EventRegistry` internally to wait for a single event.
 - [Plugin Setup](plugin.md) — binding a registry so it closes automatically with your
   plugin.
-- [contributor wiki: Events](../../dev/common/events.md) — internals and more sharp
+- [contributor wiki: Events](/contributing/common/events) — internals and more sharp
   edges.

@@ -1,3 +1,9 @@
+---
+description: >-
+  Extend the configurable vocabulary with your own YAML keys, from one new attribute
+  shared by every item to a whole new configurable type.
+---
+
 # Writing Your Own Configurable
 
 [Configurables](configurables.md) ships items, interactions, animations and GUI buttons

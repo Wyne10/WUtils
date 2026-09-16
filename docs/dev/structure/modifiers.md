@@ -1,3 +1,9 @@
+---
+description: >-
+  The config-driven hooks a structure recipe runs at fixed points in its placement
+  pipeline.
+---
+
 # Modifiers
 
 Modifiers are the config-driven hooks a [Structure](structure.md) recipe runs at fixed

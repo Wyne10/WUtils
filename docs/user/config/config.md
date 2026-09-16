@@ -1,3 +1,9 @@
+---
+description: >-
+  Annotate a field, register the class that holds it, and wutils-config generates the
+  YAML, merges new keys, and reads values back.
+---
+
 # Configuration
 
 `wutils-config` turns annotated fields into a YAML config file: you mark a field with

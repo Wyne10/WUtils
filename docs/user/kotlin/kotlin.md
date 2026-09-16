@@ -1,3 +1,9 @@
+---
+description: >-
+  Thin Kotlin layers over wutils-common and wutils-i18n, trading Java static-helper
+  style for extensions and DSL-style builders.
+---
+
 # Kotlin Support
 
 `wutils-common-kotlin` and `wutils-i18n-kotlin` are thin Kotlin layers over

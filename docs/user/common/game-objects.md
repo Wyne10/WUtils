@@ -1,3 +1,9 @@
+---
+description: >-
+  Day-to-day helpers for ItemStacks, Players, Inventories, Blocks and Worlds, plus the
+  anvil pickup fix and sound and particle parsing.
+---
+
 # Items, Players and Worlds
 
 The bulk of `wutils-common`'s day-to-day surface: helpers organized around what you're
@@ -271,9 +277,9 @@ result.
 - [WUtils Animation](../animation/animation.md) — the main consumer of the particle
   parsers.
 - contributor wiki pages with more depth:
-  [Items](../../dev/common/items.md), [Inventories](../../dev/common/inventories.md),
-  [Players](../../dev/common/players.md), [Blocks](../../dev/common/blocks.md),
-  [Worlds and Biomes](../../dev/common/worlds.md),
-  [Locations and Vectors](../../dev/common/locations.md), [Anvil](../../dev/common/anvil.md),
-  [Sounds, Randomness and Placeholders](../../dev/common/sounds.md),
-  [Particle Data Parsers](../../dev/common/particles.md).
+  [Items](/contributing/common/items), [Inventories](/contributing/common/inventories),
+  [Players](/contributing/common/players), [Blocks](/contributing/common/blocks),
+  [Worlds and Biomes](/contributing/common/worlds),
+  [Locations and Vectors](/contributing/common/locations), [Anvil](/contributing/common/anvil),
+  [Sounds, Randomness and Placeholders](/contributing/common/sounds),
+  [Particle Data Parsers](/contributing/common/particles).

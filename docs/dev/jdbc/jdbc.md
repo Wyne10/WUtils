@@ -1,3 +1,9 @@
+---
+description: >-
+  A small abstraction over JDBC connection pooling, plus a way to pull a driver onto
+  the classpath at runtime.
+---
+
 # WUtils JDBC
 
 `jdbc` is a small abstraction over JDBC connection pooling, plus a way to pull an

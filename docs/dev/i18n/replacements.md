@@ -1,3 +1,9 @@
+---
+description: >-
+  Substitutes values into localized text, either before interpretation or into the
+  resulting Component.
+---
+
 # Replacements
 
 The `me.wyne.wutils.i18n.language.replacement` package substitutes values into

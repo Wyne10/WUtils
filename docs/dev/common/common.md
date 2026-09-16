@@ -1,3 +1,9 @@
+---
+description: >-
+  The shared toolkit every other WUtils module and consumer plugin builds on —
+  independent utilities rather than a framework.
+---
+
 # WUtils Common
 
 `wutils-common` is the shared toolkit every other WUtils module and consumer plugin

@@ -1,3 +1,9 @@
+---
+description: >-
+  Tool and armor material sets, null and air checks, natural tool damage, and natural
+  item drops.
+---
+
 # Items
 
 The `item/` package (`common/src/main/java/me/wyne/wutils/common/item/`) covers three concerns:

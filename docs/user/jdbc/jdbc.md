@@ -1,3 +1,9 @@
+---
+description: >-
+  A pooled database connection that does not tie you to one pooling library, plus a
+  way to pull a JDBC driver jar onto the classpath at runtime.
+---
+
 # Databases
 
 `wutils-jdbc` gives you a pooled database connection without tying you to one pooling

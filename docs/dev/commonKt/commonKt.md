@@ -1,3 +1,9 @@
+---
+description: >-
+  A thin Kotlin ergonomics layer over common, wrapping its static Java helpers as
+  extensions.
+---
+
 # WUtils Common Kotlin
 
 `wutils-common-kotlin` is a thin Kotlin ergonomics layer over

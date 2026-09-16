@@ -1,3 +1,9 @@
+---
+description: >-
+  Ready-made config field types — items, GUI buttons, interactions, animations,
+  ranges, cooldowns — declared once and edited in YAML.
+---
+
 # Configurables
 
 `wutils-configurables` is a library of ready-made [Configuration](../config/config.md)

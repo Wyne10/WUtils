@@ -1,3 +1,9 @@
+---
+description: >-
+  Args for splitting configuration strings, and the other core class used from
+  everywhere in common.
+---
+
 # Core Utilities
 
 Two small classes sit directly in `me.wyne.wutils.common`, outside any sub-package,

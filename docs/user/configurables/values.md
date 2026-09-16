@@ -1,3 +1,9 @@
+---
+description: >-
+  Single-value configurables, so a config field holds a parsed range, duration or
+  material instead of a String you re-parse every time.
+---
+
 # Value Configurables
 
 These are the small ones. A value configurable wraps exactly one parsed value, so a

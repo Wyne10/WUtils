@@ -1,3 +1,9 @@
+---
+description: >-
+  LocationUtils and VectorUtils: the same relative-offset math, one over Bukkit
+  Locations and one over Vectors.
+---
+
 # Locations and Vectors
 
 Two small packages that mirror each other: `location/` (`LocationUtils`) and `vector/`

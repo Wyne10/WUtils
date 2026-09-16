@@ -1,3 +1,9 @@
+---
+description: >-
+  The interface hierarchy a value implements so that config knows how to render and
+  parse it.
+---
+
 # Serialization
 
 `me.wyne.wutils.config.configurable` is the other half of the [`config`](config.md)

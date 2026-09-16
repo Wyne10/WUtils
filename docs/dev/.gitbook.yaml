@@ -1,0 +1,7 @@
+# Git Sync configuration for the "Contributing" section of Wyne Docs.
+# The synced root is docs/dev/ (set as the monorepo root directory in GitBook).
+root: ./
+
+structure:
+  readme: README.md
+  summary: SUMMARY.md

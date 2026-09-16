@@ -1,3 +1,9 @@
+---
+description: >-
+  A spawned structure holds its clipboard and rollback snapshot in memory only — how
+  that state survives a restart.
+---
+
 # Persistence
 
 A spawned `WorldStructure` holds its clipboard and its pre-spawn rollback

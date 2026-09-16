@@ -1,3 +1,9 @@
+---
+description: >-
+  Forty-seven of common's source files are vendored from lucko's helper library —
+  which ones, and why they are there.
+---
+
 # Vendored helper Library
 
 Forty-seven of `common/`'s 153 source files are not WUtils code. They are vendored

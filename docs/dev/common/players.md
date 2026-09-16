@@ -1,3 +1,9 @@
+---
+description: >-
+  PlayerUtils: vanilla experience level and point conversions, and offline-player
+  handling.
+---
+
 # Players
 
 `PlayerUtils` (`common/src/main/java/me/wyne/wutils/common/player/PlayerUtils.java`) is the

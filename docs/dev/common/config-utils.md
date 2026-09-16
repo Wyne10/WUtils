@@ -1,3 +1,9 @@
+---
+description: >-
+  ConfigUtils: static helpers for reading typed, defaultable values out of a
+  configuration section.
+---
+
 # Config Utilities
 
 `ConfigUtils` (`common/src/main/java/me/wyne/wutils/common/config/ConfigUtils.java`)

@@ -1,3 +1,9 @@
+---
+description: >-
+  Dependency coordinates for every WUtils module, how versioning works across them,
+  and how to shade WUtils into your own plugin jar.
+---
+
 # Getting Started
 
 WUtils is a collection of Java/Kotlin libraries for **Bukkit/Paper 1.16.5** plugins,

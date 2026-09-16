@@ -1,3 +1,9 @@
+---
+description: >-
+  The scheduler package, ten of its fourteen files vendored from lucko's helper:
+  Schedulers, Task and the executors.
+---
+
 # Scheduler
 
 Ten of the fourteen files in `me.wyne.wutils.common.scheduler` are vendored from lucko's

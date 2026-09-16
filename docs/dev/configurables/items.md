@@ -1,3 +1,9 @@
+---
+description: >-
+  ItemConfigurable turns a YAML section into an ItemStack — the most-used
+  configurable, and the base of both GUI item types.
+---
+
 # Items
 
 `ItemConfigurable` turns a YAML section into an `ItemStack`. It is the most-used

@@ -1,3 +1,9 @@
+---
+description: >-
+  Configurables wrapping exactly one parsed value, so a @ConfigEntry field can be a
+  range or a duration.
+---
+
 # Value Configurables
 
 These are the small ones: a configurable that wraps exactly one parsed value, so a

@@ -1,3 +1,9 @@
+---
+description: >-
+  Turns a raw string looked up in a Language into another raw string or an Adventure
+  Component, with validation.
+---
+
 # Interpreters and Validation
 
 The `me.wyne.wutils.i18n.language.interpretation` package turns a raw string looked up

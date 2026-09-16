@@ -1,3 +1,9 @@
+---
+description: >-
+  Teach wutils-config to render and parse a type it does not already know, by
+  implementing one or two small interfaces.
+---
+
 # Custom Config Types
 
 [Configuration](config.md) covers plain fields — `String`, `int`, `boolean`. This page

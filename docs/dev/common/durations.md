@@ -1,3 +1,9 @@
+---
+description: >-
+  Tick conversion, a unit system for parsing human durations like 5m30s, and the two
+  cooldown holders built on top.
+---
+
 # Durations and Cooldowns
 
 Three related things live here: a tick-conversion utility, a small unit system for

@@ -1,3 +1,9 @@
+---
+description: >-
+  The step model at the core of the module: the Animation and AnimationStep types, and
+  how a chain of steps advances itself.
+---
+
 # Steps and scheduling
 
 The step model is the core of the `animation` module. This page covers the

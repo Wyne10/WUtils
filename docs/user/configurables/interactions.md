@@ -1,3 +1,9 @@
+---
+description: >-
+  Send a message, title, action bar, sound or command to a config-chosen audience,
+  replacing the bespoke messages.yml every plugin grows.
+---
+
 # Interaction Configurables
 
 An *interaction* is "something that happens to somebody": a message, a title, an
@@ -198,5 +204,5 @@ The child names in form 3 (`tellThem`, `tellEveryone`, `reward`) are arbitrary l
 - [Internationalization](../i18n/i18n.md) — audiences, accessors, and how the text is
   interpreted.
 - [Configurables](configurables.md) — the module overview and dependency table.
-- [the contributor page](../../dev/configurables/interactions.md) — attribute
+- [the contributor page](/contributing/configurables/interactions) — attribute
   resolution order and the full `InteractionAttributeContext` contract.

@@ -1,3 +1,9 @@
+---
+description: >-
+  CommandUtils: the CommandAPI player arguments that make up the whole command
+  package.
+---
+
 # Commands
 
 `CommandUtils` (`common/src/main/java/me/wyne/wutils/common/command/CommandUtils.java`) is the

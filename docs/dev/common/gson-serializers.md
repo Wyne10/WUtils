@@ -1,3 +1,9 @@
+---
+description: >-
+  Four Gson adapters for types Gson cannot handle by reflection, including Bukkit
+  types needing Bukkit's own serialization.
+---
+
 # Gson Serializers
 
 `me.wyne.wutils.common.serialization` holds four Gson adapters for types that Gson

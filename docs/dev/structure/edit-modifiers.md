@@ -1,3 +1,9 @@
+---
+description: >-
+  The EditSessionModifier implementations and their base classes, where most of a
+  structure's terrain shaping lives.
+---
+
 # Terrain Edit Modifiers
 
 `me.wyne.wutils.structure.modifier.edit` is where most of a structure's terrain shaping

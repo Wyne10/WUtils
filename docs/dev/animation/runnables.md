@@ -1,3 +1,9 @@
+---
+description: >-
+  AnimationRunnable, its supporting types, and the ten ready-made effects that ship in
+  the animation runnable package.
+---
+
 # Runnables
 
 This page covers `AnimationRunnable` and its supporting types, and the ten
