@@ -19,7 +19,7 @@ public final class PlayerUtils {
      * ```
      * </pre>
      */
-    public static int levelToExp(int level) {
+    public static long levelToExp(long level) {
         if (level <= 16)
             return (level * level) + 6 * level;
         else if (level <= 31)
@@ -28,32 +28,22 @@ public final class PlayerUtils {
             return (int) (4.5 * (level * level) - 162.5 * level + 2220);
     }
 
-    public static int expToLevel(int exp) {
+    public static long expToLevel(long exp) {
         if (exp <= 0) return 0;
 
         // --- Range 0–16: xp = L² + 6L ---
         // Solve L² + 6L − xp = 0
-        int max16 = 16 * 16 + 6 * 16; // 352
-        if (exp <= max16) {
-            return (int) Math.floor(
-                    (-6 + Math.sqrt(36 + 4 * exp)) / 2
-            );
-        }
+        if (exp <= levelToExp(16)) // 352
+            return (int) Math.floor((-6 + Math.sqrt(36 + 4.0 * exp)) / 2);
 
         // --- Range 17–31: xp = 2.5L² − 40.5L + 360 ---
         // Solve 2.5L² − 40.5L + (360 - xp) = 0
-        int max31 = (int) (2.5 * 31 * 31 - 40.5 * 31 + 360); // 1507
-        if (exp <= max31) {
-            return (int) Math.floor(
-                    (40.5 + Math.sqrt(40.5 * 40.5 - 10 * (360 - exp))) / 5
-            );
-        }
+        if (exp <= levelToExp(31)) // 1507
+            return (int) Math.floor((40.5 + Math.sqrt(40.5 * 40.5 - 10 * (360 - exp))) / 5);
 
         // --- Range 32+: xp = 4.5L² − 162.5L + 2220 ---
         // Solve 4.5L² − 162.5L + (2220 - xp) = 0
-        return (int) Math.floor(
-                (162.5 + Math.sqrt(162.5 * 162.5 - 18 * (2220 - exp))) / 9
-        );
+        return (int) Math.floor((162.5 + Math.sqrt(162.5 * 162.5 - 18 * (2220 - exp))) / 9);
     }
 
     /**
@@ -68,7 +58,7 @@ public final class PlayerUtils {
      * ```
      * </pre>
      */
-    public static int expToLevelUp(int currentLevel) {
+    public static long expToLevelUp(long currentLevel) {
         if (currentLevel <= 15)
             return 2 * currentLevel + 7;
         else if (currentLevel <= 30)
@@ -78,22 +68,19 @@ public final class PlayerUtils {
     }
 
     /** Converts {@code player}'s current level and progress into total accumulated experience points. */
-    public static int currentExp(@NotNull Player player) {
-        var currentExp = 0;
-        currentExp += levelToExp(player.getLevel());
-        currentExp += Math.round(expToLevelUp(player.getLevel()) * player.getExp());
-        return currentExp;
+    public static long currentExp(@NotNull Player player) {
+        return levelToExp(player.getLevel()) + Math.round(expToLevelUp(player.getLevel()) * player.getExp());
     }
 
     /** Resets {@code player} to level 0 and grants {@code exp} total experience points. */
-    public static void setExp(@NotNull Player player, int exp) {
+    public static void setExp(@NotNull Player player, long exp) {
         player.setExp(0);
         player.setLevel(0);
-        player.giveExp(exp);
+        player.giveExp((int) exp);
     }
 
     /** Adds {@code exp} experience points to {@code player}'s current total. */
-    public static void addExp(@NotNull Player player, int exp) {
+    public static void addExp(@NotNull Player player, long exp) {
         setExp(player, currentExp(player) + exp);
     }
 
