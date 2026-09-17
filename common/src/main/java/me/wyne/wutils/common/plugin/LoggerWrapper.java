@@ -10,13 +10,11 @@ import org.slf4j.Marker;
  * {@code warn}/{@code error} family on an explicit {@link LevelWrapper} threshold, independent of
  * however the wrapped logger is itself configured.
  *
- * <p>The gating is uneven by design of the current implementation: {@code trace}/{@code debug}
- * calls check {@link #isTraceEnabled()}/{@link #isDebugEnabled()} before logging and, once
- * enabled, are forwarded to the wrapped logger's {@code info} methods rather than its
- * {@code trace}/{@code debug} methods. {@code info}/{@code warn}/{@code error} calls are always
- * forwarded to the identically-named method on the wrapped logger, regardless of the configured
- * threshold — {@link #isInfoEnabled()}, {@link #isWarnEnabled()} and {@link #isErrorEnabled()}
- * still report against the threshold, but nothing in this class consults them before logging.</p>
+ * <p>Every logging call checks the matching {@code isXEnabled} method before logging and is
+ * dropped when that level is below the threshold. Once enabled, {@code trace}/{@code debug} calls
+ * are forwarded to the wrapped logger's {@code info} methods rather than its
+ * {@code trace}/{@code debug} methods; {@code info}/{@code warn}/{@code error} calls are forwarded
+ * to the identically-named method on the wrapped logger.</p>
  *
  * <p>Every {@code Marker}-taking {@code isXEnabled(Marker)} override ignores the marker for the
  * enablement check and simply defers to the no-marker overload; the marker is still passed
@@ -229,26 +227,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void info(@NotNull String msg) {
+        if (!isInfoEnabled())
+            return;
         logger.info(msg);
     }
 
     @Override
     public void info(@NotNull String format, @NotNull Object arg) {
+        if (!isInfoEnabled())
+            return;
         logger.info(format, arg);
     }
 
     @Override
     public void info(@NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isInfoEnabled())
+            return;
         logger.info(format, arg1, arg2);
     }
 
     @Override
     public void info(@NotNull String format, @NotNull Object... arguments) {
+        if (!isInfoEnabled())
+            return;
         logger.info(format, arguments);
     }
 
     @Override
     public void info(@NotNull String msg, @NotNull Throwable t) {
+        if (!isInfoEnabled())
+            return;
         logger.info(msg, t);
     }
 
@@ -262,26 +270,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void info(@NotNull Marker marker, @NotNull String msg) {
+        if (!isInfoEnabled(marker))
+            return;
         logger.info(marker, msg);
     }
 
     @Override
     public void info(@NotNull Marker marker, @NotNull String format, @NotNull Object arg) {
+        if (!isInfoEnabled(marker))
+            return;
         logger.info(marker, format, arg);
     }
 
     @Override
     public void info(@NotNull Marker marker, @NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isInfoEnabled(marker))
+            return;
         logger.info(marker, format, arg1, arg2);
     }
 
     @Override
     public void info(@NotNull Marker marker, @NotNull String format, @NotNull Object... arguments) {
+        if (!isInfoEnabled(marker))
+            return;
         logger.info(marker, format, arguments);
     }
 
     @Override
     public void info(@NotNull Marker marker, @NotNull String msg, @NotNull Throwable t) {
+        if (!isInfoEnabled(marker))
+            return;
         logger.info(marker, msg, t);
     }
 
@@ -292,26 +310,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void warn(@NotNull String msg) {
+        if (!isWarnEnabled())
+            return;
         logger.warn(msg);
     }
 
     @Override
     public void warn(@NotNull String format, @NotNull Object arg) {
+        if (!isWarnEnabled())
+            return;
         logger.warn(format, arg);
     }
 
     @Override
     public void warn(@NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isWarnEnabled())
+            return;
         logger.warn(format, arg1, arg2);
     }
 
     @Override
     public void warn(@NotNull String format, @NotNull Object... arguments) {
+        if (!isWarnEnabled())
+            return;
         logger.warn(format, arguments);
     }
 
     @Override
     public void warn(@NotNull String msg, @NotNull Throwable t) {
+        if (!isWarnEnabled())
+            return;
         logger.warn(msg, t);
     }
 
@@ -325,26 +353,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void warn(@NotNull Marker marker, @NotNull String msg) {
+        if (!isWarnEnabled(marker))
+            return;
         logger.warn(marker, msg);
     }
 
     @Override
     public void warn(@NotNull Marker marker, @NotNull String format, @NotNull Object arg) {
+        if (!isWarnEnabled(marker))
+            return;
         logger.warn(marker, format, arg);
     }
 
     @Override
     public void warn(@NotNull Marker marker, @NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isWarnEnabled(marker))
+            return;
         logger.warn(marker, format, arg1, arg2);
     }
 
     @Override
     public void warn(@NotNull Marker marker, @NotNull String format, @NotNull Object... arguments) {
+        if (!isWarnEnabled(marker))
+            return;
         logger.warn(marker, format, arguments);
     }
 
     @Override
     public void warn(@NotNull Marker marker, @NotNull String msg, @NotNull Throwable t) {
+        if (!isWarnEnabled(marker))
+            return;
         logger.warn(marker, msg, t);
     }
 
@@ -355,26 +393,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void error(@NotNull String msg) {
+        if (!isErrorEnabled())
+            return;
         logger.error(msg);
     }
 
     @Override
     public void error(@NotNull String format, @NotNull Object arg) {
+        if (!isErrorEnabled())
+            return;
         logger.error(format, arg);
     }
 
     @Override
     public void error(@NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isErrorEnabled())
+            return;
         logger.error(format, arg1, arg2);
     }
 
     @Override
     public void error(@NotNull String format, @NotNull Object... arguments) {
+        if (!isErrorEnabled())
+            return;
         logger.error(format, arguments);
     }
 
     @Override
     public void error(@NotNull String msg, @NotNull Throwable t) {
+        if (!isErrorEnabled())
+            return;
         logger.error(msg, t);
     }
 
@@ -388,26 +436,36 @@ public class LoggerWrapper implements Logger {
 
     @Override
     public void error(@NotNull Marker marker, @NotNull String msg) {
+        if (!isErrorEnabled(marker))
+            return;
         logger.error(marker, msg);
     }
 
     @Override
     public void error(@NotNull Marker marker, @NotNull String format, @NotNull Object arg) {
+        if (!isErrorEnabled(marker))
+            return;
         logger.error(marker, format, arg);
     }
 
     @Override
     public void error(@NotNull Marker marker, @NotNull String format, @NotNull Object arg1, @NotNull Object arg2) {
+        if (!isErrorEnabled(marker))
+            return;
         logger.error(marker, format, arg1, arg2);
     }
 
     @Override
     public void error(@NotNull Marker marker, @NotNull String format, @NotNull Object... arguments) {
+        if (!isErrorEnabled(marker))
+            return;
         logger.error(marker, format, arguments);
     }
 
     @Override
     public void error(@NotNull Marker marker, @NotNull String msg, @NotNull Throwable t) {
+        if (!isErrorEnabled(marker))
+            return;
         logger.error(marker, msg, t);
     }
 
