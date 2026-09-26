@@ -12,7 +12,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'com.zaxxer:HikariCP:7.1.0'
     testImplementation 'com.j256.ormlite:ormlite-jdbc:6.1'
-    testImplementation 'com.h2database:h2:2.4.240'
+    testImplementation 'com.h2database:h2:2.5.252'
 }
 
 tasks.named('test') {
