@@ -9,12 +9,13 @@ import java.util.regex.Pattern;
 /**
  * Resolves {@link Operable} implementations by runtime {@link Number} type, looks up
  * {@link Operation} instances by their textual operator symbol, and parses
- * {@code "<operator><number>"} expressions (e.g. {@code "+5"}, {@code "**2"}) into
- * {@link IntOperation} / {@link DoubleOperation} instances.
+ * {@code "<operator><number>"} expressions (e.g. {@code "+5"}, {@code "**2"},
+ * {@code "%3"}, {@code "<10"}) into {@link IntOperation} / {@link DoubleOperation}
+ * instances.
  */
 public final class Operations {
 
-    public static final @NotNull Pattern OPERATION_REGEX = Pattern.compile("(\\+|-|\\*|/|\\*\\*)?(-?\\d+(?:\\.\\d+)?)");
+    public static final @NotNull Pattern OPERATION_REGEX = Pattern.compile("(\\+|-|\\*|/|\\*\\*|%|<|>)?(-?\\d+(?:\\.\\d+)?)");
     public static final @NotNull IntOperations INT_OPERATIONS = new IntOperations();
     public static final @NotNull DoubleOperations DOUBLE_OPERATIONS = new DoubleOperations();
 
@@ -35,7 +36,13 @@ public final class Operations {
 
     /**
      * Resolves an operation by its symbol ({@code +}, {@code -}, {@code *}, {@code /},
-     * {@code **}). Any other symbol, including {@code null}, resolves to {@link Set}.
+     * {@code **}, {@code %}, {@code <}, {@code >}). Any other symbol, including
+     * {@code null}, resolves to {@link Set}.
+     * <p>
+     * {@code <} and {@code >} are {@link Min} and {@link Max} — clamps, not comparisons.
+     * They are deliberately the same two symbols the comparator package reads as
+     * <em>less than</em> and <em>greater than</em>, so a config value shared between the
+     * two parsers means different things depending on which one reads it.
      */
     public static <T extends Number> @NotNull Operation<T> getOperation(@Nullable String operator) {
         if (operator == null) return new Set<>();
@@ -45,6 +52,9 @@ public final class Operations {
             case "*" -> new Multiply<>();
             case "/" -> new Divide<>();
             case "**" -> new Power<>();
+            case "%" -> new Modulo<>();
+            case "<" -> new Min<>();
+            case ">" -> new Max<>();
             default -> new Set<>();
         };
     }
@@ -60,6 +70,9 @@ public final class Operations {
         else if (operation instanceof Multiply) return "*";
         else if (operation instanceof Divide) return "/";
         else if (operation instanceof Power) return "**";
+        else if (operation instanceof Modulo) return "%";
+        else if (operation instanceof Min) return "<";
+        else if (operation instanceof Max) return ">";
         else return "";
     }
 

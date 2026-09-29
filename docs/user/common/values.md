@@ -177,26 +177,93 @@ var bonus = Operations.getIntOperation("+2");
 int result = bonus.evaluate(baseValue);
 ```
 
-Both accept an optional leading operator (`<=`, `>=`, `==`, `<`, `>` for comparators;
-`+`, `-`, `*`, `/`, `**` for operations) followed by a number; omitting the operator is
+Both accept an optional leading operator followed by a number; omitting the operator is
 legal and means "equals" for a comparator or "set to" for an operation — a bare `"5"`
 parses as "equal to 5" as a condition and "set to 5" as a transformation.
 
-**An unrecognized operator doesn't fail — it silently falls back to a default that looks
-nothing like an error:**
+| Comparator operator | Means | Operation operator | Means |
+|---|---|---|---|
+| `<=` | at most | `+` | add |
+| `>=` | at least | `-` | subtract |
+| `==` | equal to | `*` | multiply |
+| `<` | less than | `/` | divide |
+| `>` | greater than | `**` | raise to the power of |
+| *(omitted)* | equal to | `%` | remainder |
+| | | `<` | **clamp to at most** (minimum of the two) |
+| | | `>` | **clamp to at least** (maximum of the two) |
+| | | *(omitted)* | set to |
+
+`%`, `<` and `>` are the newest operators. `<` and `>` are clamps, not comparisons:
 
 ```java
-Comparators.getIntComparator("~5"); // "~" isn't a real operator — parses as Equals, not a thrown exception
-Operations.getIntOperation("~5");   // same story — parses as Set
+var cap = Operations.getIntOperation("<10");
+cap.evaluate(3);  // 3  — already under the cap, untouched
+cap.evaluate(50); // 10 — clamped down
+
+var floor = Operations.getIntOperation(">0");
+floor.evaluate(-5); // 0 — clamped up
+floor.evaluate(7);  // 7
 ```
 
-If you're validating a config schema and want to catch a genuine typo instead of quietly
-accepting it as "equals"/"set", check the parsed result's operator against what you
-expected rather than trusting that parsing succeeded means the operator was valid.
+Read `<10` as "no more than 10" and `>0` as "no less than 0". The class behind `<` is
+`Min` and the class behind `>` is `Max`, which reads backwards until you notice that
+capping a value at ten *is* taking the minimum of it and ten.
+
+**`<` and `>` mean opposite things depending on which parser reads the string.** The
+same two symbols are comparators (a test) and operations (a transform):
+
+```java
+Comparators.getIntComparator("<10").compare(50); // false — "is 50 below 10?"
+Operations.getIntOperation("<10").evaluate(50);  // 10    — "cap 50 at 10"
+```
+
+Nothing detects that a string was meant for the other parser, so a config key you
+document as a threshold silently becomes a clamp if some code path reads it with
+`getIntOperation`. Keep comparator keys and operation keys clearly separated in your
+config schema and never feed one string to both.
+
+**`%` is a remainder, not a mathematical modulo.** The sign of the result follows the
+left-hand value, exactly like Java's `%`:
+
+```java
+// Wrong — cycling an index into a fixed range breaks for negative input:
+var wrap = Operations.getIntOperation("%4");
+int slot = wrap.evaluate(-7); // -3, not 1 — indexing a list with this throws
+
+// Right — normalize the result yourself if the input can go negative:
+int slot = ((wrap.evaluate(-7) % 4) + 4) % 4; // 1
+```
+
+For `int`, both `/` and `%` throw `ArithmeticException` on a zero right-hand operand;
+for `double` they return `Infinity`/`NaN` instead, with no exception at all. A `"/0"` in
+a config parses fine either way and only misbehaves at `evaluate` — as a crash for
+`getIntOperation`, as a silent `Infinity` for `getDoubleOperation`.
 
 **A string that doesn't match the format at all throws `IllegalStateException`**, not a
-parse-error message naming the bad value — validate the raw string yourself if you want a
-clearer failure for malformed config.
+parse-error message naming the bad value:
+
+```java
+Comparators.getIntComparator("~5"); // IllegalStateException: No match found
+Operations.getIntOperation("~5");   // same — "~" is not in the grammar, so nothing matches
+```
+
+Validate the raw string yourself if you want a clearer failure for malformed config.
+
+**A *recognized* symbol used in the wrong place is the quieter danger.** Every symbol in
+the table above parses, so a string that is valid for one parser is often also valid for
+the other and simply means something else — that is exactly the `<`/`>` trap above. If
+you are validating a config schema, check the parsed result's operator against what you
+expected rather than trusting that parsing succeeded means the operator was right:
+
+```java
+var parsed = Operations.getIntOperation(configuredValue);
+if (!parsed.toString().startsWith("+")) {
+    getLogger().warning("bonus must be an addition, got: " + configuredValue);
+}
+```
+
+`toString()` round-trips a parsed rule back to its config text, so it is the simplest way
+to see which operator you actually got.
 
 `Comparator`/`Operation` implementations for `int` and `double` are separate types
 (`getIntComparator`/`getDoubleComparator`, `getIntOperation`/`getDoubleOperation`) — pick
