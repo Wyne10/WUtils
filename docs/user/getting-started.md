@@ -166,10 +166,13 @@ Every module targets **Java 16** source level and is built against **Paper 1.16.
 (`com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT`) where it touches Bukkit at
 all — `wutils-jdbc` and `wutils-json` don't, and work in any JVM context.
 
-WUtils is licensed **GPL-3.0**. Shading WUtils's classes into your plugin jar makes the
-result a combined work, and GPL-3.0 requires that if you distribute that jar, you make
-the complete corresponding source available under GPL-3.0 too. That's a stronger
-condition than the MIT/Apache-licensed libraries you may be used to shading, and worth
-understanding before you ship a closed-source plugin — this isn't legal advice, so read
-the [license text](https://www.gnu.org/licenses/gpl-3.0.txt) or talk to a lawyer if you
+WUtils is licensed **LGPL-3.0**. Using WUtils as a plain dependency puts no licensing
+condition on your own plugin's source. Shading WUtils's classes into your plugin jar
+makes the result a combined work, which LGPL-3.0 still allows without relicensing your
+code, but it then asks that you say WUtils is used, ship the LGPL text, and give
+recipients a way to relink your plugin against a modified WUtils (for example by
+publishing the WUtils source you shaded, or by shipping your plugin in a form that can
+be rebuilt against it). Changes you make to WUtils's own files stay LGPL-3.0 and have to
+be published if you distribute them. This isn't legal advice, so read the
+[license text](https://www.gnu.org/licenses/lgpl-3.0.txt) or talk to a lawyer if you
 need certainty.

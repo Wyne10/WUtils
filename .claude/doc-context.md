@@ -22,7 +22,7 @@ A multi-module Gradle collection of independently versioned and independently pu
 Java/Kotlin libraries for **Bukkit/Paper 1.16.5** plugins. Each module is its own Maven
 Central artifact under group `io.github.wyne10` (`wutils-common`, `wutils-i18n`, ...).
 Consumers pull only the modules they need — WUtils is not a framework, it is a set of
-reusable libraries. Java 16 source level. GPL-3.0. Repo: https://github.com/Wyne10/WUtils
+reusable libraries. Java 16 source level. LGPL-3.0. Repo: https://github.com/Wyne10/WUtils
 
 ## Modules
 
