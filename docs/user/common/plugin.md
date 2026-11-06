@@ -186,21 +186,12 @@ not at compile time.
 
 ## `LoggerWrapper`
 
-`LoggerWrapper` wraps an SLF4J logger and is *intended* to gate `trace`/`debug`/`info`/
-`warn`/`error` calls behind a configurable `LevelWrapper` threshold (mirroring log4j's
-eight levels). **Don't rely on it to suppress output — the gating doesn't work as
-documented:**
+`LoggerWrapper` wraps an SLF4J logger and gates every `trace`/`debug`/`info`/`warn`/`error`
+call behind a configurable `LevelWrapper` threshold (mirroring log4j's eight levels). A call
+below the threshold is dropped, so `logLevel: WARN` silences `info`, `debug` and `trace`.
 
-- `trace`/`debug` do check the threshold before doing anything, but when they pass, they
-  forward to the wrapped logger's `info(...)` — there's no way to actually emit at
-  `TRACE`/`DEBUG` on the underlying logger through this class.
-- `info`/`warn`/`error` are forwarded **unconditionally**, with no threshold check at
-  all, despite the class computing the right `isXEnabled()` values internally.
-
-Net effect: setting the threshold to `ERROR` suppresses nothing except `trace`/`debug`
-calls (which get relabeled as `info` anyway). If you need real log-level filtering,
-configure it on the underlying SLF4J/log4j backend directly rather than through
-`LoggerWrapper`.
+`trace` and `debug` calls that pass the threshold are written through the wrapped logger's
+`info(...)`, so they show up in the console even though Paper's own logger is set to `INFO`.
 
 **Requires log4j-core on your classpath** for `LevelWrapper`'s type — `compileOnly` in
 `wutils-common`.

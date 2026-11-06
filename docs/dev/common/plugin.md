@@ -165,29 +165,17 @@ without the caller depending on log4j types directly.
 
 `LoggerWrapper`
 (`common/src/main/java/me/wyne/wutils/common/plugin/LoggerWrapper.java`) wraps an slf4j
-`Logger` and is meant to gate `trace`/`debug`/`info`/`warn`/`error` calls against that
-threshold. **The gating is broken and inconsistent — read this before relying on it:**
+`Logger` and gates every `trace`/`debug`/`info`/`warn`/`error` family on that threshold:
 
-- `trace(...)` and `debug(...)` do check `isTraceEnabled()`/`isDebugEnabled()`
-  (`LoggerWrapper.java:61-66`, `:147-152`) before doing anything. But when enabled, they
-  forward to the *wrapped logger's `info(...)` methods*, not its `trace`/`debug`
-  methods. There is no way, through this class, to actually emit at `TRACE` or `DEBUG`
-  level on the underlying logger.
-- `info(...)`, `warn(...)` and `error(...)` (`LoggerWrapper.java:230-233` and the
-  corresponding `warn`/`error` methods) are forwarded **unconditionally**, with no
-  threshold check at all. `isInfoEnabled()`, `isWarnEnabled()` and `isErrorEnabled()`
-  (`LoggerWrapper.java:226-228` and siblings) compute the threshold correctly, but
-  nothing in the class calls them before logging.
+- Every logging method checks the matching `isXEnabled()` first and returns without logging
+  when the level is below the threshold. `isEnabled(LevelWrapper)` does the comparison with
+  log4j's `isMoreSpecificThan`.
+- `trace(...)` and `debug(...)` that pass forward to the wrapped logger's `info(...)`, not
+  its `trace`/`debug`, so they are visible without reconfiguring Paper's logger.
+  `info`/`warn`/`error` forward to the identically named method.
 - Every `Marker`-taking `isXEnabled(Marker)` override ignores the marker for the
-  enablement check and just defers to the no-marker overload — e.g.
-  `isTraceEnabled(Marker)` at `LoggerWrapper.java:99-102` is exactly
-  `isTraceEnabled()`. The marker is still passed through to the wrapped logger when a
-  message is actually logged.
-
-**Net effect:** setting the threshold to `ERROR` (or anything else) suppresses nothing
-except `trace`/`debug` calls, and those get relabeled as `info` on the wrapped logger
-rather than actually silenced at the source. `info`/`warn`/`error` always go through.
-Do not use `LoggerWrapper` to suppress `info`, `warn`, or `error` output — it cannot.
+  enablement check and defers to the no-marker overload; the marker is still passed
+  through to the wrapped logger when a message is actually logged.
 
 ## `PluginUtils`
 
