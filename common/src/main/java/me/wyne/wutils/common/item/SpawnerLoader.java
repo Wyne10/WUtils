@@ -1,25 +1,30 @@
 package me.wyne.wutils.common.item;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.jetbrains.annotations.NotNull;
 
-/** {@link TileStateLoader} for {@link CreatureSpawner}s, persisting the spawner's mob type as the item's display name. */
+/**
+ * {@link TileStateLoader} for {@link CreatureSpawner}s, persisting the spawner's mob type as the item's display name.
+ *
+ * <p>The name is set as a BungeeCord component rather than through Paper's Adventure API, so it
+ * still works in plugins that shade and relocate {@code net.kyori}.</p>
+ */
 public class SpawnerLoader implements TileStateLoader {
 
     /** No-op (returns {@code item} unchanged) if {@code blockState} is not a {@link CreatureSpawner}. */
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull ItemStack save(@NotNull ItemStack item, @NotNull BlockState blockState) {
         if (!(blockState instanceof CreatureSpawner spawner)) return item;
-        item.editMeta(meta -> {
-            meta.displayName(Component.empty().decoration(TextDecoration.ITALIC, false).append(Component.translatable(org.bukkit.Bukkit.getUnsafe().getTranslationKey(spawner.getSpawnedType()))));
-        });
+        var name = new TranslatableComponent(org.bukkit.Bukkit.getUnsafe().getTranslationKey(spawner.getSpawnedType()));
+        name.setItalic(false);
+        item.editMeta(meta -> meta.setDisplayNameComponent(new BaseComponent[]{name}));
         return item;
-
     }
 
     /**
