@@ -226,6 +226,20 @@ surrounding `%...%`. It has no PlaceholderAPI dependency itself, but only makes 
 alongside actually registering a PAPI expansion, which needs PlaceholderAPI on your
 classpath — see [WUtils Common](common.md#third-party-dependencies-you-must-supply).
 
+## Strings
+
+**`StringUtils.toRoman(number)`** writes an `int` as Roman numerals — `4` → `"IV"`,
+`1994` → `"MCMXCIV"` — for effect and enchantment levels in item lore and messages:
+
+```java
+import me.wyne.wutils.common.strings.StringUtils;
+
+String level = StringUtils.toRoman(3); // "III"
+```
+
+**Returns an empty string** for zero or negative numbers; above 3999 it keeps repeating
+`M`. Kotlin code calls `3.toRoman()` from `wutils-common-kotlin`.
+
 ## Particles
 
 If you're building a particle system driven by config strings, `me.wyne.wutils.common.particle`

@@ -119,6 +119,12 @@ return WUtils types, so don't assume the whole family behaves the same way.
 ## Small conveniences worth knowing about
 
 ```kotlin
+import me.wyne.wutils.common.kotlin.strings.toRoman
+
+val level = 3.toRoman() // "III", see StringUtils.toRoman
+```
+
+```kotlin
 import me.wyne.wutils.common.kotlin.doubles.test
 
 if (0.12.test()) {
