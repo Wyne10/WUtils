@@ -24,6 +24,7 @@ import me.wyne.wutils.structure.modifier.EditSessionModifier;
 import me.wyne.wutils.structure.modifier.PasteModifier;
 import me.wyne.wutils.structure.modifier.SnapshotModifier;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -262,6 +263,26 @@ public class WorldStructure implements AutoCloseable {
             Operations.complete(pasteBuilder.build());
         } catch (WorldEditException e) {
             throw new RuntimeException("Structure " + uniqueKey + " snapshot restore exception", e);
+        }
+        repairHeightmaps();
+    }
+
+    // FastAsyncWorldEdit does not lower heightmaps when it clears blocks. Changing a column's top block makes the server rescan it.
+    // Theoretically we shouldn't care, because height map is already guarded in WorldUtils, but it's better to fix your shit
+    private void repairHeightmaps() {
+        if (clipboardRegion.getWorld() == null) return;
+        World world = BukkitAdapter.adapt(clipboardRegion.getWorld());
+        var min = region.getMinimumPoint();
+        var max = region.getMaximumPoint();
+        for (int x = min.getX(); x <= max.getX(); x++) {
+            for (int z = min.getZ(); z <= max.getZ(); z++) {
+                var top = world.getHighestBlockAt(x, z);
+                if (!top.getType().isAir())
+                    continue;
+                var original = top.getBlockData();
+                top.setType(Material.STONE, false);
+                top.setBlockData(original, false);
+            }
         }
     }
 

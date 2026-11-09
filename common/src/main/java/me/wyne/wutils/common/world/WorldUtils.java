@@ -6,6 +6,7 @@ import me.wyne.wutils.common.vector.VectorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +36,23 @@ public final class WorldUtils {
      */
     public static @NotNull CompletableFuture<@NotNull Block> getHighestBlockAtAsync(@NotNull World world, int x, int z) {
         return world.getChunkAtAsync(x >> 4, z >> 4)
-                .thenApply(chunk -> world.getHighestBlockAt(x, z));
+                .thenApply(chunk -> getSurfaceBlockAt(world, x, z));
     }
 
     /** @see #getHighestBlockAtAsync(World, int, int) */
     public static @NotNull CompletableFuture<@NotNull Location> getHighestLocationAtAsync(@NotNull World world, int x, int z) {
         return world.getChunkAtAsync(x >> 4, z >> 4)
-                .thenApply(chunk -> world.getHighestBlockAt(x, z).getLocation());
+                .thenApply(chunk -> getSurfaceBlockAt(world, x, z).getLocation());
+    }
+
+    // Safe guard for stale height map data
+    private static @NotNull Block getSurfaceBlockAt(@NotNull World world, int x, int z) {
+        var block = world.getHighestBlockAt(x, z);
+        if (!block.getType().isAir())
+            return block;
+        while (block.getY() > world.getMinHeight() && !block.getType().isSolid() && !block.isLiquid())
+            block = block.getRelative(BlockFace.DOWN);
+        return block;
     }
 
     /** @see #getHighestBlockAtAsync(World, int, int) */
