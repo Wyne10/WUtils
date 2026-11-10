@@ -39,3 +39,5 @@
 !.claude/doc-context.md
 !.claude/user-doc-context.md
 !.claude/validate-docs.py
+.agents/
+skills-lock.json

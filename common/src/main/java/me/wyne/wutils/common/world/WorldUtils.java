@@ -31,8 +31,9 @@ public final class WorldUtils {
 
     /**
      * Loads the chunk containing block coordinates ({@code x}, {@code z}) asynchronously, then
-     * resolves to the highest block there. Safe to call off the main thread; the completion
-     * itself still runs on the server thread per {@link World#getChunkAtAsync}.
+     * resolves to the highest block there. If the height map is stale and reports air, this walks
+     * down to the first solid or liquid block instead. Safe to call off the main thread; the
+     * completion itself still runs on the server thread per {@link World#getChunkAtAsync}.
      */
     public static @NotNull CompletableFuture<@NotNull Block> getHighestBlockAtAsync(@NotNull World world, int x, int z) {
         return world.getChunkAtAsync(x >> 4, z >> 4)

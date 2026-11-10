@@ -6,8 +6,8 @@ import me.wyne.wutils.structure.modifier.RegionModifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A {@link RadiusEditModifier} that also grows the WorldGuard protected region to cover the
- * sphere it is about to edit, so the region stays large enough to protect what this modifier
+ * A {@link RadiusEditModifier} that also grows the WorldGuard protected region to cover a cube
+ * of its radius around the centre, so the region stays large enough to protect what this modifier
  * changes — the same doubling {@link MarginEditModifier} does for its margin.
  */
 public abstract class RegionRadiusEditModifier extends RadiusEditModifier implements RegionModifier {

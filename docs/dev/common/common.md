@@ -10,7 +10,7 @@ description: >-
 builds on. It is not a framework — it is a pile of independent utilities plus one
 vendored concurrency stack, and you take only the parts you need.
 
-- **Artifact**: `io.github.wyne10:wutils-common`, version `1.16.5` (`common/build.gradle:22`)
+- **Artifact**: `io.github.wyne10:wutils-common`, version `1.16.12` (`common/build.gradle:22`)
 - **Root package**: `me.wyne.wutils.common`
 - **Depends on**: nothing else in WUtils. [`configurables`](../config/config.md) and
   `structure` depend on it.
@@ -30,8 +30,8 @@ one is a runtime `NoClassDefFoundError` at first use, not a compile error.
 
 Several libraries are used directly but not declared, arriving transitively through
 paper-api: Guava (the vendored helper code, and `PluginUtils`), Gson (the four
-[Gson Serializers](gson-serializers.md)), Adventure (`SoundUtils`, `SpawnerLoader`),
-SLF4J and SnakeYAML. They are available in any Paper runtime, but nothing in this
+[Gson Serializers](gson-serializers.md)), Adventure (`SoundUtils`), BungeeCord chat
+(`SpawnerLoader`), SLF4J and SnakeYAML. They are available in any Paper runtime, but nothing in this
 module's build file pins their versions.
 
 Note that `PAPIUtils` does **not** require PlaceholderAPI — it only concatenates a
@@ -70,7 +70,7 @@ part of the module:
 | [Particle Data Parsers](particles.md) | string → particle data |
 | [Gson Serializers](gson-serializers.md) | Base64 items/inventories, cooldown persistence |
 | [Loadables](loadables.md) | ordered config loading |
-| [Core Utilities](utilities.md) | `Args`, `MapUtils` |
+| [Core Utilities](utilities.md) | `Args`, `MapUtils`, `StringUtils` |
 
 **Lifecycle and concurrency:**
 
@@ -83,7 +83,7 @@ part of the module:
 
 ## A third of this module is not ours
 
-47 of 153 source files are vendored verbatim-ish from lucko's
+47 of 158 source files are vendored verbatim-ish from lucko's
 [`helper`](https://github.com/lucko/helper) (MIT), covering promises, terminables,
 functional event subscription and the scheduler core. They are identified by a
 `This file is part of helper, licensed under the MIT License.` header.

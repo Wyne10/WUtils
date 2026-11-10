@@ -78,7 +78,8 @@ configured mob type). This trio lets that extra state ride along on an `ItemStac
 - `SpawnerLoader` (`common/src/main/java/me/wyne/wutils/common/item/SpawnerLoader.java`) — the only
   built-in implementation, for `CreatureSpawner`. `save` sets the item's display name to the
   spawned entity type's translatable component (with italics stripped) and is a no-op for a
-  non-spawner block state. `load` copies delay, min/max spawn delay, max nearby entities, spawn
+  non-spawner block state. The name is a BungeeCord component rather than an Adventure one, so
+  it still works in plugins that shade and relocate `net.kyori`. `load` copies delay, min/max spawn delay, max nearby entities, spawn
   count, required player range, spawned type and spawn range from the item's saved state onto a
   live `CreatureSpawner`, then calls `update()`; it's a no-op if the target isn't a spawner, the
   item has no block-state meta, or the item's saved state isn't itself a spawner.

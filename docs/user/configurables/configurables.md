@@ -22,7 +22,7 @@ an animation sequence. Skip it for a lone `int` or `String` setting — that's p
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-configurables:1.21.8")
+    implementation("io.github.wyne10:wutils-configurables:1.21.9")
 }
 ```
 

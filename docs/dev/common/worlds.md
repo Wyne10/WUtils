@@ -14,7 +14,7 @@ groupings for config-friendly filtering (`BiomePreset`).
 
 `getHighestBlockAtAsync` / `getHighestLocationAtAsync` come in eight overloads, all converging on
 the `(World, int x, int z)` pair
-(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:36-45`): variants taking
+(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:38-47`): variants taking
 `double` coordinates (floored via `NumberConversions.floor`), a `Vector` (using its block
 coordinates), or a `Location` (using its world and block coordinates).
 
@@ -24,8 +24,13 @@ thread; per Bukkit's `getChunkAtAsync` contract, the completion callback itself 
 **server main thread**, so code chained onto the returned `CompletableFuture` can safely touch
 Bukkit API without hopping threads again.
 
+The result is guarded against a stale height map, which FastAsyncWorldEdit can leave behind after
+clearing blocks. When `getHighestBlockAt` returns air, `getSurfaceBlockAt`
+(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:50-57`) walks down to the first
+solid or liquid block, stopping at the world's minimum height.
+
 **Sharp edge:** the `Location`-based overloads
-(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:68-75`) pass
+(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:80-87`) pass
 `location.getWorld()` straight into the `@NotNull World world` parameter of the `(World, int, int)`
 overload. Bukkit allows `Location.getWorld()` to return `null` (e.g. for a location whose world was
 unloaded). Passing such a location does **not** fail at the call site — it throws a
@@ -40,16 +45,16 @@ the null reference. Callers passing a `Location` should ensure its world is non-
 | `CHUNK_Y_RANGE` | `ClosedIntRange(0, 255)` |
 | `CHUNK_RANGE` | a `VectorRange` spanning the full in-chunk volume, `(0,0,0)` to `(15,255,15)` |
 
-See `common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:25-29`, and
+See `common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:26-30`, and
 [Ranges](ranges.md) for `ClosedIntRange`/`VectorRange` themselves.
 
-`getRandomChunkPoint()` (`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:78-80`)
+`getRandomChunkPoint()` (`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:90-92`)
 returns a uniformly random point within `CHUNK_RANGE` on all three axes.
-`getRandomChunkPoint2D()` (`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:83-85`)
+`getRandomChunkPoint2D()` (`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:95-97`)
 does the same for X/Z only, with Y fixed at `0`.
 
 `HIGHLAND_REGEX`
-(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:23`) matches biome enum names
+(`common/src/main/java/me/wyne/wutils/common/world/WorldUtils.java:24`) matches biome enum names
 describing elevated terrain (`MOUNTAINS`, `HILLS`, `PEAKS`, `SLOPES`, `PLATEAU`, `ERODED`); it
 backs `BiomePreset.HIGHLAND` below.
 
@@ -66,7 +71,8 @@ presets) resolve each name via `Biome.valueOf(name)`
 exist on the running server version (older/newer Minecraft biome sets differ) is **silently
 dropped** rather than throwing — the preset just ends up with fewer biomes.
 
-Presets:
+The biomes in each preset are listed in full on the user wiki's
+[Biome presets](/documentation/common/game-objects#biome-presets) table. Presets:
 
 | Preset | Basis |
 |---|---|

@@ -46,6 +46,10 @@ import java.util.Set;
  * PasteModifier}, and {@code EditSessionModifier} instances that throw during {@link #spawn()} are
  * logged and skipped rather than propagated, so one misbehaving modifier does not abort the whole
  * spawn.</p>
+ *
+ * <p>Restoring the snapshot also makes the server rescan any column in the region whose height map
+ * still reports air as its top block, because FastAsyncWorldEdit does not lower height maps when it
+ * clears blocks.</p>
  */
 public class WorldStructure implements AutoCloseable {
 

@@ -1,7 +1,7 @@
 ---
 description: >-
-  Args for splitting configuration strings, and the other core class used from
-  everywhere in common.
+  Args for splitting configuration strings, and the other small helpers used across
+  common.
 ---
 
 # Core Utilities
@@ -84,6 +84,13 @@ constructs.
 Since transformation writes into the destination with `put`, a `MapFunction` that maps
 two source keys onto the same destination key silently keeps only the last one. The
 result can be smaller than the input.
+
+## `StringUtils` — Roman numerals
+
+`StringUtils` (`StringUtils.java:5`) is the whole of the `strings/` package, and has one
+method. `toRoman(int)` (`StringUtils.java:16-25`) subtracts greedily from a fixed table of
+values, so `4` becomes `IV` and `1994` becomes `MCMXCIV`. Zero and negative numbers match
+nothing in the table and return an empty string, and numbers above 3999 keep repeating `M`.
 
 ## See also
 

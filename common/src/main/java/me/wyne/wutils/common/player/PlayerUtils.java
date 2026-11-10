@@ -18,6 +18,9 @@ public final class PlayerUtils {
      * 4.5 × level^2 – 162.5 × level + 2220 (at levels 32+)
      * ```
      * </pre>
+     *
+     * <p>Above level 16 the result is narrowed through {@code int}, so despite the {@code long}
+     * return type it caps at {@link Integer#MAX_VALUE} from level 21864 upward.</p>
      */
     public static long levelToExp(long level) {
         if (level <= 16)
@@ -72,7 +75,11 @@ public final class PlayerUtils {
         return levelToExp(player.getLevel()) + Math.round(expToLevelUp(player.getLevel()) * player.getExp());
     }
 
-    /** Resets {@code player} to level 0 and grants {@code exp} total experience points. */
+    /**
+     * Resets {@code player} to level 0 and grants {@code exp} total experience points.
+     * {@code exp} is narrowed to {@code int} for {@link Player#giveExp}, so a value outside the
+     * {@code int} range wraps.
+     */
     public static void setExp(@NotNull Player player, long exp) {
         player.setExp(0);
         player.setLevel(0);

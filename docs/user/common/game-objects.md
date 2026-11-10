@@ -101,9 +101,13 @@ boolean.
 ```java
 import me.wyne.wutils.common.player.PlayerUtils;
 
-int total = PlayerUtils.currentExp(player);
+long total = PlayerUtils.currentExp(player);
 PlayerUtils.addExp(player, 50);
 ```
+
+These methods take and return `long`, but very large totals still hit `int` limits:
+`levelToExp` caps at `Integer.MAX_VALUE` from level 21864 upward, and `setExp`/`addExp` wrap
+if the total leaves the `int` range.
 
 `exists` is the same "is this a real player" check `CommandUtils.getOfflinePlayer`
 applies internally — see [Plugin Setup](plugin.md#commands) — useful outside a command
@@ -148,6 +152,10 @@ WorldUtils.getHighestLocationAtAsync(world, x, z)
         .thenAccept(location -> spawnStructureAt(location));
 ```
 
+If the server's height map is stale and reports air for that column, which
+FastAsyncWorldEdit can leave behind after clearing blocks, the lookup walks down to the first
+solid or liquid block instead of returning air.
+
 Overloads accept `(World, int/double x, int/double z)`, a `Vector`, or a `Location`.
 **Pass a `Location` with a non-null world** — the world-based overloads read
 `location.getWorld()` directly, and Bukkit allows that to be `null` for a location whose
@@ -160,7 +168,8 @@ biomes" without enumerating every `Biome` constant by hand. `BiomePreset.resolve
 combines several by name, where a `!`-prefixed name (`"!SNOWY"`) subtracts instead of
 adds, applied in list order. An unrecognized preset name, or a `Biome` constant name that
 doesn't exist on the running server version, is silently skipped rather than erroring —
-double check preset names in config if a preset seems smaller than expected.
+double check preset names in config if a preset seems smaller than expected. See
+[the biomes in each preset](#biome-presets).
 
 **Locations and vectors.** `LocationUtils`/`VectorUtils` offer matching relative-offset
 math for `Location`s and `Vector`s: `addRelative(point, ..., face)` variants for
@@ -169,6 +178,28 @@ blocks in front of the player" without hand-computing sin/cos), `getMin`/`getMax
 component-wise bounds, and `LocationUtils.getRandomPointNear(center, radius)` for a
 random point on a circle at the same Y. `VectorUtils.zero()` returns a fresh mutable
 zero vector each call, safe to `.add(...)` onto without corrupting a shared instance.
+
+### Biome presets
+
+The lists below use Paper 1.16.5's biome names. On another server version, a listed name
+that doesn't exist is dropped, and the rule-based presets follow that version's biomes.
+
+| Preset | Biomes |
+|---|---|
+| `ALL` | Every biome except `MOUNTAIN_EDGE`, `THE_VOID` and `CUSTOM` (77 on 1.16.5) |
+| `SNOWY` | `SNOWY_TAIGA`, `SNOWY_TUNDRA`, `SNOWY_BEACH`, `ICE_SPIKES`, `SNOWY_TAIGA_MOUNTAINS`, `FROZEN_RIVER` |
+| `COLD` | `MOUNTAINS`, `GRAVELLY_MOUNTAINS`, `WOODED_MOUNTAINS`, `MODIFIED_GRAVELLY_MOUNTAINS`, `FROZEN_OCEAN`, `DEEP_FROZEN_OCEAN`, `TAIGA`, `TAIGA_MOUNTAINS`, `GIANT_TREE_TAIGA`, `GIANT_SPRUCE_TAIGA`, `STONE_SHORE`, `WOODED_HILLS`, `TAIGA_HILLS`, `SNOWY_TAIGA_HILLS`, `GIANT_TREE_TAIGA_HILLS`, `GIANT_SPRUCE_TAIGA_HILLS`, `SNOWY_MOUNTAINS` |
+| `SNOWY_OR_COLD` | `SNOWY` and `COLD` combined |
+| `LUSH` | `PLAINS`, `SUNFLOWER_PLAINS`, `FOREST`, `FLOWER_FOREST`, `BIRCH_FOREST`, `TALL_BIRCH_FOREST`, `DARK_FOREST`, `DARK_FOREST_HILLS`, `SWAMP`, `SWAMP_HILLS`, `JUNGLE`, `MODIFIED_JUNGLE`, `JUNGLE_EDGE`, `MODIFIED_JUNGLE_EDGE`, `BAMBOO_JUNGLE`, `RIVER`, `BEACH`, `MUSHROOM_FIELDS`, `MUSHROOM_FIELD_SHORE`, `JUNGLE_HILLS`, `BIRCH_FOREST_HILLS`, `TALL_BIRCH_HILLS`, `BAMBOO_JUNGLE_HILLS` |
+| `WARM` | `DESERT`, `DESERT_LAKES`, `DESERT_HILLS`, `SAVANNA`, `SHATTERED_SAVANNA`, `BADLANDS`, `ERODED_BADLANDS`, `WOODED_BADLANDS_PLATEAU`, `MODIFIED_WOODED_BADLANDS_PLATEAU`, `SAVANNA_PLATEAU`, `BADLANDS_PLATEAU`, `MODIFIED_BADLANDS_PLATEAU`, `SHATTERED_SAVANNA_PLATEAU` |
+| `LUSH_OR_WARM` | `LUSH` and `WARM` combined |
+| `OCEAN` | Every biome with `OCEAN` in its name. On 1.16.5: `OCEAN`, `FROZEN_OCEAN`, `DEEP_OCEAN`, `WARM_OCEAN`, `LUKEWARM_OCEAN`, `COLD_OCEAN`, `DEEP_WARM_OCEAN`, `DEEP_LUKEWARM_OCEAN`, `DEEP_COLD_OCEAN`, `DEEP_FROZEN_OCEAN` |
+| `HIGHLAND` | Every biome with `MOUNTAINS`, `HILLS`, `PEAKS`, `SLOPES`, `PLATEAU` or `ERODED` in its name. On 1.16.5: `MOUNTAINS`, `SNOWY_MOUNTAINS`, `DESERT_HILLS`, `WOODED_HILLS`, `TAIGA_HILLS`, `JUNGLE_HILLS`, `BIRCH_FOREST_HILLS`, `SNOWY_TAIGA_HILLS`, `GIANT_TREE_TAIGA_HILLS`, `WOODED_MOUNTAINS`, `SAVANNA_PLATEAU`, `WOODED_BADLANDS_PLATEAU`, `BADLANDS_PLATEAU`, `GRAVELLY_MOUNTAINS`, `TAIGA_MOUNTAINS`, `SWAMP_HILLS`, `TALL_BIRCH_HILLS`, `DARK_FOREST_HILLS`, `SNOWY_TAIGA_MOUNTAINS`, `GIANT_SPRUCE_TAIGA_HILLS`, `MODIFIED_GRAVELLY_MOUNTAINS`, `SHATTERED_SAVANNA_PLATEAU`, `ERODED_BADLANDS`, `MODIFIED_WOODED_BADLANDS_PLATEAU`, `MODIFIED_BADLANDS_PLATEAU`, `BAMBOO_JUNGLE_HILLS` |
+| `WOODLAND` | `FOREST`, `FLOWER_FOREST`, `BIRCH_FOREST`, `TALL_BIRCH_FOREST`, `DARK_FOREST`, `DARK_FOREST_HILLS`, `TAIGA`, `TAIGA_MOUNTAINS`, `SNOWY_TAIGA`, `SNOWY_TAIGA_MOUNTAINS`, `GIANT_TREE_TAIGA`, `GIANT_SPRUCE_TAIGA`, `JUNGLE`, `MODIFIED_JUNGLE`, `JUNGLE_EDGE`, `MODIFIED_JUNGLE_EDGE`, `BAMBOO_JUNGLE`, `WOODED_MOUNTAINS`, `WOODED_HILLS`, `WOODED_BADLANDS_PLATEAU`, `MODIFIED_WOODED_BADLANDS_PLATEAU`, `TAIGA_HILLS`, `SNOWY_TAIGA_HILLS`, `JUNGLE_HILLS`, `BIRCH_FOREST_HILLS`, `TALL_BIRCH_HILLS`, `GIANT_TREE_TAIGA_HILLS`, `GIANT_SPRUCE_TAIGA_HILLS`, `BAMBOO_JUNGLE_HILLS` |
+| `WETLAND` | `RIVER`, `FROZEN_RIVER`, `SWAMP`, `SWAMP_HILLS`, `BEACH`, `SNOWY_BEACH`, `STONE_SHORE` |
+| `NETHER` | `NETHER_WASTES`, `SOUL_SAND_VALLEY`, `CRIMSON_FOREST`, `WARPED_FOREST`, `BASALT_DELTAS` |
+| `END` | `THE_END`, `SMALL_END_ISLANDS`, `END_MIDLANDS`, `END_HIGHLANDS`, `END_BARRENS` |
+| `OVERWORLD` | `ALL` without `NETHER` and `END` (67 on 1.16.5) |
 
 ## The anvil
 

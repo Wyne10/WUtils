@@ -5,8 +5,9 @@ import com.sk89q.worldedit.regions.Region;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Runs after the paste, on a fresh {@link EditSession}, to reshape the terrain surrounding the
- * pasted structure (e.g. margin smoothing, snow, deforestation).
+ * Runs after the paste, on a fresh {@link EditSession}, to edit blocks, biomes or entities inside
+ * the pasted structure, around it, or both, depending on the implementation (e.g. block
+ * replacement, margin smoothing, snow).
  *
  * <p>Applied by {@link me.wyne.wutils.structure.WorldStructure}; an implementation that throws is
  * logged and skipped rather than propagated.</p>
@@ -14,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
 public interface EditSessionModifier {
 
     /**
-     * Applies this modifier's edits to {@code editSession} within {@code region}.
+     * Applies this modifier's edits to {@code editSession}. {@code region} is the pasted
+     * structure's region, which implementations may work inside of, expand beyond, or exclude.
      */
     void apply(@NotNull EditSession editSession, @NotNull Region region);
 }

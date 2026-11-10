@@ -12,7 +12,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Removes fire blocks within the radius via {@link EditSession#removeNear}.
+ * Removes fire blocks via {@link EditSession#removeNear}, which treats the radius as an apothem:
+ * the area is a cube reaching {@code radius - 1} blocks from the centre, and a radius below 1
+ * throws.
  */
 public class ExtinguishEditModifier extends RadiusEditModifier {
 

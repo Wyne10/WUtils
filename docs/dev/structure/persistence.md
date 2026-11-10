@@ -21,7 +21,7 @@ module does not declare Gson itself.
 ## `capture()` requires a prior `spawn()`
 
 `WorldStructure#capture()`
-(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:110-113`)
+(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:115-118`)
 packages a structure's current state — unique key, location, region,
 clipboard region, transform, clipboard, and the pre-spawn snapshot — into a
 `WorldStructureMemento`. It throws `NullPointerException` if called before
@@ -32,7 +32,7 @@ clipboard region, transform, clipboard, and the pre-spawn snapshot — into a
 `WorldStructureMemento` (`structure/src/main/java/me/wyne/wutils/structure/persistence/WorldStructureMemento.java:17-25`)
 is the plain data carrier: everything `capture()` produces and
 `WorldStructure.restore(WorldStructureMemento)`
-(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:120-122`)
+(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:125-127`)
 needs to rebuild a `WorldStructure` without re-running `Structure#create`.
 A restored structure carries its restore-snapshot (so `close()` still
 works) but has **no modifiers attached** — `spawn/snapshot/paste/edit`

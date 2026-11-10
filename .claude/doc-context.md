@@ -30,14 +30,14 @@ Gradle project names are `:WUtils-<name>`; directory names differ (see `settings
 
 | Dir | Gradle project | Artifact | Version | What it does |
 |---|---|---|---|---|
-| `common/` | `:WUtils-common` | `wutils-common` | 1.16.5 | Shared toolkit: events, scheduling, promises, terminables, operations, particles, ranges, durations, comparators, plugin bootstrap, serialization |
+| `common/` | `:WUtils-common` | `wutils-common` | 1.16.12 | Shared toolkit: events, scheduling, promises, terminables, operations, particles, ranges, durations, comparators, plugin bootstrap, serialization |
 | `commonKt/` | `:WUtils-common-kotlin` | `wutils-common-kotlin` | = common | Kotlin extensions/wrappers over `common` |
 | `config/` | `:WUtils-config` | `wutils-config` | 2.10.1 | Annotation-based YAML config generation, updating and reading |
-| `configurables/` | `:WUtils-configurables` | `wutils-configurables` | 1.21.8 | Predefined annotation-friendly config serializers (items, GUIs, animations, interactions) |
+| `configurables/` | `:WUtils-configurables` | `wutils-configurables` | 1.21.9 | Predefined annotation-friendly config serializers (items, GUIs, animations, interactions) |
 | `i18n/` | `:WUtils-i18n` | `wutils-i18n` | 5.6.1 | Internationalization: MiniMessage/Legacy/EnhancedLegacy interpreters, PlaceholderAPI, per-player languages, YAML/JSON/`.lang` sources |
 | `i18nKt/` | `:WUtils-i18n-kotlin` | `wutils-i18n-kotlin` | = i18n | Kotlin extensions/wrappers over `i18n` |
 | `animation/` | `:WUtils-animation` | `wutils-animation` | 2.2.3 | Sequential/parallel animation orchestration (particles, sounds, fireworks, titles) |
-| `structure/` | `:WUtils-structure` | `wutils-structure` | 1.2.7 | Configurable schematic-based structure placement via WorldEdit/WorldGuard |
+| `structure/` | `:WUtils-structure` | `wutils-structure` | 1.2.8 | Configurable schematic-based structure placement via WorldEdit/WorldGuard |
 | `jdbc/` | `:WUtils-jdbc` | `wutils-jdbc` | 2.0.0 | Connection-pool abstraction (HikariCP, ORMLite) + runtime JDBC driver download |
 | `json/` | `:WUtils-json` | `wutils-json` | 1.2.1 | Minimal annotation-driven Gson serialization |
 | `log/` | — | — | 3.4.12 | **DEPRECATED.** Commented out of `settings.gradle`. Do not document. |

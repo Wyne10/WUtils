@@ -52,6 +52,7 @@ is the value's `toString()`, so all of these round-trip.
 | `DoubleRangeConfigurable` | `0.5..2.5` | `DoubleRange` | `0.0..1.0` |
 | `VectorRangeConfigurable` | `-1,-1,-1..1,1,1` | `VectorRange` | a unit box at origin |
 | `TimeSpanConfigurable` | `1m30s` | `TimeSpan` | `0` ticks |
+| `TimeSpanRangeConfigurable` | `5s..1m` | `TimeSpanRange` | `0t..0t` |
 | `MaterialConfigurable` | `DIAMOND_SWORD` | `Material` | `STONE` |
 | `IntComparatorConfigurable` | `>=5` | `IntComparator` | `= 0` |
 | `DoubleComparatorConfigurable` | `<2.5` | `DoubleComparator` | `= 0` |
@@ -64,6 +65,8 @@ parsed objects can do. Verified: `3..7`, `0.5..2.5`, `1m30s`, `>=5`, `*2`, `+0.5
 all re-render as exactly the text they were written as. `VectorRangeConfigurable` is the
 one exception — a hand-written `-1,-1,-1..1,1,1` regenerates as
 `-1.0,-1.0,-1.0..1.0,1.0,1.0`. It re-parses identically; only the file text changes.
+`TimeSpanRangeConfigurable` also rewrites ticks: `Durations.getTimeSpan` stores both bounds in
+milliseconds, so `10t..20t` regenerates as `500ms..1s`.
 
 ## SoundConfigurable
 

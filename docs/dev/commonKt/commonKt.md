@@ -27,7 +27,7 @@ Kotlin-native types (`IntRange`, `ClosedFloatingPointRange`, nullable returns), 
 | Dependency | Scope | Notes |
 |---|---|---|
 | `:WUtils-common` | `api` | Re-exported: depending on this module gives you `common` too, with no separate declaration. |
-| `org.jetbrains.kotlin:kotlin-stdlib:2.4.10` | `compileOnly` | **Not bundled.** The consuming plugin supplies the stdlib — normal for a Kotlin plugin, but the artifact is unusable from a project without one. |
+| `org.jetbrains.kotlin:kotlin-stdlib:2.4.21` | `compileOnly` | **Not bundled.** The consuming plugin supplies the stdlib — normal for a Kotlin plugin, but the artifact is unusable from a project without one. |
 | `com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT` | `compileOnly` | For the Bukkit receiver types. |
 | `dev.jorel:commandapi-bukkit-core:9.4.2` | `compileOnly` | Only `command/CommandUtils.kt`. |
 
@@ -52,6 +52,7 @@ One file per subject, each mirroring the `common` package it wraps:
 | `range/RangeUtils.kt` | [Ranges](../common/ranges.md) | conversions to/from Kotlin ranges |
 | `server/ServerUtils.kt` | [Plugin Composition](../common/plugin.md) | `Server.currentVersion` |
 | `sound/SoundUtils.kt` | [Sounds](../common/sounds.md) | `Sound.adventure` property |
+| `strings/StringUtils.kt` | [Core Utilities](../common/utilities.md) | `Int.toRoman()` |
 | `vector/VectorUtils.kt` | [Locations and Vectors](../common/locations.md) | `Vector.ZERO` |
 | `world/WorldUtils.kt` | [Worlds and Biomes](../common/worlds.md) | nothing — pure delegation |
 
@@ -121,7 +122,9 @@ probability roll, so `0.12.test()` is "12% of the time". Short and readable at t
 site, and the whole of the `doubles` package.
 
 `Player.expToLevelUp`, `Player.currentExp` and `OfflinePlayer.exists`
-(`player/PlayerUtils.kt:7-22`) turn accessor calls into properties. `Sound.adventure`
+(`player/PlayerUtils.kt:7-19`) turn accessor calls into properties. The two experience
+properties are `Long`, matching `PlayerUtils`, and `currentExp` is writable: assigning it calls
+`PlayerUtils.setExp`, which replaced the old `setCurrentExp` function. `Sound.adventure`
 (`sound/SoundUtils.kt:6-7`) converts a Bukkit `Sound` to an Adventure one.
 
 `suggest` and `tooltip` (`command/CommandUtils.kt:9-19`) wrap CommandAPI's

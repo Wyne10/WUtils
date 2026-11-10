@@ -22,7 +22,7 @@ one or two of these — nothing stops you from depending on `wutils-common` just
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-common:1.16.5")
+    implementation("io.github.wyne10:wutils-common:1.16.12")
 }
 ```
 
@@ -39,7 +39,7 @@ before you consider sharing.
 | log4j-core 2.26.1+ | `LoggerWrapper`'s level type only, see [Plugin Setup](plugin.md#loggerwrapper) | `compileOnly` |
 | PlaceholderAPI | only meaningful if you register a PAPI expansion; `PAPIUtils` itself doesn't require it | not declared at all |
 
-Guava, Gson, Adventure, SLF4J and SnakeYAML are used internally but arrive transitively
+Guava, Gson, Adventure, BungeeCord chat, SLF4J and SnakeYAML are used internally but arrive transitively
 through Paper's own classpath at runtime — you don't need to add them yourself on a real
 Paper server, just don't rely on their versions being pinned by this module.
 

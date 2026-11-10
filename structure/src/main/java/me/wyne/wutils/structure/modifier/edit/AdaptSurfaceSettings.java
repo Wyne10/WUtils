@@ -5,8 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Config value for {@link AdaptSurfaceEditModifier}, parsed by {@link #parse} from a single
- * space-delimited string: {@code margin(4) mask("") sampleMask(#surface)} — all tokens optional,
- * defaults in parentheses.
+ * space-delimited string: {@code margin(4) mask sampleMask(#surface)}, defaults in parentheses.
+ * {@code mask} is effectively required: it parses to an empty string when omitted, which WorldEdit
+ * rejects when the modifier is applied.
  */
 public record AdaptSurfaceSettings(int margin, @NotNull String mask, @NotNull String sampleMask) {
 

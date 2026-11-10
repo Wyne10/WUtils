@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Base for edit modifiers that reshape a ring of terrain around the pasted structure rather than
- * a sphere around its centre.
+ * an area around its centre.
  *
  * <p>{@link #apply} clones the pasted {@code region} and expands it by {@link #margin()} blocks
  * on every axis, giving the expanded region to {@link #applyEdit} as the area to work on; the
@@ -25,12 +25,13 @@ import org.jetbrains.annotations.NotNull;
  * subclasses can still tell where the structure itself sits within it.</p>
  *
  * <p>When {@link #excludeFootprint()} is {@code true} (the default), {@code apply} also installs
- * a mask on the {@link EditSession} that excludes the structure's own footprint, via
- * {@link #outsideFootprint}, so the edit reshapes the surroundings without touching the pasted
- * building. That test is 2D (X/Z only), so the exclusion is a full-height column over the
- * footprint, not a box bounded by its Y range. Any mask already set on the session is intersected
- * with — not replaced by — this one, and the previous mask is always restored in a {@code finally}
- * once {@link #applyEdit} returns or throws.</p>
+ * a mask on the {@link EditSession} that excludes the pasted region, so the edit reshapes the
+ * surroundings without touching the pasted building. That mask is a 3D box bounded by the
+ * region's Y range, so blocks directly above or below it can still be edited; subclasses that
+ * need to skip the full-height column over the footprint apply {@link #outsideFootprint}
+ * themselves. Any mask already set on the session is intersected with — not replaced by — this
+ * one, and the previous mask is always restored in a {@code finally} once {@link #applyEdit}
+ * returns or throws.</p>
  *
  * <p>A {@code MarginEditModifier} also implements {@link RegionModifier}: {@link #apply(ProtectedCuboidRegion, Region)}
  * grows the WorldGuard protected region to cover the margin the edit is about to touch, so the
@@ -57,7 +58,7 @@ public abstract class MarginEditModifier<V> extends ConfigurableAttribute<V> imp
     protected abstract void applyEdit(@NotNull EditSession editSession, @NotNull Region region, @NotNull Region clipboardRegion);
 
     /**
-     * Returns whether {@link #apply} should mask the structure's own footprint out of the edit.
+     * Returns whether {@link #apply} should mask the pasted region out of the edit.
      * {@code true} by default; subclasses whose config exposes an "include clipboard" toggle
      * override this to reflect it.
      */

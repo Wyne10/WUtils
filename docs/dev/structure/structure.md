@@ -19,7 +19,7 @@ interact with at runtime.
 - Directory: `structure/`
 - Gradle project: `:WUtils-structure`
 - Maven artifact: `io.github.wyne10:wutils-structure`
-- Version: `1.2.7`
+- Version: `1.2.8`
 - Root package: `me.wyne.wutils.structure`
 
 Source of these facts: `structure/build.gradle.kts`.
@@ -118,7 +118,7 @@ in [Modifiers](modifiers.md) and [Terrain Edit Modifiers](edit-modifiers.md).
 ### Spawning
 
 `WorldStructure#spawn()`
-(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:93-102`)
+(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:98-107`)
 snapshots the target region (with `SnapshotModifier`s applied to the copy
 operation), pastes the clipboard (with `PasteModifier`s applied to the
 paste builder), runs any `EditSessionModifier`s on a fresh `EditSession`
@@ -133,11 +133,19 @@ others.
 ### `AutoCloseable`
 
 `WorldStructure` implements `AutoCloseable`
-(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:49`).
-`close()` (`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:268-272`)
+(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:54`).
+`close()` (`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:294-297`)
 unregisters the WorldGuard region and repastes the pre-spawn snapshot,
 undoing the spawn. This makes try-with-resources a working pattern for a
 temporary structure: it is placed on entry and rolled back on exit.
+
+Every snapshot restore, including the one after a failed spawn, ends with
+`repairHeightmaps`
+(`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:276-291`).
+FastAsyncWorldEdit does not lower height maps when it clears blocks, so for
+each column in the protected region whose reported top block is air, the
+method sets that block to stone and back, without physics, to make the
+server rescan the column.
 
 ### Threading
 

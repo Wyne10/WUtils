@@ -21,8 +21,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Replaces the pasted structure's surface blocks with the block type most common in the
- * surrounding terrain, sampled column-by-column within {@link AdaptSurfaceSettings#margin()}.
+ * Replaces the pasted structure's blocks matching {@link AdaptSurfaceSettings#mask()} with the
+ * block type most common in the surrounding terrain, sampled column-by-column within
+ * {@link AdaptSurfaceSettings#margin()}.
  * Unlike the {@link MarginEditModifier} family it only reads the surroundings and never writes
  * to them, so it does not need to grow the WorldGuard protected region.
  */

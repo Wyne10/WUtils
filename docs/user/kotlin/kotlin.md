@@ -22,7 +22,7 @@ both — there's nothing here for you.
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-common-kotlin:1.16.5")
+    implementation("io.github.wyne10:wutils-common-kotlin:1.16.12")
     implementation("io.github.wyne10:wutils-i18n-kotlin:5.6.1")
 }
 ```
@@ -137,8 +137,9 @@ import me.wyne.wutils.common.kotlin.player.expToLevelUp
 import me.wyne.wutils.common.kotlin.player.currentExp
 import me.wyne.wutils.common.kotlin.player.exists
 
-val needed = player.expToLevelUp
-val had = player.currentExp
+val needed = player.expToLevelUp // Long
+val had = player.currentExp      // Long
+player.currentExp = had + 50     // writable, replaces setCurrentExp()
 if (!offlinePlayer.exists) return
 ```
 

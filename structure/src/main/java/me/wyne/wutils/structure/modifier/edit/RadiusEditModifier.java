@@ -9,14 +9,16 @@ import me.wyne.wutils.structure.modifier.EditSessionModifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Base for edit modifiers that apply a sphere-shaped operation centred on the pasted region.
+ * Base for edit modifiers that apply an operation centred on the pasted region, inside and
+ * outside the structure alike.
  *
- * <p>The attribute's {@link #getValue() value} is the sphere radius. {@link #apply} resolves the
- * centre from {@link Region#getCenter()} and delegates to {@link #applyAt}, which subclasses
- * implement with the actual WorldEdit call. A {@link MaxChangedBlocksException} thrown by that
- * call is not propagated as-is; it is wrapped in a {@link RuntimeException} naming this
- * modifier's {@link #getKey() key}, so a caller sees which config entry overran the block-change
- * limit.</p>
+ * <p>The attribute's {@link #getValue() value} is the radius, measured from the centre rather
+ * than the structure's edge. {@link #apply} resolves the centre from {@link Region#getCenter()}
+ * and delegates to {@link #applyAt}, which subclasses implement with the actual WorldEdit call;
+ * that call decides the real shape (cylinder, cube or sphere). A
+ * {@link MaxChangedBlocksException} thrown by that call is not propagated as-is; it is wrapped in
+ * a {@link RuntimeException} naming this modifier's {@link #getKey() key}, so a caller sees which
+ * config entry overran the block-change limit.</p>
  */
 public abstract class RadiusEditModifier extends ConfigurableAttribute<Double> implements EditSessionModifier {
 
@@ -35,7 +37,7 @@ public abstract class RadiusEditModifier extends ConfigurableAttribute<Double> i
     }
 
     /**
-     * Performs the sphere-shaped edit around {@code center} with the given {@code radius}.
+     * Performs the edit around {@code center} with the given {@code radius}.
      *
      * <p>Any {@link MaxChangedBlocksException} thrown here is turned by {@link #apply} into a
      * {@link RuntimeException} identifying this modifier, so implementations need not catch it

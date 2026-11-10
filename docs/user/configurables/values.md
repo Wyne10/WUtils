@@ -80,6 +80,7 @@ the value's own `toString()`, so all of them round-trip.
 | `DoubleRangeConfigurable` | `0.5..2.5` | `DoubleRange` | `0.0..1.0` |
 | `VectorRangeConfigurable` | `-1,-1,-1..1,1,1` | `VectorRange` | a unit box at origin |
 | `TimeSpanConfigurable` | `1m30s` | `TimeSpan` | `0` ticks |
+| `TimeSpanRangeConfigurable` | `5s..1m` | `TimeSpanRange` | `0t..0t` |
 | `MaterialConfigurable` | `DIAMOND_SWORD` | `Material` (nullable) | `STONE` |
 | `IntComparatorConfigurable` | `>=5` | `IntComparator` | `= 0` |
 | `DoubleComparatorConfigurable` | `<2.5` | `DoubleComparator` | `= 0` |
@@ -97,7 +98,8 @@ operations are worth knowing about: they let a server owner write the *rule*
 `VectorRangeConfigurable` is the one that does not round-trip its text exactly: a
 hand-written `-1,-1,-1..1,1,1` regenerates as `-1.0,-1.0,-1.0..1.0,1.0,1.0`. It re-parses
 identically, so this is cosmetic — but do not be surprised when regeneration rewrites
-your file.
+your file. `TimeSpanRangeConfigurable` does the same to tick values: `10t..20t` regenerates
+as `500ms..1s`.
 
 ## Sounds
 

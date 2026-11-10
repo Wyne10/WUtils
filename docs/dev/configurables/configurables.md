@@ -19,7 +19,7 @@ effects, attribute modifiers — in YAML, with no code change on your side.
 - Directory: `configurables/`
 - Gradle project: `:WUtils-configurables`
 - Maven artifact: `io.github.wyne10:wutils-configurables`
-- Version: `1.21.8` (`configurables/build.gradle:25`)
+- Version: `1.21.9` (`configurables/build.gradle:25`)
 - Root package: `me.wyne.wutils.config.configurables` — note it sits *under* `config`'s
   package, not beside it
 

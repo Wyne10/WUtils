@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Simulates snowfall within the radius, like {@link SnowEditModifier}, but only when the biome
- * temperature at the sphere's centre is at or below {@value #SNOW_TEMPERATURE}; otherwise the
- * call is skipped entirely.
+ * temperature at the pasted region's centre is at or below {@value #SNOW_TEMPERATURE}; otherwise
+ * the call is skipped entirely.
  */
 public class SnowIfColdEditModifier extends RegionRadiusEditModifier {
 

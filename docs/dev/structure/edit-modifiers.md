@@ -19,25 +19,29 @@ Every concrete modifier here is built on one of two abstract bases, which differ
 they operate relative to the pasted structure.
 
 **`RadiusEditModifier`**
-(`structure/src/main/java/me/wyne/wutils/structure/modifier/edit/RadiusEditModifier.java:21`)
-operates on a **sphere** centred on the pasted region's `getCenter()`. The attribute's value
-*is* the radius. `apply` resolves the centre and delegates to the abstract `applyAt`, which
-subclasses implement with the actual WorldEdit call; a `MaxChangedBlocksException` from that
-call is wrapped in a `RuntimeException` naming the modifier's config key, so a log line
-identifies which entry overran the block-change limit. Two static helpers, `columnBase` and
-`columnTop`, give subclasses the full-height column over the region for operations (snow,
-thaw, foliage) that need to scan vertically rather than touch a single point.
+(`structure/src/main/java/me/wyne/wutils/structure/modifier/edit/RadiusEditModifier.java:23`)
+operates **around the pasted region's `getCenter()`**, with no footprint exclusion, so it
+writes inside and outside the structure alike. The attribute's value *is* the radius,
+measured from the centre rather than from the structure's edge. `apply` resolves the centre
+and delegates to the abstract `applyAt`, which subclasses implement with the actual WorldEdit
+call, and that call decides the real shape: a vertical cylinder for `snow`, `snowIfCold`,
+`thaw` and `green`, a cube for `ex` (`EditSession#removeNear` treats the value as an apothem,
+so it reaches `radius - 1` blocks and throws below 1), and a true sphere only for `butcher`.
+A `MaxChangedBlocksException` from that call is wrapped in a `RuntimeException` naming the
+modifier's config key, so a log line identifies which entry overran the block-change limit.
+Two static helpers, `columnBase` and `columnTop`, give subclasses the column over the region
+for operations (snow, thaw, foliage) that scan vertically and stop at the top surface rather
+than touching a single point.
 
 **`MarginEditModifier<V>`**
-(`structure/src/main/java/me/wyne/wutils/structure/modifier/edit/MarginEditModifier.java:41`)
+(`structure/src/main/java/me/wyne/wutils/structure/modifier/edit/MarginEditModifier.java:42`)
 operates on a **ring of terrain around** the pasted structure. Its mechanics are the least
 obvious thing in this package:
 
 1. `apply` clones the pasted region and expands it by `margin()` blocks on every axis.
 2. If `excludeFootprint()` is `true` (the default), it installs a mask on the `EditSession`
-   that excludes the structure's own footprint, via `outsideFootprint`
-   (`MarginEditModifier.java:72-84`), so the edit reshapes the surroundings without carving
-   into the pasted building.
+   that excludes the pasted region (`MarginEditModifier.java:100-104`), so the edit reshapes
+   the surroundings without carving into the pasted building.
 3. `applyEdit` is then called with the expanded region as the area to edit, and the
    original unexpanded region passed through unchanged so subclasses can still locate the
    footprint within it.
@@ -45,9 +49,15 @@ obvious thing in this package:
    is **intersected** with the exclusion mask, not replaced by it, and that combined state
    is what gets undone afterward.
 
-The exclusion test is 2D — X/Z only (`MarginEditModifier.java:72-84`) — so it excludes the
-**full-height column** above and below the structure's footprint, not a box bounded by the
-structure's own Y range.
+That session mask is a 3D box bounded by the structure's own Y range, so terrain directly
+above or below the structure, within `margin`, can still be written. `flora` and `forest`
+are stricter: their `LayerVisitor` also applies the 2D `outsideFootprint` mask
+(`MarginEditModifier.java:73-85`), which excludes the **full-height column** over the
+footprint.
+
+A margin of 0 leaves nothing to edit once the footprint is excluded, so `biome` at margin 0
+is always a no-op, as are `flora`, `forest`, `deltree` and `dropFloating` unless
+`includeClipboard` is `true`.
 
 ## The surprising part: several edit modifiers also grow the region
 
@@ -56,7 +66,7 @@ An `EditSessionModifier` edits terrain, but several of these classes *also imple
 about to touch:
 
 - **`MarginEditModifier`** itself implements `RegionModifier`
-  (`MarginEditModifier.java:112-125`): its `apply(ProtectedCuboidRegion, Region)` expands
+  (`MarginEditModifier.java:113-126`): its `apply(ProtectedCuboidRegion, Region)` expands
   the protected region's bounds by `margin()` on every axis, same as it expands the edit
   area. Every concrete subclass inherits this, so adding `smooth: 10 2` to a structure
   silently enlarges its protected region by 10 blocks in every direction.
@@ -76,35 +86,44 @@ about to touch:
 
 ## All 18 concrete modifiers
 
-| Config key | Class | Shape | Grows region? | What it does |
-|---|---|---|---|---|
-| `replace` | `ReplaceEditModifier` | pasted region, no expansion | no | Replaces blocks matching a mask with a pattern via `EditSession#replaceBlocks` |
-| `set` | `SetEditModifier` | pasted region, no expansion | no | Sets a pattern across the pasted region, restricted to a mask, via `EditSession#setBlocks` |
-| `grow` | `GrowEditModifier` | margin | yes | Blends the terrain height map toward a target base level, with directional falloff |
-| `smooth` | `SmoothEditModifier` | margin | yes | Gaussian-smooths the terrain height map over N iterations |
-| `naturalize` | `NaturalizeEditModifier` | margin | yes | Re-layers grass/dirt/stone via `EditSession#naturalizeCuboidBlocks` |
-| `flora` | `FloraEditModifier` | margin | yes | Scatters flora across the surface via WorldEdit's `FloraGenerator` |
-| `forest` | `ForestEditModifier` | margin | yes | Grows trees of a given type across the surface via `ForestGenerator` |
-| `biome` | `BiomeEditModifier` | margin | yes | Sets the biome across the ring (excluding the footprint) via `BiomeReplace` |
-| `deform` | `DeformEditModifier` | margin | yes | Applies a WorldEdit deform expression via `EditSession#deformRegion` |
-| `snow` | `SnowEditModifier` | sphere | yes | Simulates snowfall via `EditSession#simulateSnow` over the full-height column |
-| `snowIfCold` | `SnowIfColdEditModifier` | sphere | yes | Same as `snow`, but only when the biome temperature at the sphere's centre is ≤ 0.15 |
-| `adaptSurface` | `AdaptSurfaceEditModifier` | margin, read-only | no | Replaces the structure's surface blocks with the most common block type sampled from the surrounding columns |
-| `thaw` | `ThawEditModifier` | sphere | yes | Melts snow and ice via `EditSession#thaw` over the full-height column |
-| `green` | `GreenEditModifier` | sphere | yes | Converts dirt to grass via `EditSession#green` over the full-height column |
-| `ex` | `ExtinguishEditModifier` | sphere | no | Removes fire blocks via `EditSession#removeNear` |
-| `butcher` | `ButcherEditModifier` | sphere | no | Removes non-player, non-decorative entities (spares armor stands, item frames, paintings) |
-| `deltree` | `DelTreeEditModifier` | margin | yes | Removes floating trees — trunks and attached leaves/mushroom blocks not anchored to the ground |
-| `dropFloating` | `DropFloatingEditModifier` | margin | yes | Removes plants and similar blocks that lost their supporting ground (grass, flowers, cacti, sugar cane, snow layers, torches, …) |
+**Writes** says where a modifier can change anything relative to the pasted region: *inside*
+it, *outside* it, *both*, or *outside/both* when `includeClipboard` selects between the two.
+
+| Config key | Class | Shape | Writes | Grows region? | What it does |
+|---|---|---|---|---|---|
+| `replace` | `ReplaceEditModifier` | pasted region, no expansion | inside | no | Replaces blocks matching a mask with a pattern via `EditSession#replaceBlocks` |
+| `set` | `SetEditModifier` | pasted region, no expansion | inside | no | Sets a pattern across the pasted region, restricted to a mask, via `EditSession#setBlocks` |
+| `grow` | `GrowEditModifier` | margin | outside | yes | Blends the terrain height map toward a target base level, with directional falloff |
+| `smooth` | `SmoothEditModifier` | margin | outside | yes | Gaussian-smooths the terrain height map over N iterations |
+| `naturalize` | `NaturalizeEditModifier` | margin | outside | yes | Re-layers grass/dirt/stone via `EditSession#naturalizeCuboidBlocks` |
+| `flora` | `FloraEditModifier` | margin | outside/both | yes | Scatters flora across the surface via WorldEdit's `FloraGenerator` |
+| `forest` | `ForestEditModifier` | margin | outside/both | yes | Grows trees of a given type across the surface via `ForestGenerator` |
+| `biome` | `BiomeEditModifier` | margin | outside | yes | Sets the biome across the ring (excluding the footprint) via `BiomeReplace` |
+| `deform` | `DeformEditModifier` | margin | outside | yes | Applies a WorldEdit deform expression via `EditSession#deformRegion` |
+| `snow` | `SnowEditModifier` | cylinder | both | yes | Simulates snowfall via `EditSession#simulateSnow` on the top surface of each column |
+| `snowIfCold` | `SnowIfColdEditModifier` | cylinder | both | yes | Same as `snow`, but only when the biome temperature at the centre is ≤ 0.15 |
+| `adaptSurface` | `AdaptSurfaceEditModifier` | pasted region, samples the margin | inside | no | Replaces the structure's blocks matching `mask` with the most common block type sampled from the surrounding columns |
+| `thaw` | `ThawEditModifier` | cylinder | both | yes | Melts snow and ice via `EditSession#thaw` on the top surface of each column |
+| `green` | `GreenEditModifier` | cylinder | both | yes | Converts dirt to grass via `EditSession#green` on the top surface of each column |
+| `ex` | `ExtinguishEditModifier` | cube | both | no | Removes fire blocks via `EditSession#removeNear` |
+| `butcher` | `ButcherEditModifier` | sphere | both, entities only | no | Removes non-player, non-decorative entities (spares armor stands, item frames, paintings) |
+| `deltree` | `DelTreeEditModifier` | margin | outside/both | yes | Removes floating trees — trunks and attached leaves/mushroom blocks not anchored to the ground |
+| `dropFloating` | `DropFloatingEditModifier` | margin | outside/both | yes | Removes plants and similar blocks that lost their supporting ground (grass, flowers, cacti, sugar cane, snow layers, torches, …) |
 
 ## Settings grammar
 
 Nine of the eighteen parse their config value as a single space-delimited string via their
 own `*Settings` record. Tokens are positional; defaults are shown in parentheses.
 
+A default only applies to a token left off the end. `new Args("")` yields a single empty
+token rather than none (`common/src/main/java/me/wyne/wutils/common/Args.java:93`), so
+`get(0, def)` returns `""` and the first token's default is unreachable: an empty value
+throws `NumberFormatException` instead of selecting `margin(5)` and friends.
+
 - **`adaptSurface`** (`AdaptSurfaceSettings.parse`,
-  `structure/src/main/java/me/wyne/wutils/structure/modifier/edit/AdaptSurfaceSettings.java:13-19`):
-  `margin(4) mask("") sampleMask(#surface)` — all optional.
+  `structure/src/main/java/me/wyne/wutils/structure/modifier/edit/AdaptSurfaceSettings.java:14-20`):
+  `margin(4) mask sampleMask(#surface)`. The parser defaults `mask` to `""`, but WorldEdit
+  rejects an empty mask, so the modifier is logged and skipped at spawn unless `mask` is set.
 - **`biome`** (`BiomeSettings.parse`,
   `structure/src/main/java/me/wyne/wutils/structure/modifier/edit/BiomeSettings.java:16-24`):
   `margin(0) biomeId` — `biomeId` is required; an id without a namespace gets a
@@ -126,18 +145,20 @@ own `*Settings` record. Tokens are positional; defaults are shown in parentheses
   `IllegalArgumentException`.
 - **`grow`** (`GrowSettings.parse`,
   `structure/src/main/java/me/wyne/wutils/structure/modifier/edit/GrowSettings.java:26-46`):
-  `margin(5) strength(2) base(+0) [direction] [mask]`. `direction` and `mask` share one
-  token slot: the third token is tried as a direction keyword (`up`/`raise`, `down`/`lower`,
+  `margin(5) strength(2) base(+0) direction(both) [mask]`. `direction` and `mask` share one
+  token slot: the fourth token is tried as a direction keyword (`up`/`raise`, `down`/`lower`,
   `both`/`slope`); if it matches none of those, it is taken as the mask instead and
-  `direction` defaults to `both`. A fourth token, present only when the third *was* a
+  `direction` defaults to `both`. A fifth token, present only when the fourth *was* a
   direction keyword, supplies the mask.
 - **`smooth`** (`SmoothSettings.parse`,
   `structure/src/main/java/me/wyne/wutils/structure/modifier/edit/SmoothSettings.java:13-19`):
   `margin(5) iterations(1) [mask]`.
 
-The other nine keys (`replace`, `set`, `grow`'s siblings `snow`, `snowIfCold`, `thaw`,
-`green`, `ex`, `butcher`, `naturalize`) either take a bare number (radius or margin) or a
-`mask pattern` pair parsed by `LazyMaskPatternPair` — see [Modifiers](modifiers.md#mask-and-pattern-parsing).
+The other nine keys have no defaults. `replace` and `set` take a `mask pattern` pair parsed
+by `LazyMaskPatternPair` (see [Modifiers](modifiers.md#mask-and-pattern-parsing)), and both
+tokens are required, because an empty mask fails to parse at spawn. `naturalize` takes a bare
+margin, and `snow`, `snowIfCold`, `thaw`, `green`, `ex` and `butcher` take a bare radius; a
+non-numeric value for any of those reads as 0.
 
 ### `includeClipboard`
 
@@ -174,9 +195,9 @@ my-structure:
     naturalize: 4                   # re-layer grass/dirt/stone in a 4-block ring
     flora: 4 8 false                 # scatter flora in that same ring, 8% chance per column,
                                       # structure's own footprint excluded
-    snowIfCold: 6                     # simulate snowfall in a 6-block sphere, only in cold biomes
+    snowIfCold: 6                     # simulate snowfall within 6 blocks of the centre, only in cold biomes
     dropFloating: 3 false               # remove now-unsupported plants/blocks in a 3-block ring
-    ex: 4                                # extinguish fire within a 4-block sphere
+    ex: 4                                # extinguish fire in a cube reaching 3 blocks from the centre
 ```
 
 ## See also

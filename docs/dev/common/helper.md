@@ -6,7 +6,7 @@ description: >-
 
 # Vendored helper Library
 
-Forty-seven of `common/`'s 153 source files are not WUtils code. They are vendored from **lucko's** [**`helper`**](https://github.com/lucko/helper) library (MIT), and they supply the concurrency, event, and lifecycle primitives that the rest of WUtils — and `structure/`, `configurables/`, and consumer plugins — are built on.
+Forty-seven of `common/`'s 158 source files are not WUtils code. They are vendored from **lucko's** [**`helper`**](https://github.com/lucko/helper) library (MIT), and they supply the concurrency, event, and lifecycle primitives that the rest of WUtils — and `structure/`, `configurables/`, and consumer plugins — are built on.
 
 This page exists so you can tell first-party code from vendored code, and know where the real documentation lives. **It deliberately does not re-explain the helper API.** For that, read the [upstream helper wiki](https://github.com/lucko/helper/wiki).
 

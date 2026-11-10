@@ -47,7 +47,7 @@ Each modifier kind is a single-method functional interface. `Structure.create` a
 | 3 | `RegionModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/RegionModifier.java:18`) | Before region conditions are evaluated | Returns a replacement `ProtectedCuboidRegion` — WorldGuard regions are immutable in bounds, so implementations build a new region and copy the old one's id/flags/priority onto it |
 | 4 | `SnapshotModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/SnapshotModifier.java:14`) | During `WorldStructure#spawn()`, before the rollback snapshot is captured | Configures the `ForwardExtentCopy` that captures pre-paste world state |
 | 5 | `PasteModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/PasteModifier.java:13`) | During `spawn()`, after the snapshot | Configures the `PasteBuilder` used to paste the clipboard |
-| 6 | `EditSessionModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/EditSessionModifier.java:14`) | During `spawn()`, after the paste, on a fresh `EditSession` | Edits terrain in and around the pasted region — this is the entire `modifier/edit/` package |
+| 6 | `EditSessionModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/EditSessionModifier.java:15`) | During `spawn()`, after the paste, on a fresh `EditSession` | Edits inside the pasted region, around it, or both, depending on the key (see [where each modifier writes](edit-modifiers.md#all-18-concrete-modifiers)) — this is the entire `modifier/edit/` package |
 
 ### The exception asymmetry
 
@@ -60,8 +60,8 @@ oppositely:
   the whole placement attempt.
 - **`SnapshotModifier`, `PasteModifier`, `EditSessionModifier`** are applied by
   `WorldStructure` during `spawn()`
-  (`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:193-199`, `:217-223`,
-  `:228-234`). An exception here is **logged and skipped** — one misbehaving modifier does
+  (`structure/src/main/java/me/wyne/wutils/structure/WorldStructure.java:198-204`, `:222-228`,
+  `:233-239`). An exception here is **logged and skipped** — one misbehaving modifier does
   not sink the paste or the other modifiers.
 
 In short: modifiers that run before a location/region is finalized are load-bearing —
@@ -71,28 +71,35 @@ losing the whole structure.
 
 ## `StructureModifier` config keys
 
-`StructureModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/StructureModifier.java:11`)
-is the canonical enum of config keys; its declaration order is also
-`STRUCTURE_MODIFIER_MAP`'s registration order. Most keys are guessable from the constant
-name — `EDIT_EXTINGUISH`'s key is the terse `ex`.
+`StructureModifier` (`structure/src/main/java/me/wyne/wutils/structure/modifier/StructureModifier.java:12`)
+is the canonical enum of config keys. Its declaration order is not the application order:
+`STRUCTURE_MODIFIER_MAP` registers the keys in its own sequence (`deform` before `grow`,
+for example), and that map is what counts. Most keys are guessable from the constant name —
+`EDIT_EXTINGUISH`'s key is the terse `ex`.
+
+A key missing from the config creates no modifier at all, so WorldEdit's own defaults stand.
+That matters for `snapshotEntities` and `pasteEntities`: `ForwardExtentCopy` and
+`PasteBuilder` both default to copying entities, so omitting either key means `true`, while
+the factories' `getBoolean(key, false)` only supplies `false` when the key is present with a
+non-boolean value.
 
 | Config key | Modifier | Grammar | Notes |
 |---|---|---|---|
-| `rotate` | `RotateClipboardModifier` | space-separated list of angles, or `true`/`random`/`any`/empty | See [rotate and flip](#rotate-and-flip) below |
-| `flip` | `FlipClipboardModifier` | space-separated list of axes, or `true`/`random`/`any`/empty | See [rotate and flip](#rotate-and-flip) below |
+| `rotate` | `RotateClipboardModifier` | space-separated list of angles, or `true`/`random`/`any`/empty for the default set `0 90 180 270` | See [rotate and flip](#rotate-and-flip) below |
+| `flip` | `FlipClipboardModifier` | space-separated list of axes, or `true`/`random`/`any`/empty for the default set `none x z` | See [rotate and flip](#rotate-and-flip) below |
 | `altitude` | `AltitudeLocationModifier` | an [`IntOperation`](../common/operations.md) string, e.g. `+2`, `-1`, `5` | Applied to the placement Y after the highest-block lookup; default `+0` |
-| `expand` | `ExpandRegionModifier` | `<direction> <amount>` | See [expand/contract vs. outset/inset](#expandcontract-vs-outsetinset) |
-| `contract` | `ContractRegionModifier` | `<direction> <amount>` | ditto |
-| `outset` | `OutsetRegionModifier` | `<amount> [-h] [-v]` | ditto |
-| `inset` | `InsetRegionModifier` | `<amount> [-h] [-v]` | ditto |
-| `snapshotEntities` | `EntitiesSnapshotModifier` | boolean, default `false` | Whether the rollback snapshot copies entities |
+| `expand` | `ExpandRegionModifier` | `<direction> [amount(1)]` | See [expand/contract vs. outset/inset](#expandcontract-vs-outsetinset) |
+| `contract` | `ContractRegionModifier` | `<direction> [amount(1)]` | ditto |
+| `outset` | `OutsetRegionModifier` | `[amount(1)] [-h] [-v]` | ditto |
+| `inset` | `InsetRegionModifier` | `[amount(1)] [-h] [-v]` | ditto |
+| `snapshotEntities` | `EntitiesSnapshotModifier` | boolean; `true` when omitted | Whether the rollback snapshot copies entities |
 | `snapshotRemoveEntities` | `RemoveEntitiesSnapshotModifier` | boolean, default `false` | Whether taking the snapshot removes entities from the source |
 | `snapshotBiomes` | `BiomesSnapshotModifier` | boolean, default `false` | Whether the rollback snapshot copies biomes |
-| `snapshotSourceMask` | `SourceMaskSnapshotModifier` | a WorldEdit mask string | Restricts the snapshot copy to matching source blocks |
-| `pasteEntities` | `EntitiesPasteModifier` | boolean, default `false` | Whether the paste copies entities from the clipboard |
+| `snapshotSourceMask` | `SourceMaskSnapshotModifier` | a WorldEdit mask string; no default | Restricts the snapshot copy to matching source blocks |
+| `pasteEntities` | `EntitiesPasteModifier` | boolean; `true` when omitted | Whether the paste copies entities from the clipboard |
 | `pasteBiomes` | `BiomesPasteModifier` | boolean, default `false` | Whether the paste copies biomes from the clipboard |
 | `pasteIgnoreAir` | `IgnoreAirPasteModifier` | boolean, default `false` | Whether clipboard air blocks are skipped rather than pasted |
-| `pasteSourceMask` | `MaskSourcePasteModifier` | a WorldEdit mask string | Restricts the paste to clipboard blocks matching the mask |
+| `pasteSourceMask` | `MaskSourcePasteModifier` | a WorldEdit mask string; no default | Restricts the paste to clipboard blocks matching the mask |
 | `replace`, `set`, `grow`, `smooth`, `naturalize`, `flora`, `forest`, `biome`, `deform`, `snow`, `snowIfCold`, `adaptSurface`, `thaw`, `green`, `ex`, `butcher`, `deltree`, `dropFloating` | `EditSessionModifier` implementations under `modifier/edit/` | — | Full grammar and behavior in [Terrain Edit Modifiers](edit-modifiers.md) |
 
 ### Rotate and flip

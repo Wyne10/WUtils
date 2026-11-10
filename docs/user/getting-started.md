@@ -20,14 +20,14 @@ classes you use straight into your own plugin jar.
 
 | Module | Artifact | Version | Use it for |
 |---|---|---|---|
-| [Common Toolkit](common/common.md) | `wutils-common` | 1.16.5 | Events, scheduler, promises, terminables, item/location/world helpers, ranges, durations — the shared foundation most other modules build on |
-| [Kotlin Support](kotlin/kotlin.md) | `wutils-common-kotlin` | 1.16.5 | Kotlin extension functions over `wutils-common` (reified enum reads, native ranges, DSL-style helpers) |
+| [Common Toolkit](common/common.md) | `wutils-common` | 1.16.12 | Events, scheduler, promises, terminables, item/location/world helpers, ranges, durations — the shared foundation most other modules build on |
+| [Kotlin Support](kotlin/kotlin.md) | `wutils-common-kotlin` | 1.16.12 | Kotlin extension functions over `wutils-common` (reified enum reads, native ranges, DSL-style helpers) |
 | [Configuration](config/config.md) | `wutils-config` | 2.10.1 | Annotate a class, generate and read its YAML config automatically |
-| [Configurables](configurables/configurables.md) | `wutils-configurables` | 1.21.8 | Ready-made config-driven types for items, GUIs, animations and interactions, built on `wutils-config` |
+| [Configurables](configurables/configurables.md) | `wutils-configurables` | 1.21.9 | Ready-made config-driven types for items, GUIs, animations and interactions, built on `wutils-config` |
 | [Internationalization](i18n/i18n.md) | `wutils-i18n` | 5.6.1 | Per-player languages, MiniMessage/legacy text, PlaceholderAPI integration |
 | [Kotlin Support](kotlin/kotlin.md) | `wutils-i18n-kotlin` | 5.6.1 | Kotlin extensions over `wutils-i18n` — infix replacement builders, accessor shorthands |
 | [Animations](animation/animation.md) | `wutils-animation` | 2.2.3 | Sequential/parallel orchestration of particles, sounds, fireworks and titles |
-| [Structures](structure/structure.md) | `wutils-structure` | 1.2.7 | Configurable schematic placement via WorldEdit/WorldGuard |
+| [Structures](structure/structure.md) | `wutils-structure` | 1.2.8 | Configurable schematic placement via WorldEdit/WorldGuard |
 | [Databases](jdbc/jdbc.md) | `wutils-jdbc` | 2.0.0 | A pooled `Connection`/`ConnectionSource` over HikariCP and/or ORMLite, plus runtime JDBC driver download |
 | [JSON Storage](json/json.md) | `wutils-json` | 1.2.1 | Annotate a field, write/read it as its own JSON file |
 
@@ -47,7 +47,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.wyne10:wutils-common:1.16.5")
+    implementation("io.github.wyne10:wutils-common:1.16.12")
 }
 ```
 
@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.wyne10:wutils-common:1.16.5'
+    implementation 'io.github.wyne10:wutils-common:1.16.12'
 }
 ```
 
@@ -70,7 +70,7 @@ Maven:
     <dependency>
         <groupId>io.github.wyne10</groupId>
         <artifactId>wutils-common</artifactId>
-        <version>1.16.5</version>
+        <version>1.16.12</version>
     </dependency>
 </dependencies>
 ```
@@ -91,7 +91,7 @@ plugins {
 }
 
 dependencies {
-    implementation("io.github.wyne10:wutils-common:1.16.5")
+    implementation("io.github.wyne10:wutils-common:1.16.12")
     implementation("io.github.wyne10:wutils-jdbc:2.0.0")
 }
 

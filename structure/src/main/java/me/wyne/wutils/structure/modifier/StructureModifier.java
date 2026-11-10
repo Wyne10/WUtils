@@ -4,9 +4,10 @@ package me.wyne.wutils.structure.modifier;
  * The canonical set of structure modifier config keys.
  *
  * <p>Each constant's {@link #getKey()} is the YAML key consumers write under a structure's
- * {@code modifiers} section, and enumeration order is the registration order of
- * {@link me.wyne.wutils.structure.Structure#STRUCTURE_MODIFIER_MAP}. Most keys are guessable from
- * the constant name, but {@link #EDIT_EXTINGUISH}'s key is the terse {@code "ex"}.</p>
+ * {@code modifiers} section. Enumeration order is not application order; that is decided by the
+ * registration order of {@link me.wyne.wutils.structure.Structure#STRUCTURE_MODIFIER_MAP}. Most
+ * keys are guessable from the constant name, but {@link #EDIT_EXTINGUISH}'s key is the terse
+ * {@code "ex"}.</p>
  */
 public enum StructureModifier {
     CLIPBOARD_ROTATE("rotate"),
