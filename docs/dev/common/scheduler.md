@@ -46,6 +46,21 @@ take a `Consumer<Task>` — the task passes itself in so the body can cancel it
 Which thread work runs on is entirely determined by which `Scheduler` you got it from.
 Everything else on this page is explicit about it instead.
 
+## Immediate means inline on the main thread
+
+The two ways of starting work on the sync scheduler are not equivalent. `run`
+(`Scheduler.java:66`), `supply` and `call` go through a `Promise`, and `executeSync` runs the
+work inline when the caller is already on the main thread (`HelperPromise.java:171`). A
+delayed call of 0 ticks ends up in the same place (`HelperPromise.java:184`). `execute`
+(`Schedulers.java:110`) skips the promise and always hands the work to Bukkit's scheduler,
+so it runs on the next tick (`HelperExecutors.java:61`).
+
+This makes `run` a poor stand-in for `BukkitScheduler#runTask`, which always defers. Code
+that needs to wait a tick must call `execute`, or a delayed method with at least 1 tick. The
+thread-safety guarantee is the same either way, so the difference only shows up as ordering
+bugs: work runs before the rest of the constructor or before the event being handled has
+been applied.
+
 ## Three task wrappers
 
 These are not part of helper's model. They wrap Bukkit's scheduler directly and exist to

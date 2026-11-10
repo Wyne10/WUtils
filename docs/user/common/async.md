@@ -27,6 +27,26 @@ Schedulers.sync().run(() -> player.sendMessage("done"));
 Schedulers.async().run(() -> doSomeSlowWork());
 ```
 
+### `run` doesn't wait for the next tick
+
+`Schedulers.sync().run(...)` is not the same as `Bukkit.getScheduler().runTask(...)`. If you
+are already on the main thread it runs inline, before your next line, and so do `supply`,
+`call` and a `runLater` of 0 ticks. Use `execute` when the work has to wait for the next
+tick:
+
+```java
+import me.wyne.wutils.common.scheduler.Schedulers;
+
+@EventHandler
+public void onClick(InventoryClickEvent event) {
+    // the click hasn't been applied yet, so read the inventory on the next tick
+    Schedulers.sync().execute(() -> recount(event.getView().getTopInventory()));
+}
+```
+
+The same applies to anything started during plugin startup that depends on setup finishing
+first, such as loaded config or listeners registered later.
+
 ## Running something off the main thread and coming back
 
 This is the pattern you'll reach for most. `supply`/`call`/`run` return a `Promise` you
