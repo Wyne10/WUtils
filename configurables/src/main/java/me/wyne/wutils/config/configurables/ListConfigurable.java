@@ -31,11 +31,6 @@ public class ListConfigurable<E> implements CompositeConfigSerializable, ConfigD
     }
 
     @Override
-    public @NotNull String toConfig(@NotNull ConfigEntry configEntry) {
-        return toConfig(1, configEntry);
-    }
-
-    @Override
     public @NotNull String toConfig(int depth, @NotNull ConfigEntry configEntry) {
         StringBuilder stringBuilder = new StringBuilder();
         if (list.stream().findAny().get() instanceof String)
