@@ -62,10 +62,8 @@ public class Period {
 
     /** Milliseconds until expiry, or {@code 0} if already expired or never set. */
     public long getRemaining() {
-        if (isExpired())
-            return 0;
-
-        return finishAt - System.currentTimeMillis();
+        if (finishAt == null) return 0;
+        return Math.max(0, finishAt - System.currentTimeMillis());
     }
 
     public long getRemaining(@NotNull TimeUnit unit) {

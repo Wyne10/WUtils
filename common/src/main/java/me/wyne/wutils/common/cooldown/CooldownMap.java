@@ -72,10 +72,8 @@ public class CooldownMap<T> {
 
     /** Milliseconds until {@code key}'s cooldown ends, or {@code 0} if not cooldowned. */
     public long getRemaining(@NotNull T key) {
-        if (!isCooldowned(key))
-            return 0;
-
-        return cooldownMap.get(key) - System.currentTimeMillis();
+        if (!cooldownMap.containsKey(key)) return 0;
+        return Math.max(0, cooldownMap.get(key) - System.currentTimeMillis());
     }
 
     public long getRemaining(@NotNull T key, @NotNull TimeUnit unit) {
