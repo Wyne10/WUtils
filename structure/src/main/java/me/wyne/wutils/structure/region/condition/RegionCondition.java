@@ -8,7 +8,6 @@ import me.wyne.wutils.structure.IntermediateStructure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 /**
  * Validates a structure's final protected region against a structure-config-declared rule.
@@ -23,7 +22,13 @@ public interface RegionCondition extends CompositeConfigSerializable {
     @NotNull GenericFactoryMap<@NotNull RegionCondition> FACTORY_MAP = new GenericFactoryMap<>(
             new LinkedHashMap<>() {{
                 put("region-whitelist", (key, config) ->
-                        new RegionWhitelistCondition(Set.copyOf(config.getStringList(key))));
+                        new RegionWhitelistCondition(RegionPatterns.of(config.getStringList(key)), false));
+                put("top-region-whitelist", (key, config) ->
+                        new RegionWhitelistCondition(RegionPatterns.of(config.getStringList(key)), true));
+                put("region-blacklist", (key, config) ->
+                        new RegionBlacklistCondition(RegionPatterns.of(config.getStringList(key)), false));
+                put("top-region-blacklist", (key, config) ->
+                        new RegionBlacklistCondition(RegionPatterns.of(config.getStringList(key)), true));
                 put("altitude-difference", (key, config) ->
                         new AltitudeDifferenceCondition(ConfigUtils.getIntComparator(config, key)));
             }}

@@ -164,7 +164,10 @@ see its *final* shape, margin/expansion included.
 | `is-in-mountains` | mountain/hill-family biome | location |
 | `altitude` | comparator on Y, e.g. `">=64"` | location |
 | `temperature` | comparator on biome temperature, e.g. `"<0.5"` | location |
-| `region-whitelist` | every WorldGuard region overlapping the candidate must be on this list | region |
+| `region-whitelist` | every WorldGuard region overlapping the candidate must match one of these regexes | region |
+| `top-region-whitelist` | the highest-priority overlapping region must match one of these regexes | region |
+| `region-blacklist` | no WorldGuard region overlapping the candidate may match any of these regexes | region |
+| `top-region-blacklist` | the highest-priority overlapping region must not match any of these regexes | region |
 | `altitude-difference` | comparator on terrain height variance under the footprint, e.g. `"<=8"` | region |
 
 Failing any condition — location or region — restarts the whole search from a fresh

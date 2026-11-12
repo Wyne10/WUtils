@@ -96,7 +96,7 @@ my-structure:
 ## The condition vocabulary
 
 `RegionCondition.FACTORY_MAP`
-(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionCondition.java:23-30`)
+(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionCondition.java:23-36`)
 lives in the same shared `conditions` section as location conditions (see
 [Locations and Conditions](locations.md#the-condition-vocabulary)) — the
 two vocabularies are interleaved freely because `Structure.fromConfig`
@@ -106,24 +106,34 @@ reads that one section through both `LocationCondition.FACTORY_MAP` and
 
 | Config key | Value type | Implementation |
 |---|---|---|
-| `region-whitelist` | list of WorldGuard region ids | `RegionWhitelistCondition` |
+| `region-whitelist` | list of WorldGuard region id regexes | `RegionWhitelistCondition` |
+| `top-region-whitelist` | list of WorldGuard region id regexes | `RegionWhitelistCondition` (`top = true`) |
+| `region-blacklist` | list of WorldGuard region id regexes | `RegionBlacklistCondition` |
+| `top-region-blacklist` | list of WorldGuard region id regexes | `RegionBlacklistCondition` (`top = true`) |
 | `altitude-difference` | comparator string, e.g. `"<=8"` | `AltitudeDifferenceCondition` |
 
 <!-- allow-code-fences -->
 ```yaml
 my-structure:
   conditions:
-    region-whitelist: [wilderness, spawn-buffer]   # only these regions may overlap
-    altitude-difference: "<=8"                       # reject uneven terrain
+    region-whitelist: [wilderness, "spawn-buffer-.*"]   # only these regions may overlap
+    top-region-blacklist: ["town-.*"]                   # highest-priority overlap must not be a town
+    altitude-difference: "<=8"                          # reject uneven terrain
 ```
 
 `RegionWhitelistCondition`
-(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionWhitelistCondition.java:17`)
+(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionWhitelistCondition.java`)
 fetches every WorldGuard region overlapping the candidate protected region
-and requires all of them to be in the configured list
-(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionWhitelistCondition.java:29-37`) —
-an empty or absent list of overlapping regions passes trivially, but any
-overlap with a region not on the whitelist fails the candidate.
+and requires all of them to match one of the configured patterns;
+`RegionBlacklistCondition`
+(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionBlacklistCondition.java`)
+requires none of them to match. The `top-` variants check only the
+highest-priority overlapping region — the one whose flags win. Patterns are
+Java regexes held by `RegionPatterns`
+(`structure/src/main/java/me/wyne/wutils/structure/region/condition/RegionPatterns.java`)
+and must match the whole region id, so a plain id still matches only itself
+(but an id containing regex metacharacters no longer matches literally). All
+four pass trivially when no region overlaps the candidate.
 
 `AltitudeDifferenceCondition`
 (`structure/src/main/java/me/wyne/wutils/structure/region/condition/AltitudeDifferenceCondition.java:19`)
