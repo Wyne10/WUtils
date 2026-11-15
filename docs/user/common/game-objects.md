@@ -322,9 +322,9 @@ result.
 - [WUtils Animation](../animation/animation.md) — the main consumer of the particle
   parsers.
 - contributor wiki pages with more depth:
-  [Items](/contributing/common/items), [Inventories](/contributing/common/inventories),
-  [Players](/contributing/common/players), [Blocks](/contributing/common/blocks),
-  [Worlds and Biomes](/contributing/common/worlds),
-  [Locations and Vectors](/contributing/common/locations), [Anvil](/contributing/common/anvil),
-  [Sounds, Randomness and Placeholders](/contributing/common/sounds),
-  [Particle Data Parsers](/contributing/common/particles).
+  [Items](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/items), [Inventories](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/inventories),
+  [Players](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/players), [Blocks](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/blocks),
+  [Worlds and Biomes](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/worlds),
+  [Locations and Vectors](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/locations), [Anvil](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/anvil),
+  [Sounds, Randomness and Placeholders](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/sounds),
+  [Particle Data Parsers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/particles).

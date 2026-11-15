@@ -88,7 +88,7 @@ non-boolean value.
 | `rotate` | `RotateClipboardModifier` | space-separated list of angles, or `true`/`random`/`any`/empty for the default set `0 90 180 270` | See [rotate and flip](#rotate-and-flip) below |
 | `flip` | `FlipClipboardModifier` | space-separated list of axes, or `true`/`random`/`any`/empty for the default set `none x z` | See [rotate and flip](#rotate-and-flip) below |
 | `altitude` | `AltitudeLocationModifier` | an [`IntOperation`](../common/operations.md) string, e.g. `+2`, `-1`, `5` | Applied to the placement Y after the highest-block lookup; default `+0` |
-| `expand` | `ExpandRegionModifier` | `<direction> [amount(1)]` | See [expand/contract vs. outset/inset](#expandcontract-vs-outsetinset) |
+| `expand` | `ExpandRegionModifier` | `<direction> [amount(1)]` | See [expand/contract vs. outset/inset](#expand-contract-vs.-outset-inset) |
 | `contract` | `ContractRegionModifier` | `<direction> [amount(1)]` | ditto |
 | `outset` | `OutsetRegionModifier` | `[amount(1)] [-h] [-v]` | ditto |
 | `inset` | `InsetRegionModifier` | `[amount(1)] [-h] [-v]` | ditto |

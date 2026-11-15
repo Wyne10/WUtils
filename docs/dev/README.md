@@ -11,7 +11,7 @@ WUtils is a multi-module collection of independently versioned and independently
 This section documents WUtils at the level of detail someone **changing the code** needs: internal structure, invariants, sharp edges, and `path/to/File.java:<line>` citations back into the repository. It covers the `animation`, `common`, `commonKt`, `config`, `configurables`, `i18n`, `i18nKt`, `jdbc`, `json`, and `structure` modules. The deprecated `log` module is excluded from the build and is not documented.
 
 {% hint style="warning" %}
-These pages describe internals and are deliberately prose-only — they are not an API contract. If you want to _use_ WUtils in a plugin rather than work on it, read the [Documentation](../../documentation/) section instead.
+These pages describe internals and are deliberately prose-only — they are not an API contract. If you want to _use_ WUtils in a plugin rather than work on it, read the [Documentation](https://app.gitbook.com/s/ZQ50kJ36ioYPFvndW1LL/) section instead.
 {% endhint %}
 
 ## Module map

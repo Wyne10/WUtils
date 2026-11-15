@@ -26,7 +26,7 @@ the first time a structure is generated.
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-structure:1.2.8")
+    implementation("io.github.wyne10:wutils-structure:1.2.9")
 }
 ```
 
@@ -194,7 +194,7 @@ The presets are `ALL`, `SNOWY`, `COLD`, `SNOWY_OR_COLD`, `LUSH`, `WARM`, `LUSH_O
 ## The modifier pipeline
 
 Modifiers are config-driven hooks that run at fixed points regardless of what order you
-write them in YAML — see [the surprise below](#registration-order-not-yaml-order). Six
+write them in YAML — see [the surprise below](#two-things-that-will-surprise-you). Six
 interfaces cover the whole pipeline:
 
 | Stage | Interface | Runs | Does |
@@ -228,7 +228,7 @@ the exceptions.
 |---|---|---|---|---|
 | `rotate` | the paste's rotation | angles that are multiples of 90 (`90 180`), one picked per placement | `0 90 180 270` for empty, `any`, `random` or `true` | 1 |
 | `flip` | the paste's mirroring | axes (`x`, `y`, `z`, `none`), one picked per placement | `none x z` for empty, `any`, `random` or `true` | 1 |
-| `altitude` | the placement Y | an [`IntOperation`](/contributing/common/operations) string, e.g. `+2` | Y is left unchanged | 2 |
+| `altitude` | the placement Y | an [`IntOperation`](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/operations) string, e.g. `+2` | Y is left unchanged | 2 |
 | `expand` / `contract` | one face of the protected region | `direction amount(1)` | no `direction` default | 3 |
 | `outset` / `inset` | all faces of the protected region | `amount(1) [-h] [-v]` | no flag, or both, applies to both axes | 3 |
 | `snapshotEntities` | whether the rollback snapshot captures entities | boolean | `true` (WorldEdit default) | 4 |
@@ -290,8 +290,8 @@ A few consequences are easy to miss:
 
 Full grammar for each key — including the `RegionRadiusEditModifier`/`MarginEditModifier`
 distinction and every settings parser's exact token order — is in the contributor wiki's
-[Modifiers](/contributing/structure/modifiers) and
-[Terrain Edit Modifiers](/contributing/structure/edit-modifiers) pages.
+[Modifiers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/modifiers) and
+[Terrain Edit Modifiers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/edit-modifiers) pages.
 
 ## Two things that will surprise you
 
@@ -332,22 +332,22 @@ own plugin's error handling expects.
 
 `load(...)` does **not** re-spawn the structure — the paste already exists in the world
 from before the restart — it only gives you back a handle you can `close()`. See the
-contributor wiki's [Persistence](/contributing/structure/persistence) page for the memento
+contributor wiki's [Persistence](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/persistence) page for the memento
 format and the two schematic files it writes.
 
 ## See also
 
-- [the contributor wiki](/contributing/structure/structure) — the full generation
+- [the contributor wiki](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/structure) — the full generation
   pipeline, threading rules, and the programmatic `Structure.Builder`.
-- [Schemes and Clipboards](/contributing/structure/schemes) — how `scheme`/`schemes`
+- [Schemes and Clipboards](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/schemes) — how `scheme`/`schemes`
   resolve to a clipboard, including the directory-plus-regex gotcha in `schemes`.
-- [Locations and Conditions](/contributing/structure/locations) — every location
+- [Locations and Conditions](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/locations) — every location
   strategy's exact search algorithm, including `RandomLocation`'s infinite-loop hazard if
   `except` covers all of `range`.
-- [Regions and Flags](/contributing/structure/regions) — `RegionData`, WorldGuard flag
+- [Regions and Flags](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/regions) — `RegionData`, WorldGuard flag
   resolution, and region id sanitization.
-- [Modifiers](/contributing/structure/modifiers) and
-  [Terrain Edit Modifiers](/contributing/structure/edit-modifiers) — full grammar for every
+- [Modifiers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/modifiers) and
+  [Terrain Edit Modifiers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/structure/edit-modifiers) — full grammar for every
   modifier key in the tables above.
 - [Configurables](../configurables/configurables.md) — the `AttributeMap`/
   `AttributeConfigurable` machinery `Structure` and its modifiers are built on.

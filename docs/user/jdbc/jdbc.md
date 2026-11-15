@@ -36,7 +36,7 @@ dependency — WUtils declares both `compileOnly`, so neither ships inside
 | `com.j256.ormlite:ormlite-jdbc:6.1` | `OrmLiteConnectionPool`, `HikariOrmLiteConnectionPool` |
 
 Pick one row if you only need one implementation, or both if you're using
-`HikariOrmLiteConnectionPool`. See [Getting Started](../getting-started.md#the-compileonly-model--read-this-before-you-deploy)
+`HikariOrmLiteConnectionPool`. See [Getting Started](../getting-started.md#the-compileonly-model-read-this-before-you-deploy)
 for what happens if you forget.
 
 ## Getting a connection pool

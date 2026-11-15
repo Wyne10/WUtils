@@ -127,7 +127,7 @@ below).
 - Need to switch between the two kinds? `TextReplacement#asComponentReplacement()` and
   `ComponentReplacement#asTextReplacement()` convert one to the other, but both throw
   `NullPointerException` if `I18n.global` was never assigned — they round-trip through its
-  configured interpreter to convert. See [the `I18n.global` gotcha](i18n.md#the-i18nglobal-field-is-not-initialized-for-you).
+  configured interpreter to convert. See [the `I18n.global` gotcha](i18n.md#the-i18n.global-field-is-not-initialized-for-you).
 
 ### A regex hazard with `Placeholder`
 
@@ -167,7 +167,7 @@ the sender isn't one.
 
 - [Internationalization](i18n.md) — building `I18n`, laying out language files, and the
   `I18n.global` initialization gotcha these examples depend on.
-- [the contributor wiki](/contributing/i18n/replacements) — `Replacement`'s internals and
+- [the contributor wiki](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/i18n/replacements) — `Replacement`'s internals and
   the full regex-hazard writeup.
-- [the contributor wiki's Localized Values page](/contributing/i18n/localized) — every
+- [the contributor wiki's Localized Values page](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/i18n/localized) — every
   `LocalizedComponent` method, and how `ComponentAudiences` resolves targets.

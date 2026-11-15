@@ -39,7 +39,7 @@ Be clear about the scale of that second point. `nextDouble` is continuous, not d
 
 ## Traversal order
 
-Scalar iterators (`ClosedIntRangeIterator`, `DoubleRangeIterator`, `TimeSpanIterator`) are linear: ascending when `step > 0`, descending when `step < 0`. A step whose sign doesn't match the start/end direction yields zero elements. `ClosedIntRangeIterator` and `TimeSpanIterator` get that by recomputing `hasNext()` against `end` on each call; `DoubleRangeIterator` gets it from its precomputed element count instead (see [Step arithmetic](ranges.md#step-arithmetic)).
+Scalar iterators (`ClosedIntRangeIterator`, `DoubleRangeIterator`, `TimeSpanIterator`) are linear: ascending when `step > 0`, descending when `step < 0`. A step whose sign doesn't match the start/end direction yields zero elements. `ClosedIntRangeIterator` and `TimeSpanIterator` get that by recomputing `hasNext()` against `end` on each call; `DoubleRangeIterator` gets it from its precomputed element count instead.
 
 `VectorRangeIterator` and `LocationRangeIterator` traverse a box as a nested triple loop: X varies fastest, then Y, then Z varies slowest — equivalent to X as the innermost loop and Z as the outermost.
 

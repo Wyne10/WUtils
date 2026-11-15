@@ -19,7 +19,7 @@ interact with at runtime.
 - Directory: `structure/`
 - Gradle project: `:WUtils-structure`
 - Maven artifact: `io.github.wyne10:wutils-structure`
-- Version: `1.2.8`
+- Version: `1.2.9`
 - Root package: `me.wyne.wutils.structure`
 
 Source of these facts: `structure/build.gradle.kts`.

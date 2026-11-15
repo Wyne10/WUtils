@@ -55,11 +55,24 @@ when to read it. There is no
 `llms.txt` in this repository and there should not be: GitBook builds it, along with
 `/llms-full.txt` and a `.md` version of every page.
 
-Because the two wikis sync as separate sections, a relative link from one into the other
-would escape its sync root and 404 on the site. Cross-wiki links are therefore written as
-site paths — `/contributing/common/events`, not `../../dev/common/events.md`. The
-validator resolves those back to files, so they stay checked; the tradeoff is that they
-point at the site rather than the file when the repository is browsed on GitHub.
+Because the two wikis sync into separate spaces, links never cross from one into the
+other by relative path. Neither does a site path such as `/contributing/common/events`:
+Git Sync rewrites both into a `github.com/Wyne10/WUtils/tree/master/...` URL that does
+not exist. Cross-wiki links are written as GitBook cross-space links instead, which
+GitBook resolves to the published page:
+
+| Target wiki | Link form |
+|---|---|
+| `docs/user/` | `https://app.gitbook.com/s/ZQ50kJ36ioYPFvndW1LL/<page path>` |
+| `docs/dev/` | `https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/<page path>` |
+
+The page path is GitBook's, not the file's: it is the slug of the page's `##` group
+heading in `SUMMARY.md` plus the file's stem, so `docs/user/i18n/i18n.md` is
+`text/i18n` and `docs/dev/jdbc/jdbc.md` is `storage/jdbc`. Leave the path empty to link
+a section's landing page. The validator resolves these links back to files, rejects
+bare site paths, and checks every `#anchor` against the target's headings using
+GitBook's slug rules. Those keep dots and spell out `<` and `>`, so `` `close()` vs. ``
+becomes `#close-vs.-...`, not the GitHub-style `#close-vs-...`.
 
 Git Sync itself is configured in the GitBook UI, per space, and is not part of this
 repository.

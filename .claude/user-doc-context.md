@@ -69,7 +69,7 @@ Show the Gradle Kotlin DSL form, and the version from `.claude/doc-context.md`:
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-common:1.16.4")
+    implementation("io.github.wyne10:wutils-common:1.16.14")
 }
 ```
 

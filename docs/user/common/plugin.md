@@ -215,7 +215,7 @@ runtime.
   but commonly bound alongside it.
 - [Ranges, Durations and Values](values.md) — loading typed config values inside a
   `LOAD`-scoped step.
-- [contributor wiki: Plugin Composition](/contributing/common/plugin) — internals,
+- [contributor wiki: Plugin Composition](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/plugin) — internals,
   including the `CompositeStep` scope-nesting trap this page omits.
-- [contributor wiki: Loadables](/contributing/common/loadables) and
-  [Commands](/contributing/common/commands) — internals for the sections above.
+- [contributor wiki: Loadables](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/loadables) and
+  [Commands](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/commands) — internals for the sections above.

@@ -10,7 +10,7 @@ description: >-
 builds on. It is not a framework — it is a pile of independent utilities plus one
 vendored concurrency stack, and you take only the parts you need.
 
-- **Artifact**: `io.github.wyne10:wutils-common`, version `1.16.12` (`common/build.gradle:22`)
+- **Artifact**: `io.github.wyne10:wutils-common`, version `1.16.14` (`common/build.gradle:22`)
 - **Root package**: `me.wyne.wutils.common`
 - **Depends on**: nothing else in WUtils. [`configurables`](../config/config.md) and
   `structure` depend on it.

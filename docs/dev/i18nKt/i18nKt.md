@@ -95,7 +95,7 @@ The receiver is the **placeholder key, not the text being replaced** — `"playe
 
 Chain with `andThen` (`Replacements.kt:62`), which wraps `Replacement#then` and exists for both replacement kinds.
 
-Which kind to reach for is the same decision as in Java, and it matters: a `TextReplacement` is substituted before the interpreter parses the string, so its value can inject markup, while a `ComponentReplacement` is applied afterwards and cannot. See [the comparison in the `i18n` overview](../i18n/i18n.md#textreplacement-vs-componentreplacement).
+Which kind to reach for is the same decision as in Java, and it matters: a `TextReplacement` is substituted before the interpreter parses the string, so its value can inject markup, while a `ComponentReplacement` is applied afterwards and cannot. See [the comparison in the `i18n` overview](../i18n/i18n.md#textreplacement-vs.-componentreplacement).
 
 ## Serializer properties
 
@@ -155,7 +155,7 @@ hi
 <gray>Welcome, <aqua>Wyne</aqua>! You have \<count> new messages.
 ```
 
-The last line shows an unsubstituted `<count>` coming back escaped from MiniMessage serialization — harmless in the rendered component, and explained in [the `i18n` overview](../i18n/i18n.md#textreplacement-vs-componentreplacement).
+The last line shows an unsubstituted `<count>` coming back escaped from MiniMessage serialization — harmless in the rendered component, and explained in [the `i18n` overview](../i18n/i18n.md#textreplacement-vs.-componentreplacement).
 
 With a player in hand, the receiver carries both the locale and the PlaceholderAPI context, which is the form most plugin code uses:
 

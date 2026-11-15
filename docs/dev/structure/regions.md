@@ -45,7 +45,7 @@ corner
 (`structure/src/main/java/me/wyne/wutils/structure/region/MarginRegion.java:33-38`) —
 useful for giving a structure a buffer zone (no build damage right up to
 its walls) without changing what gets pasted. Both call `Scheme.toWorld`
-(see [Schemes and Clipboards](schemes.md#schemetoworld-bounding-box-not-corner-mapping))
+(see [Schemes and Clipboards](schemes.md#scheme.toworld-bounding-box-not-corner-mapping))
 to get correct bounds under rotation.
 
 ## `RegionData`

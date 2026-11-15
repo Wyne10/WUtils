@@ -44,5 +44,5 @@ table, and shading — read it before anything else.
   [Sending Messages](i18n/messages.md).
 * **Wiring up a plugin** — [Plugin Setup](common/plugin.md) and
   [Scheduling and Async Work](common/async.md).
-* **Changing WUtils itself** — the [Contributing](/contributing) section documents every
+* **Changing WUtils itself** — the [Contributing](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/) section documents every
   module's internals, invariants and sharp edges.

@@ -193,7 +193,7 @@ the `Animation` object cleans itself up on its own.
 
 ## See also
 
-- [the contributor wiki](/contributing/animation/steps) — the full step-advancement
+- [the contributor wiki](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/animation/steps) — the full step-advancement
   mechanism, exact `close()`/`_finalize()` call sites, and threading details.
-- [the contributor wiki's Runnables page](/contributing/animation/runnables) — every
+- [the contributor wiki's Runnables page](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/animation/runnables) — every
   built-in effect's exact no-op/edge-case behavior.

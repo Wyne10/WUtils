@@ -22,7 +22,7 @@ both — there's nothing here for you.
 
 ```kotlin
 dependencies {
-    implementation("io.github.wyne10:wutils-common-kotlin:1.16.12")
+    implementation("io.github.wyne10:wutils-common-kotlin:1.16.14")
     implementation("io.github.wyne10:wutils-i18n-kotlin:5.6.1")
 }
 ```

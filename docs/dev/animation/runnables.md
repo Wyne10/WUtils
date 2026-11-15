@@ -16,7 +16,7 @@ See also: [Animation module overview](animation.md), [Steps and scheduling](step
 
 Because the abstract method is plain `Runnable.run()`, any `Runnable` lambda or method reference already satisfies `AnimationRunnable` directly — no adapter is needed. `AnimationRunnable.EMPTY` is a no-op instance, useful as a default/placeholder value. `AnimationRunnable .runnable(Runnable)` (`AnimationRunnable.java:38-41`) is a static factory that wraps a plain `Runnable`, ignoring the timing arguments — it is marked `@Deprecated`, consistent with it being redundant given the point above.
 
-A runnable can optionally implement `AutoCloseable` and/or `Finalizable` to participate in step cleanup — see [`close()` vs. `_finalize()`](steps.md#close-vs-_finalize) in Steps and scheduling. None of the built-in effects on this page do; they are stateless, fire-and-forget calls with nothing to release.
+A runnable can optionally implement `AutoCloseable` and/or `Finalizable` to participate in step cleanup — see [`close()` vs. `_finalize()`](steps.md#close-vs.-_finalize) in Steps and scheduling. None of the built-in effects on this page do; they are stateless, fire-and-forget calls with nothing to release.
 
 ## `CompositeRunnable`
 

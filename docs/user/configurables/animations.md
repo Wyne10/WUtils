@@ -172,5 +172,5 @@ a regular attribute — it's read and consumed before the step is built.
 - [Ranges, Durations and Values](../common/values.md) — the duration expressions
   used by every timing key.
 - [Configurables](configurables.md) — the module overview and dependency table.
-- [the contributor page](/contributing/configurables/animations) — the attribute
+- [the contributor page](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/configurables/animations) — the attribute
   interfaces and `AnimationStepConfigurable` internals, if you need to go deeper.

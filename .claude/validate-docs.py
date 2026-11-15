@@ -22,11 +22,11 @@ DOCS = ROOT / 'docs'
 #         'free'  = any code fence is fine
 # cites:  'check' = every path:line must resolve and be in range
 #         'forbid' = source citations do not belong on these pages
-# section: the Wyne Docs site section this wiki is published under, so that
-#          cross-wiki links written as site paths still resolve to a real file.
+# space:  the GitBook space this wiki syncs into, so that cross-wiki links written
+#         as https://app.gitbook.com/s/<space>/<page path> still resolve to a real file.
 WIKIS = {
-    'docs/dev':  {'fences': 'prose', 'cites': 'check',  'section': '/contributing'},
-    'docs/user': {'fences': 'free',  'cites': 'forbid', 'section': '/documentation'},
+    'docs/dev':  {'fences': 'prose', 'cites': 'check',  'space': 'BlHpY9Cbyf7QuSQXTKKu'},
+    'docs/user': {'fences': 'free',  'cites': 'forbid', 'space': 'ZQ50kJ36ioYPFvndW1LL'},
 }
 ALLOW_MARKER = '<!-- allow-code-fences -->'
 # Not wiki pages: the AGENTS.md index, and the two files GitBook Git Sync consumes.
@@ -101,46 +101,106 @@ def check_fences(md, text, mode):
     if open_at is not None:
         problems.append(f"{rel(md)}:{open_at}: ```mermaid block is never closed")
 
-# --- relative links between pages must resolve ------------------------------
-LINK = re.compile(r'\[[^\]]*\]\(([^)#\s]+)(?:#[^)\s]*)?\)')
+# --- links between pages must resolve ---------------------------------------
+LINK = re.compile(r'\[[^\]]*\]\(([^)#\s]*)(?:#([^)\s]*))?\)')
+CROSS_SPACE = re.compile(r'https://app\.gitbook\.com/(?:o/[^/]+/)?s/([^/]+)/?(.*)$')
 
-def site_target(t):
-    """Resolve a site-absolute link like /contributing/common/events to its file.
+def gitbook_slug(s):
+    """A page path segment or heading anchor, slugged the way GitBook does it.
 
-    The two wikis publish as separate GitBook sections, so a relative link from one
-    into the other would escape its Git Sync root and 404 on the site. Cross-wiki
-    links are written as site paths instead; they still have to name a real page.
+    Checked against every heading on the published site: `<`/`>` are spelled out,
+    parentheses and slashes separate words, other punctuation is dropped (dots and
+    underscores survive), and runs of hyphens collapse — so `close()` vs. `_finalize()`
+    is #close-vs.-_finalize, not the GitHub-style #close-vs-_finalize.
     """
-    for name, rules in WIKIS.items():
-        section = rules['section']
-        if t == section:
-            return ROOT / name / 'README.md'
-        if t.startswith(section + '/'):
-            return ROOT / name / (t[len(section) + 1:] + '.md')
-    return None
+    s = s.lower().replace('<', ' less than ').replace('>', ' greater than ')
+    s = re.sub(r'[()]', ' ', s)
+    s = re.sub(r'[^\w\s./-]', '', s)
+    s = re.sub(r'[\s/]+', '-', s)
+    return re.sub(r'-+', '-', s).strip('-')
+
+def page_paths(wiki):
+    """Map each GitBook page path in a wiki to its file, as Git Sync derives it.
+
+    GitBook paths come from SUMMARY.md, not from the directory tree: a page's path is
+    its `## group` heading slug plus its file's stem, so docs/user/i18n/i18n.md is
+    published at text/i18n and docs/dev/jdbc/jdbc.md at storage/jdbc.
+    """
+    summary = ROOT / wiki / 'SUMMARY.md'
+    group, paths = None, {'': ROOT / wiki / 'README.md'}
+    if not summary.is_file():
+        return paths
+    for line in summary.read_text().splitlines():
+        if line.startswith('## '):
+            group = gitbook_slug(line[3:])
+        m = re.match(r'\s*\* \[[^\]]*\]\(([^)]+)\)', line)
+        if m and m.group(1) != 'README.md':
+            stem = gitbook_slug(pathlib.Path(m.group(1)).stem)
+            paths[f'{group}/{stem}' if group else stem] = ROOT / wiki / m.group(1)
+    return paths
+
+SPACES = {rules['space']: name for name, rules in WIKIS.items()}
+PAGE_PATHS = {name: page_paths(name) for name in WIKIS}
+
+def cross_space_target(md, t):
+    """Resolve https://app.gitbook.com/s/<space>/<path> to the file it names.
+
+    The two wikis sync into separate GitBook spaces, and links never cross a space
+    boundary by relative path — GitBook rewrites one that escapes its sync root, or
+    a bare site path like /contributing/common/events, into a GitHub tree URL that
+    does not exist. Cross-wiki links therefore use the space's app URL, which GitBook
+    resolves to the published page; they still have to name a real page.
+    """
+    m = CROSS_SPACE.match(t)
+    if not m or m.group(1) not in SPACES:
+        return None
+    wiki, path = SPACES[m.group(1)], m.group(2).rstrip('/')
+    page = PAGE_PATHS[wiki].get(path)
+    if page is None:
+        problems.append(f"{rel(md)}: cross-space link {t} names no page in {wiki}/SUMMARY.md "
+                        f"(GitBook paths are '<group heading>/<file stem>')")
+    return page
+
+anchor_cache = {}
+def anchors_of(f):
+    if f not in anchor_cache:
+        text = re.sub(r'^```.*?^```', '', f.read_text(), flags=re.S | re.M)
+        anchor_cache[f] = {gitbook_slug(h) for h in re.findall(r'^#{1,6}\s+(.*)$', text, re.M)}
+    return anchor_cache[f]
+
+def check_anchor(md, t, frag, page):
+    if frag and page.suffix == '.md' and frag not in anchors_of(page):
+        problems.append(f"{rel(md)}: anchor #{frag} in link {t or '(same page)'} matches no "
+                        f"heading in {rel(page)} (GitBook slugs: `close()` vs. x -> close-vs.-x)")
 
 def check_links(md, text):
     for target in LINK.finditer(text):
-        t = target.group(1)
-        if t.startswith(('http://', 'https://', 'mailto:')):
+        t, frag = target.group(1), target.group(2)
+        if not t:
+            check_anchor(md, t, frag, md)
+            continue
+        if t.startswith(('http://', 'https://')):
+            page = cross_space_target(md, t)
+            if page is not None:
+                check_anchor(md, t, frag, page)
+            continue
+        if t.startswith('mailto:'):
             continue
         if t.startswith('/'):
-            page = site_target(t)
-            if page is None:
-                problems.append(f"{rel(md)}: site link {t} is not under a known section "
-                                f"({', '.join(r['section'] for r in WIKIS.values())})")
-            elif not page.is_file():
-                problems.append(f"{rel(md)}: site link {t} resolves to {rel(page)}, "
-                                f"which does not exist")
+            problems.append(f"{rel(md)}: site path {t} — GitBook turns it into a broken GitHub "
+                            f"link; link the other wiki as https://app.gitbook.com/s/<space>/<path>")
             continue
         # Every link resolves from the file it appears in — including the AGENTS.md
         # indexes, which live inside their wiki root rather than at the repo root.
         # Repo-relative targets look right in a diff and 404 in every viewer.
-        if not (md.parent / t).resolve().is_file():
+        page = (md.parent / t).resolve()
+        if not page.is_file():
             hint = ""
             if t.startswith('docs/') and (ROOT / t).is_file():
                 hint = f" — repo-relative; from {rel(md.parent)}/ write {os.path.relpath(ROOT / t, md.parent)}"
             problems.append(f"{rel(md)}: dead link {t}{hint}")
+            continue
+        check_anchor(md, t, frag, page)
 
 def check_description(md, text):
     """Every page needs frontmatter `description:`.

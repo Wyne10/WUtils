@@ -397,7 +397,7 @@ expired entries.
 - [WUtils Config](../config/config.md) — the separate, annotation-driven whole-file
   config module, not to be confused with `ConfigUtils`.
 - contributor wiki pages with more depth:
-  [Ranges](/contributing/common/ranges), [Durations and Cooldowns](/contributing/common/durations),
-  [Comparators and Operations](/contributing/common/operations),
-  [Core Utilities](/contributing/common/utilities), [Config Utilities](/contributing/common/config-utils),
-  [Gson Serializers](/contributing/common/gson-serializers).
+  [Ranges](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/ranges), [Durations and Cooldowns](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/durations),
+  [Comparators and Operations](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/operations),
+  [Core Utilities](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/utilities), [Config Utilities](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/config-utils),
+  [Gson Serializers](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/gson-serializers).

@@ -72,7 +72,7 @@ exist on the running server version (older/newer Minecraft biome sets differ) is
 dropped** rather than throwing — the preset just ends up with fewer biomes.
 
 The biomes in each preset are listed in full on the user wiki's
-[Biome presets](/documentation/common/game-objects#biome-presets) table. Presets:
+[Biome presets](https://app.gitbook.com/s/ZQ50kJ36ioYPFvndW1LL/common/game-objects#biome-presets) table. Presets:
 
 | Preset | Basis |
 |---|---|
