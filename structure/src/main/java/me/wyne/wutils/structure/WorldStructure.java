@@ -292,8 +292,11 @@ public class WorldStructure implements AutoCloseable {
 
     @Override
     public void close() {
-        removeProtectedRegion();
-        restoreRegionSnapshot();
+        try {
+            removeProtectedRegion();
+        } finally {
+            restoreRegionSnapshot();
+        }
     }
 
 }
