@@ -57,6 +57,7 @@ import me.wyne.wutils.structure.modifier.edit.ThawEditModifier;
 import me.wyne.wutils.structure.region.StructureRegion;
 import me.wyne.wutils.structure.region.condition.RegionCondition;
 import me.wyne.wutils.structure.scheme.Scheme;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Contract;
@@ -310,7 +311,11 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
      * outside {@code [A-Za-z0-9_,'+/-]} so the result is safe to use as a WorldGuard region id.
      */
     private @NotNull String getUniqueKey(@NotNull Location location) {
+        var worldName = "null";
+        if (location.getWorld() != null && location.isWorldLoaded())
+            worldName = location.getWorld().getName();
         return (key + "-<x>x<y>y<z>z")
+                .replace("<world>", worldName)
                 .replace("<x>", String.valueOf(location.getBlockX()))
                 .replace("<y>", String.valueOf(location.getBlockY()))
                 .replace("<z>", String.valueOf(location.getBlockZ()))

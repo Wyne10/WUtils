@@ -40,7 +40,12 @@ public abstract class StructureRegion implements CompositeConfigSerializable {
      * block coordinates, then strips every character WorldGuard rejects in a region id.
      */
     public static @NotNull String validateId(@NotNull String id, @NotNull Location location) {
-        return id.replace("<x>", String.valueOf(location.getBlockX()))
+        var worldName = "null";
+        if (location.getWorld() != null && location.isWorldLoaded())
+            worldName = location.getWorld().getName();
+        return id
+                .replace("<world>", worldName)
+                .replace("<x>", String.valueOf(location.getBlockX()))
                 .replace("<y>", String.valueOf(location.getBlockY()))
                 .replace("<z>", String.valueOf(location.getBlockZ()))
                 .replaceAll("[^A-Za-z0-9_,'+/-]", "");
