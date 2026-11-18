@@ -66,7 +66,7 @@ public record AltitudeDifferenceCondition(@NotNull IntComparator comparator) imp
                 .toHighestLocation(HeightMap.OCEAN_FLOOR);
 
         Set<Location> locations = new HashSet<>(Arrays.asList(
-                intermediateStructure.location(), minimumPoint, xCorner, zCorner, xzCorner,
+                intermediateStructure.location().toHighestLocation(HeightMap.OCEAN_FLOOR), minimumPoint, xCorner, zCorner, xzCorner,
                 xMidpoint, zMidpoint, xzMidpoint, zxMidpoint
         ));
 
