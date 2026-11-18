@@ -23,14 +23,14 @@ own page: [Terrain Edit Modifiers](edit-modifiers.md).
 
 **YAML key order does not decide when a modifier runs.** Application order is fixed by
 `Structure.STRUCTURE_MODIFIER_MAP`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:92-128`), a static
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:94-131`), a static
 registry that maps every built-in `StructureModifier` key to its factory, in a fixed
 order. Whatever order you write `rotate`, `outset`, `smooth`, etc. under `modifiers:` in
 your YAML, they are looked up and applied in `STRUCTURE_MODIFIER_MAP`'s order, not the
 file's.
 
 The same applies to the programmatic `Structure.Builder`: `build()`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:434-458`) re-sorts
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:441-465`) re-sorts
 whatever was added via `.modifier(...)` into `STRUCTURE_MODIFIER_MAP`'s order, appending
 any unrecognised (custom) modifier key afterward in the order it was added.
 
@@ -55,8 +55,8 @@ Where a modifier runs determines what happens when it throws, and the two halves
 oppositely:
 
 - **`ClipboardModifier`, `LocationModifier`, `RegionModifier`** are invoked directly inside
-  `Structure.create` (`structure/src/main/java/me/wyne/wutils/structure/Structure.java:283-289`,
-  `:247-250`). An exception here is **not caught** — it propagates to the caller and aborts
+  `Structure.create` (`structure/src/main/java/me/wyne/wutils/structure/Structure.java:286-291`,
+  `:250-254`). An exception here is **not caught** — it propagates to the caller and aborts
   the whole placement attempt.
 - **`SnapshotModifier`, `PasteModifier`, `EditSessionModifier`** are applied by
   `WorldStructure` during `spawn()`
@@ -88,6 +88,7 @@ non-boolean value.
 | `rotate` | `RotateClipboardModifier` | space-separated list of angles, or `true`/`random`/`any`/empty for the default set `0 90 180 270` | See [rotate and flip](#rotate-and-flip) below |
 | `flip` | `FlipClipboardModifier` | space-separated list of axes, or `true`/`random`/`any`/empty for the default set `none x z` | See [rotate and flip](#rotate-and-flip) below |
 | `altitude` | `AltitudeLocationModifier` | an [`IntOperation`](../common/operations.md) string, e.g. `+2`, `-1`, `5` | Applied to the placement Y after the highest-block lookup; default `+0` |
+| `offset` | `OffsetLocationModifier` | a [`ClosedIntRange`](../common/ranges.md) string, e.g. `-2..2` | Random Y offset drawn from the closed range and added to the placement location; default `0..0` |
 | `expand` | `ExpandRegionModifier` | `<direction> [amount(1)]` | See [expand/contract vs. outset/inset](#expand-contract-vs.-outset-inset) |
 | `contract` | `ContractRegionModifier` | `<direction> [amount(1)]` | ditto |
 | `outset` | `OutsetRegionModifier` | `[amount(1)] [-h] [-v]` | ditto |
@@ -186,4 +187,5 @@ my-structure:
 - [Terrain Edit Modifiers](edit-modifiers.md) — the `modifier/edit/` package (`EditSessionModifier`).
 - [Regions and Flags](regions.md) — what a `RegionModifier` is reshaping.
 - [Comparators and Operations](../common/operations.md) — `IntOperation`, used by `altitude`.
+- [Ranges](../common/ranges.md) — `ClosedIntRange`, used by `offset`.
 - [Attributes and Containers](../configurables/attributes.md) — `AttributeMap`/`AttributeConfigurable`, the machinery that resolves YAML keys to modifier factories and preserves registration order.

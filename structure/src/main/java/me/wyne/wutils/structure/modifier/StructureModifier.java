@@ -13,6 +13,7 @@ public enum StructureModifier {
     CLIPBOARD_ROTATE("rotate"),
     CLIPBOARD_FLIP("flip"),
     LOCATION_ALTITUDE("altitude"),
+    LOCATION_OFFSET("offset"),
     REGION_EXPAND("expand"),
     REGION_CONTRACT("contract"),
     REGION_OUTSET("outset"),

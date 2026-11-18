@@ -24,6 +24,7 @@ import me.wyne.wutils.structure.modifier.StructureModifier;
 import me.wyne.wutils.structure.modifier.clipboard.FlipClipboardModifier;
 import me.wyne.wutils.structure.modifier.clipboard.RotateClipboardModifier;
 import me.wyne.wutils.structure.modifier.location.AltitudeLocationModifier;
+import me.wyne.wutils.structure.modifier.location.OffsetLocationModifier;
 import me.wyne.wutils.structure.modifier.snapshot.BiomesSnapshotModifier;
 import me.wyne.wutils.structure.modifier.snapshot.EntitiesSnapshotModifier;
 import me.wyne.wutils.structure.modifier.snapshot.RemoveEntitiesSnapshotModifier;
@@ -96,6 +97,7 @@ public class Structure implements CompositeConfigSerializable, ConfigDeserializa
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.CLIPBOARD_ROTATE.getKey(), new RotateClipboardModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.CLIPBOARD_FLIP.getKey(), new FlipClipboardModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.LOCATION_ALTITUDE.getKey(), new AltitudeLocationModifier.Factory());
+        STRUCTURE_MODIFIER_MAP.put(StructureModifier.LOCATION_OFFSET.getKey(), new OffsetLocationModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_ENTITIES.getKey(), new EntitiesSnapshotModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_REMOVE_ENTITIES.getKey(), new RemoveEntitiesSnapshotModifier.Factory());
         STRUCTURE_MODIFIER_MAP.put(StructureModifier.SNAPSHOT_BIOMES.getKey(), new BiomesSnapshotModifier.Factory());

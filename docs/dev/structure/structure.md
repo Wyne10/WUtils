@@ -64,10 +64,10 @@ my-structure:           # section name doubles as the default key
   modifiers: { ... }    # see modifiers.md and edit-modifiers.md
 ```
 
-`Structure.fromConfig` (`structure/src/main/java/me/wyne/wutils/structure/Structure.java:204-223`)
+`Structure.fromConfig` (`structure/src/main/java/me/wyne/wutils/structure/Structure.java:207-226`)
 reads all six via each package's own `Factory`. Calling
 `Structure#create(long, StructureCancellationToken, Executor)`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:240`) runs
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:243`) runs
 the recipe and resolves to a `WorldStructure` — placed, but not yet spawned.
 
 Generation happens in two phases, both retried together as one unit:
@@ -79,7 +79,7 @@ flowchart TD
     C -- no --> A
     C -- yes --> D["scheme.getClipboard()"]
     D --> E["ClipboardModifiers\n(rotate, flip)"]
-    E --> F["LocationModifiers\n(altitude)"]
+    E --> F["LocationModifiers\n(altitude, offset)"]
     F --> G["region.getRegion(...)\n+ Scheme.toWorld(...)"]
     G --> H["IntermediateStructure"]
     H --> I["RegionModifiers\n(expand, contract, outset, inset)"]
@@ -89,7 +89,7 @@ flowchart TD
 ```
 
 **Phase 1 — location and clipboard**
-(`getIntermediateStructure`, `structure/src/main/java/me/wyne/wutils/structure/Structure.java:268-305`).
+(`getIntermediateStructure`, `structure/src/main/java/me/wyne/wutils/structure/Structure.java:271-308`).
 The `StructureLocation` yields a candidate point; the caller snaps it to the
 highest solid block (`+1`) and checks every `LocationCondition`
 (see [Locations and Conditions](locations.md)). Any failure restarts the
@@ -103,7 +103,7 @@ point, and `StructureRegion` builds the pre-modifier WorldGuard region shape
 a snapshot of everything resolved so far.
 
 **Phase 2 — region and conditions**
-(`createWorldStructure`, `structure/src/main/java/me/wyne/wutils/structure/Structure.java:244-266`).
+(`createWorldStructure`, `structure/src/main/java/me/wyne/wutils/structure/Structure.java:247-269`).
 `RegionModifier`s (expand/contract/outset/inset) reshape the protected
 region, then every `RegionCondition` is checked against the *final* shape.
 Failing any of them restarts from Phase 1 — not just the region step —
@@ -150,7 +150,7 @@ server rescan the column.
 ### Threading
 
 Location lookup hops onto the main thread via `Schedulers#sync()`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:273`)
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:276`)
 because it queries world height and, for `BiomeLocation`/
 `NearestStructureLocation`, calls `World#locateNearestBiome` /
 `World#locateNearestStructure` — both of which Bukkit requires on the main
@@ -163,15 +163,15 @@ them on a thread WorldEdit/WorldGuard accept (in practice, the main thread).
 ### Cancellation and timeouts
 
 `create(long timeoutMillis, StructureCancellationToken token, Executor executor)`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:240`)
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:243`)
 takes a total time budget, measured from the first call across every retry,
 and an optional `StructureCancellationToken`
 (`structure/src/main/java/me/wyne/wutils/structure/StructureCancellationToken.java:11-23`) —
 a thread-safe cancellation flag. Cancelling the token before or during
 generation fails the returned future with `CancellationException`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:270`).
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:273`).
 Running out of the time budget instead fails it with `IllegalStateException`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:272`) —
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:275`) —
 distinct exception types, so callers can tell "gave up on time" from
 "someone cancelled it" without inspecting the message.
 
@@ -193,15 +193,15 @@ distinct exception types, so callers can tell "gave up on time" from
 ## The `Structure.Builder`
 
 For placing structures without a config file, `Structure.builder()`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:160-163`)
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:163-166`)
 gives a fluent, programmatic alternative to YAML. `key`, `location`,
 `scheme`, and `region` are required; `build()`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:434-458`)
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:441-465`)
 throws `NullPointerException` if any is missing.
 
 `build()` also re-sorts whatever modifiers were added via `.modifier(...)`
 into `STRUCTURE_MODIFIER_MAP`'s registration order
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:92-128`) —
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:94-131`) —
 the same canonical order YAML keys are matched against. Any modifier key
 `build()` doesn't recognize (a custom, non-built-in modifier) is appended
 afterward, in the order it was added. `Structure.builder(Structure source)`

@@ -102,7 +102,7 @@ lives in the same shared `conditions` section as location conditions (see
 two vocabularies are interleaved freely because `Structure.fromConfig`
 reads that one section through both `LocationCondition.FACTORY_MAP` and
 `RegionCondition.FACTORY_MAP`
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:213-214`).
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:216-217`).
 
 | Config key | Value type | Implementation |
 |---|---|---|
@@ -151,7 +151,7 @@ ravines that a flat schematic would paste awkwardly onto.
 against the final protected region shape — this is the opposite order from
 location conditions, which run before any placement modifier touches the
 location. `Structure#create`'s Phase 2
-(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:244-266`)
+(`structure/src/main/java/me/wyne/wutils/structure/Structure.java:247-269`)
 applies every `RegionModifier` (expand/contract/outset/inset — see
 [Modifiers](modifiers.md)) to the region *first*, then checks
 `RegionCondition`s against the modified result. Practically: an

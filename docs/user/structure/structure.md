@@ -229,6 +229,7 @@ the exceptions.
 | `rotate` | the paste's rotation | angles that are multiples of 90 (`90 180`), one picked per placement | `0 90 180 270` for empty, `any`, `random` or `true` | 1 |
 | `flip` | the paste's mirroring | axes (`x`, `y`, `z`, `none`), one picked per placement | `none x z` for empty, `any`, `random` or `true` | 1 |
 | `altitude` | the placement Y | an [`IntOperation`](https://app.gitbook.com/s/BlHpY9Cbyf7QuSQXTKKu/common/operations) string, e.g. `+2` | Y is left unchanged | 2 |
+| `offset` | a random Y offset on the placement | a [`ClosedIntRange`](../common/values.md#ranges) string, e.g. `-2..2` | Y is left unchanged | 2 |
 | `expand` / `contract` | one face of the protected region | `direction amount(1)` | no `direction` default | 3 |
 | `outset` / `inset` | all faces of the protected region | `amount(1) [-h] [-v]` | no flag, or both, applies to both axes | 3 |
 | `snapshotEntities` | whether the rollback snapshot captures entities | boolean | `true` (WorldEdit default) | 4 |
